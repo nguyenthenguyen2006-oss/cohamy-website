@@ -1,0 +1,557 @@
+{
+  "nav": {
+    "home": "首页",
+    "products": "产品",
+    "blog": "博客",
+    "about": "关于我们",
+    "activities": "活动",
+    "contact": "联系我们",
+    "cart": "购物车",
+    "search": "搜索",
+    "searchPlaceholder": "搜索产品...",
+    "language": "语言",
+    "menu": "菜单",
+    "close": "关闭"
+  },
+  "home": {
+    "hero": {
+      "badge": "Cohamy by Jamy Green",
+      "title": "高端坚果巧克力与果干",
+      "subtitle": "Cohamy 精选坚果、热带水果与精致巧克力层，打造甜美、现代、易于享用的礼品。",
+      "ctaPrimary": "探索产品",
+      "ctaSecondary": "查看礼品系列",
+      "scrollHint": "向下滚动探索",
+      "premiumLabel": "Premium",
+      "pouchLabel": "55克袋装"
+    },
+    "gift": {
+      "eyebrow": "礼品系列",
+      "title": "礼品系列",
+      "subtitle": "五款杏仁风味玻璃罐装——适合节日、庆典与企业赠礼。",
+      "cta": "探索礼品套装",
+      "badge": "礼品套装",
+      "imageAlt": "Cohamy 礼品罐装巧克力套装"
+    },
+    "marquee": {
+      "phrase1": "优质坚果巧克力",
+      "phrase2": "精美礼品系列",
+      "phrase3": "精选原料",
+      "phrase4": "独家风味",
+      "phrase5": "by Jamy Green",
+      "phrase6": "越南制造"
+    },
+    "flavorRibbon": {
+      "title": "探索风味",
+      "subtitle": "从经典杏仁到抹茶、芒果干和榴莲——每种风味都有独特故事。",
+      "item1": "杏仁",
+      "item2": "芒果干",
+      "item3": "夏威夷果",
+      "item4": "抹茶",
+      "item5": "榴莲",
+      "item6": "腰果"
+    },
+    "visualBreak": {
+      "number": "01",
+      "title": "人气精选系列",
+      "subtitle": "最畅销的风味——适合品尝、送礼或批量订购。",
+      "cta": "查看全部"
+    },
+    "taste": {
+      "title": "每个时刻的不同风味",
+      "subtitle": "从经典杏仁到热带芒果干——每一包都有独特的故事。"
+    },
+    "bento": {
+      "almond": {
+        "title": "杏仁",
+        "subtitle": "55%黑巧克力裹手工烘烤加州杏仁"
+      },
+      "mango": {
+        "title": "芒果干",
+        "subtitle": "和平乐芒果冷干或玻璃罐装牛奶巧克力"
+      },
+      "macadamia": {
+        "title": "夏威夷果",
+        "subtitle": "澳洲夏威夷果裹白巧克力和牛奶巧克力"
+      },
+      "matcha": {
+        "title": "抹茶",
+        "subtitle": "日本宇治抹茶白巧克力裹烤杏仁"
+      }
+    },
+    "quality": {
+      "title": "从产品到体验的精益求精",
+      "subtitle": "我们对每一款产品承诺的品质标准",
+      "items": {
+        "ingredients": "精选原料",
+        "packaging": "精美包装",
+        "taste": "易于享用",
+        "gift": "适合送礼",
+        "retail": "适合零售与电商"
+      }
+    },
+    "featured": {
+      "title": "精选产品",
+      "subtitle": "Cohamy & Jamy 系列中最受欢迎的产品",
+      "viewAll": "查看全部产品",
+      "contactCta": "联系我们",
+      "viewDetail": "查看详情",
+      "new": "新品",
+      "bestseller": "畅销"
+    },
+    "categories": {
+      "title": "产品分类",
+      "subtitle": "选择适合您口味的产品",
+      "chocolate": "坚果裹巧克力",
+      "gift": "礼品套装",
+      "jamy": "Jamy 系列",
+      "seasonal": "季节限定",
+      "explore": "探索"
+    },
+    "about": {
+      "title": "Cohamy 品牌故事",
+      "subtitle": "从工厂到您的手中",
+      "description": "Cohamy 致力于提供高品质巧克力产品，融合腰果、杏仁和越南天然原料。每一块巧克力都凝聚了精湛工艺与严格的质量标准。",
+      "stats": {
+        "products": "产品",
+        "partners": "合作伙伴",
+        "years": "年经验",
+        "customers": "客户"
+      },
+      "cta": "关于我们"
+    },
+    "whyUs": {
+      "title": "为什么选择 Cohamy？",
+      "subtitle": "每款产品都承诺品质",
+      "quality": {
+        "title": "精选原料",
+        "description": "平福腰果、杏仁和可可均来自可信赖的供应商，经过严格筛选。"
+      },
+      "craft": {
+        "title": "独家配方",
+        "description": "现代生产工艺结合传统技艺，打造独特且难以复制的风味。"
+      },
+      "natural": {
+        "title": "天然安全",
+        "description": "无防腐剂、无添加剂——适合家庭享用及高端礼品赠送。"
+      },
+      "gift": {
+        "title": "精美礼品",
+        "description": "奢华包装设计，适合节日、生日及企业活动。"
+      }
+    },
+    "process": {
+      "title": "生产工艺",
+      "subtitle": "从坚果到完美巧克力",
+      "step1": {
+        "title": "原料甄选",
+        "description": "腰果、杏仁和可可均达到出口级标准。"
+      },
+      "step2": {
+        "title": "裹巧克力加工",
+        "description": "采用独家配方裹上细腻巧克力层，保留坚果天然风味。"
+      },
+      "step3": {
+        "title": "质量检验",
+        "description": "每批产品包装前均经过严格检测。"
+      },
+      "step4": {
+        "title": "包装与配送",
+        "description": "防潮包装，确保巧克力以最佳状态送达您手中。"
+      }
+    },
+    "testimonials": {
+      "title": "客户评价",
+      "subtitle": "来自巧克力爱好者的真实反馈",
+      "review1": {
+        "text": "Cohamy 巧克力口感细腻，腰果香味浓郁。买来送礼收到很多好评！",
+        "author": "阮氏兰",
+        "role": "忠实客户"
+      },
+      "review2": {
+        "text": "抹茶和榴莲口味非常独特，很有越南特色。会继续支持！",
+        "author": "陈明俊",
+        "role": "美食博主"
+      },
+      "review3": {
+        "text": "包装精美，品质稳定。我们公司订购企业礼品非常满意。",
+        "author": "黎芳英",
+        "role": "市场经理"
+      }
+    },
+    "activities": {
+      "title": "精彩活动",
+      "subtitle": "Cohamy 连接与成长之旅",
+      "viewAll": "查看全部活动",
+      "readMore": "了解更多"
+    },
+    "blog": {
+      "title": "最新文章",
+      "subtitle": "Cohamy 新闻、食谱与品牌故事",
+      "viewAll": "查看全部文章",
+      "readMore": "阅读更多",
+      "minRead": "分钟阅读"
+    },
+    "newsletter": {
+      "title": "订阅资讯",
+      "subtitle": "获取 Cohamy 独家优惠与新品资讯",
+      "placeholder": "输入您的邮箱",
+      "button": "订阅",
+      "success": "订阅成功！感谢您的关注。",
+      "privacy": "我们承诺保护您的个人信息。"
+    },
+    "cta": {
+      "title": "准备好品尝了吗？",
+      "subtitle": "立即下单，享受优惠并体验 Cohamy 风味",
+      "button": "立即购买",
+      "contact": "咨询联系"
+    }
+  },
+  "products": {
+    "title": "产品",
+    "subtitle": "Cohamy & Jamy 巧克力系列",
+    "count": "{count} 件产品",
+    "empty": "未找到匹配的产品",
+    "emptyHint": "请尝试调整筛选条件或搜索关键词",
+    "contactForPrice": "联系我们",
+    "contactCta": "联系订购",
+    "outOfStock": "缺货",
+    "inStock": "有货",
+    "weight": "重量",
+    "ingredients": "成分",
+    "description": "产品描述",
+    "related": "相关产品",
+    "share": "分享",
+    "quantity": "数量",
+    "price": "价格",
+    "originalPrice": "原价",
+    "salePrice": "促销价",
+    "sku": "产品编号",
+    "category": "分类",
+    "backToList": "返回列表",
+    "faq": {
+      "title": "常见问题",
+      "q1": {
+        "question": "Cohamy 巧克力的保质期是多久？",
+        "answer": "55克袋装通常保质期12个月，160克玻璃罐约10–12个月。包装上的日期为最准确依据。"
+      },
+      "q2": {
+        "question": "坚果巧克力应如何保存？",
+        "answer": "请存放于25°C以下阴凉干燥处，避免阳光直射。开封后请密封袋装或瓶盖，以保持酥脆口感。"
+      },
+      "q3": {
+        "question": "产品是否含有过敏原？",
+        "answer": "产品含有坚果（杏仁、腰果、夏威夷果）、牛奶、大豆，稳定剂中可能含麸质。请查看包装成分表或联系我们了解详情。"
+      },
+      "q4": {
+        "question": "是否支持批量订购和企业礼品？",
+        "answer": "Cohamy 提供节日礼盒、活动礼品及定制logo服务。请联系热线/Zalo 0981 956 111 或电邮 Cohamyvietnam@gmail.com 获取报价。"
+      }
+    }
+  },
+  "cart": {
+    "title": "购物车",
+    "subtitle": "结账前请确认您的商品",
+    "empty": "购物车为空",
+    "emptyHint": "探索 Cohamy 巧克力系列，添加您喜爱的产品",
+    "continueShopping": "继续购物",
+    "product": "产品",
+    "price": "单价",
+    "quantity": "数量",
+    "total": "小计",
+    "subtotal": "商品总额",
+    "shipping": "运费",
+    "shippingNote": "结账时计算",
+    "discount": "折扣",
+    "grandTotal": "总计",
+    "remove": "删除",
+    "update": "更新",
+    "checkout": "结账",
+    "coupon": "优惠码",
+    "couponPlaceholder": "输入优惠码",
+    "applyCoupon": "应用",
+    "couponApplied": "优惠码已应用",
+    "couponInvalid": "优惠码无效",
+    "itemsCount": "{count} 件商品"
+  },
+  "checkout": {
+    "title": "结账",
+    "subtitle": "完成您的订单",
+    "contactInfo": "联系信息",
+    "shippingInfo": "配送信息",
+    "paymentMethod": "支付方式",
+    "orderSummary": "订单摘要",
+    "placeOrder": "提交订单",
+    "processing": "处理中...",
+    "success": "订单提交成功！",
+    "successMessage": "感谢您的订购！我们将尽快联系您确认订单。",
+    "backToHome": "返回首页",
+    "fields": {
+      "fullName": "姓名",
+      "email": "邮箱",
+      "phone": "电话号码",
+      "address": "地址",
+      "city": "省/市",
+      "district": "区/县",
+      "ward": "街道/乡镇",
+      "note": "订单备注",
+      "notePlaceholder": "配送时间或特殊要求备注"
+    },
+    "payment": {
+      "cod": "货到付款 (COD)",
+      "bank": "银行转账",
+      "momo": "MoMo 钱包",
+      "zalopay": "ZaloPay"
+    },
+    "validation": {
+      "required": "请填写所有必填项",
+      "invalidEmail": "邮箱格式无效",
+      "invalidPhone": "电话号码无效"
+    }
+  },
+  "blog": {
+    "title": "博客",
+    "subtitle": "Cohamy 新闻、食谱与品牌故事",
+    "readMore": "阅读更多",
+    "minRead": "分钟阅读",
+    "publishedAt": "发布日期",
+    "author": "作者",
+    "category": "分类",
+    "tags": "标签",
+    "share": "分享文章",
+    "related": "相关文章",
+    "empty": "暂无文章",
+    "emptyHint": "请稍后查看 Cohamy 的新故事",
+    "backToList": "返回列表",
+    "searchPlaceholder": "搜索文章...",
+    "toc": "目录",
+    "featuredLabel": "精选",
+    "featuredProduct": "精选产品",
+    "viewProduct": "查看产品",
+    "categoryLabels": {
+      "all": "全部",
+      "chocolate": "巧克力",
+      "dried-fruit": "果干",
+      "gift-ideas": "礼品灵感",
+      "food-guide": "美食指南",
+      "brand-story": "品牌故事"
+    }
+  },
+  "about": {
+    "title": "关于我们",
+    "subtitle": "打造越南巧克力品牌之路",
+    "mission": {
+      "title": "使命",
+      "description": "提供高品质巧克力产品，融合越南天然原料与国际生产标准。"
+    },
+    "vision": {
+      "title": "愿景",
+      "description": "成为越南领先的坚果裹巧克力品牌，深受国内喜爱并走向国际。"
+    },
+    "values": {
+      "title": "核心价值观",
+      "quality": "品质",
+      "integrity": "诚信",
+      "innovation": "创新",
+      "community": "社区"
+    },
+    "story": {
+      "title": "我们的故事",
+      "description": "Cohamy 源于对巧克力的热爱和对越南腰果的钟情。从小型工坊起步，我们不断完善配方、扩展产品线，并参与国内外贸易展览。"
+    },
+    "team": {
+      "title": "我们的团队",
+      "subtitle": "Cohamy 风味背后的团队"
+    },
+    "certifications": {
+      "title": "认证与标准",
+      "subtitle": "致力于食品安全与稳定品质"
+    }
+  },
+  "activities": {
+    "title": "活动",
+    "subtitle": "Cohamy 与社区连接的精彩时刻",
+    "readMore": "查看详情",
+    "empty": "暂无活动",
+    "emptyHint": "我们将尽快更新",
+    "backToList": "返回列表",
+    "gallery": "图片库",
+    "date": "日期",
+    "location": "地点"
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "我们随时倾听您的声音",
+    "form": {
+      "title": "发送消息",
+      "name": "姓名",
+      "email": "邮箱",
+      "phone": "电话号码",
+      "subject": "主题",
+      "message": "内容",
+      "messagePlaceholder": "请输入您的留言...",
+      "submit": "发送消息",
+      "sending": "发送中...",
+      "success": "消息发送成功！我们将尽快回复。",
+      "error": "发送失败，请重试。"
+    },
+    "info": {
+      "title": "联系信息",
+      "address": "地址",
+      "addressValue": "越南河内市义都坊通光斐街T608大厦A座3层",
+      "phone": "热线",
+      "zalo": "Zalo OA",
+      "email": "联系及订单邮箱",
+      "openMaps": "在 Google 地图中查看",
+      "mapTitle": "Cohamy 在 Google 地图上的位置",
+      "hours": "营业时间",
+      "hoursValue": "周一至周五：8:00 - 17:00"
+    },
+    "subjects": {
+      "general": "一般咨询",
+      "order": "订单与配送",
+      "gift": "礼品咨询",
+      "product": "产品咨询",
+      "other": "其他"
+    }
+  },
+  "footer": {
+    "description": "Cohamy — 来自越南的高端坚果裹巧克力。精致风味，心意好礼。",
+    "quickLinks": "快速链接",
+    "support": "客户支持",
+    "followUs": "关注我们",
+    "newsletter": "获取促销资讯",
+    "newsletterPlaceholder": "您的邮箱",
+    "subscribe": "订阅",
+    "copyright": "© {year} Cohamy. 保留所有权利。",
+    "privacy": "隐私政策",
+    "terms": "使用条款",
+    "shipping": "配送政策",
+    "returns": "退换政策",
+    "faq": "常见问题"
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "发生错误",
+    "retry": "重试",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "edit": "编辑",
+    "view": "查看",
+    "back": "返回",
+    "next": "下一页",
+    "previous": "上一页",
+    "seeMore": "查看更多",
+    "seeLess": "收起",
+    "showAll": "显示全部",
+    "close": "关闭",
+    "open": "打开",
+    "yes": "是",
+    "no": "否",
+    "or": "或",
+    "and": "和",
+    "from": "从",
+    "to": "到",
+    "all": "全部",
+    "none": "无",
+    "required": "必填",
+    "optional": "选填",
+    "currency": "₫",
+    "addedToCart": "已加入购物车",
+    "removedFromCart": "已从购物车移除",
+    "copied": "已复制",
+    "noResults": "无结果",
+    "page": "第",
+    "of": "页，共",
+    "items": "项"
+  },
+  "filters": {
+    "title": "筛选",
+    "clear": "清除筛选",
+    "apply": "应用",
+    "sort": "排序",
+    "sortBy": "排序方式",
+    "sortOptions": {
+      "newest": "最新",
+      "oldest": "最早",
+      "priceAsc": "价格：从低到高",
+      "priceDesc": "价格：从高到低",
+      "nameAsc": "名称：A-Z",
+      "nameDesc": "名称：Z-A",
+      "popular": "最受欢迎"
+    },
+    "category": "分类",
+    "categories": {
+      "all": "全部",
+      "chocolate": "坚果裹巧克力",
+      "almond": "杏仁",
+      "cashew": "腰果",
+      "gift": "礼品套装",
+      "jamy": "Jamy 系列",
+      "seasonal": "季节限定",
+      "chocolateNuts": "坚果裹巧克力",
+      "driedFruit": "果干",
+      "giftJar": "礼品罐装",
+      "premiumPack": "高端包装"
+    },
+    "price": "价格区间",
+    "priceRange": "{min} 至 {max}",
+    "weight": "重量",
+    "flavor": "口味",
+    "flavors": {
+      "original": "原味",
+      "matcha": "抹茶",
+      "durian": "榴莲",
+      "strawberry": "草莓",
+      "milk": "牛奶",
+      "mango": "芒果",
+      "macadamia": "夏威夷果"
+    },
+    "inStock": "有货",
+    "onSale": "促销中",
+    "results": "{count} 个结果"
+  },
+  "seo": {
+    "home": {
+      "title": "Cohamy — 越南高端坚果裹巧克力",
+      "description": "探索 Cohamy & Jamy 巧克力系列：腰果、杏仁、抹茶、榴莲等多种独特口味。精美礼品，优质品质。"
+    },
+    "products": {
+      "title": "产品 — Cohamy 巧克力",
+      "description": "浏览 Cohamy & Jamy 坚果裹巧克力产品。在线购买，全国配送。"
+    },
+    "productDetail": {
+      "title": "{name} — Cohamy",
+      "description": "在 Cohamy 购买 {name}。优质巧克力，天然原料，精美包装。"
+    },
+    "cart": {
+      "title": "购物车 — Cohamy",
+      "description": "查看和管理您的 Cohamy 巧克力购物车。"
+    },
+    "checkout": {
+      "title": "结账 — Cohamy",
+      "description": "完成您的 Cohamy 巧克力订单。快速配送，便捷支付。"
+    },
+    "blog": {
+      "title": "博客 — Cohamy",
+      "description": "Cohamy 品牌巧克力新闻、食谱与故事。"
+    },
+    "blogDetail": {
+      "title": "{title} — Cohamy 博客",
+      "description": "{excerpt}"
+    },
+    "about": {
+      "title": "关于我们 — Cohamy",
+      "description": "了解越南巧克力品牌 Cohamy 的故事、使命与价值观。"
+    },
+    "activities": {
+      "title": "活动 — Cohamy",
+      "description": "Cohamy 展览、活动及社区动态更新。"
+    },
+    "contact": {
+      "title": "联系我们 — Cohamy",
+      "description": "联系 Cohamy 订购产品、批发合作或企业礼品咨询。"
+    }
+  }
+}

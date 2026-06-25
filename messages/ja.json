@@ -1,0 +1,557 @@
+{
+  "nav": {
+    "home": "ホーム",
+    "products": "製品",
+    "blog": "ブログ",
+    "about": "会社概要",
+    "activities": "活動",
+    "contact": "お問い合わせ",
+    "cart": "カート",
+    "search": "検索",
+    "searchPlaceholder": "製品を検索...",
+    "language": "言語",
+    "menu": "メニュー",
+    "close": "閉じる"
+  },
+  "home": {
+    "hero": {
+      "badge": "Cohamy by Jamy Green",
+      "title": "プレミアムナッツチョコレート＆ドライフルーツ",
+      "subtitle": "Cohamyは厳選ナッツ、トロピカルフルーツ、繊細なチョコレート層を組み合わせ、甘く現代的で楽しみやすいギフトをお届けします。",
+      "ctaPrimary": "製品を見る",
+      "ctaSecondary": "ギフトコレクションを見る",
+      "scrollHint": "スクロールして探索",
+      "premiumLabel": "Premium",
+      "pouchLabel": "55gパウチ"
+    },
+    "gift": {
+      "eyebrow": "ギフトコレクション",
+      "title": "ギフトコレクション",
+      "subtitle": "ガラス瓶に入った5種類のアーモンドフレーバー — 祝日、フェスティバル、企業ギフトに最適。",
+      "cta": "ギフトセットを見る",
+      "badge": "ギフトセット",
+      "imageAlt": "Cohamy ギフトジャーコレクション"
+    },
+    "marquee": {
+      "phrase1": "プレミアムナッツチョコレート",
+      "phrase2": "上品なギフトコレクション",
+      "phrase3": "厳選素材",
+      "phrase4": "独自のフレーバー",
+      "phrase5": "by Jamy Green",
+      "phrase6": "Made in Vietnam"
+    },
+    "flavorRibbon": {
+      "title": "フレーバーを探す",
+      "subtitle": "クラシックなアーモンドから抹茶、ドライマンゴー、ドリアンまで — 各フレーバーに独自のストーリーがあります。",
+      "item1": "アーモンド",
+      "item2": "ドライマンゴー",
+      "item3": "マカダミア",
+      "item4": "抹茶",
+      "item5": "ドリアン",
+      "item6": "カシューナッツ"
+    },
+    "visualBreak": {
+      "number": "01",
+      "title": "人気コレクション",
+      "subtitle": "ベストセラーフレーバー — お試し、ギフト、大口注文に最適です。",
+      "cta": "すべて見る"
+    },
+    "taste": {
+      "title": "あらゆる瞬間のためのフレーバー",
+      "subtitle": "クラシックなアーモンドからトロピカルマンゴー干しまで — 各パックに独自のストーリーがあります。"
+    },
+    "bento": {
+      "almond": {
+        "title": "アーモンド",
+        "subtitle": "55%ダークチョコレートと手焙煎カリフォルニア産アーモンド"
+      },
+      "mango": {
+        "title": "ドライマンゴー",
+        "subtitle": "ホアロックマンゴーの冷凍乾燥、またはガラス瓶のミルクチョコレート"
+      },
+      "macadamia": {
+        "title": "マカダミア",
+        "subtitle": "オーストラリア産マカダミアをホワイト・ミルクチョコでコーティング"
+      },
+      "matcha": {
+        "title": "抹茶",
+        "subtitle": "日本宇治抹茶ホワイトチョコレートとローストアーモンド"
+      }
+    },
+    "quality": {
+      "title": "製品から体験まで丁寧に",
+      "subtitle": "すべての製品にお約束する品質基準",
+      "items": {
+        "ingredients": "厳選素材",
+        "packaging": "上品なパッケージ",
+        "taste": "楽しみやすい味わい",
+        "gift": "ギフトに最適",
+        "retail": "小売・EC対応"
+      }
+    },
+    "featured": {
+      "title": "おすすめ製品",
+      "subtitle": "Cohamy & Jamyコレクションの人気商品",
+      "viewAll": "すべての製品を見る",
+      "contactCta": "お問い合わせ",
+      "viewDetail": "詳細を見る",
+      "new": "新商品",
+      "bestseller": "ベストセラー"
+    },
+    "categories": {
+      "title": "製品カテゴリー",
+      "subtitle": "お好みの味をお選びください",
+      "chocolate": "ナッツコーティングチョコレート",
+      "gift": "ギフトセット",
+      "jamy": "Jamyコレクション",
+      "seasonal": "季節限定",
+      "explore": "探索する"
+    },
+    "about": {
+      "title": "Cohamyのストーリー",
+      "subtitle": "工場からあなたの手へ",
+      "description": "Cohamyは、カシューナッツ、アーモンド、ベトナムの天然素材を組み合わせた高品質チョコレート製品を提供するために設立されました。一つ一つに職人の技と厳格な品質基準が込められています。",
+      "stats": {
+        "products": "製品",
+        "partners": "パートナー",
+        "years": "年の実績",
+        "customers": "お客様"
+      },
+      "cta": "会社概要"
+    },
+    "whyUs": {
+      "title": "Cohamyが選ばれる理由",
+      "subtitle": "すべての製品に込めた品質への約束",
+      "quality": {
+        "title": "厳選素材",
+        "description": "ビンフオック産カシューナッツ、アーモンド、カカオを信頼できる供給元から厳選。"
+      },
+      "craft": {
+        "title": "独自レシピ",
+        "description": "最新の製造技術と伝統的な手法を融合し、他にはない独特の味わいを実現。"
+      },
+      "natural": {
+        "title": "天然・安全",
+        "description": "保存料なし、添加物なし — ご家族やプレミアムギフトに最適。"
+      },
+      "gift": {
+        "title": "上品なギフト",
+        "description": "高級感のあるパッケージで、祝日、誕生日、企業イベントに最適。"
+      }
+    },
+    "process": {
+      "title": "製造工程",
+      "subtitle": "ナッツから完璧なチョコレートへ",
+      "step1": {
+        "title": "素材選定",
+        "description": "輸出基準を満たすカシューナッツ、アーモンド、カカオを選定。"
+      },
+      "step2": {
+        "title": "チョコレートコーティング",
+        "description": "独自レシピで滑らかなチョコレートをコーティングし、ナッツの自然な風味を保持。"
+      },
+      "step3": {
+        "title": "品質検査",
+        "description": "すべてのロットは包装前に厳格な品質検査を実施。"
+      },
+      "step4": {
+        "title": "包装・配送",
+        "description": "防湿包装により、チョコレートが最高の状態でお届け。"
+      }
+    },
+    "testimonials": {
+      "title": "お客様の声",
+      "subtitle": "チョコレート愛好家からの率直なレビュー",
+      "review1": {
+        "text": "Cohamyのチョコレートはなめらかで、カシューナッツの香りが素晴らしいです。ギフトにしたらたくさん褒められました！",
+        "author": "グエン・ティ・ラン",
+        "role": "常連のお客様"
+      },
+      "review2": {
+        "text": "抹茶とドリアンの味はとてもユニークで、まさにベトナムらしい。これからも応援します！",
+        "author": "チャン・ミン・トゥアン",
+        "role": "フードブロガー"
+      },
+      "review3": {
+        "text": "パッケージが美しく、品質も安定しています。会社のイベント用ギフトとして注文し、大変満足しています。",
+        "author": "レ・フォウ・アイン",
+        "role": "マーケティングマネージャー"
+      }
+    },
+    "activities": {
+      "title": "注目の活動",
+      "subtitle": "Cohamyのつながりと成長の歩み",
+      "viewAll": "すべての活動を見る",
+      "readMore": "続きを読む"
+    },
+    "blog": {
+      "title": "最新記事",
+      "subtitle": "Cohamyのニュース、レシピ、ストーリー",
+      "viewAll": "すべての記事を見る",
+      "readMore": "続きを読む",
+      "minRead": "分で読める"
+    },
+    "newsletter": {
+      "title": "ニュースレター登録",
+      "subtitle": "Cohamyの限定オファーと新製品情報をお届け",
+      "placeholder": "メールアドレスを入力",
+      "button": "登録する",
+      "success": "登録が完了しました！ありがとうございます。",
+      "privacy": "お客様の個人情報を安全に保護します。"
+    },
+    "cta": {
+      "title": "味わう準備はできましたか？",
+      "subtitle": "今すぐご注文して、特別オファーとCohamyの味わいを体験してください",
+      "button": "今すぐ購入",
+      "contact": "お問い合わせ"
+    }
+  },
+  "products": {
+    "title": "製品",
+    "subtitle": "Cohamy & Jamy チョコレートコレクション",
+    "count": "{count}件の製品",
+    "empty": "該当する製品が見つかりません",
+    "emptyHint": "フィルターや検索キーワードを変更してみてください",
+    "contactForPrice": "お問い合わせ",
+    "contactCta": "注文のお問い合わせ",
+    "outOfStock": "在庫切れ",
+    "inStock": "在庫あり",
+    "weight": "重量",
+    "ingredients": "原材料",
+    "description": "製品説明",
+    "related": "関連製品",
+    "share": "共有",
+    "quantity": "数量",
+    "price": "価格",
+    "originalPrice": "定価",
+    "salePrice": "セール価格",
+    "sku": "商品コード",
+    "category": "カテゴリー",
+    "backToList": "一覧に戻る",
+    "faq": {
+      "title": "よくある質問",
+      "q1": {
+        "question": "Cohamyチョコレートの賞味期限はどのくらいですか？",
+        "answer": "55gパウチは通常12ヶ月、160gガラス瓶は製造日から約10〜12ヶ月です。パッケージの日付が最も正確です。"
+      },
+      "q2": {
+        "question": "ナッツチョコレートの保存方法は？",
+        "answer": "25°C以下の涼しく乾燥した場所に保管し、直射日光を避けてください。開封後は袋や蓋をしっかり閉めてサクサク感を保ちましょう。"
+      },
+      "q3": {
+        "question": "アレルゲンは含まれていますか？",
+        "answer": "ナッツ（アーモンド、カシュー、マカダミア）、乳、大豆が含まれ、安定剤にグルテンが含まれる場合があります。成分表示をご確認いただくかお問い合わせください。"
+      },
+      "q4": {
+        "question": "大口注文や企業ギフトに対応していますか？",
+        "answer": "Cohamyは祝日ギフト、イベント用ギフト、ロゴ印刷に対応しています。ホットライン/Zalo 0981 956 111 または Cohamyvietnam@gmail.com までお見積りください。"
+      }
+    }
+  },
+  "cart": {
+    "title": "ショッピングカート",
+    "subtitle": "お支払い前に商品をご確認ください",
+    "empty": "カートは空です",
+    "emptyHint": "Cohamyのチョコレートコレクションを探索し、お気に入りを追加してください",
+    "continueShopping": "買い物を続ける",
+    "product": "製品",
+    "price": "単価",
+    "quantity": "数量",
+    "total": "小計",
+    "subtotal": "商品合計",
+    "shipping": "送料",
+    "shippingNote": "お支払い時に計算",
+    "discount": "割引",
+    "grandTotal": "合計金額",
+    "remove": "削除",
+    "update": "更新",
+    "checkout": "お支払いへ",
+    "coupon": "クーポンコード",
+    "couponPlaceholder": "クーポンコードを入力",
+    "applyCoupon": "適用",
+    "couponApplied": "クーポンが適用されました",
+    "couponInvalid": "無効なクーポンコードです",
+    "itemsCount": "{count}点の商品"
+  },
+  "checkout": {
+    "title": "お支払い",
+    "subtitle": "ご注文を完了してください",
+    "contactInfo": "連絡先情報",
+    "shippingInfo": "配送情報",
+    "paymentMethod": "お支払い方法",
+    "orderSummary": "注文概要",
+    "placeOrder": "注文する",
+    "processing": "処理中...",
+    "success": "ご注文が完了しました！",
+    "successMessage": "ありがとうございます！まもなくご注文確認のご連絡をいたします。",
+    "backToHome": "ホームに戻る",
+    "fields": {
+      "fullName": "氏名",
+      "email": "メールアドレス",
+      "phone": "電話番号",
+      "address": "住所",
+      "city": "都道府県 / 市区町村",
+      "district": "区 / 郡",
+      "ward": "町 / 村",
+      "note": "注文メモ",
+      "notePlaceholder": "配送時間や特別なご要望など"
+    },
+    "payment": {
+      "cod": "代金引換 (COD)",
+      "bank": "銀行振込",
+      "momo": "MoMoウォレット",
+      "zalopay": "ZaloPay"
+    },
+    "validation": {
+      "required": "必須項目をすべて入力してください",
+      "invalidEmail": "無効なメールアドレスです",
+      "invalidPhone": "無効な電話番号です"
+    }
+  },
+  "blog": {
+    "title": "ブログ",
+    "subtitle": "Cohamyのニュース、レシピ、ストーリー",
+    "readMore": "続きを読む",
+    "minRead": "分で読める",
+    "publishedAt": "公開日",
+    "author": "著者",
+    "category": "カテゴリー",
+    "tags": "タグ",
+    "share": "記事を共有",
+    "related": "関連記事",
+    "empty": "記事はまだありません",
+    "emptyHint": "Cohamyの新しいストーリーをお楽しみに",
+    "backToList": "一覧に戻る",
+    "searchPlaceholder": "記事を検索...",
+    "toc": "目次",
+    "featuredLabel": "注目",
+    "featuredProduct": "おすすめ製品",
+    "viewProduct": "製品を見る",
+    "categoryLabels": {
+      "all": "すべて",
+      "chocolate": "チョコレート",
+      "dried-fruit": "ドライフルーツ",
+      "gift-ideas": "ギフトアイデア",
+      "food-guide": "フードガイド",
+      "brand-story": "ブランドストーリー"
+    }
+  },
+  "about": {
+    "title": "会社概要",
+    "subtitle": "ベトナムのチョコレートブランドを築く歩み",
+    "mission": {
+      "title": "ミッション",
+      "description": "ベトナムの天然素材と国際的な生産基準を融合したプレミアムチョコレート製品を提供すること。"
+    },
+    "vision": {
+      "title": "ビジョン",
+      "description": "ベトナムを代表するナッツコーティングチョコレートブランドとして、国内外で愛されるブランドになること。"
+    },
+    "values": {
+      "title": "コアバリュー",
+      "quality": "品質",
+      "integrity": "誠実さ",
+      "innovation": "革新",
+      "community": "コミュニティ"
+    },
+    "story": {
+      "title": "私たちのストーリー",
+      "description": "Cohamyはチョコレートへの情熱とベトナムのカシューナッツへの愛から始まりました。小さな工房から出発し、レシピを磨き、製品ラインを拡大し、国内外の見本市に参加しています。"
+    },
+    "team": {
+      "title": "チーム紹介",
+      "subtitle": "Cohamyの味わいを支える人々"
+    },
+    "certifications": {
+      "title": "認証・基準",
+      "subtitle": "食品安全と安定した品質へのコミットメント"
+    }
+  },
+  "activities": {
+    "title": "活動",
+    "subtitle": "Cohamyがコミュニティとつながる瞬間",
+    "readMore": "詳細を見る",
+    "empty": "活動はまだありません",
+    "emptyHint": "まもなく更新いたします",
+    "backToList": "一覧に戻る",
+    "gallery": "フォトギャラリー",
+    "date": "日付",
+    "location": "場所"
+  },
+  "contact": {
+    "title": "お問い合わせ",
+    "subtitle": "いつでもお気軽にご連絡ください",
+    "form": {
+      "title": "メッセージを送る",
+      "name": "氏名",
+      "email": "メールアドレス",
+      "phone": "電話番号",
+      "subject": "件名",
+      "message": "メッセージ",
+      "messagePlaceholder": "メッセージを入力してください...",
+      "submit": "送信する",
+      "sending": "送信中...",
+      "success": "メッセージが送信されました！まもなくご返信いたします。",
+      "error": "送信に失敗しました。もう一度お試しください。"
+    },
+    "info": {
+      "title": "連絡先情報",
+      "address": "住所",
+      "addressValue": "ベトナム・ハノイ市義都坊トンクアンフィエット通りT608ビルA棟3階",
+      "phone": "ホットライン",
+      "zalo": "Zalo OA",
+      "email": "お問い合わせ・注文メール",
+      "openMaps": "Google マップで見る",
+      "mapTitle": "Google マップ上の Cohamy の所在地",
+      "hours": "営業時間",
+      "hoursValue": "月〜金：8:00 - 17:00"
+    },
+    "subjects": {
+      "general": "一般的なお問い合わせ",
+      "order": "注文・配送",
+      "gift": "ギフト相談",
+      "product": "製品に関するお問い合わせ",
+      "other": "その他"
+    }
+  },
+  "footer": {
+    "description": "Cohamy — ベトナム産プレミアムナッツコーティングチョコレート。繊細な味わい、心のこもったギフト。",
+    "quickLinks": "クイックリンク",
+    "support": "サポート",
+    "followUs": "フォローする",
+    "newsletter": "プロモーション情報を受け取る",
+    "newsletterPlaceholder": "メールアドレス",
+    "subscribe": "登録",
+    "copyright": "© {year} Cohamy. All rights reserved.",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "shipping": "配送ポリシー",
+    "returns": "返品ポリシー",
+    "faq": "よくある質問"
+  },
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "retry": "再試行",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "delete": "削除",
+    "edit": "編集",
+    "view": "表示",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "seeMore": "もっと見る",
+    "seeLess": "閉じる",
+    "showAll": "すべて表示",
+    "close": "閉じる",
+    "open": "開く",
+    "yes": "はい",
+    "no": "いいえ",
+    "or": "または",
+    "and": "および",
+    "from": "から",
+    "to": "まで",
+    "all": "すべて",
+    "none": "なし",
+    "required": "必須",
+    "optional": "任意",
+    "currency": "₫",
+    "addedToCart": "カートに追加しました",
+    "removedFromCart": "カートから削除しました",
+    "copied": "コピーしました",
+    "noResults": "結果なし",
+    "page": "ページ",
+    "of": "/",
+    "items": "件"
+  },
+  "filters": {
+    "title": "フィルター",
+    "clear": "フィルターをクリア",
+    "apply": "適用",
+    "sort": "並び替え",
+    "sortBy": "並び替え基準",
+    "sortOptions": {
+      "newest": "新しい順",
+      "oldest": "古い順",
+      "priceAsc": "価格：安い順",
+      "priceDesc": "価格：高い順",
+      "nameAsc": "名前：A-Z",
+      "nameDesc": "名前：Z-A",
+      "popular": "人気順"
+    },
+    "category": "カテゴリー",
+    "categories": {
+      "all": "すべて",
+      "chocolate": "ナッツコーティングチョコレート",
+      "almond": "アーモンド",
+      "cashew": "カシューナッツ",
+      "gift": "ギフトセット",
+      "jamy": "Jamyコレクション",
+      "seasonal": "季節限定",
+      "chocolateNuts": "ナッツコーティングチョコ",
+      "driedFruit": "ドライフルーツ",
+      "giftJar": "ギフトジャー",
+      "premiumPack": "プレミアムパック"
+    },
+    "price": "価格帯",
+    "priceRange": "{min} 〜 {max}",
+    "weight": "重量",
+    "flavor": "フレーバー",
+    "flavors": {
+      "original": "オリジナル",
+      "matcha": "抹茶",
+      "durian": "ドリアン",
+      "strawberry": "ストロベリー",
+      "milk": "ミルク",
+      "mango": "マンゴー",
+      "macadamia": "マカダミア"
+    },
+    "inStock": "在庫あり",
+    "onSale": "セール中",
+    "results": "{count}件の結果"
+  },
+  "seo": {
+    "home": {
+      "title": "Cohamy — ベトナム産プレミアムナッツコーティングチョコレート",
+      "description": "Cohamy & Jamyチョコレートコレクション：カシューナッツ、アーモンド、抹茶、ドリアンなど独自のフレーバー。上品なギフト、高品質。"
+    },
+    "products": {
+      "title": "製品 — Cohamyチョコレート",
+      "description": "Cohamy & Jamyのナッツコーティングチョコレート製品一覧。オンライン購入、全国配送。"
+    },
+    "productDetail": {
+      "title": "{name} — Cohamy",
+      "description": "Cohamyで{name}を購入。プレミアムチョコレート、天然素材、上品なパッケージ。"
+    },
+    "cart": {
+      "title": "カート — Cohamy",
+      "description": "Cohamyチョコレートのショッピングカートを確認・管理。"
+    },
+    "checkout": {
+      "title": "お支払い — Cohamy",
+      "description": "Cohamyチョコレートのご注文を完了。迅速な配送、便利なお支払い。"
+    },
+    "blog": {
+      "title": "ブログ — Cohamy",
+      "description": "Cohamyブランドのチョコレートニュース、レシピ、ストーリー。"
+    },
+    "blogDetail": {
+      "title": "{title} — Cohamyブログ",
+      "description": "{excerpt}"
+    },
+    "about": {
+      "title": "会社概要 — Cohamy",
+      "description": "ベトナムのチョコレートブランドCohamyのストーリー、ミッション、価値観をご紹介。"
+    },
+    "activities": {
+      "title": "活動 — Cohamy",
+      "description": "Cohamyの展示会、イベント、コミュニティ活動の最新情報。"
+    },
+    "contact": {
+      "title": "お問い合わせ — Cohamy",
+      "description": "ご注文、卸売パートナーシップ、企業ギフトのご相談はCohamyまでお問い合わせください。"
+    }
+  }
+}

@@ -1,0 +1,557 @@
+{
+  "nav": {
+    "home": "Home",
+    "products": "Products",
+    "blog": "Blog",
+    "about": "About Us",
+    "activities": "Activities",
+    "contact": "Contact",
+    "cart": "Cart",
+    "search": "Search",
+    "searchPlaceholder": "Search products...",
+    "language": "Language",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "home": {
+    "hero": {
+      "badge": "Cohamy by Jamy Green",
+      "title": "Premium Nut Chocolate & Dried Fruit",
+      "subtitle": "Cohamy combines selected nuts, tropical fruits and refined chocolate layers to create sweet, modern gifts that are easy to enjoy.",
+      "ctaPrimary": "Explore Products",
+      "ctaSecondary": "View Gift Collection",
+      "scrollHint": "Scroll to explore",
+      "premiumLabel": "Premium",
+      "pouchLabel": "55g Pouch"
+    },
+    "gift": {
+      "eyebrow": "Gift Collection",
+      "title": "Gift Collection",
+      "subtitle": "Five almond flavors in glass jars — ideal for holidays, festivals and corporate gifting.",
+      "cta": "Explore Gift Sets",
+      "badge": "Gift Set",
+      "imageAlt": "Cohamy Gift Jar Collection"
+    },
+    "marquee": {
+      "phrase1": "Premium Nut Chocolate",
+      "phrase2": "Elegant Gift Collection",
+      "phrase3": "Selected Ingredients",
+      "phrase4": "Signature Flavors",
+      "phrase5": "by Jamy Green",
+      "phrase6": "Made in Vietnam"
+    },
+    "flavorRibbon": {
+      "title": "Explore the Flavors",
+      "subtitle": "From classic almond to matcha, dried mango and durian — each flavor tells its own story.",
+      "item1": "Almond",
+      "item2": "Dried Mango",
+      "item3": "Macadamia",
+      "item4": "Matcha",
+      "item5": "Durian",
+      "item6": "Cashew"
+    },
+    "visualBreak": {
+      "number": "01",
+      "title": "Fan-Favorite Collection",
+      "subtitle": "Our best-selling flavors — perfect to try, gift, or order in bulk.",
+      "cta": "View All"
+    },
+    "taste": {
+      "title": "Flavors for Every Moment",
+      "subtitle": "From classic almonds to tropical dried mango — each pack tells its own flavor story."
+    },
+    "bento": {
+      "almond": {
+        "title": "Almond",
+        "subtitle": "55% dark chocolate with hand-roasted California almonds"
+      },
+      "mango": {
+        "title": "Dried Mango",
+        "subtitle": "Cold-dried Hoa Loc mango or milk chocolate-coated in glass jars"
+      },
+      "macadamia": {
+        "title": "Macadamia",
+        "subtitle": "Australian macadamia coated in white and milk chocolate"
+      },
+      "matcha": {
+        "title": "Matcha",
+        "subtitle": "Japanese Uji matcha white chocolate over roasted almonds"
+      }
+    },
+    "quality": {
+      "title": "Meticulous from Product to Experience",
+      "subtitle": "Quality standards we commit to with every product",
+      "items": {
+        "ingredients": "Selected ingredients",
+        "packaging": "Elegant packaging",
+        "taste": "Easy to enjoy",
+        "gift": "Perfect for gifting",
+        "retail": "Ready for retail and e-commerce"
+      }
+    },
+    "featured": {
+      "title": "Featured Products",
+      "subtitle": "Customer favorites from the Cohamy & Jamy collection",
+      "viewAll": "View All Products",
+      "contactCta": "Contact us",
+      "viewDetail": "View Details",
+      "new": "New",
+      "bestseller": "Bestseller"
+    },
+    "categories": {
+      "title": "Product Categories",
+      "subtitle": "Find the perfect flavor for your taste",
+      "chocolate": "Nut-Coated Chocolate",
+      "gift": "Gift Sets",
+      "jamy": "Jamy Collection",
+      "seasonal": "Seasonal",
+      "explore": "Explore"
+    },
+    "about": {
+      "title": "The Cohamy Story",
+      "subtitle": "From our factory to your hands",
+      "description": "Cohamy was founded with a mission to deliver premium chocolate products, combining cashews, almonds, and natural Vietnamese ingredients. Every piece reflects artisan craftsmanship and strict quality standards.",
+      "stats": {
+        "products": "Products",
+        "partners": "Partners",
+        "years": "Years of Experience",
+        "customers": "Customers"
+      },
+      "cta": "About Us"
+    },
+    "whyUs": {
+      "title": "Why Choose Cohamy?",
+      "subtitle": "Quality commitment in every product",
+      "quality": {
+        "title": "Selected Ingredients",
+        "description": "Binh Phuoc cashews, almonds, and cacao carefully sourced from trusted suppliers."
+      },
+      "craft": {
+        "title": "Exclusive Recipes",
+        "description": "Modern production combined with time-honored techniques for a distinctive, unmatched taste."
+      },
+      "natural": {
+        "title": "Natural & Safe",
+        "description": "No preservatives, no additives — perfect for families and premium gifting."
+      },
+      "gift": {
+        "title": "Elegant Gifting",
+        "description": "Luxurious packaging ideal for holidays, birthdays, and corporate events."
+      }
+    },
+    "process": {
+      "title": "Our Production Process",
+      "subtitle": "From nut to perfect chocolate",
+      "step1": {
+        "title": "Ingredient Selection",
+        "description": "Cashews, almonds, and cacao meeting export-grade standards."
+      },
+      "step2": {
+        "title": "Coating & Crafting",
+        "description": "Smooth chocolate coating with our signature recipe, preserving natural nut flavors."
+      },
+      "step3": {
+        "title": "Quality Inspection",
+        "description": "Every batch undergoes rigorous testing before packaging."
+      },
+      "step4": {
+        "title": "Packaging & Delivery",
+        "description": "Moisture-resistant packaging ensures chocolate arrives in perfect condition."
+      }
+    },
+    "testimonials": {
+      "title": "What Our Customers Say",
+      "subtitle": "Genuine feedback from chocolate lovers",
+      "review1": {
+        "text": "Cohamy chocolate is smooth and the cashew flavor is wonderful. I bought it as a gift and received so many compliments!",
+        "author": "Lan Nguyen",
+        "role": "Loyal Customer"
+      },
+      "review2": {
+        "text": "The matcha and durian flavors are so unique — truly Vietnamese. I'll definitely keep supporting Cohamy!",
+        "author": "Minh Tuan Tran",
+        "role": "Food Blogger"
+      },
+      "review3": {
+        "text": "Beautiful packaging and consistent quality. Our company ordered corporate gifts and was very satisfied.",
+        "author": "Phuong Anh Le",
+        "role": "Marketing Manager"
+      }
+    },
+    "activities": {
+      "title": "Featured Activities",
+      "subtitle": "Cohamy's journey of connection and growth",
+      "viewAll": "View All Activities",
+      "readMore": "Read More"
+    },
+    "blog": {
+      "title": "Latest Articles",
+      "subtitle": "News, recipes, and stories from Cohamy",
+      "viewAll": "View All Articles",
+      "readMore": "Read More",
+      "minRead": "min read"
+    },
+    "newsletter": {
+      "title": "Subscribe to Our Newsletter",
+      "subtitle": "Get exclusive offers and new product updates from Cohamy",
+      "placeholder": "Enter your email",
+      "button": "Subscribe",
+      "success": "Successfully subscribed! Thank you.",
+      "privacy": "We respect your privacy and protect your information."
+    },
+    "cta": {
+      "title": "Ready to Indulge?",
+      "subtitle": "Order today to enjoy special offers and experience Cohamy flavors",
+      "button": "Shop Now",
+      "contact": "Contact Us"
+    }
+  },
+  "products": {
+    "title": "Products",
+    "subtitle": "Cohamy & Jamy Chocolate Collection",
+    "count": "{count} products",
+    "empty": "No matching products found",
+    "emptyHint": "Try adjusting your filters or search keywords",
+    "contactForPrice": "Contact us",
+    "contactCta": "Contact to order",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "weight": "Weight",
+    "ingredients": "Ingredients",
+    "description": "Description",
+    "related": "Related Products",
+    "share": "Share",
+    "quantity": "Quantity",
+    "price": "Price",
+    "originalPrice": "Original Price",
+    "salePrice": "Sale Price",
+    "sku": "SKU",
+    "category": "Category",
+    "backToList": "Back to List",
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "q1": {
+        "question": "What is the shelf life of Cohamy chocolate?",
+        "answer": "55g pouches typically last 12 months; 160g glass jars about 10–12 months from production. The date printed on packaging is the most accurate reference."
+      },
+      "q2": {
+        "question": "How should I store nut chocolate?",
+        "answer": "Keep in a cool, dry place below 25°C and away from direct sunlight. After opening, reseal the pouch or jar to preserve crunch."
+      },
+      "q3": {
+        "question": "Does the product contain allergens?",
+        "answer": "Products contain nuts (almonds, cashews, macadamia), milk, soy, and may contain gluten from stabilizers. Check the ingredients on packaging or contact us for details."
+      },
+      "q4": {
+        "question": "Do you support bulk orders and corporate gifts?",
+        "answer": "Cohamy offers holiday combos, event gifting, and custom logo printing. Contact hotline/Zalo 0981 956 111 or email Cohamyvietnam@gmail.com for a quote."
+      }
+    }
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "subtitle": "Review your items before checkout",
+    "empty": "Your cart is empty",
+    "emptyHint": "Explore the Cohamy chocolate collection and add your favorites",
+    "continueShopping": "Continue Shopping",
+    "product": "Product",
+    "price": "Unit Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "shippingNote": "Calculated at checkout",
+    "discount": "Discount",
+    "grandTotal": "Grand Total",
+    "remove": "Remove",
+    "update": "Update",
+    "checkout": "Checkout",
+    "coupon": "Coupon Code",
+    "couponPlaceholder": "Enter coupon code",
+    "applyCoupon": "Apply",
+    "couponApplied": "Coupon applied successfully",
+    "couponInvalid": "Invalid coupon code",
+    "itemsCount": "{count} items"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "subtitle": "Complete your order",
+    "contactInfo": "Contact Information",
+    "shippingInfo": "Shipping Information",
+    "paymentMethod": "Payment Method",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order",
+    "processing": "Processing...",
+    "success": "Order Placed Successfully!",
+    "successMessage": "Thank you! We will contact you to confirm your order shortly.",
+    "backToHome": "Back to Home",
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "address": "Address",
+      "city": "Province / City",
+      "district": "District",
+      "ward": "Ward",
+      "note": "Order Notes",
+      "notePlaceholder": "Notes about delivery time or special requests"
+    },
+    "payment": {
+      "cod": "Cash on Delivery (COD)",
+      "bank": "Bank Transfer",
+      "momo": "MoMo Wallet",
+      "zalopay": "ZaloPay"
+    },
+    "validation": {
+      "required": "Please fill in all required fields",
+      "invalidEmail": "Invalid email address",
+      "invalidPhone": "Invalid phone number"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "News, recipes, and stories from Cohamy",
+    "readMore": "Read More",
+    "minRead": "min read",
+    "publishedAt": "Published",
+    "author": "Author",
+    "category": "Category",
+    "tags": "Tags",
+    "share": "Share Article",
+    "related": "Related Articles",
+    "empty": "No articles yet",
+    "emptyHint": "Check back soon for new stories from Cohamy",
+    "backToList": "Back to List",
+    "searchPlaceholder": "Search articles...",
+    "toc": "Table of Contents",
+    "featuredLabel": "Featured",
+    "featuredProduct": "Featured Product",
+    "viewProduct": "View Product",
+    "categoryLabels": {
+      "all": "All",
+      "chocolate": "Chocolate",
+      "dried-fruit": "Dried Fruit",
+      "gift-ideas": "Gift Ideas",
+      "food-guide": "Food Guide",
+      "brand-story": "Brand Story"
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Building a Vietnamese chocolate brand",
+    "mission": {
+      "title": "Our Mission",
+      "description": "To deliver premium chocolate products combining natural Vietnamese ingredients with international production standards."
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "To become Vietnam's leading nut-coated chocolate brand, loved domestically and recognized worldwide."
+    },
+    "values": {
+      "title": "Core Values",
+      "quality": "Quality",
+      "integrity": "Integrity",
+      "innovation": "Innovation",
+      "community": "Community"
+    },
+    "story": {
+      "title": "Our Story",
+      "description": "Cohamy began with a passion for chocolate and love for Vietnamese cashews. From a small workshop, we continuously refined our recipes, expanded our product lines, and participated in trade shows at home and abroad."
+    },
+    "team": {
+      "title": "Our Team",
+      "subtitle": "The people behind Cohamy flavors"
+    },
+    "certifications": {
+      "title": "Certifications & Standards",
+      "subtitle": "Committed to food safety and consistent quality"
+    }
+  },
+  "activities": {
+    "title": "Activities",
+    "subtitle": "Moments when Cohamy connects with the community",
+    "readMore": "View Details",
+    "empty": "No activities yet",
+    "emptyHint": "We will update soon",
+    "backToList": "Back to List",
+    "gallery": "Photo Gallery",
+    "date": "Date",
+    "location": "Location"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "We're always here to listen",
+    "form": {
+      "title": "Send a Message",
+      "name": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "subject": "Subject",
+      "message": "Message",
+      "messagePlaceholder": "Enter your message...",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We will respond soon.",
+      "error": "Failed to send message. Please try again."
+    },
+    "info": {
+      "title": "Contact Information",
+      "address": "Address",
+      "addressValue": "Floor 3, Tower A, T608 Building, Ton Quang Phiet St., Nghia Do Ward, Hanoi, Vietnam",
+      "phone": "Hotline",
+      "zalo": "Zalo OA",
+      "email": "Contact & order email",
+      "openMaps": "View on Google Maps",
+      "mapTitle": "Cohamy location on Google Maps",
+      "hours": "Business Hours",
+      "hoursValue": "Mon - Fri: 8:00 AM - 5:00 PM"
+    },
+    "subjects": {
+      "general": "General Inquiry",
+      "order": "Orders & Delivery",
+      "gift": "Gift Consultation",
+      "product": "Product Inquiry",
+      "other": "Other"
+    }
+  },
+  "footer": {
+    "description": "Cohamy — Premium nut-coated chocolate from Vietnam. Exquisite flavors, meaningful gifts.",
+    "quickLinks": "Quick Links",
+    "support": "Support",
+    "followUs": "Follow Us",
+    "newsletter": "Get Promotional Updates",
+    "newsletterPlaceholder": "Your email",
+    "subscribe": "Subscribe",
+    "copyright": "© {year} Cohamy. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "shipping": "Shipping Policy",
+    "returns": "Return Policy",
+    "faq": "FAQ"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "seeMore": "See More",
+    "seeLess": "See Less",
+    "showAll": "Show All",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "from": "From",
+    "to": "To",
+    "all": "All",
+    "none": "None",
+    "required": "Required",
+    "optional": "Optional",
+    "currency": "₫",
+    "addedToCart": "Added to cart",
+    "removedFromCart": "Removed from cart",
+    "copied": "Copied",
+    "noResults": "No results",
+    "page": "Page",
+    "of": "of",
+    "items": "items"
+  },
+  "filters": {
+    "title": "Filters",
+    "clear": "Clear Filters",
+    "apply": "Apply",
+    "sort": "Sort",
+    "sortBy": "Sort By",
+    "sortOptions": {
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "priceAsc": "Price: Low to High",
+      "priceDesc": "Price: High to Low",
+      "nameAsc": "Name: A-Z",
+      "nameDesc": "Name: Z-A",
+      "popular": "Most Popular"
+    },
+    "category": "Category",
+    "categories": {
+      "all": "All",
+      "chocolate": "Nut-Coated Chocolate",
+      "almond": "Almond",
+      "cashew": "Cashew",
+      "gift": "Gift Sets",
+      "jamy": "Jamy Collection",
+      "seasonal": "Seasonal",
+      "chocolateNuts": "Nut-Coated Chocolate",
+      "driedFruit": "Dried Fruit",
+      "giftJar": "Gift Jars",
+      "premiumPack": "Premium Packs"
+    },
+    "price": "Price Range",
+    "priceRange": "From {min} to {max}",
+    "weight": "Weight",
+    "flavor": "Flavor",
+    "flavors": {
+      "original": "Original",
+      "matcha": "Matcha",
+      "durian": "Durian",
+      "strawberry": "Strawberry",
+      "milk": "Milk",
+      "mango": "Mango",
+      "macadamia": "Macadamia"
+    },
+    "inStock": "In Stock",
+    "onSale": "On Sale",
+    "results": "{count} results"
+  },
+  "seo": {
+    "home": {
+      "title": "Cohamy — Premium Vietnamese Nut-Coated Chocolate",
+      "description": "Discover Cohamy & Jamy chocolate collection: cashew, almond, matcha, durian and more unique flavors. Elegant gifts, premium quality."
+    },
+    "products": {
+      "title": "Products — Cohamy Chocolate",
+      "description": "Browse Cohamy & Jamy nut-coated chocolate products. Shop online with nationwide delivery."
+    },
+    "productDetail": {
+      "title": "{name} — Cohamy",
+      "description": "Buy {name} at Cohamy. Premium chocolate, natural ingredients, elegant packaging."
+    },
+    "cart": {
+      "title": "Cart — Cohamy",
+      "description": "View and manage your Cohamy chocolate shopping cart."
+    },
+    "checkout": {
+      "title": "Checkout — Cohamy",
+      "description": "Complete your Cohamy chocolate order. Fast delivery, convenient payment."
+    },
+    "blog": {
+      "title": "Blog — Cohamy",
+      "description": "News, recipes, and chocolate stories from Cohamy brand."
+    },
+    "blogDetail": {
+      "title": "{title} — Cohamy Blog",
+      "description": "{excerpt}"
+    },
+    "about": {
+      "title": "About Us — Cohamy",
+      "description": "Learn about the story, mission, and values of Vietnamese chocolate brand Cohamy."
+    },
+    "activities": {
+      "title": "Activities — Cohamy",
+      "description": "Updates on Cohamy exhibitions, events, and community activities."
+    },
+    "contact": {
+      "title": "Contact — Cohamy",
+      "description": "Contact Cohamy for orders, gift consultation, or product inquiries."
+    }
+  }
+}

@@ -1,0 +1,557 @@
+{
+  "nav": {
+    "home": "Trang chủ",
+    "products": "Sản phẩm",
+    "blog": "Bài viết",
+    "about": "Về chúng tôi",
+    "activities": "Hoạt động",
+    "contact": "Liên hệ",
+    "cart": "Giỏ hàng",
+    "search": "Tìm kiếm",
+    "searchPlaceholder": "Tìm sản phẩm...",
+    "language": "Ngôn ngữ",
+    "menu": "Menu",
+    "close": "Đóng"
+  },
+  "home": {
+    "hero": {
+      "badge": "Cohamy by Jamy Green",
+      "title": "Socola hạt & trái cây sấy cao cấp",
+      "subtitle": "Cohamy kết hợp hạt tuyển chọn, trái cây nhiệt đới và lớp socola tinh tế để tạo nên những món quà ngọt ngào, hiện đại và dễ thưởng thức.",
+      "ctaPrimary": "Khám phá sản phẩm",
+      "ctaSecondary": "Xem bộ sưu tập quà tặng",
+      "scrollHint": "Cuộn để khám phá",
+      "premiumLabel": "Premium",
+      "pouchLabel": "Gói 55g"
+    },
+    "gift": {
+      "eyebrow": "Bộ sưu tập quà",
+      "title": "Bộ sưu tập quà tặng",
+      "subtitle": "Năm hương vị hạnh nhân trong hũ thủy tinh — lý tưởng cho Tết, lễ hội và quà biếu doanh nghiệp.",
+      "cta": "Khám phá bộ quà tặng",
+      "badge": "Bộ quà tặng",
+      "imageAlt": "Bộ quà tặng Cohamy – Bộ sưu tập hũ socola"
+    },
+    "marquee": {
+      "phrase1": "Socola hạt cao cấp",
+      "phrase2": "Bộ quà tặng tinh tế",
+      "phrase3": "Nguyên liệu chọn lọc",
+      "phrase4": "Hương vị độc quyền",
+      "phrase5": "by Jamy Green",
+      "phrase6": "Made in Vietnam"
+    },
+    "flavorRibbon": {
+      "title": "Khám phá hương vị",
+      "subtitle": "Từ hạnh nhân cổ điển đến matcha, xoài sấy và sầu riêng — mỗi vị là một câu chuyện riêng.",
+      "item1": "Hạnh nhân",
+      "item2": "Xoài sấy",
+      "item3": "Macca",
+      "item4": "Matcha",
+      "item5": "Sầu riêng",
+      "item6": "Hạt điều"
+    },
+    "visualBreak": {
+      "number": "01",
+      "title": "Bộ sưu tập được yêu thích",
+      "subtitle": "Những hương vị bán chạy nhất — lý tưởng để thử, biếu tặng hoặc đặt số lượng lớn.",
+      "cta": "Xem tất cả"
+    },
+    "taste": {
+      "title": "Nhiều hương vị cho từng khoảnh khắc",
+      "subtitle": "Từ hạnh nhân cổ điển đến xoài sấy nhiệt đới — mỗi gói là một câu chuyện hương vị riêng."
+    },
+    "bento": {
+      "almond": {
+        "title": "Hạnh nhân",
+        "subtitle": "Socola đen 55% cacao, hạnh nhân California rang giòn"
+      },
+      "mango": {
+        "title": "Xoài sấy",
+        "subtitle": "Xoài Hòa Lộc sấy lạnh hoặc phủ socola sữa trong hũ thủy tinh"
+      },
+      "macadamia": {
+        "title": "Macadamia",
+        "subtitle": "Hạt macca Úc phủ socola trắng và socola sữa cao cấp"
+      },
+      "matcha": {
+        "title": "Matcha",
+        "subtitle": "Socola trắng matcha Uji Nhật Bản bọc hạnh nhân rang"
+      }
+    },
+    "quality": {
+      "title": "Chỉn chu từ sản phẩm đến trải nghiệm",
+      "subtitle": "Tiêu chuẩn chất lượng mà chúng tôi cam kết với mỗi sản phẩm",
+      "items": {
+        "ingredients": "Nguyên liệu chọn lọc",
+        "packaging": "Bao bì sang trọng",
+        "taste": "Hương vị dễ thưởng thức",
+        "gift": "Phù hợp làm quà tặng",
+        "retail": "Sẵn sàng cho bán lẻ và thương mại điện tử"
+      }
+    },
+    "featured": {
+      "title": "Bộ sưu tập nổi bật",
+      "subtitle": "Những hương vị được yêu thích cho ăn vặt, biếu tặng và chia sẻ mỗi ngày.",
+      "viewAll": "Xem tất cả sản phẩm",
+      "contactCta": "Liên hệ",
+      "viewDetail": "Xem chi tiết",
+      "new": "Mới",
+      "bestseller": "Bán chạy"
+    },
+    "categories": {
+      "title": "Danh mục sản phẩm",
+      "subtitle": "Chọn hương vị phù hợp với gu của bạn",
+      "chocolate": "Chocolate phủ hạt",
+      "gift": "Quà tặng",
+      "jamy": "Dòng Jamy",
+      "seasonal": "Theo mùa",
+      "explore": "Khám phá"
+    },
+    "about": {
+      "title": "Từ nguyên liệu quen thuộc đến diện mạo quà tặng cao cấp",
+      "subtitle": "by Jamy Green",
+      "description": "Chúng tôi chọn cách kể câu chuyện hương vị Việt Nam bằng bao bì hiện đại, sản phẩm chỉn chu và trải nghiệm thưởng thức phù hợp với cả thị trường nội địa lẫn quốc tế.",
+      "stats": {
+        "products": "Sản phẩm",
+        "partners": "Đối tác",
+        "years": "Năm kinh nghiệm",
+        "customers": "Khách hàng"
+      },
+      "cta": "Về chúng tôi"
+    },
+    "whyUs": {
+      "title": "Vì sao chọn Cohamy?",
+      "subtitle": "Cam kết chất lượng trong từng sản phẩm",
+      "quality": {
+        "title": "Nguyên liệu chọn lọc",
+        "description": "Hạt điều Bình Phước, hạnh nhân và cacao được tuyển chọn kỹ lưỡng từ nguồn cung uy tín."
+      },
+      "craft": {
+        "title": "Công thức độc quyền",
+        "description": "Quy trình sản xuất hiện đại kết hợp bí quyết gia truyền, tạo nên hương vị đặc trưng khó trùng lặp."
+      },
+      "natural": {
+        "title": "Tự nhiên & an toàn",
+        "description": "Không chất bảo quản, không tạp chất — phù hợp cho cả gia đình và quà tặng cao cấp."
+      },
+      "gift": {
+        "title": "Quà tặng tinh tế",
+        "description": "Thiết kế bao bì sang trọng, lý tưởng cho mọi dịp lễ, sinh nhật và doanh nghiệp."
+      }
+    },
+    "process": {
+      "title": "Quy trình sản xuất",
+      "subtitle": "Từ hạt đến chocolate hoàn hảo",
+      "step1": {
+        "title": "Chọn nguyên liệu",
+        "description": "Tuyển chọn hạt điều, hạnh nhân và cacao đạt tiêu chuẩn xuất khẩu."
+      },
+      "step2": {
+        "title": "Chế biến & phủ chocolate",
+        "description": "Phủ lớp chocolate mịn màng theo công thức riêng, giữ trọn vị tự nhiên của hạt."
+      },
+      "step3": {
+        "title": "Kiểm định chất lượng",
+        "description": "Mỗi lô sản phẩm đều trải qua kiểm tra nghiêm ngặt trước khi đóng gói."
+      },
+      "step4": {
+        "title": "Đóng gói & giao hàng",
+        "description": "Bao bì chống ẩm, bảo quản tối ưu để chocolate đến tay bạn ở trạng thái hoàn hảo."
+      }
+    },
+    "testimonials": {
+      "title": "Khách hàng nói gì?",
+      "subtitle": "Những phản hồi chân thực từ người yêu chocolate",
+      "review1": {
+        "text": "Chocolate Cohamy mềm mịn, vị hạt điều rất thơm. Mình mua làm quà tặng và được khen rất nhiều!",
+        "author": "Nguyễn Thị Lan",
+        "role": "Khách hàng thân thiết"
+      },
+      "review2": {
+        "text": "Dòng matcha và sầu riêng rất độc đáo, đúng chất thương hiệu Việt. Sẽ tiếp tục ủng hộ!",
+        "author": "Trần Minh Tuấn",
+        "role": "Food blogger"
+      },
+      "review3": {
+        "text": "Bao bì đẹp, chất lượng ổn định. Công ty chúng tôi đặt làm quà tặng sự kiện rất hài lòng.",
+        "author": "Lê Phương Anh",
+        "role": "Quản lý marketing"
+      }
+    },
+    "activities": {
+      "title": "Hoạt động nổi bật",
+      "subtitle": "Cohamy trên hành trình kết nối và phát triển",
+      "viewAll": "Xem tất cả hoạt động",
+      "readMore": "Xem thêm"
+    },
+    "blog": {
+      "title": "Bài viết mới nhất",
+      "subtitle": "Cập nhật tin tức, công thức và câu chuyện từ Cohamy",
+      "viewAll": "Xem tất cả bài viết",
+      "readMore": "Đọc tiếp",
+      "minRead": "phút đọc"
+    },
+    "newsletter": {
+      "title": "Đăng ký nhận tin",
+      "subtitle": "Nhận ưu đãi độc quyền và cập nhật sản phẩm mới từ Cohamy",
+      "placeholder": "Nhập email của bạn",
+      "button": "Đăng ký",
+      "success": "Đăng ký thành công! Cảm ơn bạn.",
+      "privacy": "Chúng tôi cam kết bảo mật thông tin của bạn."
+    },
+    "cta": {
+      "title": "Quan tâm đến sản phẩm Cohamy?",
+      "subtitle": "Liên hệ với chúng tôi để được tư vấn, báo giá và đặt hàng",
+      "button": "Xem sản phẩm",
+      "contact": "Liên hệ ngay"
+    }
+  },
+  "products": {
+    "title": "Sản phẩm",
+    "subtitle": "Bộ sưu tập chocolate Cohamy & Jamy",
+    "count": "{count} sản phẩm",
+    "empty": "Không tìm thấy sản phẩm phù hợp",
+    "emptyHint": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm",
+    "contactForPrice": "Liên hệ",
+    "contactCta": "Liên hệ đặt hàng",
+    "outOfStock": "Hết hàng",
+    "inStock": "Còn hàng",
+    "weight": "Trọng lượng",
+    "ingredients": "Thành phần",
+    "description": "Mô tả",
+    "related": "Sản phẩm liên quan",
+    "share": "Chia sẻ",
+    "quantity": "Số lượng",
+    "price": "Giá",
+    "originalPrice": "Giá gốc",
+    "salePrice": "Giá khuyến mãi",
+    "sku": "Mã sản phẩm",
+    "category": "Danh mục",
+    "backToList": "Quay lại danh sách",
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "q1": {
+        "question": "Socola Cohamy có hạn sử dụng bao lâu?",
+        "answer": "Gói 55g thường có hạn dùng 12 tháng, hũ thủy tinh 160g khoảng 10–12 tháng kể từ ngày sản xuất. Ngày in trên bao bì là căn cứ chính xác nhất."
+      },
+      "q2": {
+        "question": "Cách bảo quản socola hạt đúng cách?",
+        "answer": "Giữ nơi khô ráo, thoáng mát, dưới 25°C và tránh ánh nắng trực tiếp. Sau khi mở, đậy kín túi hoặc nắp hũ để giữ độ giòn của hạt."
+      },
+      "q3": {
+        "question": "Sản phẩm có chứa chất gây dị ứng không?",
+        "answer": "Sản phẩm chứa hạt (hạnh nhân, hạt điều, macca), sữa, đậu nành và có thể có gluten từ chất ổn định. Vui lòng xem thành phần trên bao bì hoặc liên hệ để được tư vấn chi tiết."
+      },
+      "q4": {
+        "question": "Có hỗ trợ đặt hàng số lượng lớn và quà doanh nghiệp không?",
+        "answer": "Cohamy hỗ trợ đặt combo quà Tết, sự kiện và in logo theo yêu cầu. Liên hệ hotline/Zalo 0981 956 111 hoặc email Cohamyvietnam@gmail.com để được báo giá."
+      }
+    }
+  },
+  "cart": {
+    "title": "Giỏ hàng",
+    "subtitle": "Kiểm tra sản phẩm trước khi thanh toán",
+    "empty": "Giỏ hàng trống",
+    "emptyHint": "Hãy khám phá bộ sưu tập chocolate Cohamy và thêm sản phẩm yêu thích",
+    "continueShopping": "Tiếp tục mua sắm",
+    "product": "Sản phẩm",
+    "price": "Đơn giá",
+    "quantity": "Số lượng",
+    "total": "Thành tiền",
+    "subtotal": "Tạm tính",
+    "shipping": "Phí vận chuyển",
+    "shippingNote": "Tính khi thanh toán",
+    "discount": "Giảm giá",
+    "grandTotal": "Tổng cộng",
+    "remove": "Xóa",
+    "update": "Cập nhật",
+    "checkout": "Thanh toán",
+    "coupon": "Mã giảm giá",
+    "couponPlaceholder": "Nhập mã giảm giá",
+    "applyCoupon": "Áp dụng",
+    "couponApplied": "Mã giảm giá đã được áp dụng",
+    "couponInvalid": "Mã giảm giá không hợp lệ",
+    "itemsCount": "{count} sản phẩm"
+  },
+  "checkout": {
+    "title": "Thanh toán",
+    "subtitle": "Hoàn tất đơn hàng của bạn",
+    "contactInfo": "Thông tin liên hệ",
+    "shippingInfo": "Thông tin giao hàng",
+    "paymentMethod": "Phương thức thanh toán",
+    "orderSummary": "Tóm tắt đơn hàng",
+    "placeOrder": "Đặt hàng",
+    "processing": "Đang xử lý...",
+    "success": "Đặt hàng thành công!",
+    "successMessage": "Cảm ơn bạn! Chúng tôi sẽ liên hệ xác nhận đơn hàng trong thời gian sớm nhất.",
+    "backToHome": "Về trang chủ",
+    "fields": {
+      "fullName": "Họ và tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "address": "Địa chỉ",
+      "city": "Tỉnh / Thành phố",
+      "district": "Quận / Huyện",
+      "ward": "Phường / Xã",
+      "note": "Ghi chú đơn hàng",
+      "notePlaceholder": "Ghi chú về thời gian giao hàng hoặc yêu cầu đặc biệt"
+    },
+    "payment": {
+      "cod": "Thanh toán khi nhận hàng (COD)",
+      "bank": "Chuyển khoản ngân hàng",
+      "momo": "Ví MoMo",
+      "zalopay": "ZaloPay"
+    },
+    "validation": {
+      "required": "Vui lòng điền đầy đủ thông tin bắt buộc",
+      "invalidEmail": "Email không hợp lệ",
+      "invalidPhone": "Số điện thoại không hợp lệ"
+    }
+  },
+  "blog": {
+    "title": "Bài viết",
+    "subtitle": "Tin tức, công thức và câu chuyện từ Cohamy",
+    "readMore": "Đọc tiếp",
+    "minRead": "phút đọc",
+    "publishedAt": "Đăng ngày",
+    "author": "Tác giả",
+    "category": "Danh mục",
+    "tags": "Thẻ",
+    "share": "Chia sẻ bài viết",
+    "related": "Bài viết liên quan",
+    "empty": "Chưa có bài viết",
+    "emptyHint": "Hãy quay lại sau để đọc những câu chuyện mới từ Cohamy",
+    "backToList": "Quay lại danh sách",
+    "searchPlaceholder": "Tìm bài viết...",
+    "toc": "Mục lục",
+    "featuredLabel": "Nổi bật",
+    "featuredProduct": "Sản phẩm nổi bật",
+    "viewProduct": "Xem sản phẩm",
+    "categoryLabels": {
+      "all": "Tất cả",
+      "chocolate": "Chocolate",
+      "dried-fruit": "Trái cây sấy",
+      "gift-ideas": "Gợi ý quà tặng",
+      "food-guide": "Cẩm nang ẩm thực",
+      "brand-story": "Câu chuyện thương hiệu"
+    }
+  },
+  "about": {
+    "title": "Về chúng tôi",
+    "subtitle": "Hành trình xây dựng thương hiệu chocolate Việt",
+    "mission": {
+      "title": "Sứ mệnh",
+      "description": "Mang đến những sản phẩm chocolate chất lượng cao, kết hợp nguyên liệu tự nhiên Việt Nam với tiêu chuẩn sản xuất quốc tế."
+    },
+    "vision": {
+      "title": "Tầm nhìn",
+      "description": "Trở thành thương hiệu chocolate phủ hạt hàng đầu Việt Nam, được yêu thích trong nước và vươn ra thế giới."
+    },
+    "values": {
+      "title": "Giá trị cốt lõi",
+      "quality": "Chất lượng",
+      "integrity": "Trung thực",
+      "innovation": "Đổi mới",
+      "community": "Cộng đồng"
+    },
+    "story": {
+      "title": "Câu chuyện của chúng tôi",
+      "description": "Cohamy bắt đầu từ niềm đam mê chocolate và tình yêu với hạt điều Việt Nam. Từ xưởng sản xuất nhỏ, chúng tôi không ngừng hoàn thiện công thức, mở rộng dòng sản phẩm và tham gia các hội chợ triển lãm trong và ngoài nước."
+    },
+    "team": {
+      "title": "Đội ngũ",
+      "subtitle": "Những con người đằng sau hương vị Cohamy"
+    },
+    "certifications": {
+      "title": "Chứng nhận & Tiêu chuẩn",
+      "subtitle": "Cam kết an toàn thực phẩm và chất lượng ổn định"
+    }
+  },
+  "activities": {
+    "title": "Hoạt động",
+    "subtitle": "Những khoảnh khắc Cohamy kết nối cộng đồng",
+    "readMore": "Xem chi tiết",
+    "empty": "Chưa có hoạt động",
+    "emptyHint": "Chúng tôi sẽ cập nhật sớm nhất",
+    "backToList": "Quay lại danh sách",
+    "gallery": "Thư viện ảnh",
+    "date": "Ngày",
+    "location": "Địa điểm"
+  },
+  "contact": {
+    "title": "Liên hệ",
+    "subtitle": "Chúng tôi luôn sẵn sàng lắng nghe bạn",
+    "form": {
+      "title": "Gửi tin nhắn",
+      "name": "Họ và tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "subject": "Chủ đề",
+      "message": "Nội dung",
+      "messagePlaceholder": "Nhập nội dung tin nhắn của bạn...",
+      "submit": "Gửi tin nhắn",
+      "sending": "Đang gửi...",
+      "success": "Gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm.",
+      "error": "Gửi tin nhắn thất bại. Vui lòng thử lại."
+    },
+    "info": {
+      "title": "Thông tin liên hệ",
+      "address": "Địa chỉ",
+      "addressValue": "Tầng 3, tháp A, Tòa T608, Tôn Quang Phiệt, phường Nghĩa Đô, Hà Nội",
+      "phone": "Hotline",
+      "zalo": "Zalo OA",
+      "email": "Email liên hệ & nhận đơn",
+      "openMaps": "Xem trên Google Maps",
+      "mapTitle": "Vị trí Cohamy trên Google Maps",
+      "hours": "Giờ làm việc",
+      "hoursValue": "Thứ 2 - Thứ 6: 8:00 - 17:00"
+    },
+    "subjects": {
+      "general": "Thông tin chung",
+      "order": "Đặt hàng & Giao hàng",
+      "gift": "Tư vấn quà tặng",
+      "product": "Hỏi về sản phẩm",
+      "other": "Khác"
+    }
+  },
+  "footer": {
+    "description": "Cohamy — Thương hiệu chocolate phủ hạt cao cấp từ Việt Nam. Hương vị tinh tế, quà tặng ý nghĩa.",
+    "quickLinks": "Liên kết nhanh",
+    "support": "Hỗ trợ",
+    "followUs": "Theo dõi chúng tôi",
+    "newsletter": "Nhận tin khuyến mãi",
+    "newsletterPlaceholder": "Email của bạn",
+    "subscribe": "Đăng ký",
+    "copyright": "© {year} Cohamy. Bảo lưu mọi quyền.",
+    "privacy": "Chính sách bảo mật",
+    "terms": "Điều khoản sử dụng",
+    "shipping": "Chính sách giao hàng",
+    "returns": "Chính sách đổi trả",
+    "faq": "Câu hỏi thường gặp"
+  },
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Đã xảy ra lỗi",
+    "retry": "Thử lại",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "view": "Xem",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "seeMore": "Xem thêm",
+    "seeLess": "Thu gọn",
+    "showAll": "Hiện tất cả",
+    "close": "Đóng",
+    "open": "Mở",
+    "yes": "Có",
+    "no": "Không",
+    "or": "hoặc",
+    "and": "và",
+    "from": "Từ",
+    "to": "Đến",
+    "all": "Tất cả",
+    "none": "Không có",
+    "required": "Bắt buộc",
+    "optional": "Tùy chọn",
+    "currency": "₫",
+    "addedToCart": "Đã thêm vào giỏ hàng",
+    "removedFromCart": "Đã xóa khỏi giỏ hàng",
+    "copied": "Đã sao chép",
+    "noResults": "Không có kết quả",
+    "page": "Trang",
+    "of": "của",
+    "items": "mục"
+  },
+  "filters": {
+    "title": "Bộ lọc",
+    "clear": "Xóa bộ lọc",
+    "apply": "Áp dụng",
+    "sort": "Sắp xếp",
+    "sortBy": "Sắp xếp theo",
+    "sortOptions": {
+      "newest": "Mới nhất",
+      "oldest": "Cũ nhất",
+      "priceAsc": "Giá: Thấp đến cao",
+      "priceDesc": "Giá: Cao đến thấp",
+      "nameAsc": "Tên: A-Z",
+      "nameDesc": "Tên: Z-A",
+      "popular": "Phổ biến nhất"
+    },
+    "category": "Danh mục",
+    "categories": {
+      "all": "Tất cả",
+      "chocolate": "Chocolate phủ hạt",
+      "almond": "Hạnh nhân",
+      "cashew": "Hạt điều",
+      "gift": "Quà tặng",
+      "jamy": "Dòng Jamy",
+      "seasonal": "Theo mùa",
+      "chocolateNuts": "Socola phủ hạt",
+      "driedFruit": "Trái cây sấy",
+      "giftJar": "Hũ quà tặng",
+      "premiumPack": "Gói cao cấp"
+    },
+    "price": "Khoảng giá",
+    "priceRange": "Từ {min} đến {max}",
+    "weight": "Trọng lượng",
+    "flavor": "Hương vị",
+    "flavors": {
+      "original": "Nguyên bản",
+      "matcha": "Matcha",
+      "durian": "Sầu riêng",
+      "strawberry": "Dâu tây",
+      "milk": "Sữa",
+      "mango": "Xoài",
+      "macadamia": "Macadamia"
+    },
+    "inStock": "Còn hàng",
+    "onSale": "Đang giảm giá",
+    "results": "{count} kết quả"
+  },
+  "seo": {
+    "home": {
+      "title": "Cohamy — Chocolate phủ hạt cao cấp Việt Nam",
+      "description": "Khám phá bộ sưu tập chocolate Cohamy & Jamy: hạt điều, hạnh nhân, matcha, sầu riêng và nhiều hương vị độc đáo. Quà tặng tinh tế, chất lượng cao."
+    },
+    "products": {
+      "title": "Sản phẩm — Cohamy Chocolate",
+      "description": "Danh sách sản phẩm chocolate phủ hạt Cohamy & Jamy. Mua online, giao hàng toàn quốc."
+    },
+    "productDetail": {
+      "title": "{name} — Cohamy",
+      "description": "Mua {name} tại Cohamy. Chocolate chất lượng cao, nguyên liệu tự nhiên, bao bì sang trọng."
+    },
+    "cart": {
+      "title": "Giỏ hàng — Cohamy",
+      "description": "Xem và quản lý giỏ hàng chocolate Cohamy của bạn."
+    },
+    "checkout": {
+      "title": "Thanh toán — Cohamy",
+      "description": "Hoàn tất đơn hàng chocolate Cohamy. Giao hàng nhanh, thanh toán tiện lợi."
+    },
+    "blog": {
+      "title": "Bài viết — Cohamy",
+      "description": "Tin tức, công thức và câu chuyện về chocolate từ thương hiệu Cohamy."
+    },
+    "blogDetail": {
+      "title": "{title} — Cohamy Blog",
+      "description": "{excerpt}"
+    },
+    "about": {
+      "title": "Về chúng tôi — Cohamy",
+      "description": "Tìm hiểu câu chuyện, sứ mệnh và giá trị của thương hiệu chocolate Cohamy Việt Nam."
+    },
+    "activities": {
+      "title": "Hoạt động — Cohamy",
+      "description": "Cập nhật hoạt động, triển lãm và sự kiện của thương hiệu Cohamy."
+    },
+    "contact": {
+      "title": "Liên hệ — Cohamy",
+      "description": "Liên hệ Cohamy để đặt hàng, tư vấn quà tặng hoặc hỏi về sản phẩm."
+    }
+  }
+}

@@ -1,0 +1,557 @@
+{
+  "nav": {
+    "home": "홈",
+    "products": "제품",
+    "blog": "블로그",
+    "about": "회사 소개",
+    "activities": "활동",
+    "contact": "문의하기",
+    "cart": "장바구니",
+    "search": "검색",
+    "searchPlaceholder": "제품 검색...",
+    "language": "언어",
+    "menu": "메뉴",
+    "close": "닫기"
+  },
+  "home": {
+    "hero": {
+      "badge": "Cohamy by Jamy Green",
+      "title": "프리미엄 견과 초콜릿 & 건조 과일",
+      "subtitle": "코하미는 엄선된 견과류, 열대 과일과 정교한 초콜릿 층을 결합하여 달콤하고 현대적인 선물을 만듭니다.",
+      "ctaPrimary": "제품 둘러보기",
+      "ctaSecondary": "선물 컬렉션 보기",
+      "scrollHint": "스크롤하여 탐색하기",
+      "premiumLabel": "Premium",
+      "pouchLabel": "55g 파우치"
+    },
+    "gift": {
+      "eyebrow": "선물 컬렉션",
+      "title": "선물 컬렉션",
+      "subtitle": "유리병에 담긴 5가지 아몬드 맛 — 명절, 축제, 기업 선물에 이상적입니다.",
+      "cta": "선물 세트 둘러보기",
+      "badge": "기프트 세트",
+      "imageAlt": "코하미 기프트 병 컬렉션"
+    },
+    "marquee": {
+      "phrase1": "프리미엄 견과 초콜릿",
+      "phrase2": "우아한 선물 컬렉션",
+      "phrase3": "엄선된 원료",
+      "phrase4": "독점적인 맛",
+      "phrase5": "by Jamy Green",
+      "phrase6": "Made in Vietnam"
+    },
+    "flavorRibbon": {
+      "title": "맛 탐험",
+      "subtitle": "클래식 아몬드부터 말차, 망고 건조, 두리안까지 — 각 맛마다 고유한 이야기가 있습니다.",
+      "item1": "아몬드",
+      "item2": "망고 건조",
+      "item3": "마카다미아",
+      "item4": "말차",
+      "item5": "두리안",
+      "item6": "캐슈넛"
+    },
+    "visualBreak": {
+      "number": "01",
+      "title": "인기 컬렉션",
+      "subtitle": "가장 사랑받는 베스트셀러 맛 — 시식, 선물, 대량 주문에 이상적입니다.",
+      "cta": "전체 보기"
+    },
+    "taste": {
+      "title": "모든 순간을 위한 다양한 맛",
+      "subtitle": "클래식 아몬드부터 열대 망고 건조 과일까지 — 각 포장마다 고유한 이야기가 있습니다."
+    },
+    "bento": {
+      "almond": {
+        "title": "아몬드",
+        "subtitle": "55% 다크 초콜릿과 손으로 로스팅한 캘리포니아 아몬드"
+      },
+      "mango": {
+        "title": "망고 건조",
+        "subtitle": "호아록 망고 냉동 건조 또는 유리병 밀크 초콜릿 코팅"
+      },
+      "macadamia": {
+        "title": "마카다미아",
+        "subtitle": "호주산 마카다미아를 화이트·밀크 초콜릿으로 코팅"
+      },
+      "matcha": {
+        "title": "말차",
+        "subtitle": "일본 우지 말차 화이트 초콜릿과 로스팅 아몬드"
+      }
+    },
+    "quality": {
+      "title": "제품부터 경험까지 꼼꼼하게",
+      "subtitle": "모든 제품에 약속하는 품질 기준",
+      "items": {
+        "ingredients": "엄선된 원료",
+        "packaging": "고급 포장",
+        "taste": "쉽게 즐기는 맛",
+        "gift": "선물에 적합",
+        "retail": "소매 및 이커머스 준비 완료"
+      }
+    },
+    "featured": {
+      "title": "추천 제품",
+      "subtitle": "Cohamy & Jamy 컬렉션의 인기 제품",
+      "viewAll": "전체 제품 보기",
+      "contactCta": "문의하기",
+      "viewDetail": "상세 보기",
+      "new": "신제품",
+      "bestseller": "베스트셀러"
+    },
+    "categories": {
+      "title": "제품 카테고리",
+      "subtitle": "취향에 맞는 맛을 선택하세요",
+      "chocolate": "견과류 코팅 초콜릿",
+      "gift": "선물 세트",
+      "jamy": "Jamy 컬렉션",
+      "seasonal": "시즌 한정",
+      "explore": "탐색하기"
+    },
+    "about": {
+      "title": "Cohamy 이야기",
+      "subtitle": "공장에서 여러분의 손까지",
+      "description": "Cohamy는 캐슈넛, 아몬드, 베트남 천연 원료를 결합한 프리미엄 초콜릿 제품을 제공하기 위해 설립되었습니다. 모든 제품은 장인 정신과 엄격한 품질 기준을 담고 있습니다.",
+      "stats": {
+        "products": "제품",
+        "partners": "파트너",
+        "years": "년 경력",
+        "customers": "고객"
+      },
+      "cta": "회사 소개"
+    },
+    "whyUs": {
+      "title": "Cohamy를 선택하는 이유",
+      "subtitle": "모든 제품에 담긴 품질 약속",
+      "quality": {
+        "title": "엄선된 원료",
+        "description": "빈푹 캐슈넛, 아몬드, 카카오를 신뢰할 수 있는 공급처에서 엄선합니다."
+      },
+      "craft": {
+        "title": "독점 레시피",
+        "description": "현대적 생산 공정과 전통 기법의 조화로 독특하고 비교할 수 없는 맛을 완성합니다."
+      },
+      "natural": {
+        "title": "천연 & 안전",
+        "description": "방부제 없음, 첨가물 없음 — 가족과 프리미엄 선물에 완벽합니다."
+      },
+      "gift": {
+        "title": "우아한 선물",
+        "description": "고급스러운 패키지로 명절, 생일, 기업 행사에 이상적입니다."
+      }
+    },
+    "process": {
+      "title": "생산 과정",
+      "subtitle": "견과류에서 완벽한 초콜릿까지",
+      "step1": {
+        "title": "원료 선별",
+        "description": "수출 기준을 충족하는 캐슈넛, 아몬드, 카카오를 선별합니다."
+      },
+      "step2": {
+        "title": "초콜릿 코팅",
+        "description": "독점 레시피로 부드러운 초콜릿을 입혀 견과류의 자연스러운 풍미를 유지합니다."
+      },
+      "step3": {
+        "title": "품질 검사",
+        "description": "모든 배치는 포장 전 엄격한 품질 검사를 거칩니다."
+      },
+      "step4": {
+        "title": "포장 & 배송",
+        "description": "방습 포장으로 초콜릿이 완벽한 상태로 전달됩니다."
+      }
+    },
+    "testimonials": {
+      "title": "고객 후기",
+      "subtitle": "초콜릿 애호가들의 진솔한 평가",
+      "review1": {
+        "text": "Cohamy 초콜릿은 부드럽고 캐슈넛 향이 정말 좋아요. 선물로 샀는데 칭찬을 많이 받았습니다!",
+        "author": "응uyen Thi Lan",
+        "role": "단골 고객"
+      },
+      "review2": {
+        "text": "말차와 두리안 맛이 정말 독특하고 베트남다워요. 계속 응원하겠습니다!",
+        "author": "Tran Minh Tuan",
+        "role": "푸드 블로거"
+      },
+      "review3": {
+        "text": "패키지가 예쁘고 품질이 일정해요. 회사에서 기업 선물로 주문했는데 매우 만족합니다.",
+        "author": "Le Phuong Anh",
+        "role": "마케팅 매니저"
+      }
+    },
+    "activities": {
+      "title": "주요 활동",
+      "subtitle": "Cohamy의 연결과 성장의 여정",
+      "viewAll": "전체 활동 보기",
+      "readMore": "더 보기"
+    },
+    "blog": {
+      "title": "최신 글",
+      "subtitle": "Cohamy의 뉴스, 레시피, 이야기",
+      "viewAll": "전체 글 보기",
+      "readMore": "더 읽기",
+      "minRead": "분 읽기"
+    },
+    "newsletter": {
+      "title": "뉴스레터 구독",
+      "subtitle": "Cohamy의 독점 혜택과 신제품 소식을 받아보세요",
+      "placeholder": "이메일을 입력하세요",
+      "button": "구독하기",
+      "success": "구독이 완료되었습니다! 감사합니다.",
+      "privacy": "개인정보를 안전하게 보호합니다."
+    },
+    "cta": {
+      "title": "맛보실 준비 되셨나요?",
+      "subtitle": "지금 주문하고 특별 혜택과 Cohamy의 풍미를 경험하세요",
+      "button": "지금 구매",
+      "contact": "상담 문의"
+    }
+  },
+  "products": {
+    "title": "제품",
+    "subtitle": "Cohamy & Jamy 초콜릿 컬렉션",
+    "count": "제품 {count}개",
+    "empty": "일치하는 제품이 없습니다",
+    "emptyHint": "필터나 검색어를 변경해 보세요",
+    "contactForPrice": "문의하기",
+    "contactCta": "주문 문의",
+    "outOfStock": "품절",
+    "inStock": "재고 있음",
+    "weight": "중량",
+    "ingredients": "성분",
+    "description": "제품 설명",
+    "related": "관련 제품",
+    "share": "공유",
+    "quantity": "수량",
+    "price": "가격",
+    "originalPrice": "정가",
+    "salePrice": "할인가",
+    "sku": "제품 코드",
+    "category": "카테고리",
+    "backToList": "목록으로",
+    "faq": {
+      "title": "자주 묻는 질문",
+      "q1": {
+        "question": "코하미 초콜릿의 유통기한은 얼마나 되나요?",
+        "answer": "55g 파우치는 보통 12개월, 160g 유리병은 제조일로부터 약 10–12개월입니다. 포장에 인쇄된 날짜가 가장 정확합니다."
+      },
+      "q2": {
+        "question": "견과 초콜릿은 어떻게 보관해야 하나요?",
+        "answer": "25°C 이하의 서늘하고 건조한 곳에 보관하고 직사광선을 피하세요. 개봉 후에는 지퍼백이나 뚜껑을 밀봉해 바삭함을 유지하세요."
+      },
+      "q3": {
+        "question": "알레르기 유발 성분이 있나요?",
+        "answer": "견과류(아몬드, 캐슈넛, 마카다미아), 우유, 대두가 포함되며 안정제에 글루텐이 있을 수 있습니다. 포장 성분표를 확인하거나 문의해 주세요."
+      },
+      "q4": {
+        "question": "대량 주문과 기업 선물을 지원하나요?",
+        "answer": "코하미는 명절 세트, 이벤트 선물, 맞춤 로고 인쇄를 지원합니다. 핫라인/Zalo 0981 956 111 또는 Cohamyvietnam@gmail.com 으로 견적 문의하세요."
+      }
+    }
+  },
+  "cart": {
+    "title": "장바구니",
+    "subtitle": "결제 전 상품을 확인하세요",
+    "empty": "장바구니가 비어 있습니다",
+    "emptyHint": "Cohamy 초콜릿 컬렉션을 둘러보고 마음에 드는 제품을 담아보세요",
+    "continueShopping": "쇼핑 계속하기",
+    "product": "제품",
+    "price": "단가",
+    "quantity": "수량",
+    "total": "합계",
+    "subtotal": "소계",
+    "shipping": "배송비",
+    "shippingNote": "결제 시 계산",
+    "discount": "할인",
+    "grandTotal": "총 결제금액",
+    "remove": "삭제",
+    "update": "업데이트",
+    "checkout": "결제하기",
+    "coupon": "쿠폰 코드",
+    "couponPlaceholder": "쿠폰 코드 입력",
+    "applyCoupon": "적용",
+    "couponApplied": "쿠폰이 적용되었습니다",
+    "couponInvalid": "유효하지 않은 쿠폰입니다",
+    "itemsCount": "상품 {count}개"
+  },
+  "checkout": {
+    "title": "결제",
+    "subtitle": "주문을 완료하세요",
+    "contactInfo": "연락처 정보",
+    "shippingInfo": "배송 정보",
+    "paymentMethod": "결제 방법",
+    "orderSummary": "주문 요약",
+    "placeOrder": "주문하기",
+    "processing": "처리 중...",
+    "success": "주문이 완료되었습니다!",
+    "successMessage": "감사합니다! 곧 주문 확인을 위해 연락드리겠습니다.",
+    "backToHome": "홈으로",
+    "fields": {
+      "fullName": "이름",
+      "email": "이메일",
+      "phone": "전화번호",
+      "address": "주소",
+      "city": "시/도",
+      "district": "구/군",
+      "ward": "동/읍/면",
+      "note": "주문 메모",
+      "notePlaceholder": "배송 시간 또는 특별 요청 사항"
+    },
+    "payment": {
+      "cod": "착불 결제 (COD)",
+      "bank": "계좌 이체",
+      "momo": "MoMo 지갑",
+      "zalopay": "ZaloPay"
+    },
+    "validation": {
+      "required": "필수 항목을 모두 입력해 주세요",
+      "invalidEmail": "유효하지 않은 이메일입니다",
+      "invalidPhone": "유효하지 않은 전화번호입니다"
+    }
+  },
+  "blog": {
+    "title": "블로그",
+    "subtitle": "Cohamy의 뉴스, 레시피, 이야기",
+    "readMore": "더 읽기",
+    "minRead": "분 읽기",
+    "publishedAt": "게시일",
+    "author": "작성자",
+    "category": "카테고리",
+    "tags": "태그",
+    "share": "글 공유",
+    "related": "관련 글",
+    "empty": "아직 글이 없습니다",
+    "emptyHint": "Cohamy의 새로운 이야기를 곧 만나보세요",
+    "backToList": "목록으로",
+    "searchPlaceholder": "글 검색...",
+    "toc": "목차",
+    "featuredLabel": "추천",
+    "featuredProduct": "추천 제품",
+    "viewProduct": "제품 보기",
+    "categoryLabels": {
+      "all": "전체",
+      "chocolate": "초콜릿",
+      "dried-fruit": "건조 과일",
+      "gift-ideas": "선물 아이디어",
+      "food-guide": "푸드 가이드",
+      "brand-story": "브랜드 스토리"
+    }
+  },
+  "about": {
+    "title": "회사 소개",
+    "subtitle": "베트남 초콜릿 브랜드를 만들어가는 여정",
+    "mission": {
+      "title": "미션",
+      "description": "베트남 천연 원료와 국제 생산 기준을 결합한 프리미엄 초콜릿 제품을 제공합니다."
+    },
+    "vision": {
+      "title": "비전",
+      "description": "베트남 최고의 견과류 코팅 초콜릿 브랜드로, 국내외에서 사랑받는 브랜드가 되는 것입니다."
+    },
+    "values": {
+      "title": "핵심 가치",
+      "quality": "품질",
+      "integrity": "진정성",
+      "innovation": "혁신",
+      "community": "커뮤니티"
+    },
+    "story": {
+      "title": "우리의 이야기",
+      "description": "Cohamy는 초콜릿에 대한 열정과 베트남 캐슈넛에 대한 사랑에서 시작되었습니다. 작은 작업장에서 출발하여 레시피를 개선하고 제품 라인을 확장하며 국내외 박람회에 참여하고 있습니다."
+    },
+    "team": {
+      "title": "팀 소개",
+      "subtitle": "Cohamy 풍미 뒤에 있는 사람들"
+    },
+    "certifications": {
+      "title": "인증 & 기준",
+      "subtitle": "식품 안전과 일관된 품질에 대한 약속"
+    }
+  },
+  "activities": {
+    "title": "활동",
+    "subtitle": "Cohamy가 커뮤니티와 연결되는 순간들",
+    "readMore": "상세 보기",
+    "empty": "아직 활동이 없습니다",
+    "emptyHint": "곧 업데이트하겠습니다",
+    "backToList": "목록으로",
+    "gallery": "사진 갤러리",
+    "date": "날짜",
+    "location": "장소"
+  },
+  "contact": {
+    "title": "문의하기",
+    "subtitle": "언제든지 기다리고 있습니다",
+    "form": {
+      "title": "메시지 보내기",
+      "name": "이름",
+      "email": "이메일",
+      "phone": "전화번호",
+      "subject": "제목",
+      "message": "내용",
+      "messagePlaceholder": "메시지를 입력하세요...",
+      "submit": "메시지 보내기",
+      "sending": "전송 중...",
+      "success": "메시지가 전송되었습니다! 곧 답변드리겠습니다.",
+      "error": "전송에 실패했습니다. 다시 시도해 주세요."
+    },
+    "info": {
+      "title": "연락처 정보",
+      "address": "주소",
+      "addressValue": "하노이 응이아 도 동, 톤 쿠앙 피엣 거리 T608 빌딩 A동 3층",
+      "phone": "핫라인",
+      "zalo": "Zalo OA",
+      "email": "문의 및 주문 이메일",
+      "openMaps": "Google 지도에서 보기",
+      "mapTitle": "Google 지도상 Cohamy 위치",
+      "hours": "영업 시간",
+      "hoursValue": "월-금: 08:00 - 17:00"
+    },
+    "subjects": {
+      "general": "일반 문의",
+      "order": "주문 & 배송",
+      "gift": "선물 상담",
+      "product": "제품 문의",
+      "other": "기타"
+    }
+  },
+  "footer": {
+    "description": "Cohamy — 베트남 프리미엄 견과류 코팅 초콜릿. 정교한 풍미, 의미 있는 선물.",
+    "quickLinks": "바로가기",
+    "support": "고객 지원",
+    "followUs": "팔로우",
+    "newsletter": "프로모션 소식 받기",
+    "newsletterPlaceholder": "이메일",
+    "subscribe": "구독",
+    "copyright": "© {year} Cohamy. All rights reserved.",
+    "privacy": "개인정보 처리방침",
+    "terms": "이용약관",
+    "shipping": "배송 정책",
+    "returns": "반품 정책",
+    "faq": "자주 묻는 질문"
+  },
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "retry": "다시 시도",
+    "save": "저장",
+    "cancel": "취소",
+    "confirm": "확인",
+    "delete": "삭제",
+    "edit": "수정",
+    "view": "보기",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "seeMore": "더 보기",
+    "seeLess": "접기",
+    "showAll": "전체 보기",
+    "close": "닫기",
+    "open": "열기",
+    "yes": "예",
+    "no": "아니오",
+    "or": "또는",
+    "and": "그리고",
+    "from": "부터",
+    "to": "까지",
+    "all": "전체",
+    "none": "없음",
+    "required": "필수",
+    "optional": "선택",
+    "currency": "₫",
+    "addedToCart": "장바구니에 담았습니다",
+    "removedFromCart": "장바구니에서 삭제했습니다",
+    "copied": "복사됨",
+    "noResults": "결과 없음",
+    "page": "페이지",
+    "of": "/",
+    "items": "항목"
+  },
+  "filters": {
+    "title": "필터",
+    "clear": "필터 초기화",
+    "apply": "적용",
+    "sort": "정렬",
+    "sortBy": "정렬 기준",
+    "sortOptions": {
+      "newest": "최신순",
+      "oldest": "오래된순",
+      "priceAsc": "가격: 낮은순",
+      "priceDesc": "가격: 높은순",
+      "nameAsc": "이름: A-Z",
+      "nameDesc": "이름: Z-A",
+      "popular": "인기순"
+    },
+    "category": "카테고리",
+    "categories": {
+      "all": "전체",
+      "chocolate": "견과류 코팅 초콜릿",
+      "almond": "아몬드",
+      "cashew": "캐슈넛",
+      "gift": "선물 세트",
+      "jamy": "Jamy 컬렉션",
+      "seasonal": "시즌 한정",
+      "chocolateNuts": "견과 코팅 초콜릿",
+      "driedFruit": "건조 과일",
+      "giftJar": "선물 유리병",
+      "premiumPack": "프리미엄 패키지"
+    },
+    "price": "가격대",
+    "priceRange": "{min} ~ {max}",
+    "weight": "중량",
+    "flavor": "맛",
+    "flavors": {
+      "original": "오리지널",
+      "matcha": "말차",
+      "durian": "두리안",
+      "strawberry": "딸기",
+      "milk": "밀크",
+      "mango": "망고",
+      "macadamia": "마카다미아"
+    },
+    "inStock": "재고 있음",
+    "onSale": "할인 중",
+    "results": "결과 {count}개"
+  },
+  "seo": {
+    "home": {
+      "title": "Cohamy — 베트남 프리미엄 견과류 코팅 초콜릿",
+      "description": "Cohamy & Jamy 초콜릿 컬렉션: 캐슈넛, 아몬드, 말차, 두리안 등 독특한 맛. 우아한 선물, 프리미엄 품질."
+    },
+    "products": {
+      "title": "제품 — Cohamy 초콜릿",
+      "description": "Cohamy & Jamy 견과류 코팅 초콜릿 제품을 둘러보세요. 온라인 구매, 전국 배송."
+    },
+    "productDetail": {
+      "title": "{name} — Cohamy",
+      "description": "Cohamy에서 {name} 구매. 프리미엄 초콜릿, 천연 원료, 우아한 패키지."
+    },
+    "cart": {
+      "title": "장바구니 — Cohamy",
+      "description": "Cohamy 초콜릿 장바구니를 확인하고 관리하세요."
+    },
+    "checkout": {
+      "title": "결제 — Cohamy",
+      "description": "Cohamy 초콜릿 주문을 완료하세요. 빠른 배송, 편리한 결제."
+    },
+    "blog": {
+      "title": "블로그 — Cohamy",
+      "description": "Cohamy 브랜드의 초콜릿 뉴스, 레시피, 이야기."
+    },
+    "blogDetail": {
+      "title": "{title} — Cohamy 블로그",
+      "description": "{excerpt}"
+    },
+    "about": {
+      "title": "회사 소개 — Cohamy",
+      "description": "베트남 초콜릿 브랜드 Cohamy의 이야기, 미션, 가치를 알아보세요."
+    },
+    "activities": {
+      "title": "활동 — Cohamy",
+      "description": "Cohamy 전시회, 이벤트, 커뮤니티 활동 소식."
+    },
+    "contact": {
+      "title": "문의 — Cohamy",
+      "description": "주문, 도매 제휴, 기업 선물 상담을 위해 Cohamy에 문의하세요."
+    }
+  }
+}
