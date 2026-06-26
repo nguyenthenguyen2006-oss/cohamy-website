@@ -6,10 +6,62 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 import type { Locale } from "@/lib/types";
 
+const SUBJECT_KEYS = ["general", "order", "gift", "product"] as const;
+
+type FormState = {
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+};
+
+const initialForm: FormState = {
+  name: "",
+  email: "",
+  phone: "",
+  subject: "general",
+  message: "",
+};
+
 export function ContactForm() {
   const t = useTranslations("contact");
   const locale = useLocale() as Locale;
-  const [done, setDone] = useState(false);
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+
+  const subjectOptions = SUBJECT_KEYS.map((key) => ({
+    value: key,
+    label: t(`subjects.${key}`),
+  }));
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("sending");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          subject: subjectOptions.find((item) => item.value === form.subject)?.label ?? form.subject,
+          message: form.message,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("send_failed");
+      }
+
+      setStatus("success");
+      setForm(initialForm);
+    } catch {
+      setStatus("error");
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-12">
@@ -102,48 +154,65 @@ export function ContactForm() {
 
       <div>
         <h2 className="font-medium text-lg mb-6">{t("form.title")}</h2>
-        {done ? (
-          <div className="p-8 bg-[#FFF4D8] rounded-2xl text-center">
-            {t("form.success")}
-          </div>
+        {status === "success" ? (
+          <div className="p-8 bg-[#FFF4D8] rounded-2xl text-center">{t("form.success")}</div>
         ) : (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              setDone(true);
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={handleSubmit} className="space-y-4">
             <input
               required
+              name="name"
+              value={form.name}
+              onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
               placeholder={t("form.name")}
               className="w-full h-12 px-4 border rounded-xl bg-white"
             />
             <input
               required
+              name="email"
               type="email"
+              value={form.email}
+              onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
               placeholder={t("form.email")}
               className="w-full h-12 px-4 border rounded-xl bg-white"
             />
             <input
               required
+              name="phone"
+              value={form.phone}
+              onChange={(e) => setForm((prev) => ({ ...prev, phone: e.target.value }))}
               placeholder={t("form.phone")}
               className="w-full h-12 px-4 border rounded-xl bg-white"
             />
-            <select className="w-full h-12 px-4 border rounded-xl bg-white">
-              <option>{t("subjects.general")}</option>
-              <option>{t("subjects.order")}</option>
-              <option>{t("subjects.gift")}</option>
-              <option>{t("subjects.product")}</option>
+            <select
+              name="subject"
+              value={form.subject}
+              onChange={(e) => setForm((prev) => ({ ...prev, subject: e.target.value }))}
+              className="w-full h-12 px-4 border rounded-xl bg-white"
+            >
+              {subjectOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
             <textarea
               required
+              name="message"
               rows={5}
+              value={form.message}
+              onChange={(e) => setForm((prev) => ({ ...prev, message: e.target.value }))}
               placeholder={t("form.messagePlaceholder")}
               className="w-full p-4 border rounded-xl bg-white"
             />
-            <button type="submit" className="btn-primary w-full h-14 rounded-2xl">
-              {t("form.submit")}
+            {status === "error" ? (
+              <p className="text-sm text-red-700">{t("form.error")}</p>
+            ) : null}
+            <button
+              type="submit"
+              disabled={status === "sending"}
+              className="btn-primary w-full h-14 rounded-2xl disabled:opacity-60"
+            >
+              {status === "sending" ? t("form.sending") : t("form.submit")}
             </button>
           </form>
         )}
