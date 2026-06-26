@@ -15,7 +15,7 @@
   },
   "home": {
     "hero": {
-      "badge": "Cohamy by Jamy Green",
+      "badge": "Cohamy and Jamy Green",
       "title": "Premium Nut Chocolate & Dried Fruit",
       "subtitle": "Cohamy combines selected nuts, tropical fruits and refined chocolate layers to create sweet, modern gifts that are easy to enjoy.",
       "ctaPrimary": "Explore Products",
@@ -37,7 +37,7 @@
       "phrase2": "Elegant Gift Collection",
       "phrase3": "Selected Ingredients",
       "phrase4": "Signature Flavors",
-      "phrase5": "by Jamy Green",
+      "phrase5": "Cohamy and Jamy Green",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -427,6 +427,7 @@
     }
   },
   "footer": {
+    "brandTagline": "Cohamy and Jamy Green",
     "description": "Cohamy — Premium nut-coated chocolate from Vietnam. Exquisite flavors, meaningful gifts.",
     "quickLinks": "Quick Links",
     "support": "Support",

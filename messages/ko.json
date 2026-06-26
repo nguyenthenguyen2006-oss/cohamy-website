@@ -15,7 +15,7 @@
   },
   "home": {
     "hero": {
-      "badge": "Cohamy by Jamy Green",
+      "badge": "Cohamy와 Jamy Green",
       "title": "프리미엄 견과 초콜릿 & 건조 과일",
       "subtitle": "코하미는 엄선된 견과류, 열대 과일과 정교한 초콜릿 층을 결합하여 달콤하고 현대적인 선물을 만듭니다.",
       "ctaPrimary": "제품 둘러보기",
@@ -37,7 +37,7 @@
       "phrase2": "우아한 선물 컬렉션",
       "phrase3": "엄선된 원료",
       "phrase4": "독점적인 맛",
-      "phrase5": "by Jamy Green",
+      "phrase5": "Cohamy와 Jamy Green",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -427,6 +427,7 @@
     }
   },
   "footer": {
+    "brandTagline": "Cohamy와 Jamy Green",
     "description": "Cohamy — 베트남 프리미엄 견과류 코팅 초콜릿. 정교한 풍미, 의미 있는 선물.",
     "quickLinks": "바로가기",
     "support": "고객 지원",

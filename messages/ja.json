@@ -15,7 +15,7 @@
   },
   "home": {
     "hero": {
-      "badge": "Cohamy by Jamy Green",
+      "badge": "CohamyとJamy Green",
       "title": "プレミアムナッツチョコレート＆ドライフルーツ",
       "subtitle": "Cohamyは厳選ナッツ、トロピカルフルーツ、繊細なチョコレート層を組み合わせ、甘く現代的で楽しみやすいギフトをお届けします。",
       "ctaPrimary": "製品を見る",
@@ -37,7 +37,7 @@
       "phrase2": "上品なギフトコレクション",
       "phrase3": "厳選素材",
       "phrase4": "独自のフレーバー",
-      "phrase5": "by Jamy Green",
+      "phrase5": "CohamyとJamy Green",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -427,6 +427,7 @@
     }
   },
   "footer": {
+    "brandTagline": "CohamyとJamy Green",
     "description": "Cohamy — ベトナム産プレミアムナッツコーティングチョコレート。繊細な味わい、心のこもったギフト。",
     "quickLinks": "クイックリンク",
     "support": "サポート",

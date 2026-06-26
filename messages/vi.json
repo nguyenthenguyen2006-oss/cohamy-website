@@ -15,7 +15,7 @@
   },
   "home": {
     "hero": {
-      "badge": "Cohamy by Jamy Green",
+      "badge": "Cohamy và Jamy Green",
       "title": "Socola hạt & trái cây sấy cao cấp",
       "subtitle": "Cohamy kết hợp hạt tuyển chọn, trái cây nhiệt đới và lớp socola tinh tế để tạo nên những món quà ngọt ngào, hiện đại và dễ thưởng thức.",
       "ctaPrimary": "Khám phá sản phẩm",
@@ -37,7 +37,7 @@
       "phrase2": "Bộ quà tặng tinh tế",
       "phrase3": "Nguyên liệu chọn lọc",
       "phrase4": "Hương vị độc quyền",
-      "phrase5": "by Jamy Green",
+      "phrase5": "Cohamy và Jamy Green",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -109,7 +109,7 @@
     },
     "about": {
       "title": "Từ nguyên liệu quen thuộc đến diện mạo quà tặng cao cấp",
-      "subtitle": "by Jamy Green",
+      "subtitle": "Cohamy và Jamy Green",
       "description": "Chúng tôi chọn cách kể câu chuyện hương vị Việt Nam bằng bao bì hiện đại, sản phẩm chỉn chu và trải nghiệm thưởng thức phù hợp với cả thị trường nội địa lẫn quốc tế.",
       "stats": {
         "products": "Sản phẩm",
@@ -427,6 +427,7 @@
     }
   },
   "footer": {
+    "brandTagline": "Cohamy và Jamy Green",
     "description": "Cohamy — Thương hiệu chocolate phủ hạt cao cấp từ Việt Nam. Hương vị tinh tế, quà tặng ý nghĩa.",
     "quickLinks": "Liên kết nhanh",
     "support": "Hỗ trợ",

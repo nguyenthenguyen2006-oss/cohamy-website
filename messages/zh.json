@@ -15,7 +15,7 @@
   },
   "home": {
     "hero": {
-      "badge": "Cohamy by Jamy Green",
+      "badge": "Cohamy 与 Jamy Green",
       "title": "高端坚果巧克力与果干",
       "subtitle": "Cohamy 精选坚果、热带水果与精致巧克力层，打造甜美、现代、易于享用的礼品。",
       "ctaPrimary": "探索产品",
@@ -37,7 +37,7 @@
       "phrase2": "精美礼品系列",
       "phrase3": "精选原料",
       "phrase4": "独家风味",
-      "phrase5": "by Jamy Green",
+      "phrase5": "Cohamy 与 Jamy Green",
       "phrase6": "越南制造"
     },
     "flavorRibbon": {
@@ -427,6 +427,7 @@
     }
   },
   "footer": {
+    "brandTagline": "Cohamy 与 Jamy Green",
     "description": "Cohamy — 来自越南的高端坚果裹巧克力。精致风味，心意好礼。",
     "quickLinks": "快速链接",
     "support": "客户支持",

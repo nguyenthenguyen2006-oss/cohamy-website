@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { BrandLogo } from "@/components/BrandLogo";
 import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 import type { Locale } from "@/lib/types";
 
@@ -15,9 +16,11 @@ export function Footer() {
     <footer className="bg-[#2A120C] text-[#FAF6EF] text-base pt-16 pb-10">
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
         <div>
-          <div className="font-serif text-3xl mb-2 tracking-tight">Cohamy</div>
+          <div className="mb-2">
+            <BrandLogo height={36} />
+          </div>
           <p className="text-[#FAF6EF]/80 text-xs font-medium mb-1">{getCompanyName(locale)}</p>
-          <div className="text-xs text-[#D9A441] mb-3">by Jamy Green</div>
+          <div className="text-xs text-[#D9A441] mb-3">{t("brandTagline")}</div>
           <p className="text-[#FAF6EF]/70 text-xs leading-relaxed">{t("description")}</p>
         </div>
         <div>
