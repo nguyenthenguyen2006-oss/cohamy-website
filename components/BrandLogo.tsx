@@ -5,7 +5,7 @@ import { useLocale } from "next-intl";
 import type { Locale } from "@/lib/types";
 import { getAssetById } from "@/lib/assets/manifest";
 
-const LOGO_PATH = "/images/logo/cohamy-logo.png";
+const LOGO_PATH = "/images/logo/cohamy-logo.png?v=3";
 const LOGO_ASPECT = 925 / 267;
 
 type BrandLogoProps = {

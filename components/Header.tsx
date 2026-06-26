@@ -23,7 +23,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-[#FAF6EF]/95 border-b border-[#4A2418]/10 backdrop-blur">
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex shrink-0 items-center" aria-label="Cohamy">
-          <BrandLogo height={44} />
+          <BrandLogo height={52} />
         </Link>
 
         <nav className="hidden md:flex gap-9 text-base font-medium">

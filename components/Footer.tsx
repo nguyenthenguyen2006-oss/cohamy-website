@@ -17,7 +17,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
         <div>
           <div className="mb-2">
-            <BrandLogo height={36} />
+            <BrandLogo height={44} />
           </div>
           <p className="text-[#FAF6EF]/80 text-xs font-medium mb-1">{getCompanyName(locale)}</p>
           <div className="text-xs text-[#D9A441] mb-3">{t("brandTagline")}</div>
