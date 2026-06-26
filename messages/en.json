@@ -399,7 +399,8 @@
       "submit": "Send Message",
       "sending": "Sending...",
       "success": "Message sent successfully! We will respond soon.",
-      "error": "Failed to send message. Please try again."
+      "error": "Failed to send message. Please try again.",
+      "errorSmtp": "Email server is not configured. Add SMTP_PASS to .env.local and restart npm run dev."
     },
     "info": {
       "title": "Contact Information",

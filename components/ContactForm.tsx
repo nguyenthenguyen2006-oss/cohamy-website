@@ -29,6 +29,7 @@ export function ContactForm() {
   const locale = useLocale() as Locale;
   const [form, setForm] = useState<FormState>(initialForm);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [errorCode, setErrorCode] = useState<string | null>(null);
 
   const subjectOptions = SUBJECT_KEYS.map((key) => ({
     value: key,
@@ -38,6 +39,7 @@ export function ContactForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus("sending");
+    setErrorCode(null);
 
     try {
       const response = await fetch("/api/contact", {
@@ -53,12 +55,16 @@ export function ContactForm() {
       });
 
       if (!response.ok) {
-        throw new Error("send_failed");
+        const data = (await response.json().catch(() => null)) as { error?: string } | null;
+        setErrorCode(data?.error ?? "SEND_FAILED");
+        setStatus("error");
+        return;
       }
 
       setStatus("success");
       setForm(initialForm);
     } catch {
+      setErrorCode("SEND_FAILED");
       setStatus("error");
     }
   };
@@ -205,7 +211,9 @@ export function ContactForm() {
               className="w-full p-4 border rounded-xl bg-white"
             />
             {status === "error" ? (
-              <p className="text-sm text-red-700">{t("form.error")}</p>
+              <p className="text-sm text-red-700">
+                {errorCode === "SMTP_NOT_CONFIGURED" ? t("form.errorSmtp") : t("form.error")}
+              </p>
             ) : null}
             <button
               type="submit"

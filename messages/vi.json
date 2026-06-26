@@ -399,7 +399,8 @@
       "submit": "Gửi tin nhắn",
       "sending": "Đang gửi...",
       "success": "Gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm.",
-      "error": "Gửi tin nhắn thất bại. Vui lòng thử lại."
+      "error": "Gửi tin nhắn thất bại. Vui lòng thử lại.",
+      "errorSmtp": "Chưa cấu hình email server. Thêm SMTP_PASS vào file .env.local rồi khởi động lại npm run dev."
     },
     "info": {
       "title": "Thông tin liên hệ",

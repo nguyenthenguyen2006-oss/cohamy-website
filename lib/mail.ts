@@ -11,7 +11,7 @@ export type ContactEmailPayload = {
 
 function getSmtpConfig() {
   const user = process.env.SMTP_USER?.trim();
-  const pass = process.env.SMTP_PASS?.trim();
+  const pass = process.env.SMTP_PASS?.replace(/\s/g, "").trim();
 
   if (!user || !pass) {
     return null;
