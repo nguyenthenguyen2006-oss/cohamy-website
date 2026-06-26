@@ -3,6 +3,7 @@ name: Deploy to Hostinger VPS
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: deploy-production
@@ -22,11 +23,15 @@ jobs:
           script_stop: true
           script: |
             set -e
-            APP_DIR="/var/www/cohamy"
+            APP_DIR="/root/cohamy"
             cd "$APP_DIR"
             git fetch origin main
             git reset --hard origin/main
-            npm ci
+            if [ ! -f .env.production ]; then
+              cp .env.example .env.production
+              sed -i 's|PORT=3000|PORT=3001|' .env.production || true
+            fi
+            npm install
             npm run build
             if pm2 describe cohamy > /dev/null 2>&1; then
               pm2 reload ecosystem.config.js --env production
@@ -34,3 +39,4 @@ jobs:
               pm2 start ecosystem.config.js --env production
             fi
             pm2 save
+            echo "Deploy OK: $(date -u)"
