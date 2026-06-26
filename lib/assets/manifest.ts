@@ -3,7 +3,7 @@ import type { AssetManifestItem } from "../types";
 export const assetManifest: AssetManifestItem[] = [
   {
     id: "cohamy-logo",
-    path: "/images/logo/cohamy-logo.png",
+    path: "/images/logo/cohamy-brand-logo.png",
     category: "logo",
     alt: {
       vi: "Logo Cohamy – Thương hiệu socola hạt cao cấp",

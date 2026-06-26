@@ -11,6 +11,9 @@ git pull origin main
 echo ">>> npm install"
 npm install
 
+echo ">>> clear Next image cache"
+rm -rf .next/cache
+
 echo ">>> npm run build"
 npm run build
 

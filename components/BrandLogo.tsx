@@ -1,11 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { useLocale } from "next-intl";
 import type { Locale } from "@/lib/types";
 import { getAssetById } from "@/lib/assets/manifest";
 
-const LOGO_PATH = "/images/logo/cohamy-logo.png";
+const LOGO_PATH = "/images/logo/cohamy-brand-logo.png";
 const LOGO_ASPECT = 925 / 267;
 
 type BrandLogoProps = {
@@ -19,12 +18,13 @@ export function BrandLogo({ className = "", height = 40 }: BrandLogoProps) {
   const width = Math.round(height * LOGO_ASPECT);
 
   return (
-    <Image
+    // Native img avoids Next.js /_next/image cache serving stale optimized logos.
+    <img
       src={LOGO_PATH}
       alt={logoAsset?.alt[locale] ?? "Cohamy"}
       width={width}
       height={height}
-      priority
+      decoding="async"
       className={`block object-contain object-left ${className}`}
       style={{ height, width, maxWidth: width }}
     />

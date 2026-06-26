@@ -129,7 +129,7 @@ export function generateOrganizationJsonLd(locale: Locale) {
     alternateName: ["Cohamy", "Cohamy and Jamy Green", "Cohamy và Jamy Green"],
     legalName: getCompanyName(locale),
     url: SITE_URL,
-    logo: `${SITE_URL}/images/logo/cohamy-logo.png`,
+    logo: `${SITE_URL}/images/logo/cohamy-brand-logo.png`,
     email: CONTACT.email,
     telephone: "+84981956111",
     address: [
@@ -198,7 +198,7 @@ export function generateArticleJsonLd(options: {
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/images/logo/cohamy-logo.png`,
+        url: `${SITE_URL}/images/logo/cohamy-brand-logo.png`,
       },
     },
     mainEntityOfPage: {
