@@ -51,6 +51,7 @@ export function ContactForm() {
           phone: form.phone,
           subject: subjectOptions.find((item) => item.value === form.subject)?.label ?? form.subject,
           message: form.message,
+          locale,
         }),
       });
 
@@ -212,7 +213,7 @@ export function ContactForm() {
             />
             {status === "error" ? (
               <p className="text-sm text-red-700">
-                {errorCode === "SMTP_NOT_CONFIGURED" ? t("form.errorSmtp") : t("form.error")}
+                {errorCode === "SHEETS_NOT_CONFIGURED" ? t("form.errorSheets") : t("form.error")}
               </p>
             ) : null}
             <button

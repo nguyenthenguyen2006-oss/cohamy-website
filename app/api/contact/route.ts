@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sendContactEmail } from "@/lib/mail";
+import { appendContactToSheet } from "@/lib/google-sheets";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -11,6 +11,7 @@ export async function POST(request: Request) {
       phone?: string;
       subject?: string;
       message?: string;
+      locale?: string;
       website?: string;
     };
 
@@ -23,6 +24,7 @@ export async function POST(request: Request) {
     const phone = body.phone?.trim() ?? "";
     const subject = body.subject?.trim() ?? "";
     const message = body.message?.trim() ?? "";
+    const locale = body.locale?.trim() ?? "";
 
     if (!name || !email || !phone || !subject || !message) {
       return NextResponse.json({ error: "MISSING_FIELDS" }, { status: 400 });
@@ -36,13 +38,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "MESSAGE_TOO_LONG" }, { status: 400 });
     }
 
-    await sendContactEmail({ name, email, phone, subject, message });
+    await appendContactToSheet({ name, email, phone, subject, message, locale });
 
     return NextResponse.json({ ok: true });
   } catch (error) {
     const message = error instanceof Error ? error.message : "UNKNOWN";
-    if (message === "SMTP_NOT_CONFIGURED") {
-      return NextResponse.json({ error: "SMTP_NOT_CONFIGURED" }, { status: 503 });
+    if (message === "SHEETS_NOT_CONFIGURED") {
+      return NextResponse.json({ error: "SHEETS_NOT_CONFIGURED" }, { status: 503 });
     }
     console.error("[contact]", error);
     return NextResponse.json({ error: "SEND_FAILED" }, { status: 500 });
