@@ -354,6 +354,13 @@
       "innovation": "Đổi mới",
       "community": "Cộng đồng"
     },
+    "company": {
+      "title": "Thông tin doanh nghiệp",
+      "nameVi": "Tên công ty (tiếng Việt): CÔNG TY TNHH COHAMY",
+      "nameEn": "Tên công ty (tiếng Anh): COHAMY COMPANY LIMITED",
+      "addressHanoi": "Hà Nội: Tầng 3, tháp A, Tòa T608, Phường Nghĩa Đô, TP. Hà Nội",
+      "addressHcmc": "TP. Hồ Chí Minh: Tổ 7, Cầu Mới, P. Tân Thành, TP Hồ Chí Minh"
+    },
     "story": {
       "title": "Câu chuyện của chúng tôi",
       "description": "Cohamy bắt đầu từ niềm đam mê chocolate và tình yêu với hạt điều Việt Nam. Từ xưởng sản xuất nhỏ, chúng tôi không ngừng hoàn thiện công thức, mở rộng dòng sản phẩm và tham gia các hội chợ triển lãm trong và ngoài nước."
@@ -396,13 +403,18 @@
     },
     "info": {
       "title": "Thông tin liên hệ",
+      "companyName": "Tên công ty",
       "address": "Địa chỉ",
-      "addressValue": "Tầng 3, tháp A, Tòa T608, Tôn Quang Phiệt, phường Nghĩa Đô, Hà Nội",
+      "addressHanoi": "Văn phòng Hà Nội",
+      "addressHcmc": "Văn phòng TP. Hồ Chí Minh",
+      "addressValue": "Tầng 3, tháp A, Tòa T608, Phường Nghĩa Đô, TP. Hà Nội",
       "phone": "Hotline",
       "zalo": "Zalo OA",
       "email": "Email liên hệ & nhận đơn",
       "openMaps": "Xem trên Google Maps",
-      "mapTitle": "Vị trí Cohamy trên Google Maps",
+      "openMapsHanoi": "Xem vị trí Hà Nội trên Google Maps",
+      "openMapsHcmc": "Xem vị trí HCM trên Google Maps",
+      "mapTitle": "Vị trí văn phòng Hà Nội trên Google Maps",
       "hours": "Giờ làm việc",
       "hoursValue": "Thứ 2 - Thứ 6: 8:00 - 17:00"
     },
@@ -422,7 +434,7 @@
     "newsletter": "Nhận tin khuyến mãi",
     "newsletterPlaceholder": "Email của bạn",
     "subscribe": "Đăng ký",
-    "copyright": "© {year} Cohamy. Bảo lưu mọi quyền.",
+    "copyright": "© {year} CÔNG TY TNHH COHAMY. Bảo lưu mọi quyền.",
     "privacy": "Chính sách bảo mật",
     "terms": "Điều khoản sử dụng",
     "shipping": "Chính sách giao hàng",

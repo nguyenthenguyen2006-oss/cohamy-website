@@ -354,6 +354,13 @@
       "innovation": "革新",
       "community": "コミュニティ"
     },
+    "company": {
+      "title": "企業情報",
+      "nameVi": "会社名（ベトナム語）：CÔNG TY TNHH COHAMY",
+      "nameEn": "会社名（英語）：COHAMY COMPANY LIMITED",
+      "addressHanoi": "ハノイ：ベトナム・ハノイ市義都坊T608ビルA棟3階",
+      "addressHcmc": "ホーチミン：ベトナム・ホーチミン市タンタイン坊カウモイ7組"
+    },
     "story": {
       "title": "私たちのストーリー",
       "description": "Cohamyはチョコレートへの情熱とベトナムのカシューナッツへの愛から始まりました。小さな工房から出発し、レシピを磨き、製品ラインを拡大し、国内外の見本市に参加しています。"
@@ -396,13 +403,18 @@
     },
     "info": {
       "title": "連絡先情報",
+      "companyName": "会社名",
       "address": "住所",
-      "addressValue": "ベトナム・ハノイ市義都坊トンクアンフィエット通りT608ビルA棟3階",
+      "addressHanoi": "ハノイオフィス",
+      "addressHcmc": "ホーチミンオフィス",
+      "addressValue": "ベトナム・ハノイ市義都坊T608ビルA棟3階",
       "phone": "ホットライン",
       "zalo": "Zalo OA",
       "email": "お問い合わせ・注文メール",
       "openMaps": "Google マップで見る",
-      "mapTitle": "Google マップ上の Cohamy の所在地",
+      "openMapsHanoi": "Google マップでハノイオフィスを見る",
+      "openMapsHcmc": "Google マップでホーチミンオフィスを見る",
+      "mapTitle": "Google マップ上のハノイオフィス",
       "hours": "営業時間",
       "hoursValue": "月〜金：8:00 - 17:00"
     },

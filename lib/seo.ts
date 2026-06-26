@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
-import { CONTACT, getAddress } from "@/lib/contact";
+import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://cohamy.vn";
@@ -120,22 +120,36 @@ export function generateProductJsonLd(options: {
 }
 
 export function generateOrganizationJsonLd(locale: Locale) {
+  const addresses = getAddresses(locale);
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: SITE_NAME,
-    alternateName: "Cohamy by Jamy Green",
+    name: getCompanyName(locale),
+    alternateName: ["Cohamy", "Cohamy by Jamy Green"],
+    legalName: getCompanyName(locale),
     url: SITE_URL,
-    logo: `${SITE_URL}/images/logo/cohamy-logo.jpg`,
+    logo: `${SITE_URL}/images/logo/cohamy-logo.png`,
     email: CONTACT.email,
     telephone: "+84981956111",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Tầng 3, tháp A, Tòa T608, Tôn Quang Phiệt",
-      addressLocality: "Hà Nội",
-      addressRegion: "Hà Nội",
-      addressCountry: "VN",
-    },
+    address: [
+      {
+        "@type": "PostalAddress",
+        name: "Hanoi Office",
+        streetAddress: CONTACT.addresses.hanoi.vi,
+        addressLocality: "Hà Nội",
+        addressRegion: "Hà Nội",
+        addressCountry: "VN",
+      },
+      {
+        "@type": "PostalAddress",
+        name: "Ho Chi Minh City Office",
+        streetAddress: CONTACT.addresses.hcmc.vi,
+        addressLocality: "Hồ Chí Minh",
+        addressRegion: "Hồ Chí Minh",
+        addressCountry: "VN",
+      },
+    ],
     contactPoint: [
       {
         "@type": "ContactPoint",
@@ -145,8 +159,8 @@ export function generateOrganizationJsonLd(locale: Locale) {
         availableLanguage: routing.locales,
       },
     ],
-    sameAs: [CONTACT.zaloUrl, CONTACT.mapsLink],
-    description: getAddress(locale),
+    sameAs: [CONTACT.zaloUrl, CONTACT.mapsLink, CONTACT.mapsLinkHcmc],
+    description: `${addresses.hanoi} | ${addresses.hcmc}`,
   };
 }
 
@@ -184,7 +198,7 @@ export function generateArticleJsonLd(options: {
       name: SITE_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/images/logo/cohamy-logo.jpg`,
+        url: `${SITE_URL}/images/logo/cohamy-logo.png`,
       },
     },
     mainEntityOfPage: {

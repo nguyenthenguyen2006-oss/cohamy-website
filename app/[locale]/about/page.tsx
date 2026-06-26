@@ -48,6 +48,16 @@ export default async function AboutPage({
         </div>
       </div>
 
+      <div className="p-8 bg-white rounded-2xl border border-[#4A2418]/10 mb-12">
+        <h2 className="font-serif text-3xl mb-4">{t("company.title")}</h2>
+        <div className="space-y-2 text-[#4A2418]/80">
+          <p>{t("company.nameVi")}</p>
+          <p>{t("company.nameEn")}</p>
+          <p>{t("company.addressHanoi")}</p>
+          <p>{t("company.addressHcmc")}</p>
+        </div>
+      </div>
+
       <div className="grid md:grid-cols-2 gap-8">
         <div className="p-8 bg-white rounded-2xl border border-[#4A2418]/10">
           <h3 className="font-serif text-2xl mb-3">{t("mission.title")}</h3>

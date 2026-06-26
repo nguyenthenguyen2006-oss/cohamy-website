@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Mail, MapPin, Phone } from "lucide-react";
-import { CONTACT, getAddress } from "@/lib/contact";
+import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 import type { Locale } from "@/lib/types";
 
 export function ContactForm() {
@@ -15,7 +15,8 @@ export function ContactForm() {
     <div className="max-w-6xl mx-auto px-6 py-12 grid lg:grid-cols-2 gap-12">
       <div>
         <h1 className="font-serif text-5xl tracking-tight mb-2">{t("title")}</h1>
-        <p className="text-[#4A2418]/70 mb-10">{t("subtitle")}</p>
+        <p className="text-[#4A2418]/70 mb-2">{t("subtitle")}</p>
+        <p className="text-sm font-medium text-[#4A2418] mb-10">{getCompanyName(locale)}</p>
 
         <div className="space-y-6">
           <div className="flex items-start gap-4">
@@ -58,17 +59,31 @@ export function ContactForm() {
           </div>
           <div className="flex items-start gap-4">
             <MapPin className="text-[#D9A441] mt-1 shrink-0" size={20} />
-            <div>
-              <div className="font-medium">{t("info.address")}</div>
-              <p className="text-[#4A2418]/70 leading-relaxed">{getAddress(locale)}</p>
-              <a
-                href={CONTACT.mapsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-block text-sm text-[#D9A441] hover:underline"
-              >
-                {t("info.openMaps")}
-              </a>
+            <div className="space-y-4">
+              <div>
+                <div className="font-medium">{t("info.addressHanoi")}</div>
+                <p className="text-[#4A2418]/70 leading-relaxed">{getAddresses(locale).hanoi}</p>
+                <a
+                  href={CONTACT.mapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-block text-sm text-[#D9A441] hover:underline"
+                >
+                  {t("info.openMapsHanoi")}
+                </a>
+              </div>
+              <div>
+                <div className="font-medium">{t("info.addressHcmc")}</div>
+                <p className="text-[#4A2418]/70 leading-relaxed">{getAddresses(locale).hcmc}</p>
+                <a
+                  href={CONTACT.mapsLinkHcmc}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-1 inline-block text-sm text-[#D9A441] hover:underline"
+                >
+                  {t("info.openMapsHcmc")}
+                </a>
+              </div>
             </div>
           </div>
         </div>

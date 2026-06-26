@@ -354,6 +354,13 @@
       "innovation": "创新",
       "community": "社区"
     },
+    "company": {
+      "title": "企业信息",
+      "nameVi": "公司名称（越南语）：CÔNG TY TNHH COHAMY",
+      "nameEn": "公司名称（英语）：COHAMY COMPANY LIMITED",
+      "addressHanoi": "河内：越南河内市义都坊T608大厦A座3层",
+      "addressHcmc": "胡志明市：越南胡志明市新成坊新桥7组"
+    },
     "story": {
       "title": "我们的故事",
       "description": "Cohamy 源于对巧克力的热爱和对越南腰果的钟情。从小型工坊起步，我们不断完善配方、扩展产品线，并参与国内外贸易展览。"
@@ -396,13 +403,18 @@
     },
     "info": {
       "title": "联系信息",
+      "companyName": "公司名称",
       "address": "地址",
-      "addressValue": "越南河内市义都坊通光斐街T608大厦A座3层",
+      "addressHanoi": "河内办公室",
+      "addressHcmc": "胡志明市办公室",
+      "addressValue": "越南河内市义都坊T608大厦A座3层",
       "phone": "热线",
       "zalo": "Zalo OA",
       "email": "联系及订单邮箱",
       "openMaps": "在 Google 地图中查看",
-      "mapTitle": "Cohamy 在 Google 地图上的位置",
+      "openMapsHanoi": "在 Google 地图查看河内办公室",
+      "openMapsHcmc": "在 Google 地图查看胡志明市办公室",
+      "mapTitle": "河内办公室 Google 地图位置",
       "hours": "营业时间",
       "hoursValue": "周一至周五：8:00 - 17:00"
     },

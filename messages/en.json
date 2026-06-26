@@ -354,6 +354,13 @@
       "innovation": "Innovation",
       "community": "Community"
     },
+    "company": {
+      "title": "Company Information",
+      "nameVi": "Company name (Vietnamese): CÔNG TY TNHH COHAMY",
+      "nameEn": "Company name (English): COHAMY COMPANY LIMITED",
+      "addressHanoi": "Hanoi: Floor 3, Tower A, T608 Building, Nghia Do Ward, Hanoi, Vietnam",
+      "addressHcmc": "Ho Chi Minh City: Group 7, Cau Moi, Tan Thanh Ward, Ho Chi Minh City, Vietnam"
+    },
     "story": {
       "title": "Our Story",
       "description": "Cohamy began with a passion for chocolate and love for Vietnamese cashews. From a small workshop, we continuously refined our recipes, expanded our product lines, and participated in trade shows at home and abroad."
@@ -396,13 +403,18 @@
     },
     "info": {
       "title": "Contact Information",
+      "companyName": "Company name",
       "address": "Address",
-      "addressValue": "Floor 3, Tower A, T608 Building, Ton Quang Phiet St., Nghia Do Ward, Hanoi, Vietnam",
+      "addressHanoi": "Hanoi Office",
+      "addressHcmc": "Ho Chi Minh City Office",
+      "addressValue": "Floor 3, Tower A, T608 Building, Nghia Do Ward, Hanoi, Vietnam",
       "phone": "Hotline",
       "zalo": "Zalo OA",
       "email": "Contact & order email",
       "openMaps": "View on Google Maps",
-      "mapTitle": "Cohamy location on Google Maps",
+      "openMapsHanoi": "View Hanoi office on Google Maps",
+      "openMapsHcmc": "View HCMC office on Google Maps",
+      "mapTitle": "Hanoi office on Google Maps",
       "hours": "Business Hours",
       "hoursValue": "Mon - Fri: 8:00 AM - 5:00 PM"
     },

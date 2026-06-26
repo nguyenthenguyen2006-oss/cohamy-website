@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { CONTACT, getAddress } from "@/lib/contact";
+import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 import type { Locale } from "@/lib/types";
 
 export function Footer() {
@@ -16,6 +16,7 @@ export function Footer() {
       <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-4 gap-8">
         <div>
           <div className="font-serif text-3xl mb-2 tracking-tight">Cohamy</div>
+          <p className="text-[#FAF6EF]/80 text-xs font-medium mb-1">{getCompanyName(locale)}</p>
           <div className="text-xs text-[#D9A441] mb-3">by Jamy Green</div>
           <p className="text-[#FAF6EF]/70 text-xs leading-relaxed">{t("description")}</p>
         </div>
@@ -62,14 +63,25 @@ export function Footer() {
           >
             {contact("zalo")}: {CONTACT.phoneDisplay}
           </a>
-          <p className="text-[#FAF6EF]/50 text-xs leading-relaxed mb-1">{getAddress(locale)}</p>
+          <p className="text-[#FAF6EF]/60 text-xs font-medium mb-0.5">{contact("addressHanoi")}</p>
+          <p className="text-[#FAF6EF]/50 text-xs leading-relaxed mb-2">{getAddresses(locale).hanoi}</p>
+          <p className="text-[#FAF6EF]/60 text-xs font-medium mb-0.5">{contact("addressHcmc")}</p>
+          <p className="text-[#FAF6EF]/50 text-xs leading-relaxed mb-2">{getAddresses(locale).hcmc}</p>
           <a
             href={CONTACT.mapsLink}
             target="_blank"
             rel="noopener noreferrer"
+            className="text-[#FAF6EF]/50 hover:text-[#D9A441] text-xs block mb-1"
+          >
+            {contact("openMapsHanoi")}
+          </a>
+          <a
+            href={CONTACT.mapsLinkHcmc}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-[#FAF6EF]/50 hover:text-[#D9A441] text-xs"
           >
-            {contact("openMaps")}
+            {contact("openMapsHcmc")}
           </a>
         </div>
       </div>
