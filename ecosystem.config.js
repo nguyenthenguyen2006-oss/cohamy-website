@@ -13,6 +13,8 @@ module.exports = {
       env_production: {
         NODE_ENV: "production",
         PORT: 3001,
+        GOOGLE_SHEETS_WEBHOOK_URL:
+          "https://script.google.com/macros/s/AKfycbyJLPIwSK_3x5d2bPjCmuAf7wltaThcmPPgiesCljfr2oESXStW6ZAxQEAhWEPLEWJtQg/exec",
       },
     },
   ],

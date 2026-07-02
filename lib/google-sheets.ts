@@ -7,15 +7,19 @@ export type ContactSubmission = {
   locale?: string;
 };
 
+const DEFAULT_SHEETS_WEBHOOK_URL =
+  "https://script.google.com/macros/s/AKfycbyJLPIwSK_3x5d2bPjCmuAf7wltaThcmPPgiesCljfr2oESXStW6ZAxQEAhWEPLEWJtQg/exec";
+
+function getSheetsWebhookUrl(): string {
+  return process.env.GOOGLE_SHEETS_WEBHOOK_URL?.trim() || DEFAULT_SHEETS_WEBHOOK_URL;
+}
+
 export function isGoogleSheetsConfigured(): boolean {
-  return Boolean(process.env.GOOGLE_SHEETS_WEBHOOK_URL?.trim());
+  return Boolean(getSheetsWebhookUrl());
 }
 
 export async function appendContactToSheet(data: ContactSubmission): Promise<void> {
-  const url = process.env.GOOGLE_SHEETS_WEBHOOK_URL?.trim();
-  if (!url) {
-    throw new Error("SHEETS_NOT_CONFIGURED");
-  }
+  const url = getSheetsWebhookUrl();
 
   const response = await fetch(url, {
     method: "POST",

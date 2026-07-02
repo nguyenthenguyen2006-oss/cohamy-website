@@ -400,7 +400,7 @@
       "sending": "Đang gửi...",
       "success": "Gửi tin nhắn thành công! Chúng tôi sẽ phản hồi sớm.",
       "error": "Gửi tin nhắn thất bại. Vui lòng thử lại.",
-      "errorSheets": "Chưa cấu hình Google Sheet. Thêm GOOGLE_SHEETS_WEBHOOK_URL vào .env.local rồi khởi động lại npm run dev."
+      "errorSheets": "Hệ thống lưu liên hệ tạm thời không khả dụng. Vui lòng thử lại sau hoặc gọi hotline."
     },
     "info": {
       "title": "Thông tin liên hệ",

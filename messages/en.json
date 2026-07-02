@@ -400,7 +400,7 @@
       "sending": "Sending...",
       "success": "Message sent successfully! We will respond soon.",
       "error": "Failed to send message. Please try again.",
-      "errorSheets": "Google Sheet is not configured. Add GOOGLE_SHEETS_WEBHOOK_URL to .env.local and restart npm run dev."
+      "errorSheets": "Contact storage is temporarily unavailable. Please try again later or call our hotline."
     },
     "info": {
       "title": "Contact Information",
