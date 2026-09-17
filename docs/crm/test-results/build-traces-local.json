@@ -1,0 +1,24 @@
+{
+  "environment": "LOCAL",
+  "testedAt": "2026-09-17T22:21:58.048Z",
+  "cases": [
+    {
+      "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
+      "status": "PASS"
+    },
+    {
+      "name": "All CRM migration files included in API tracing",
+      "status": "PASS"
+    }
+  ],
+  "traceCount": 54,
+  "includedMigrations": [
+    "db/crm/001-access-catalog.sql",
+    "db/crm/002-website-order-intake.sql",
+    "db/crm/003-work-management.sql",
+    "db/crm/004-catalog-management.sql"
+  ],
+  "leaks": [],
+  "deployment": "NOT RUN",
+  "runtimePostgres": "NOT RUN"
+}

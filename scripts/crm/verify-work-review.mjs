@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {chromium} from '@playwright/test';
+const base='http://localhost:4310',browser=await chromium.launch({channel:'msedge',headless:true}),screens=[],errors=[];
+try {
+ const context=await browser.newContext({viewport:{width:1366,height:900}}),page=await context.newPage();
+ page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+ const capture=async(name)=>{await page.evaluate(async()=>{await document.fonts.ready;window.scrollTo(0,0);});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'overflow '+name);const path='.impeccable/review/work/'+name+'.png';await page.screenshot({path,fullPage:true,caret:'initial'});screens.push(path);};
+ await page.goto(base+'/crm/login');assert.equal(await page.getByText('Cohamy · Không gian làm việc',{exact:true}).count(),0);await capture('login-desktop');
+ await page.getByLabel('Email',{exact:true}).fill('admin@crm-qa.invalid');await page.getByLabel('Mật khẩu',{exact:true}).fill('Local-QA-Only-2026!');await page.getByRole('button',{name:'Đăng nhập',exact:true}).click();await page.waitForURL(base+'/crm');await page.getByRole('heading',{name:'Bàn làm việc',exact:true}).waitFor();await capture('desktop');
+ await page.goto(base+'/crm/orders');await capture('orders-desktop');await page.locator('.work-orders-desktop .table-primary').last().click();await page.waitForURL(/\/crm\/orders\/.+/);const orderUrl=page.url();await capture('order-detail-desktop');
+ const next=page.locator('section').filter({has:page.getByRole('heading',{name:'Việc tiếp theo',exact:true})});
+ assert.equal(await next.locator('.work-task-list li').count(),0,'Target QA order must show the contextual empty-task state');{assert.equal(await next.getByRole('link',{name:'Mở yêu cầu đặt hàng'}).count(),0);await next.getByText('Tạo việc và đặt hạn',{exact:true}).click();assert.ok(await next.getByLabel('Việc cần làm',{exact:true}).isVisible());await capture('order-inline-task-desktop');await next.getByText('Tạo việc và đặt hạn',{exact:true}).click();}
+ await page.goto(base+'/crm/customers');await page.locator('.data-table tbody .table-primary').first().click();await page.waitForURL(/\/crm\/customers\/.+/);await capture('customer-desktop');
+ await page.goto(base+'/crm/goods');await page.locator('.data-table tbody a').first().click();await page.waitForURL(/\/crm\/goods\/.+/);await capture('catalog-detail-desktop');
+ await page.goto(base+'/crm/tasks');await capture('tasks-desktop');await page.goto(base+'/crm/accounts');await capture('accounts-desktop');await page.getByRole('link',{name:'Quyền và bảo mật',exact:true}).first().click();await page.waitForURL(/\/crm\/accounts\/.+/);await capture('account-detail-desktop');
+ await page.setViewportSize({width:390,height:844});await page.goto(base+'/crm');await page.getByRole('link',{name:'Hồ sơ và bảo mật của LOCAL QA · Quản trị',exact:true}).waitFor();await capture('mobile');
+ await page.goto(orderUrl);const disclosure=page.locator('.work-contact-details');await disclosure.locator('summary').click();assert.ok(await disclosure.getByText('Địa chỉ kiểm thử LOCAL',{exact:false}).isVisible());assert.ok((await disclosure.boundingBox()).y<500);assert.ok(await disclosure.getByText('Thanh toán mong muốn',{exact:true}).isVisible());assert.ok(!await page.locator('.work-detail-aside').isVisible());await capture('order-detail-mobile');
+ for(const width of [390,320]){await page.setViewportSize({width,height:844});await page.goto(base+'/crm/orders');await capture('orders-mobile-'+width);}
+ await page.goto(base+'/crm');await capture('user-320');await page.setViewportSize({width:390,height:844});await page.goto(base+'/crm/login');await capture('login-mobile');
+ assert.deepEqual(errors,[]);await fs.writeFile('docs/crm/test-results/work-review-local.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'LOCAL Edge existing fictitious QA data; read-only business actions',cases:[{name:'Accessible mobile profile link',status:'PASS'},{name:'Early expandable customer context on mobile',status:'PASS'},{name:'Inline contextual empty-task creation',status:'PASS'},{name:'Desktop login eyebrow removed',status:'PASS'}],screens,consoleErrors:errors},null,2)+'\n');console.log('PASS 4 review regressions; '+screens.length+' captures; no console errors');
+}finally{await browser.close();}

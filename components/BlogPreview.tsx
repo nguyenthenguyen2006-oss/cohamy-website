@@ -1,21 +1,22 @@
-"use client";
-
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getFeaturedBlogPosts } from "@/lib/blog";
+import { getFeaturedPosts } from "@/lib/blog-repository";
 import { BlogCard } from "@/components/BlogCard";
 import { MotionWrapper } from "@/components/MotionWrapper";
 import { DecorativeOrbs } from "@/components/DecorativeOrbs";
 import { Tilt3D } from "@/components/ui/Tilt3D";
-import type { Locale } from "@/lib/types";
+import type { BlogLocale } from "@/lib/blog-schema";
 
 interface BlogPreviewProps {
-  locale: Locale;
+  locale: string;
 }
 
-export function BlogPreview({ locale }: BlogPreviewProps) {
-  const t = useTranslations("home.blog");
-  const posts = getFeaturedBlogPosts().slice(0, 3);
+export async function BlogPreview({ locale }: BlogPreviewProps) {
+  const [t, posts] = await Promise.all([
+    getTranslations({ locale, namespace: "home.blog" }),
+    getFeaturedPosts(locale as BlogLocale, 3),
+  ]);
+  if (posts.length === 0) return null;
 
   return (
     <section className="relative overflow-hidden bg-[#FFF4D8] py-20">
@@ -39,7 +40,10 @@ export function BlogPreview({ locale }: BlogPreviewProps) {
           {posts.map((post, index) => (
             <MotionWrapper key={post.id} delay={index * 0.1} className="h-full">
               <Tilt3D intensity={9} className="h-full">
-                <BlogCard post={post} className="h-full shadow-[0_14px_40px_-22px_rgba(42,18,12,0.22)]" />
+                <BlogCard
+                  post={post}
+                  className="h-full shadow-[0_14px_40px_-22px_rgba(42,18,12,0.22)]"
+                />
               </Tilt3D>
             </MotionWrapper>
           ))}

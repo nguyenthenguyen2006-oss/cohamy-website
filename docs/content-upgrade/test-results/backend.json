@@ -1,0 +1,42 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS + RANK MATH + ACTION SCHEDULER",
+  "run": "upgrade-mu603bmf",
+  "finished_at": "2026-09-17T20:47:37.145Z",
+  "results": [
+    {
+      "name": "WordPress database and Action Scheduler",
+      "status": "PASS",
+      "detail": "{\"wordpress\":\"7.1\",\"rank_math\":\"1.0.278\",\"action_scheduler\":true,\"timezone\":\"Asia/Ho_Chi_Minh\",\"database\":true,\"storage_writable\":true,\"pending_webhooks\":0,\"active_campaigns\":0,\"gsc\":\"not_connected\",\"ai\":\"not_connected\",\"indexnow\":\"not_connected\",\"smtp\":\"not_verified\"}"
+    },
+    {
+      "name": "2 approved templates × 3 approved locations preview",
+      "status": "PASS",
+      "detail": "6 valid combinations, actual database campaign 2b6e1647-b318-496e-a924-a35efaf4102e"
+    },
+    {
+      "name": "Durable Action Scheduler produces six real public posts",
+      "status": "PASS",
+      "detail": "All 6 real WordPress posts published by server queue; no browser involved"
+    },
+    {
+      "name": "Re-running same template/location creates no duplicate",
+      "status": "PASS",
+      "detail": "Stable unique keys reused; six skipped"
+    },
+    {
+      "name": "Expired data and missing variables fail server validation",
+      "status": "PASS",
+      "detail": "Expired source, missing required variable and conflicting country references all blocked before post creation"
+    },
+    {
+      "name": "Writer cannot operate campaigns or configure credentials",
+      "status": "PASS",
+      "detail": "Real WordPress Application Password permissions return 403"
+    },
+    {
+      "name": "Redirect loop rejected and missing provider is explicit",
+      "status": "PASS",
+      "detail": "Loop 409, AI unconnected 503; no simulated success"
+    }
+  ]
+}

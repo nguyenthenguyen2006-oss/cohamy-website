@@ -70,6 +70,7 @@ export default async function ProductDetailPage({
         product={product}
         related={related}
         locale={locale as Locale}
+        orderIntakeEnabled={process.env.CRM_WEBSITE_ORDER_INTAKE === "true"}
       />
     </>
   );

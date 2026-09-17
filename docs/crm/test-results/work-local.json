@@ -1,0 +1,92 @@
+{
+  "testedAt": "2026-09-17T22:03:57.027Z",
+  "environment": "LOCAL PGlite isolated fixtures",
+  "cases": [
+    {
+      "name": "migrations rerun safely without resetting existing profiles",
+      "status": "PASS"
+    },
+    {
+      "name": "order detail contains original items and contact; search by phone/email works",
+      "status": "PASS"
+    },
+    {
+      "name": "unassigned requests and details inaccessible to sales and dealers",
+      "status": "PASS"
+    },
+    {
+      "name": "manager assigns request; only assigned sales gains access",
+      "status": "PASS"
+    },
+    {
+      "name": "stale edits fail without changing status",
+      "status": "PASS"
+    },
+    {
+      "name": "sales cannot reassign or inject payment fields; accountant cannot write",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid dealer assignee rolls back entire order change",
+      "status": "PASS"
+    },
+    {
+      "name": "rejection needs reason, reopening terminal request requires manager",
+      "status": "PASS"
+    },
+    {
+      "name": "unsupported state jumps rejected; READY stays unpaid and creates no stock/debt",
+      "status": "PASS"
+    },
+    {
+      "name": "notes persist and reject cross-dealer or unassigned partner access",
+      "status": "PASS"
+    },
+    {
+      "name": "create due task with scoped owner and complete it with conflict control",
+      "status": "PASS"
+    },
+    {
+      "name": "task assignee must be allowed to read the linked customer",
+      "status": "PASS"
+    },
+    {
+      "name": "UI assignments enforce role and scope; invalid batch preserves old grants",
+      "status": "PASS"
+    },
+    {
+      "name": "removing request assignment also hides its notes and tasks from previous sales",
+      "status": "PASS"
+    },
+    {
+      "name": "extended customer profile and contact search persist",
+      "status": "PASS"
+    },
+    {
+      "name": "duplicate suggestions only include records user can access",
+      "status": "PASS"
+    },
+    {
+      "name": "catalog unit and SKU changes preserve public ID and website price",
+      "status": "PASS"
+    },
+    {
+      "name": "report counts actual requests and labels value separately from revenue",
+      "status": "PASS"
+    },
+    {
+      "name": "admin session revoke, role validation and role change clear assignments",
+      "status": "PASS"
+    },
+    {
+      "name": "password reset and self password change revoke all existing sessions",
+      "status": "PASS"
+    },
+    {
+      "name": "date validation and pagination keep complete request history accessible",
+      "status": "PASS"
+    }
+  ],
+  "financialPosting": "NOT IMPLEMENTED",
+  "postgresService": "NOT RUN"
+}

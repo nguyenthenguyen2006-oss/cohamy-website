@@ -1,0 +1,32 @@
+{
+  "environment": "LOCAL",
+  "testedAt": "2026-09-17T19:42:11.159Z",
+  "method": "Fresh headless Edge context; diagnostic console sample, not full E2E or a blanket zero-error proof",
+  "consoleMessages": [
+    {
+      "url": "http://localhost:4310/vi/san-pham",
+      "type": "warning",
+      "text": "Image with src \"/images/logo/cohamy-brand-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    },
+    {
+      "url": "http://localhost:4310/vi/san-pham",
+      "type": "warning",
+      "text": "Image with src \"/images/products/cohamy-almond-chocolate-55g.jpg\" was detected as the Largest Contentful Paint (LCP). Please add the `loading=\"eager\"` property if this image is above the fold.\nRead more: https://nextjs.org/docs/app/api-reference/components/image#loading"
+    },
+    {
+      "url": "http://localhost:4310/vi/san-pham/cohamy-socola-hanh-nhan",
+      "type": "warning",
+      "text": "Image with src \"/images/logo/cohamy-brand-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    },
+    {
+      "url": "http://localhost:4310/vi/gio-hang",
+      "type": "warning",
+      "text": "Image with src \"/images/logo/cohamy-brand-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    },
+    {
+      "url": "http://localhost:4310/vi/thanh-toan",
+      "type": "warning",
+      "text": "Image with src \"/images/logo/cohamy-brand-logo.png\" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: \"auto\"' or 'height: \"auto\"' to maintain the aspect ratio."
+    }
+  ]
+}

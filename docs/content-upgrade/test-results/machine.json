@@ -1,0 +1,8 @@
+{
+  "os": "Windows_NT 10.0.26200",
+  "arch": "x64",
+  "cpu": "Intel(R) Core(TM) i9-14900HX",
+  "logicalProcessors": 32,
+  "memoryGB": 16,
+  "node": "v24.19.0"
+}

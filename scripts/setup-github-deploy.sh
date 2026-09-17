@@ -2,7 +2,12 @@
 # One-time: allow GitHub Actions to SSH deploy (run on VPS as root)
 set -euo pipefail
 
-DEPLOY_PUBKEY="ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOYGQq8IlZDtIwL4PDtEUrqB7mxfmThWprYtZEuwcbjK github-deploy"
+DEPLOY_PUBKEY="${1:-}"
+
+if [ -z "$DEPLOY_PUBKEY" ]; then
+  echo "Usage: bash scripts/setup-github-deploy.sh 'ssh-ed25519 AAAA... github-deploy'"
+  exit 1
+fi
 
 mkdir -p ~/.ssh
 chmod 700 ~/.ssh

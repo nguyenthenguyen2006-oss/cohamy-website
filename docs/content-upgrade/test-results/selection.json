@@ -1,0 +1,27 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS DATABASE + ACTION SCHEDULER",
+  "build": "b28H0qqz9W7NuC1gnhp2H",
+  "runtime": {
+    "harness": 46992,
+    "cms": 32856,
+    "frontend": 38092,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:06:31.939Z"
+  },
+  "results": [
+    {
+      "name": "Selected WordPress IDs freeze exactly two URLs with metadata, dedup and invalid-ID refusal",
+      "status": "PASS",
+      "job_id": "909ccf00-94d6-4015-bb00-4a232ad2271e",
+      "total": 2
+    },
+    {
+      "name": "Native same-locale near-duplicate review finds exact text, remains advisory",
+      "status": "PASS",
+      "word_overlap": 1,
+      "scope": "100 bài publish gần nhất cùng locale; độ trùng từ không kết luận sao chép"
+    }
+  ],
+  "finished_at": "2026-09-17T21:07:56.078Z"
+}

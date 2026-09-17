@@ -3,40 +3,33 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import type { BlogPost, Locale } from "@/lib/types";
+import type { BlogRow } from "@/lib/blog-schema";
+import type { Locale } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { SectionHeading } from "@/components/SectionHeading";
 import { BlogCard } from "@/components/BlogCard";
-
-interface BlogListProps {
-  posts: BlogPost[];
-  className?: string;
-  showHeading?: boolean;
-}
 
 export function BlogList({
   posts,
   className,
   showHeading = true,
-}: BlogListProps) {
+}: {
+  posts: BlogRow[];
+  className?: string;
+  showHeading?: boolean;
+}) {
   const t = useTranslations("blog");
   const locale = useLocale() as Locale;
   const [query, setQuery] = useState("");
-
   const filteredPosts = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
+    const normalized = query.trim().toLocaleLowerCase(locale);
     if (!normalized) return posts;
-
-    return posts.filter((post) => {
-      const haystack = [
-        post.title[locale],
-        post.excerpt[locale],
-        ...post.tags,
-      ]
+    return posts.filter((post) =>
+      [post.title, post.excerpt, ...post.tags]
         .join(" ")
-        .toLowerCase();
-      return haystack.includes(normalized);
-    });
+        .toLocaleLowerCase(locale)
+        .includes(normalized),
+    );
   }, [posts, query, locale]);
 
   return (
@@ -48,7 +41,6 @@ export function BlogList({
           className="mb-8"
         />
       ) : null}
-
       <div className="relative mb-8 max-w-md">
         <Search
           size={16}
@@ -59,25 +51,14 @@ export function BlogList({
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={t("searchPlaceholder")}
-          className="h-12 w-full rounded-full border border-[#4A2418]/15 bg-[#FFF4D8]/50 pl-11 pr-4 text-sm text-[#2A120C] outline-none transition-colors placeholder:text-[#4A2418]/40 focus:border-[#D9A441]"
-          aria-label={t("searchPlaceholder")}
+          className="h-12 w-full rounded-full border border-[#4A2418]/15 bg-[#FFF4D8]/50 pl-11 pr-4 text-sm outline-none focus:border-[#D9A441]"
         />
       </div>
-
-      {filteredPosts.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#4A2418]/15 px-6 py-16 text-center">
-          <p className="font-[family-name:var(--font-playfair)] text-2xl text-[#2A120C]">
-            {t("empty")}
-          </p>
-          <p className="mt-2 text-sm text-[#4A2418]/65">{t("emptyHint")}</p>
-        </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {filteredPosts.map((post) => (
-            <BlogCard key={post.id} post={post} />
-          ))}
-        </div>
-      )}
+      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {filteredPosts.map((post) => (
+          <BlogCard key={post.id} post={post} />
+        ))}
+      </div>
     </section>
   );
 }

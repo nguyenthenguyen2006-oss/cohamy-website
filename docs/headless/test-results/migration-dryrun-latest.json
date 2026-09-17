@@ -1,0 +1,122 @@
+{
+  "source": "legacy",
+  "sourceHash": "8b7ab62b13340c0c55c18dd2db7ca8bb7d4835c024a6009b31e3eb815c7726db",
+  "rows": 40,
+  "groups": 8,
+  "localeCounts": {
+    "vi": 8,
+    "en": 8,
+    "zh": 8,
+    "ko": 8,
+    "ja": 8
+  },
+  "mode": "dry-run",
+  "warnings": [
+    "Bundled content only; not proof of current Google Sheets contents. Legacy source has no updated_at; using publishedAt as the only known source timestamp."
+  ],
+  "destination": {
+    "existing": 40,
+    "conflicts": [],
+    "overwriteExplicitlyAllowed": false
+  },
+  "preview": {
+    "token": "61707e3c-12ce-4782-9516-3bf8cfff491c",
+    "total": 40,
+    "valid": 40,
+    "invalid": 0,
+    "errors": [],
+    "preview": [
+      {
+        "row": 2,
+        "id": "blog-chon-socola-hat-vi",
+        "locale": "vi",
+        "slug": "huong-dan-chon-socola-hat-cohamy",
+        "title": "Hướng dẫn chọn socola hạt Cohamy phù hợp gu thưởng thức",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 3,
+        "id": "blog-chon-socola-hat-en",
+        "locale": "en",
+        "slug": "how-to-choose-cohamy-nut-chocolate",
+        "title": "How to Choose the Right Cohamy Nut Chocolate",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 4,
+        "id": "blog-chon-socola-hat-zh",
+        "locale": "zh",
+        "slug": "how-to-choose-cohamy-nut-chocolate",
+        "title": "如何选择适合您的 Cohamy 坚果巧克力",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 5,
+        "id": "blog-chon-socola-hat-ko",
+        "locale": "ko",
+        "slug": "how-to-choose-cohamy-nut-chocolate",
+        "title": "취향에 맞는 코하미 견과 초콜릿 고르는 법",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 6,
+        "id": "blog-chon-socola-hat-ja",
+        "locale": "ja",
+        "slug": "how-to-choose-cohamy-nut-chocolate",
+        "title": "好みに合うCohamyナッツチョコレートの選び方",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 7,
+        "id": "blog-xoai-say-hoa-loc-vi",
+        "locale": "vi",
+        "slug": "xoai-say-hoa-loc-jamy",
+        "title": "Xoài sấy Hòa Lộc: Từ trái cây Việt đến snack cao cấp",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 8,
+        "id": "blog-xoai-say-hoa-loc-en",
+        "locale": "en",
+        "slug": "jamy-hoa-loc-dried-mango",
+        "title": "Hoa Loc Dried Mango: From Vietnamese Fruit to Premium Snack",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 9,
+        "id": "blog-xoai-say-hoa-loc-zh",
+        "locale": "zh",
+        "slug": "jamy-hoa-loc-dried-mango",
+        "title": "和平芒果干：从越南水果到高端零食",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 10,
+        "id": "blog-xoai-say-hoa-loc-ko",
+        "locale": "ko",
+        "slug": "jamy-hoa-loc-dried-mango",
+        "title": "호아록 건조 망고: 베트남 과일에서 프리미엄 스낵까지",
+        "status": "published",
+        "action": "updated"
+      },
+      {
+        "row": 11,
+        "id": "blog-xoai-say-hoa-loc-ja",
+        "locale": "ja",
+        "slug": "jamy-hoa-loc-dried-mango",
+        "title": "ホアロックドライマンゴー：ベトナムの果物からプレミアムスナックへ",
+        "status": "published",
+        "action": "updated"
+      }
+    ],
+    "batch_size": 25
+  }
+}

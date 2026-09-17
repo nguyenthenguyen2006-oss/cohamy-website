@@ -1,0 +1,19 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS REST, NATIVE DATABASE AND ACTION SCHEDULER",
+  "run": "large-preview-mu60d3h2",
+  "results": [
+    {
+      "name": "301-row durable preview validates across batches without writing",
+      "status": "PASS",
+      "milliseconds": 15026,
+      "valid": 300,
+      "failed": 1
+    },
+    {
+      "name": "Confirmed background import persists 300 draft records, skips explicit error, cannot run twice",
+      "status": "PASS",
+      "milliseconds": 76700
+    }
+  ],
+  "finished_at": "2026-09-17T20:56:04.979Z"
+}

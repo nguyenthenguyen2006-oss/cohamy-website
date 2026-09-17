@@ -1,0 +1,119 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS + REAL RANK MATH",
+  "database": "SQLite 3 via official WordPress SQLite Database Integration",
+  "runtime": {
+    "harness": 30708,
+    "cms": 5308,
+    "frontend": 38656,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:30:05.681Z"
+  },
+  "runId": "e2e-mu61oxz2",
+  "cms": "http://127.0.0.1:8081",
+  "front": "http://127.0.0.1:3001",
+  "startedBuild": "5CuZsCRQV0qILSzmZCUi2",
+  "finishedAt": "2026-09-17T21:34:30.255Z",
+  "results": [
+    {
+      "name": "01 warm draft cache",
+      "status": "PASS",
+      "detail": "Draft 10949; warmed detail/list/home/sitemap before publish"
+    },
+    {
+      "name": "02 publish in WordPress",
+      "status": "PASS",
+      "detail": "Verified with real local WordPress and running Next.js"
+    },
+    {
+      "name": "03 public HTTP 200 and content",
+      "status": "PASS",
+      "detail": "Verified with real local WordPress and running Next.js"
+    },
+    {
+      "name": "04 one self-referencing canonical",
+      "status": "PASS",
+      "detail": "Verified with real local WordPress and running Next.js"
+    },
+    {
+      "name": "05 indexable robots",
+      "status": "PASS",
+      "detail": "Verified with real local WordPress and running Next.js"
+    },
+    {
+      "name": "06 crawlable listing anchor",
+      "status": "PASS",
+      "detail": "Verified with real local WordPress and running Next.js"
+    },
+    {
+      "name": "07 sitemap and UTC lastModified",
+      "status": "PASS",
+      "detail": "lastModified=2026-09-17T21:32:08.000Z"
+    },
+    {
+      "name": "08 update content SEO and media",
+      "status": "PASS",
+      "detail": "Native Rank Math %title%/%sep%/%sitename%/%excerpt% resolved; new WP upload visible"
+    },
+    {
+      "name": "09 unpublish removes public and sitemap",
+      "status": "PASS",
+      "detail": "Verified with real local WordPress and running Next.js"
+    },
+    {
+      "name": "10 non-public statuses remain secret",
+      "status": "PASS",
+      "detail": "Verified with real local WordPress and running Next.js"
+    },
+    {
+      "name": "11 scheduled publish without WP HTTP traffic",
+      "status": "FAIL",
+      "detail": "The expression evaluated to a falsy value:\n\n  assert(cronLog.includes(`publish_future_post ${post.id}`))\n"
+    },
+    {
+      "name": "12 same slug translations and uniqueness",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "13 CSV template import and safe reimport",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "14 webhook signature timestamp replay",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "15 permissions and authenticated real Next preview",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "16 actual WordPress 503 does not become empty sitemap or 404",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "17 same Next process and build",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "18 slug 301 and loop prevention",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "19 CMS protection and old admin write lock",
+      "status": "NOT RUN",
+      "detail": ""
+    },
+    {
+      "name": "20 Gutenberg content and sanitization",
+      "status": "NOT RUN",
+      "detail": ""
+    }
+  ]
+}

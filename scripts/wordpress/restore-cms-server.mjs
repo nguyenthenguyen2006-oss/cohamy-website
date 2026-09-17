@@ -1,0 +1,11 @@
+import {spawn} from 'node:child_process';
+import {readFileSync,writeFileSync,appendFileSync} from 'node:fs';
+import path from 'node:path';
+const runtime=JSON.parse(readFileSync('.local/runtime.json'));const local=JSON.parse(readFileSync('.local/secrets.json'));const root=process.cwd();
+if(runtime.cms!==Number(process.argv[2]) || !runtime.harness || !runtime.frontend)throw new Error('Replacement must match the recorded local CMS process.');
+const php=spawn(process.env.PHP_BINARY || 'php',['-c',path.join(root,'.local/php.ini'),'-S',`127.0.0.1:${local.cms_port}`,'-t',path.join(root,'.local/wordpress'),'scripts/wordpress/router.php'],{windowsHide:true,stdio:['ignore','pipe','pipe']});
+for(const stream of [php.stdout,php.stderr])stream.on('data',chunk=>appendFileSync('.local/logs/wordpress-recovery.log',chunk));
+php.on('error',()=>process.exit(1));php.on('exit',code=>process.exit(code ?? 1));
+writeFileSync('.local/runtime.json',JSON.stringify({...runtime,cms:php.pid,cms_replacement_watchdog:process.pid,cmsRestoredAt:new Date().toISOString()},null,2));
+const stop=()=>{php.kill();process.exit(0);};process.on('SIGINT',stop);process.on('SIGTERM',stop);
+setInterval(()=>{try{process.kill(runtime.harness,0);process.kill(runtime.frontend,0);}catch{stop();}},2000);

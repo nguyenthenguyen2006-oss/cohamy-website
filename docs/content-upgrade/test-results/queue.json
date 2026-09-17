@@ -1,0 +1,32 @@
+{
+    "environment": "LOCAL \/ REAL WORDPRESS + ACTION SCHEDULER \/ CONTROLLED DATE AND CRASH FIXTURES",
+    "run": "recovery-1efc3866a195",
+    "finished_at": "2026-09-17T20:50:40+00:00",
+    "results": [
+        {
+            "name": "pause\/resume and Vietnamese daily quota",
+            "status": "PASS",
+            "detail": "Native server worker wrote one of six then deferred remaining work to next Vietnamese day."
+        },
+        {
+            "name": "quota rollover from persisted yesterday checkpoint",
+            "status": "PASS \/ CONTROLLED DATE FIXTURE",
+            "detail": "Real database checkpoint and native date logic; not a live overnight observation."
+        },
+        {
+            "name": "stop\/resume, mid-job failure, bounded retry and stable idempotence",
+            "status": "PASS",
+            "detail": "Archiving one live record caused real failed items; approval + explicit retry completed all six; rerun creates zero."
+        },
+        {
+            "name": "missing action repair and expired worker lease recovery",
+            "status": "PASS \/ CONTROLLED CRASH FIXTURE",
+            "detail": "Actual SQL CAS leases and Action Scheduler entry recreated; subsequent PHP worker reconciled persisted job."
+        },
+        {
+            "name": "scoped recoverable campaign rollback",
+            "status": "PASS",
+            "detail": "Only six posts owned by this campaign were returned to draft; extra job retained its draft."
+        }
+    ]
+}

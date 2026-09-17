@@ -3,14 +3,16 @@ import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://cohamy.vn";
+const configuredSiteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://cohamy.vn";
+
+export const SITE_URL = configuredSiteUrl.replace(/\/+$/u, "");
 
 export const SITE_NAME = "Cohamy";
 
 type HreflangHref = Parameters<typeof getPathname>[0]["href"];
 
-function buildLocalizedUrl(locale: Locale, pathname: HreflangHref): string {
+export function buildLocalizedUrl(locale: Locale, pathname: HreflangHref): string {
   const localizedPath = getPathname({ locale, href: pathname });
   return `${SITE_URL}${localizedPath}`;
 }
@@ -41,7 +43,14 @@ export function generatePageMetadata(options: {
   image?: string;
   type?: "website" | "article";
   publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  canonicalUrl?: string;
+  alternates?: Metadata["alternates"];
+  robots?: Metadata["robots"];
+  imageAlt?: string;
   keywords?: string[];
+  social?: { facebook_title?: string; facebook_description?: string; facebook_image?: string; twitter_title?: string; twitter_description?: string; twitter_image?: string; twitter_card_type?: string };
 }): Metadata {
   const {
     locale,
@@ -51,32 +60,52 @@ export function generatePageMetadata(options: {
     image = "/images/products/cohamy-almond-chocolate-55g.jpg",
     type = "website",
     publishedTime,
+    modifiedTime,
+    author,
+    canonicalUrl,
+    alternates,
+    robots,
+    imageAlt,
     keywords,
+    social,
   } = options;
 
   const url = buildLocalizedUrl(locale, pathname);
-  const imageUrl = image.startsWith("http") ? image : `${SITE_URL}${image}`;
+  const resolvedImage =
+    image || "/images/products/cohamy-almond-chocolate-55g.jpg";
+  const imageUrl = resolvedImage.startsWith("http")
+    ? resolvedImage
+    : `${SITE_URL}${resolvedImage}`;
+  const resolvedAlternates =
+    alternates ??
+    {
+      ...buildAlternates(pathname, locale),
+      canonical: canonicalUrl || url,
+    };
 
   return {
     title,
     description,
     keywords,
-    alternates: buildAlternates(pathname, locale),
+    robots,
+    alternates: resolvedAlternates,
     openGraph: {
-      title,
-      description,
-      url,
+      title: social?.facebook_title || title,
+      description: social?.facebook_description || description,
+      url: canonicalUrl || url,
       siteName: SITE_NAME,
       locale,
       type,
-      images: [{ url: imageUrl, alt: title }],
+      images: [{ url: social?.facebook_image || imageUrl, alt: imageAlt || title }],
       ...(publishedTime ? { publishedTime } : {}),
+      ...(modifiedTime ? { modifiedTime } : {}),
+      ...(author ? { authors: [author] } : {}),
     },
     twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [imageUrl],
+      card: social?.twitter_card_type === "summary" ? "summary" : "summary_large_image",
+      title: social?.twitter_title || title,
+      description: social?.twitter_description || description,
+      images: [social?.twitter_image || imageUrl],
     },
   };
 }
@@ -159,7 +188,7 @@ export function generateOrganizationJsonLd(locale: Locale) {
         availableLanguage: routing.locales,
       },
     ],
-    sameAs: [CONTACT.zaloUrl, CONTACT.mapsLink, CONTACT.mapsLinkHcmc],
+    sameAs: [CONTACT.zaloUrl, CONTACT.mapsLink, CONTACT.mapsLinkHcmc].map(url => String(url)),
     description: `${addresses.hanoi} | ${addresses.hcmc}`,
   };
 }
@@ -172,14 +201,31 @@ export function generateArticleJsonLd(options: {
   slug: string;
   author: string;
   publishedAt: string;
+  modifiedAt?: string;
+  canonicalUrl?: string;
 }) {
-  const { locale, title, description, image, slug, author, publishedAt } =
-    options;
-  const url = buildLocalizedUrl(locale, {
-    pathname: "/blog/[slug]",
-    params: { slug },
-  });
-  const imageUrl = image.startsWith("http") ? image : `${SITE_URL}${image}`;
+  const {
+    locale,
+    title,
+    description,
+    image,
+    slug,
+    author,
+    publishedAt,
+    modifiedAt,
+    canonicalUrl,
+  } = options;
+  const url =
+    canonicalUrl ||
+    buildLocalizedUrl(locale, {
+      pathname: "/blog/[slug]",
+      params: { slug },
+    });
+  const resolvedImage =
+    image || "/images/products/cohamy-almond-chocolate-55g.jpg";
+  const imageUrl = resolvedImage.startsWith("http")
+    ? resolvedImage
+    : `${SITE_URL}${resolvedImage}`;
 
   return {
     "@context": "https://schema.org",
@@ -188,7 +234,7 @@ export function generateArticleJsonLd(options: {
     description,
     image: imageUrl,
     datePublished: publishedAt,
-    dateModified: publishedAt,
+    dateModified: modifiedAt || publishedAt,
     author: {
       "@type": "Person",
       name: author,
@@ -205,5 +251,40 @@ export function generateArticleJsonLd(options: {
       "@type": "WebPage",
       "@id": url,
     },
+  };
+}
+
+export function generateBlogBreadcrumbJsonLd(options: {
+  locale: Locale;
+  slug: string;
+  title: string;
+}) {
+  const { locale, slug, title } = options;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: SITE_NAME,
+        item: buildLocalizedUrl(locale, "/"),
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Blog",
+        item: buildLocalizedUrl(locale, "/blog"),
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: title,
+        item: buildLocalizedUrl(locale, {
+          pathname: "/blog/[slug]",
+          params: { slug },
+        }),
+      },
+    ],
   };
 }

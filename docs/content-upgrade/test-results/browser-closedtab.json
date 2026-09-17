@@ -1,0 +1,22 @@
+{
+  "environment": "LOCAL / ACTUAL CHROME UI + WORDPRESS + SERVER CRON + NEXT",
+  "closed_at": "2026-09-17T20:08:24.933Z",
+  "queued_at_close": 2,
+  "daily_at_vn": "03:18",
+  "heartbeat_utc": "2026-09-17T20:18:01.000Z",
+  "publicPosts": [
+    {
+      "wp_id": 10549,
+      "path": "/vi/bai-viet/upgrade-mu5vrbth-2-dia-diem-dong-tab",
+      "created_at_utc": "2026-09-17T20:18:01Z"
+    },
+    {
+      "wp_id": 10551,
+      "path": "/vi/bai-viet/upgrade-mu5vrbth-1-dia-diem-dong-tab",
+      "created_at_utc": "2026-09-17T20:18:01Z"
+    }
+  ],
+  "build": "izO7CdfK8W0nZOh6h_9Lz",
+  "next_pid": 11172,
+  "status": "PASS"
+}

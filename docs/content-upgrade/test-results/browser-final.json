@@ -1,0 +1,31 @@
+{
+  "environment": "LOCAL / ACTUAL CHROME / FINAL NEXT BUILD",
+  "status": "PASS",
+  "verified_at": "2026-09-17T21:55:39.549Z",
+  "public": {
+    "canonical": [
+      "https://cohamy.vn/vi/bai-viet/e2e-mu5skjxi"
+    ],
+    "robots": [
+      "index, follow"
+    ],
+    "saved_content": true,
+    "title": "Cohamy SEO nhập trong Rank Math thật"
+  },
+  "operations": {
+    "latest_record_visible": true,
+    "server_loaded": true,
+    "url": "http://127.0.0.1:8081/wp-admin/admin.php?page=cohamy-operations"
+  },
+  "runtime": {
+    "harness": 30708,
+    "cms": 36360,
+    "frontend": 38656,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:30:05.681Z",
+    "cms_replacement_watchdog": 35176,
+    "cmsRestoredAt": "2026-09-17T21:51:29.187Z"
+  },
+  "build": "5CuZsCRQV0qILSzmZCUi2"
+}

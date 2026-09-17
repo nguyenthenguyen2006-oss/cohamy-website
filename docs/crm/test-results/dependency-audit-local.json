@@ -1,0 +1,89 @@
+{
+  "checkedAt": "2026-09-17T19:20:04.643Z",
+  "environment": "LOCAL",
+  "command": "npm audit --omit=dev",
+  "totals": {
+    "info": 0,
+    "low": 0,
+    "moderate": 29,
+    "high": 3,
+    "critical": 1,
+    "total": 33
+  },
+  "packages": [
+    {
+      "name": "@tiptap/extension-image",
+      "severity": "moderate",
+      "range": "<=3.0.0-next.8 || 3.22.4 - 3.30.3",
+      "advisories": []
+    },
+    {
+      "name": "@tiptap/extension-link",
+      "severity": "moderate",
+      "range": "<=3.0.0-next.8 || 3.22.4 - 3.30.3",
+      "advisories": []
+    },
+    {
+      "name": "@tiptap/react",
+      "severity": "moderate",
+      "range": "<=3.0.0-next.8 || 3.22.4 - 3.30.3",
+      "advisories": []
+    },
+    {
+      "name": "next",
+      "severity": "critical",
+      "range": "9.5.6-canary.0 - 10.0.7 || 14.3.0-canary.0 - 15.5.23 || 15.6.0-canary.0 - 16.3.2",
+      "advisories": [
+        {
+          "title": "Next.js: Unauthenticated Remote Code Execution on windows-hosted servers",
+          "url": "https://github.com/advisories/GHSA-p293-qw3h-jr36"
+        },
+        {
+          "title": "Next.js: Unauthenticated Remote Code Execution in Image Optimization API when AVIF files are used",
+          "url": "https://github.com/advisories/GHSA-2xp9-vwfh-vxw4"
+        }
+      ]
+    },
+    {
+      "name": "sanitize-html",
+      "severity": "moderate",
+      "range": "1.9.0 - 2.17.6",
+      "advisories": [
+        {
+          "title": "ApostropheCMS: Stored XSS via SVG SMIL URI-list scheme-policy bypass",
+          "url": "https://github.com/advisories/GHSA-g8qq-57p8-ggw5"
+        }
+      ]
+    },
+    {
+      "name": "sharp",
+      "severity": "high",
+      "range": "<0.35.4",
+      "advisories": [
+        {
+          "title": "sharp: Vulnerabilities in libheif: GHSA-g89c-p67h-r497 and GHSA-2jg2-4ch7-h545",
+          "url": "https://github.com/advisories/GHSA-rgj7-g3m4-5g8c"
+        }
+      ]
+    }
+  ],
+  "crmAddedPackages": [
+    {
+      "name": "pg",
+      "reported": false
+    },
+    {
+      "name": "@electric-sql/pglite",
+      "reported": false
+    },
+    {
+      "name": "@phosphor-icons/react",
+      "reported": false
+    },
+    {
+      "name": "@fontsource/be-vietnam-pro",
+      "reported": false
+    }
+  ],
+  "action": "No automatic upgrades; incumbent Next/CMS dependencies require separate remediation and full regression before production."
+}

@@ -1,0 +1,46 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS + REAL RANK MATH + NEXT PRODUCTION",
+  "run": "public-mu61nchd",
+  "build": "5CuZsCRQV0qILSzmZCUi2",
+  "runtime": {
+    "harness": 30708,
+    "cms": 5308,
+    "frontend": 38656,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:30:05.681Z"
+  },
+  "finished_at": "2026-09-17T21:31:27.130Z",
+  "results": [
+    {
+      "name": "Draft warmup then real publish without restarting Next",
+      "status": "PASS",
+      "detail": "Warm 404 becomes real 200, one public canonical, robots follow and distinct social fields correct"
+    },
+    {
+      "name": "Server-paged listing and sitemap index reflect saved post",
+      "status": "PASS",
+      "detail": "SSR crawlable anchor, sitemap shards <=5000 URLs, UTC lastModified"
+    },
+    {
+      "name": "Real Rank Math engine runs in Action Scheduler and persists score",
+      "status": "PASS",
+      "detail": "Native vendored Rank Math Analyzer/ResultManager persisted private authorized score 20; public SEO API omits keywords/score/state"
+    },
+    {
+      "name": "WordPress managed page public and SEO update",
+      "status": "PASS",
+      "detail": "Native WP page publish/update/draft changes actual Next HTML and sitemap in same session"
+    },
+    {
+      "name": "Redirect manager and real aggregated 404",
+      "status": "PASS",
+      "detail": "HTTP 301 destination correct; 2 actual 404 hits persisted without query/PII"
+    },
+    {
+      "name": "Unpublish removes public post and sitemap without deployment",
+      "status": "PASS",
+      "detail": "Same process IDs and build across every publish/update/unpublish step"
+    }
+  ]
+}

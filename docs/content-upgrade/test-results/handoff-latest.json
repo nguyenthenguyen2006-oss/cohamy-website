@@ -1,0 +1,263 @@
+{
+  "generated_at": "2026-09-17T21:52:50.382142+00:00",
+  "status": "LOCAL_IMPLEMENTED_AND_VERIFIED / PRODUCTION_NOT_RUN",
+  "runtime": {
+    "harness": 30708,
+    "cms": 36360,
+    "frontend": 38656,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:30:05.681Z",
+    "cms_replacement_watchdog": 35176,
+    "cmsRestoredAt": "2026-09-17T21:51:29.187Z"
+  },
+  "build": "5CuZsCRQV0qILSzmZCUi2",
+  "wordpress": "7.1",
+  "rank_math_free": "1.0.278",
+  "bridge": "2.0.9",
+  "suites": [
+    {
+      "name": "Blog 17 yêu cầu + 3 regression",
+      "report": "docs/headless/test-results/e2e-latest.json",
+      "passed": 20,
+      "environment": "LOCAL / REAL WORDPRESS + REAL RANK MATH",
+      "build": "5CuZsCRQV0qILSzmZCUi2",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Mất cron event có chủ đích",
+      "report": "docs/headless/test-results/schedule-latest.json",
+      "passed": 2,
+      "environment": "LOCAL / REAL WORDPRESS + REAL RANK MATH",
+      "build": "5CuZsCRQV0qILSzmZCUi2",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "CMS TCP disconnect/recovery",
+      "report": "docs/headless/test-results/tcp-disconnect.json",
+      "passed": 3,
+      "environment": "LOCAL / ACTUAL WORDPRESS PROCESS STOP AND RESTORE / NEXT UNCHANGED",
+      "build": "5CuZsCRQV0qILSzmZCUi2",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Gutenberg/webhook/migration/backup",
+      "report": "docs/headless/test-results/operations-latest.json",
+      "passed": 5,
+      "environment": "LOCAL / REAL WORDPRESS + REAL RANK MATH",
+      "build": "izO7CdfK8W0nZOh6h_9Lz",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Campaign 2 template × 3 location",
+      "report": "docs/content-upgrade/test-results/backend.json",
+      "passed": 7,
+      "environment": "LOCAL / REAL WORDPRESS + RANK MATH + ACTION SCHEDULER",
+      "build": null,
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Public pages/SEO/social/private analysis",
+      "report": "docs/content-upgrade/test-results/public.json",
+      "passed": 6,
+      "environment": "LOCAL / REAL WORDPRESS + REAL RANK MATH + NEXT PRODUCTION",
+      "build": "5CuZsCRQV0qILSzmZCUi2",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "References/inspector/links/redirect/404",
+      "report": "docs/content-upgrade/test-results/advanced.json",
+      "passed": 6,
+      "environment": "LOCAL / REAL WORDPRESS, FREE RANK MATH, ACTION SCHEDULER AND NEXT PRODUCTION",
+      "build": "b28H0qqz9W7NuC1gnhp2H",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Editorial CSV/JSON/CAS/duplicate",
+      "report": "docs/content-upgrade/test-results/editorial.json",
+      "passed": 4,
+      "environment": "LOCAL / REAL WORDPRESS REST + NATIVE TABLES + ACTION SCHEDULER",
+      "build": null,
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Queue/quota/retry/repair/rollback",
+      "report": "docs/content-upgrade/test-results/queue.json",
+      "passed": 5,
+      "environment": "LOCAL / REAL WORDPRESS + ACTION SCHEDULER / CONTROLLED DATE AND CRASH FIXTURES",
+      "build": null,
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "301-row durable preview/import",
+      "report": "docs/content-upgrade/test-results/large-import.json",
+      "passed": 2,
+      "environment": "LOCAL / REAL WORDPRESS REST, NATIVE DATABASE AND ACTION SCHEDULER",
+      "build": null,
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Selected CSV/duplicate advisory",
+      "report": "docs/content-upgrade/test-results/selection.json",
+      "passed": 2,
+      "environment": "LOCAL / REAL WORDPRESS DATABASE + ACTION SCHEDULER",
+      "build": "b28H0qqz9W7NuC1gnhp2H",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Dashboard/selection/robots/CSV",
+      "report": "docs/content-upgrade/test-results/enhancements.json",
+      "passed": 6,
+      "environment": "LOCAL / REAL WORDPRESS + NEXT / NO EXTERNAL LIVE CALLS",
+      "build": "izO7CdfK8W0nZOh6h_9Lz",
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    },
+    {
+      "name": "Provider contracts ONLY",
+      "report": "docs/content-upgrade/test-results/providers.json",
+      "passed": 5,
+      "environment": "LOCAL WordPress REAL persistence / EXTERNAL TRANSPORT CONTRACT MOCK ONLY",
+      "build": null,
+      "scope": "As stated in original report; CONTRACT MOCK or controlled fixtures remain labeled."
+    }
+  ],
+  "proofs": [
+    {
+      "name": "Pending campaign survives actual PHP restart",
+      "report": "docs/content-upgrade/test-results/cms-restart.json",
+      "status": "PASS",
+      "environment": "LOCAL / ACTUAL PHP CMS PROCESS RESTART WITH PERSISTED PENDING ACTION SCHEDULER JOB",
+      "build": "5CuZsCRQV0qILSzmZCUi2",
+      "scope": "HTTP PHP server restarted; system cron dispatch paused then resumed with new PHP CLI workers. This is not an OS/VPS reboot or hard-kill inside an open transaction."
+    },
+    {
+      "name": "Frozen 10001 URL export",
+      "report": "docs/content-upgrade/test-results/export.json",
+      "status": "PASS",
+      "environment": "LOCAL / REAL WORDPRESS DATABASE + ACTION SCHEDULER",
+      "build": null,
+      "scope": "As stated in original report."
+    },
+    {
+      "name": "101-post rollback preserves human edit",
+      "report": "docs/content-upgrade/test-results/rollback.json",
+      "status": "PASS",
+      "environment": "LOCAL / REAL WORDPRESS DATABASE FIXTURE + REST + NATIVE ACTION SCHEDULER",
+      "build": "cXKbyMkGE6CIZQ3fw-b3c",
+      "scope": "101 isolated fixture posts; rollback performance only, not campaign generation throughput"
+    },
+    {
+      "name": "Native UI closed before worker",
+      "report": "docs/content-upgrade/test-results/browser-closedtab.json",
+      "status": "PASS",
+      "environment": "LOCAL / ACTUAL CHROME UI + WORDPRESS + SERVER CRON + NEXT",
+      "build": "izO7CdfK8W0nZOh6h_9Lz",
+      "scope": "As stated in original report."
+    },
+    {
+      "name": "Native UI desktop/mobile/save/export",
+      "report": "docs/content-upgrade/test-results/browser-upgrade.json",
+      "status": "PASS",
+      "environment": "LOCAL / ACTUAL CHROME UI + WORDPRESS + NEXT",
+      "build": "b28H0qqz9W7NuC1gnhp2H",
+      "scope": "As stated in original report."
+    },
+    {
+      "name": "Client secrets and installed source",
+      "report": "docs/headless/test-results/release-latest.json",
+      "status": "PASS",
+      "environment": "LOCAL / BUILT NEXT CLIENT + INSTALLED WORDPRESS BRIDGE",
+      "build": "5CuZsCRQV0qILSzmZCUi2",
+      "scope": "As stated in original report."
+    },
+    {
+      "name": "Final build native browser public/admin",
+      "report": "docs/content-upgrade/test-results/browser-final.json",
+      "status": "PASS",
+      "environment": "LOCAL / ACTUAL CHROME / FINAL NEXT BUILD",
+      "build": "5CuZsCRQV0qILSzmZCUi2",
+      "scope": "Actual persisted Gutenberg marker, canonical one/index follow, operations fetched latest saved server record; no new mobile claim."
+    }
+  ],
+  "migration": {
+    "rows": 40,
+    "matched": 40,
+    "mismatches": 0,
+    "unchanged_skipped": 40,
+    "source": "legacy static; production Sheets not audited"
+  },
+  "package": {
+    "entries": [
+      "cohamy-headless-bridge/admin.php",
+      "cohamy-headless-bridge/ai-jobs.php",
+      "cohamy-headless-bridge/analysis.php",
+      "cohamy-headless-bridge/atomic-rest.php",
+      "cohamy-headless-bridge/campaigns.php",
+      "cohamy-headless-bridge/cohamy-headless-bridge.php",
+      "cohamy-headless-bridge/connections.php",
+      "cohamy-headless-bridge/data-transfer.php",
+      "cohamy-headless-bridge/distribution.php",
+      "cohamy-headless-bridge/editor.js",
+      "cohamy-headless-bridge/editorial.php",
+      "cohamy-headless-bridge/identity.php",
+      "cohamy-headless-bridge/import.js",
+      "cohamy-headless-bridge/import.php",
+      "cohamy-headless-bridge/indexnow-selection.php",
+      "cohamy-headless-bridge/links.php",
+      "cohamy-headless-bridge/maintenance.php",
+      "cohamy-headless-bridge/operations-admin.php",
+      "cohamy-headless-bridge/operations-content-screen.php",
+      "cohamy-headless-bridge/operations-transfer-screen.php",
+      "cohamy-headless-bridge/operations.js",
+      "cohamy-headless-bridge/operations.php",
+      "cohamy-headless-bridge/products.json",
+      "cohamy-headless-bridge/README.md",
+      "cohamy-headless-bridge/rest.php",
+      "cohamy-headless-bridge/transfer-preview.php",
+      "cohamy-headless-bridge/webhooks.php"
+    ],
+    "sha256": "8C3471618386F29575500BC744E61B69A5F389C1E26A8FF3884E34ED8598C5D3",
+    "file": ".headless-reports/packages/cohamy-headless-bridge-20260918-044247.zip",
+    "count": 27
+  },
+  "dependency_audit": {
+    "info": 0,
+    "low": 0,
+    "moderate": 29,
+    "high": 5,
+    "critical": 0,
+    "total": 34
+  },
+  "benchmarks": {
+    "hardware_report": "docs/content-upgrade/test-results/machine.json",
+    "database": "SQLite",
+    "preview_301_ms": 15026,
+    "write_300_draft_records_ms": 76700,
+    "export_10001_ms": 24659,
+    "rollback_101_ms": 23246,
+    "scope": "Measured fixture operations, not campaign throughput/P95/281000-post capacity."
+  },
+  "resolved_failures": [
+    {
+      "report": "docs/headless/test-results/e2e-lost-event-failed.json",
+      "issue": "Future post missing native cron event; exact writer not traced.",
+      "fix": "Bridge 2.0.9 restores due native events; full20 and controlled loss regression2 passed."
+    },
+    {
+      "report": "docs/content-upgrade/test-results/cms-restart-invalid.json",
+      "issue": "Invalid control: build overlapped restart test and removed BUILD_ID.",
+      "fix": "Shared QA lock; serialized actual restart6 passed."
+    }
+  ],
+  "not_run": [
+    "VPS/DNS/HTTPS/MariaDB/Docker/systemd/CDN/multi-instance/shared replay/SMTP/full-server restore",
+    "Production Google Sheets audit/migration/rollback delta and contact LIVE submission",
+    "GSC/IndexNow/AI LIVE credentials, actual metrics/index/cost; provider tests CONTRACT MOCK only",
+    "Native chooser via Chrome connector blocked by file URL permission; Microsoft Excel GUI",
+    "OS reboot/hard-kill worker in transaction/real overnight quota rollover",
+    "Rank Math PRO/Content AI paid features",
+    "281000-post load and P95 production"
+  ],
+  "external_live_requests": 0,
+  "external_live_requests_scope": "IndexNow/GSC/AI provider submissions only; official downloads/audit and public media requests are outside this count."
+}

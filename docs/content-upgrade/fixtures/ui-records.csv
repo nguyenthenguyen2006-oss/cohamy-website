@@ -1,0 +1,3 @@
+﻿sep=;
+entity_id;name;type;state;fields_json;reference_source;reference_date;expires_at
+ui-csv-proof-v1;CSV lưu từ giao diện thật;location;approved;"{""slug"":""csv-giao-dien"",""description"":""Tiếng Việt; HTML <p>và xuống\ndòng</p>""}";https://cohamy.vn;2026-09-18;

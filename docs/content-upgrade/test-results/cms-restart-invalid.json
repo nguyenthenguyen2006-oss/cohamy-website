@@ -1,0 +1,11 @@
+{
+  "environment": "LOCAL / ACTUAL PHP CMS PROCESS RESTART WITH PERSISTED PENDING ACTION SCHEDULER JOB",
+  "status": "FAIL",
+  "scope": "HTTP PHP server restarted; system cron dispatch paused then resumed with new PHP CLI workers. This is not an OS/VPS reboot or hard-kill inside an open transaction.",
+  "due_utc": "2026-09-17T21:26:00.000Z",
+  "daily_at_vn": "04:26",
+  "campaign_id": "e9e5ee46-d3ed-4e7f-93e5-aa927fba4ed1",
+  "items_at_stop": 6,
+  "pending_items_survived_restart": 6,
+  "error": "ENOENT: no such file or directory, open 'C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\.local\\next-headless\\BUILD_ID'"
+}

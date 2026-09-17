@@ -1,19 +1,25 @@
 #!/usr/bin/env bash
-# Chạy trên VPS sau khi git push từ máy local
 set -euo pipefail
 
-APP_DIR="/root/cohamy"
+APP_DIR="${1:-}"
+if [ -z "$APP_DIR" ] || [ ! -f "$APP_DIR/package.json" ]; then
+  echo "Usage: bash scripts/manual-deploy.sh /duong/dan/source-thuc-te"
+  exit 1
+fi
+
 cd "$APP_DIR"
 
 echo ">>> git pull"
-git pull origin main
+git pull --ff-only origin main
 
-echo ">>> npm install"
-npm install
+echo ">>> npm ci"
+npm ci
 
-echo ">>> clear Next image cache"
-rm -rf .next/cache
-
+echo ">>> validate"
+npm run test:cms
+npm run lint
+npx tsc --noEmit
+npm audit --omit=dev
 echo ">>> npm run build"
 npm run build
 
@@ -25,4 +31,4 @@ else
 fi
 pm2 save
 
-echo ">>> Done: https://cohamy.vn/vi"
+echo ">>> Build và reload hoàn tất. Tiếp tục chạy smoke test theo docs/CMS-DEPLOY.md"

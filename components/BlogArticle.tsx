@@ -1,18 +1,20 @@
 "use client";
 
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ProductGrid } from "@/components/ProductGrid";
 import { BlogCard } from "@/components/BlogCard";
-import { extractToc } from "@/lib/blog";
+import { extractTableOfContents } from "@/lib/blog-toc";
 import { getProductById } from "@/lib/products";
 
-import type { BlogPost, Locale, Product } from "@/lib/types";
+import type { BlogRow } from "@/lib/blog-schema";
+import type { Locale, Product } from "@/lib/types";
 
 interface BlogArticleProps {
-  post: BlogPost;
+  post: BlogRow;
   locale: Locale;
-  relatedPosts?: BlogPost[];
+  relatedPosts?: BlogRow[];
   featuredProduct?: Product;
 }
 
@@ -24,9 +26,9 @@ export function BlogArticle({
 }: BlogArticleProps) {
   const t = useTranslations("blog");
   const tProducts = useTranslations("products");
-  const content = post.content[locale];
-  const toc = extractToc(content);
-  const relatedProducts = post.relatedProductIds
+  const content = post.content_html;
+  const toc = extractTableOfContents(content);
+  const relatedProducts = post.related_product_ids
     .map((id) => getProductById(id))
     .filter(Boolean) as NonNullable<ReturnType<typeof getProductById>>[];
 
@@ -41,19 +43,32 @@ export function BlogArticle({
           {t(`categoryLabels.${post.category}`)}
         </span>
         <h1 className="font-serif text-4xl md:text-5xl tracking-tight mt-3">
-          {post.title[locale]}
+          {post.title}
         </h1>
-        <p className="text-[#4A2418]/70 mt-4 text-lg">{post.excerpt[locale]}</p>
+        <p className="text-[#4A2418]/70 mt-4 text-lg">{post.excerpt}</p>
         <div className="text-sm text-[#4A2418]/50 mt-4">
-          {t("publishedAt")}: {post.publishedAt} • {t("author")}: {post.author}
+          {t("publishedAt")}:{" "}
+          {new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(
+            new Date(
+              post.published_at || post.scheduled_at || post.updated_at,
+            ),
+          )}{" "}
+          <span aria-hidden="true">/</span> {t("author")}: {post.author}
         </div>
       </header>
 
-      <img
-        src={post.coverImage}
-        alt={post.title[locale]}
-        className="rounded-3xl w-full max-h-[480px] object-cover mb-12"
-      />
+      {post.cover_image ? (
+        <Image
+          src={post.cover_image}
+          unoptimized={/^https?:\/\//u.test(post.cover_image)}
+          alt={post.cover_image_alt}
+          width={1200}
+          height={630}
+          priority
+          className="mb-12 max-h-[480px] w-full rounded-3xl object-cover"
+          sizes="(max-width: 1200px) 100vw, 1200px"
+        />
+      ) : null}
 
       <div className="grid lg:grid-cols-4 gap-10">
         {toc.length > 0 && (
@@ -83,10 +98,12 @@ export function BlogArticle({
 
       {featuredProduct && (
         <aside className="mt-16 p-6 bg-[#FFF4D8] rounded-3xl flex flex-col md:flex-row gap-6 items-center">
-          <img
+          <Image
             src={featuredProduct.images[0]}
             alt={featuredProduct.name[locale]}
-            className="w-32 h-32 rounded-2xl object-cover"
+            width={128}
+            height={128}
+            className="h-32 w-32 rounded-2xl object-cover"
           />
           <div className="flex-1">
             <p className="text-xs uppercase tracking-wider text-[#4A2418]/50">{t("featuredProduct")}</p>

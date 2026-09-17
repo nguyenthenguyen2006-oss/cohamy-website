@@ -1,0 +1,87 @@
+{
+  "environment": "LOCAL",
+  "testedAt": "2026-09-17T19:47:01.453Z",
+  "method": "Rendered metadata in headless Edge; legacy static QA only, not live CMS or crawler indexing proof",
+  "cases": [
+    {
+      "route": "http://localhost:4310/vi/gio-hang",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/vi/thanh-toan",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/vi/san-pham",
+      "status": "PASS",
+      "robots": null,
+      "canonical": "https://cohamy.vn/vi/san-pham"
+    },
+    {
+      "route": "http://localhost:4310/en/cart",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/en/checkout",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/en/products",
+      "status": "PASS",
+      "robots": null,
+      "canonical": "https://cohamy.vn/en/products"
+    },
+    {
+      "route": "http://localhost:4310/zh/cart",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/zh/checkout",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/zh/products",
+      "status": "PASS",
+      "robots": null,
+      "canonical": "https://cohamy.vn/zh/products"
+    },
+    {
+      "route": "http://localhost:4310/ko/cart",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/ko/checkout",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/ko/products",
+      "status": "PASS",
+      "robots": null,
+      "canonical": "https://cohamy.vn/ko/products"
+    },
+    {
+      "route": "http://localhost:4310/ja/cart",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/ja/checkout",
+      "status": "PASS",
+      "robots": "noindex, nofollow"
+    },
+    {
+      "route": "http://localhost:4310/ja/products",
+      "status": "PASS",
+      "robots": null,
+      "canonical": "https://cohamy.vn/ja/products"
+    }
+  ]
+}

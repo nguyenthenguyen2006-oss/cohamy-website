@@ -1,0 +1,108 @@
+{
+    "environment": "LOCAL WordPress REAL persistence / EXTERNAL TRANSPORT CONTRACT MOCK ONLY",
+    "external_live_requests": 0,
+    "results": [
+        {
+            "name": "IndexNow request, key verification, retry and accepted state",
+            "status": "PASS / CONTRACT MOCK"
+        },
+        {
+            "name": "GSC RS256, property, analytics, persisted inspection and sitemap PUT",
+            "status": "PASS / CONTRACT MOCK"
+        },
+        {
+            "name": "AI missing facts, preview, CAS conflict, apply and usage log",
+            "status": "PASS / CONTRACT MOCK"
+        },
+        {
+            "name": "AI model connection, durable retry checkpoint, bounded failures and human conflict",
+            "status": "PASS / CONTRACT MOCK / CONTROLLED RETRY CLOCK"
+        },
+        {
+            "name": "FAQ append preserves article and SEO; links use supplied internal URLs and remain advisory",
+            "status": "PASS / CONTRACT MOCK"
+        }
+    ],
+    "captured_requests": [
+        {
+            "url": "https://cohamy.vn/indexnow/contract-key-only-123456.txt",
+            "method": "GET"
+        },
+        {
+            "url": "https://api.indexnow.org/indexnow",
+            "method": "POST"
+        },
+        {
+            "url": "https://cohamy.vn/indexnow/contract-key-only-123456.txt",
+            "method": "GET"
+        },
+        {
+            "url": "https://api.indexnow.org/indexnow",
+            "method": "POST"
+        },
+        {
+            "url": "https://oauth2.googleapis.com/token",
+            "method": "POST"
+        },
+        {
+            "url": "https://www.googleapis.com/webmasters/v3/sites",
+            "method": "GET"
+        },
+        {
+            "url": "https://www.googleapis.com/webmasters/v3/sites/https%3A%2F%2Fcohamy.vn%2F/searchAnalytics/query",
+            "method": "POST"
+        },
+        {
+            "url": "https://searchconsole.googleapis.com/v1/urlInspection/index:inspect",
+            "method": "POST"
+        },
+        {
+            "url": "https://www.googleapis.com/webmasters/v3/sites/https%3A%2F%2Fcohamy.vn%2F/sitemaps/https%3A%2F%2Fcohamy.vn%2Fsitemap.xml",
+            "method": "PUT"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/models",
+            "method": "GET"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        },
+        {
+            "url": "https://api.openai.com/v1/chat/completions",
+            "method": "POST"
+        }
+    ]
+}

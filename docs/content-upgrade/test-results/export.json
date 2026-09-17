@@ -1,0 +1,45 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS DATABASE + ACTION SCHEDULER",
+  "status": "PASS",
+  "job_id": "213b3038-d2e8-4d4c-8c31-d62a59abbe17",
+  "elapsed_ms": 24659,
+  "total": 10001,
+  "unique": 10001,
+  "files": [
+    10000,
+    1
+  ],
+  "hashes_verified": true,
+  "frozen_membership": true,
+  "concurrent_changes": [
+    "slug changed",
+    "selected post unpublished",
+    "additional post published after selection"
+  ],
+  "manifest": {
+    "files": [
+      {
+        "name": "urls-0001.txt",
+        "count": 10000,
+        "bytes": 508894,
+        "sha256": "bd1fe5cb2df7a0d37ede5630c4091c31f2d551be0a08fb3ddbf5e56caf56e5fe"
+      },
+      {
+        "name": "urls-0002.txt",
+        "count": 1,
+        "bytes": 52,
+        "sha256": "f9eeb827606e288fbd815ce4c1e3ffd0c574e3cff4a23ec6a48e6db83e9c76bf"
+      }
+    ],
+    "current_count": 1,
+    "records_written": 10001,
+    "limit": 10000,
+    "selection": {
+      "format": "txt",
+      "indexable_only": true,
+      "campaign_id": "export-load-v2"
+    },
+    "snapshot_created_at": "2026-09-17T20:48:20+00:00",
+    "total": 10001
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "environment": "LOCAL / ACTUAL CHROME UI + WORDPRESS + NEXT",
+  "status": "PASS",
+  "public": {
+    "path": "/vi/bai-viet/e2e-mu5skjxi",
+    "saved_marker": "UI_GUTENBERG_COHAMY_THAT",
+    "title": "Cohamy SEO nhập trong Rank Math thật",
+    "canonical_count": 1,
+    "canonical": "https://cohamy.vn/vi/bai-viet/e2e-mu5skjxi",
+    "robots": "index, follow",
+    "main_images_loaded": 3,
+    "mobile": {
+      "viewport": 430,
+      "height": 900,
+      "document_width": 414
+    },
+    "desktop": {
+      "viewport": 1280,
+      "height": 900,
+      "document_width": 1264
+    },
+    "source_console_errors": 0,
+    "extension_onboarding_errors": true
+  },
+  "operations": {
+    "mobile_overflow_fixed": true,
+    "ui_record_save_reload": "ui-location-proof-v2",
+    "closed_tab_campaign_evidence": "browser-closedtab.json",
+    "ui_selected_export": {
+      "job_id": "34365a20-3ea6-4726-a204-235cdc743251",
+      "state": "completed",
+      "total": 2,
+      "format": "csv",
+      "confirmed_by_ui": true,
+      "completed_read_from_native_api": true
+    }
+  },
+  "screenshots": [
+    "screenshots/admin-mobile.png",
+    "screenshots/public-mobile.png",
+    "screenshots/public-desktop.png",
+    "screenshots/admin-export-desktop.png"
+  ],
+  "not_run": [
+    "Chrome file chooser automation: extension file URL access disabled",
+    "Microsoft Excel GUI",
+    "Provider LIVE and production"
+  ],
+  "runtime": {
+    "harness": 46992,
+    "cms": 32856,
+    "frontend": 38092,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:06:31.939Z"
+  },
+  "build": "b28H0qqz9W7NuC1gnhp2H",
+  "verified_at": "2026-09-17T21:17:01.157Z"
+}

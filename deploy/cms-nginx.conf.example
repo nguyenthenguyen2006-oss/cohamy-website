@@ -1,0 +1,28 @@
+# Add only after confirming the real Cohamy VPS topology and obtaining a certificate.
+# This does not configure DNS, certificates, or a production CMS automatically.
+server {
+    listen 443 ssl;
+    server_name cms.cohamy.vn;
+    ssl_certificate /etc/letsencrypt/live/cms.cohamy.vn/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/cms.cohamy.vn/privkey.pem;
+    client_max_body_size 24m;
+
+    # Uploads remain public; no global auth/robots deny that blocks media, REST or cron.
+    location ~* ^/wp-content/uploads/.*\.(php|phtml|phar)$ { return 403; }
+    # Apply noindex to CMS documents/API, not to public image files.
+    location /wp-content/uploads/ {
+        proxy_pass http://127.0.0.1:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    location / {
+        proxy_pass http://127.0.0.1:8081;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Authorization $http_authorization;
+        proxy_buffering off;
+        add_header X-Robots-Tag "noindex, nofollow" always;
+    }
+}

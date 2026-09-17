@@ -1,0 +1,48 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS, FREE RANK MATH, ACTION SCHEDULER AND NEXT PRODUCTION",
+  "run": "advanced-mu60v167",
+  "source_id": 10877,
+  "target_id": 10876,
+  "runtime": {
+    "harness": 46992,
+    "cms": 32856,
+    "frontend": 38092,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:06:31.939Z"
+  },
+  "build": "b28H0qqz9W7NuC1gnhp2H",
+  "finished_at": "2026-09-17T21:09:25.522Z",
+  "results": [
+    {
+      "name": "Approved reference records persist and filter actual public SSR anchors",
+      "status": "PASS",
+      "detail": "4 stable record types saved; actual native SQL facets, public HTML <a href>, and indexable admin filter agree"
+    },
+    {
+      "name": "HTML inspector reads real public Next metadata from durable server job",
+      "status": "PASS",
+      "detail": "Real HTTP HTML, one canonical/title/meta/schema; actor/capability guard denies writer"
+    },
+    {
+      "name": "Native free Rank Math links and HTTP broken links persist",
+      "status": "PASS",
+      "detail": "Rank Math native edge/count tables; actual Next HEAD 200/404, external URL explicitly not fetched"
+    },
+    {
+      "name": "Every redirect code, toggle, counters and global 404 aggregation work",
+      "status": "PASS",
+      "detail": "301/302/307/308/410 actual HTTP; disabled rules return 404; global unknown route logs exactly 2 requests and omits query"
+    },
+    {
+      "name": "IndexNow key file is public while unconnected providers fail explicitly",
+      "status": "PASS",
+      "detail": "Actual Next keyLocation file; no external submits; GSC/AI show not connected, not fabricated metrics"
+    },
+    {
+      "name": "Same Next process and build across all advanced mutations",
+      "status": "PASS",
+      "detail": "Same production process/build throughout native records, posts, jobs and redirects"
+    }
+  ]
+}

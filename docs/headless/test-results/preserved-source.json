@@ -1,0 +1,66 @@
+{
+    "preservedCriticalPaths":  [
+                                   "data/products.ts",
+                                   "lib/products.ts",
+                                   "lib/google-sheets.ts",
+                                   "app/api/contact/route.ts",
+                                   "components/ContactForm.tsx"
+                               ],
+    "baselineHash":  "24AE07AB05138A62FAF906235DA19D6E0EE1200809506AB171396673387F52C7",
+    "changed":  [
+                    "app/globals.css",
+                    "app/robots.ts",
+                    "app/admin/login/page.tsx",
+                    "app/api/health/route.ts",
+                    "app/[locale]/layout.tsx",
+                    "app/[locale]/blog/page.tsx",
+                    "app/[locale]/blog/[slug]/page.tsx",
+                    "app/[locale]/cart/page.tsx",
+                    "app/[locale]/checkout/page.tsx",
+                    "app/[locale]/products/[slug]/page.tsx",
+                    "components/BlogArticle.tsx",
+                    "components/BlogCard.tsx",
+                    "components/BlogPageClient.tsx",
+                    "components/CartView.tsx",
+                    "components/CheckoutForm.tsx",
+                    "components/Header.tsx",
+                    "components/ProductDetailView.tsx",
+                    "docs/CMS-DEPLOY.md",
+                    "docs/CMS-HANDOFF.md",
+                    "lib/admin-auth.ts",
+                    "lib/blog-repository.ts",
+                    "lib/blog-sanitize.ts",
+                    "lib/blog-schema.ts",
+                    "lib/blog-seo.ts",
+                    "lib/google-sheets-blog.ts",
+                    "lib/seo.ts",
+                    "messages/en.json",
+                    "messages/ja.json",
+                    "messages/ko.json",
+                    "messages/vi.json",
+                    "messages/zh.json",
+                    "scripts/verify-cms.ts",
+                    ".env.example",
+                    ".gitignore",
+                    "eslint.config.mjs",
+                    "next-env.d.ts",
+                    "next.config.ts",
+                    "package-lock.json",
+                    "package.json",
+                    "proxy.ts",
+                    "tsconfig.json",
+                    "tsconfig.tsbuildinfo"
+                ],
+    "unchangedCount":  156,
+    "scope":  "Product data and contact Google Sheets source are byte-identical. Changed files include headless integrations and concurrent user CRM/commerce work; this report does not attribute all changes to headless work.",
+    "missing":  [
+                    "app/sitemap.ts"
+                ],
+    "expectedReplacements":  {
+                                 "app/sitemap.ts":  "app/sitemap.xml/route.ts plus app/sitemaps/[name]/route.ts"
+                             },
+    "allowedIntegrationPaths":  [
+                                    "i18n/routing.ts",
+                                    "app/robots.ts"
+                                ]
+}

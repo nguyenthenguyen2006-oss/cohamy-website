@@ -17,6 +17,7 @@ import { ProcessSection } from "@/components/ProcessSection";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
 import { routing } from "@/i18n/routing";
 
+export const dynamic = "force-dynamic";
 
 export default async function HomePage({
   params,

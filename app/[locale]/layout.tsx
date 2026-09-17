@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Manrope } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -7,19 +6,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { routing } from "@/i18n/routing";
 import { generateOrganizationJsonLd, generatePageMetadata } from "@/lib/seo";
-import "../globals.css";
+import { wordpressSiteSeo } from "@/lib/wordpress-site-seo";
+import { SITE_URL } from "@/lib/seo";
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-});
-
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+export const dynamic = "force-dynamic";
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -62,23 +52,24 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
   const organizationJsonLd = generateOrganizationJsonLd(locale);
+  const siteSeo = await wordpressSiteSeo();
+  if (siteSeo?.name) organizationJsonLd.name = siteSeo.name;
+  if (siteSeo?.logo) organizationJsonLd.logo = siteSeo.logo;
+  if (siteSeo?.same_as.length) organizationJsonLd.sameAs = siteSeo.same_as;
+  const websiteJsonLd = {"@context":"https://schema.org","@type":"WebSite","@id":SITE_URL+"/#website",url:SITE_URL,name:siteSeo?.website_name || "Cohamy",description:siteSeo?.website_description || undefined,inLanguage:routing.locales};
 
   return (
-    <html
-      lang={locale}
-      className={`${playfair.variable} ${manrope.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-[#FAF6EF] text-[#2A120C] font-[family-name:var(--font-manrope)]">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
-        />
-        <NextIntlClientProvider messages={messages}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <div className="flex min-h-[100dvh] flex-col bg-[#FAF6EF] text-[#2A120C]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</gu,"\\u003c") }}
+      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(websiteJsonLd).replace(/</gu,"\\u003c")}} />
+      <NextIntlClientProvider messages={messages}>
+        <Header orderIntakeEnabled={process.env.CRM_WEBSITE_ORDER_INTAKE === "true"} />
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </NextIntlClientProvider>
+    </div>
   );
 }

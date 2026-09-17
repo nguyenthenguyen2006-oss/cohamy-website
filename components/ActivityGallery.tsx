@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { activities } from "@/data/activities";
 import { getAssetById } from "@/lib/assets/manifest";
 import type { Locale } from "@/lib/types";
@@ -21,9 +22,11 @@ export function ActivityGallery({ locale }: ActivityGalleryProps) {
             key={activity.id}
             className="bg-white rounded-2xl overflow-hidden border border-[#4A2418]/10"
           >
-            <img
+            <Image
               src={asset?.path ?? "/images/activities/team-factory.jpg"}
               alt={activity.caption[locale]}
+              width={720}
+              height={540}
               className="aspect-[4/3] object-cover w-full"
             />
             <div className="p-5">

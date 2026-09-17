@@ -1,0 +1,41 @@
+{
+  "testedAt": "2026-09-17T22:22:40.739Z",
+  "environment": "LOCAL Edge existing fictitious QA data; read-only business actions",
+  "cases": [
+    {
+      "name": "Accessible mobile profile link",
+      "status": "PASS"
+    },
+    {
+      "name": "Early expandable customer context on mobile",
+      "status": "PASS"
+    },
+    {
+      "name": "Inline contextual empty-task creation",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop login eyebrow removed",
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    ".impeccable/review/work/login-desktop.png",
+    ".impeccable/review/work/desktop.png",
+    ".impeccable/review/work/orders-desktop.png",
+    ".impeccable/review/work/order-detail-desktop.png",
+    ".impeccable/review/work/order-inline-task-desktop.png",
+    ".impeccable/review/work/customer-desktop.png",
+    ".impeccable/review/work/catalog-detail-desktop.png",
+    ".impeccable/review/work/tasks-desktop.png",
+    ".impeccable/review/work/accounts-desktop.png",
+    ".impeccable/review/work/account-detail-desktop.png",
+    ".impeccable/review/work/mobile.png",
+    ".impeccable/review/work/order-detail-mobile.png",
+    ".impeccable/review/work/orders-mobile-390.png",
+    ".impeccable/review/work/orders-mobile-320.png",
+    ".impeccable/review/work/user-320.png",
+    ".impeccable/review/work/login-mobile.png"
+  ],
+  "consoleErrors": []
+}

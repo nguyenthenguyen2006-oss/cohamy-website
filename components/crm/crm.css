@@ -1,0 +1,4626 @@
+.cohamy-crm { --hb-accent:#f97316; --hb-control-radius:4px; color-scheme:light; font-family:"Be Vietnam Pro","Segoe UI",sans-serif; font-size:15px; line-height:1.6; min-height:100dvh; color:#111827; background:#fff; }
+.cohamy-crm *, .cohamy-crm *::before, .cohamy-crm *::after { box-sizing:border-box; }
+.cohamy-crm :where(h1,h2,h3,h4,p,figure,form) { margin:0; }
+.cohamy-crm :where(button,input,select,textarea) { font:inherit; }
+.cohamy-crm :where(h1,h2,h3,h4) { font-family:"Be Vietnam Pro",system-ui,sans-serif; text-wrap:balance; }
+.cohamy-crm a { color:inherit; text-decoration:none; }
+.cohamy-crm :focus-visible { outline:2px solid #f97316; outline-offset:3px; }
+.cohamy-crm ::selection { background:#fed7aa; color:#111827; }
+.cohamy-crm .sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap; }
+.cohamy-crm .skip-link { position:fixed; z-index:200; top:10px; left:10px; transform:translateY(-200%); padding:10px; background:#fff; color:#111827; }
+.cohamy-crm .skip-link:focus { transform:none; }
+
+
+/* HumanBank globals.css; original cascade order. */
+
+
+.cohamy-crm .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.cohamy-crm .skip-link {
+  position: fixed;
+  left: 16px;
+  top: 12px;
+  z-index: 100;
+  transform: translateY(-180%);
+  border-radius: var(--hb-radius-sm);
+  background: var(--hb-ink);
+  color: var(--hb-surface);
+  padding: 10px 14px;
+  transition: transform 160ms ease;
+}
+
+.cohamy-crm .skip-link:focus {
+  transform: translateY(0);
+}
+
+.cohamy-crm .button {
+  min-height: 46px;
+  width: max-content;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--hb-radius-sm);
+  padding: 0 18px;
+  cursor: pointer;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 100ms ease;
+}
+
+.cohamy-crm .button:active {
+  transform: translateY(1px);
+}
+
+.cohamy-crm .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.cohamy-crm .button--compact {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.cohamy-crm .button--primary {
+  background: var(--hb-accent);
+  color: #fff;
+}
+
+.cohamy-crm .button--primary:hover:not(:disabled) {
+  background: var(--hb-accent-hover);
+}
+
+.cohamy-crm .button--secondary {
+  border-color: var(--hb-line-strong);
+  background: var(--hb-surface);
+  color: var(--hb-ink);
+}
+
+.cohamy-crm .button--secondary:hover:not(:disabled),
+.cohamy-crm .button--quiet:hover:not(:disabled) {
+  border-color: var(--hb-line);
+  background: var(--hb-surface-subtle);
+}
+
+.cohamy-crm .button--quiet {
+  background: transparent;
+  color: var(--hb-ink);
+}
+
+.cohamy-crm .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--hb-accent);
+  font-weight: 700;
+}
+
+.cohamy-crm .text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.cohamy-crm .field {
+  min-width: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.cohamy-crm .field label {
+  color: var(--hb-ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cohamy-crm .field input,
+.cohamy-crm .field select,
+.cohamy-crm .field textarea {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--hb-line-strong);
+  border-radius: var(--hb-radius-sm);
+  background: var(--hb-surface);
+  color: var(--hb-ink);
+  padding: 10px 12px;
+  outline: 0;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.cohamy-crm .field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.cohamy-crm .field input:focus,
+.cohamy-crm .field select:focus,
+.cohamy-crm .field textarea:focus {
+  border-color: var(--hb-accent);
+  box-shadow: 0 0 0 3px rgba(15, 107, 91, 0.12);
+}
+
+.cohamy-crm .field input::placeholder,
+.cohamy-crm .field textarea::placeholder {
+  color: #7c8d87;
+}
+
+.cohamy-crm .field-help {
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+}
+
+.cohamy-crm .field-error {
+  color: var(--hb-danger);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cohamy-crm .state-panel {
+  min-height: 210px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-lg);
+  background: var(--hb-surface);
+  padding: 28px;
+}
+
+.cohamy-crm .state-panel--error {
+  border-color: #e7c2c5;
+  background: var(--hb-danger-soft);
+}
+
+.cohamy-crm .state-panel__icon {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--hb-surface-subtle);
+  color: var(--hb-accent);
+}
+
+.cohamy-crm .state-panel--error .state-panel__icon {
+  background: #ffe3e4;
+  color: var(--hb-danger);
+}
+
+.cohamy-crm .state-panel h2 {
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+
+.cohamy-crm .state-panel p {
+  max-width: 62ch;
+  margin: 6px 0 18px;
+  color: var(--hb-ink-muted);
+}
+
+.cohamy-crm .detail-card {
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-lg);
+  background: var(--hb-surface);
+  padding: 26px;
+  box-shadow: var(--hb-shadow-soft);
+}
+
+.cohamy-crm .detail-card h2 {
+  margin-bottom: 18px;
+  font-size: 21px;
+  letter-spacing: -0.03em;
+}
+
+.cohamy-crm .form-card {
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-lg);
+  background: var(--hb-surface);
+  padding: clamp(22px, 4vw, 36px);
+  box-shadow: var(--hb-shadow-soft);
+}
+
+.cohamy-crm .form-card h2 {
+  margin-bottom: 6px;
+  font-size: 23px;
+  letter-spacing: -0.035em;
+}
+
+.cohamy-crm .field--full {
+  grid-column: 1 / -1;
+}
+
+.cohamy-crm .form-status {
+  grid-column: 1 / -1;
+  border-radius: var(--hb-radius-sm);
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cohamy-crm .form-status svg {
+  display: inline-block;
+  margin-right: 6px;
+  vertical-align: -3px;
+}
+
+.cohamy-crm .form-status--error {
+  border: 1px solid #e2b9bc;
+  background: var(--hb-danger-soft);
+  color: #8d252d;
+}
+
+.cohamy-crm .form-status--success {
+  border: 1px solid #b7d9c9;
+  background: var(--hb-success-soft);
+  color: #0e5b3e;
+}
+
+.cohamy-crm .form-status--warning {
+  border: 1px solid #e7cb85;
+  background: var(--hb-warning-soft);
+  color: var(--hb-warning);
+}
+
+.cohamy-crm .auth-form {
+  display: grid;
+  gap: 18px;
+}
+
+.cohamy-crm .password-wrap {
+  position: relative;
+}
+
+.cohamy-crm .password-wrap input {
+  padding-right: 48px;
+}
+
+.cohamy-crm .password-toggle {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--hb-ink-muted);
+  cursor: pointer;
+}
+
+.cohamy-crm .password-toggle:hover {
+  background: var(--hb-surface-subtle);
+}
+
+.cohamy-crm .portal-shell {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: var(--hb-sidebar) minmax(0, 1fr);
+  background: #f3f6f5;
+}
+
+.cohamy-crm .portal-workspace {
+  grid-column: 2;
+  min-width: 0;
+  padding-top: 34px;
+}
+
+.cohamy-crm .portal-topbar {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--hb-line);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 0 28px;
+  backdrop-filter: blur(14px);
+}
+
+.cohamy-crm .portal-topbar > p {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cohamy-crm .icon-button {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-sm);
+  background: var(--hb-surface);
+  color: var(--hb-ink-muted);
+}
+
+.cohamy-crm .portal-content {
+  width: min(calc(100% - 48px), 1440px);
+  margin: 0 auto;
+  padding: 36px 0 64px;
+}
+
+.cohamy-crm .portal-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.cohamy-crm .portal-page-header h1 {
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+}
+
+.cohamy-crm .portal-page-header p {
+  margin-top: 6px;
+  color: var(--hb-ink-muted);
+  font-size: 13px;
+}
+
+.cohamy-crm .table-toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(150px, 0.35fr) auto;
+  gap: 10px;
+  margin-bottom: 14px;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-surface);
+  padding: 14px;
+}
+
+.cohamy-crm .table-shell {
+  overflow: hidden;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-surface);
+}
+
+.cohamy-crm .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.cohamy-crm .data-table th {
+  background: #f3f7f5;
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .data-table th,
+.cohamy-crm .data-table td {
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--hb-line);
+  vertical-align: middle;
+}
+
+.cohamy-crm .data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.cohamy-crm .data-table tbody tr:hover {
+  background: #f8faf9;
+}
+
+.cohamy-crm .table-primary {
+  display: grid;
+  gap: 2px;
+}
+
+.cohamy-crm .table-primary strong {
+  font-size: 12px;
+}
+
+.cohamy-crm .table-primary span {
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+}
+
+.cohamy-crm .table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-top: 1px solid var(--hb-line);
+  padding: 12px 14px;
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 1080px) {
+
+  .cohamy-crm .table-shell {
+    overflow-x: auto;
+  }
+
+  .cohamy-crm .data-table {
+    min-width: 840px;
+  }
+}
+
+@media (max-width: 820px) {
+
+  .cohamy-crm .portal-shell {
+    display: block;
+  }
+
+  .cohamy-crm .portal-workspace {
+    padding-top: 34px;
+  }
+
+  .cohamy-crm .portal-content {
+    width: min(calc(100% - 28px), 1440px);
+  }
+}
+
+@media (max-width: 600px) {
+
+  .cohamy-crm .table-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .cohamy-crm .portal-page-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cohamy-crm .portal-topbar {
+    padding: 0 14px;
+  }
+
+  .cohamy-crm .portal-content {
+    padding-top: 26px;
+  }
+}
+
+.cohamy-crm .portal-user-summary {
+  min-width: 0;
+  display: grid;
+  justify-items: end;
+  line-height: 1.3;
+}
+
+.cohamy-crm .portal-user-summary strong {
+  overflow: hidden;
+  max-width: 280px;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-user-summary span {
+  overflow: hidden;
+  max-width: 360px;
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .table-shell {
+  overflow-x: auto;
+}
+
+.cohamy-crm .data-table {
+  min-width: 760px;
+}
+
+.cohamy-crm .pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-top: 14px;
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+}
+
+.cohamy-crm .pagination > div {
+  display: flex;
+  gap: 8px;
+}
+
+.cohamy-crm .resource-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-line);
+}
+
+.cohamy-crm .resource-facts > div {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  background: var(--hb-surface);
+  padding: 16px;
+}
+
+.cohamy-crm .resource-facts dt {
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cohamy-crm .resource-facts dd {
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.cohamy-crm .table-toolbar--compact {
+  grid-template-columns: minmax(220px, 360px) auto;
+  justify-content: start;
+}
+
+.cohamy-crm .create-disclosure {
+  margin-bottom: 18px;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-surface);
+}
+
+.cohamy-crm .create-disclosure > summary {
+  cursor: pointer;
+  padding: 15px 18px;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.cohamy-crm .create-disclosure[open] > summary {
+  border-bottom: 1px solid var(--hb-line);
+}
+
+@media (max-width: 980px) {
+
+  .cohamy-crm .portal-user-summary {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 760px) {
+
+  .cohamy-crm .resource-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .cohamy-crm .portal-user-summary span {
+    display: none;
+  }
+
+  .cohamy-crm .pagination {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cohamy-crm .pagination > div,
+.cohamy-crm .pagination .button {
+    width: 100%;
+  }
+}
+.cohamy-crm .portal-shell {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.cohamy-crm .portal-workspace {
+  grid-column: 2;
+  grid-row: 2;
+  padding-top: 0;
+}
+
+.cohamy-crm .portal-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.cohamy-crm .portal-user-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.cohamy-crm .portal-user-menu > summary {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.cohamy-crm .portal-user-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cohamy-crm .portal-user-avatar {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: var(--hb-radius-sm);
+  background: var(--hb-accent-soft);
+  color: var(--hb-accent);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.cohamy-crm .portal-user-avatar__verified {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--hb-surface);
+  border-radius: 50%;
+  background: var(--hb-success);
+}
+
+.cohamy-crm .portal-user-menu__content {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  width: min(290px, calc(100vw - 28px));
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-surface);
+  padding: 8px;
+  box-shadow: var(--hb-shadow);
+}
+
+.cohamy-crm .portal-user-menu__content a,
+.cohamy-crm .portal-user-menu__content button {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-radius: var(--hb-radius-sm);
+  background: transparent;
+  padding: 9px 11px;
+  color: var(--hb-ink);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 650;
+  text-align: left;
+}
+
+.cohamy-crm .portal-user-menu__content a:hover,
+.cohamy-crm .portal-user-menu__content button:hover {
+  background: var(--hb-surface-subtle);
+}
+
+.cohamy-crm .portal-user-menu__content button {
+  color: var(--hb-danger);
+}
+
+.cohamy-crm .portal-user-menu__content p {
+  padding: 8px 10px;
+  color: var(--hb-danger);
+  font-size: 11px;
+}
+
+.cohamy-crm .table-shell:focus-visible {
+  outline-offset: 2px;
+}
+
+.cohamy-crm .field input[aria-invalid="true"],
+.cohamy-crm .field select[aria-invalid="true"],
+.cohamy-crm .field textarea[aria-invalid="true"],
+.cohamy-crm .field input:user-invalid,
+.cohamy-crm .field select:user-invalid,
+.cohamy-crm .field textarea:user-invalid {
+  border-color: var(--hb-danger);
+  box-shadow: 0 0 0 3px rgba(180, 58, 66, 0.1);
+}
+
+@media (max-width: 820px) {
+  .cohamy-crm .portal-workspace {
+    grid-column: 1 / -1;
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .cohamy-crm .portal-topbar {
+    min-height: 64px;
+    height: auto;
+  }
+
+  .cohamy-crm .portal-user-summary {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+
+  .cohamy-crm .portal-user-menu {
+    margin-left: auto;
+  }
+}
+
+/* HumanBank foundation-design.css; original cascade order. */
+
+
+.cohamy-crm .button {
+  text-wrap: balance;
+}
+
+.cohamy-crm .skip-link {
+  left: 18px;
+  top: 14px;
+  border-radius: var(--hb-radius-sm);
+  background: var(--hb-ink);
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.cohamy-crm .button {
+  min-height: 44px;
+  border-radius: var(--hb-radius-sm);
+  padding-inline: 17px;
+  box-shadow: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    transform 100ms ease;
+}
+
+.cohamy-crm .button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+
+.cohamy-crm .button--compact {
+  min-height: 38px;
+  padding-inline: 13px;
+  font-size: 12px;
+}
+
+.cohamy-crm .button--primary {
+  border-color: var(--hb-accent);
+  background: var(--hb-accent);
+  color: #fff;
+}
+
+.cohamy-crm .button--primary:hover:not(:disabled) {
+  border-color: var(--hb-accent-hover);
+  background: var(--hb-accent-hover);
+}
+
+.cohamy-crm .button--secondary,
+.cohamy-crm .button--ghost {
+  border-color: var(--hb-line-strong);
+  background: transparent;
+  color: var(--hb-ink);
+}
+
+.cohamy-crm .button--secondary:hover:not(:disabled),
+.cohamy-crm .button--ghost:hover:not(:disabled),
+.cohamy-crm .button--quiet:hover:not(:disabled) {
+  border-color: var(--hb-ink);
+  background: var(--hb-surface);
+}
+
+.cohamy-crm .button--quiet {
+  border-color: transparent;
+  background: transparent;
+}
+
+.cohamy-crm .text-link {
+  gap: 6px;
+  color: var(--hb-accent);
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 140ms ease;
+}
+
+.cohamy-crm .text-link:hover {
+  text-decoration-color: currentColor;
+}
+
+.cohamy-crm .field {
+  gap: 7px;
+}
+
+.cohamy-crm .field label {
+  color: var(--hb-ink);
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+}
+
+.cohamy-crm .field input,
+.cohamy-crm .field select,
+.cohamy-crm .field textarea {
+  min-height: 44px;
+  border: 1px solid var(--hb-line-strong);
+  border-radius: var(--hb-radius-sm);
+  background: var(--hb-surface);
+  box-shadow: none;
+  color: var(--hb-ink);
+  padding: 10px 12px;
+}
+
+.cohamy-crm .field input:hover,
+.cohamy-crm .field select:hover,
+.cohamy-crm .field textarea:hover {
+  border-color: #82968d;
+}
+
+.cohamy-crm .field input:focus,
+.cohamy-crm .field select:focus,
+.cohamy-crm .field textarea:focus {
+  border-color: var(--hb-accent);
+  box-shadow: 0 0 0 3px rgba(0, 107, 80, 0.11);
+}
+
+.cohamy-crm .field input::placeholder,
+.cohamy-crm .field textarea::placeholder {
+  color: #6f7e78;
+  opacity: 1;
+}
+
+.cohamy-crm .field-help,
+.cohamy-crm .field-error {
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.cohamy-crm .field-help {
+  color: var(--hb-ink-muted);
+}
+
+.cohamy-crm .field-error {
+  color: var(--hb-danger);
+  font-weight: 650;
+}
+
+.cohamy-crm .form-status {
+  border-radius: var(--hb-radius-sm);
+  box-shadow: none;
+}
+
+.cohamy-crm .form-status--error {
+  border-color: #dfb8bb;
+  background: var(--hb-danger-soft);
+  color: var(--hb-danger);
+}
+
+.cohamy-crm .form-status--success {
+  border-color: #acd2c0;
+  background: var(--hb-success-soft);
+  color: var(--hb-success);
+}
+
+.cohamy-crm .state-panel {
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: transparent;
+  box-shadow: none;
+}
+
+.cohamy-crm .state-panel__icon {
+  border-radius: var(--hb-radius-sm);
+  background: var(--hb-surface-strong);
+}
+
+.cohamy-crm .state-panel h2 {
+  font-size: 17px;
+  letter-spacing: -0.02em;
+}
+
+.cohamy-crm .detail-card,
+.cohamy-crm .form-card {
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-surface);
+  box-shadow: none;
+}
+
+.cohamy-crm .detail-card h2 {
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.cohamy-crm .table-toolbar {
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-surface);
+  box-shadow: none;
+}
+
+.cohamy-crm .table-shell {
+  overflow: hidden;
+  border: 1px solid var(--hb-line);
+  border-radius: var(--hb-radius-md);
+  background: var(--hb-surface);
+  box-shadow: none;
+}
+
+.cohamy-crm .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--hb-ink);
+}
+
+.cohamy-crm .data-table th {
+  background: var(--hb-surface-subtle);
+  color: #40504a;
+  font-family: var(--hb-font-label);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .data-table th,
+.cohamy-crm .data-table td {
+  border-bottom: 1px solid var(--hb-line);
+  padding: 13px 15px;
+}
+
+.cohamy-crm .data-table tbody tr:hover {
+  background: #f3f7f5;
+}
+
+.cohamy-crm .table-primary {
+  gap: 2px;
+}
+
+.cohamy-crm .table-primary strong {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.cohamy-crm .table-primary span {
+  color: var(--hb-ink-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 760px) {
+
+  .cohamy-crm .button {
+    min-height: 44px;
+  }
+
+  .cohamy-crm .table-toolbar {
+    border-radius: var(--hb-radius-sm);
+  }
+}
+
+/* HumanBank public-design.css; original cascade order. */
+
+
+.cohamy-crm .auth-field-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cohamy-crm .auth-field-heading a {
+  color: var(--registry-accent);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* HumanBank portal-design.css; original cascade order. */
+
+
+.cohamy-crm .portal-shell {
+  color-scheme: light;
+  --portal-canvas: #edf2ef;
+  --portal-paper: #fbfcfb;
+  --portal-paper-muted: #f3f6f4;
+  --portal-ink: #17211d;
+  --portal-muted: #58655f;
+  --portal-rule: #cbd5d1;
+  --portal-rule-strong: #9baaa4;
+  --portal-green: #0b6654;
+  --portal-green-deep: #084b3f;
+  --portal-green-soft: #e1eee9;
+  --portal-danger: #a7353e;
+  --portal-danger-soft: #f9e9ea;
+  --portal-warning: #80570d;
+  --portal-warning-soft: #f6efdc;
+  --portal-radius: 4px;
+  --portal-banner-offset: 0px;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 252px minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  background: var(--portal-canvas);
+  color: var(--portal-ink);
+}
+
+.cohamy-crm .portal-shell :focus-visible {
+  outline: 2px solid var(--portal-green);
+  outline-offset: 2px;
+}
+
+.cohamy-crm .portal-workspace {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  padding-top: 0;
+  background: var(--portal-canvas);
+}
+
+.cohamy-crm .portal-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--portal-rule-strong);
+  background: var(--portal-paper);
+  padding: 0 clamp(20px, 2.8vw, 40px);
+}
+
+.cohamy-crm .portal-user-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.cohamy-crm .portal-user-menu > summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: var(--portal-radius);
+  padding: 4px 6px;
+  cursor: pointer;
+  list-style: none;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease;
+}
+
+.cohamy-crm .portal-user-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cohamy-crm .portal-user-menu > summary:hover,
+.cohamy-crm .portal-user-menu[open] > summary {
+  border-color: var(--portal-rule);
+  background: var(--portal-paper-muted);
+}
+
+.cohamy-crm .portal-user-menu > summary > svg:last-child {
+  color: var(--portal-muted);
+  transition: transform 120ms ease;
+}
+
+.cohamy-crm .portal-user-menu[open] > summary > svg:last-child {
+  transform: rotate(180deg);
+}
+
+.cohamy-crm .portal-user-avatar {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 3px;
+  background: var(--portal-green-deep);
+  color: #f4f8f6;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cohamy-crm .portal-user-summary {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.cohamy-crm .portal-user-summary strong {
+  overflow: hidden;
+  max-width: 210px;
+  color: var(--portal-ink);
+  font-size: 11px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-user-summary span {
+  color: var(--portal-muted);
+  font-size: 11px;
+}
+
+.cohamy-crm .portal-user-menu__content {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: min(286px, calc(100vw - 28px));
+  display: grid;
+  gap: 2px;
+  border: 1px solid var(--portal-rule-strong);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+  padding: 6px;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-user-menu__content a,
+.cohamy-crm .portal-user-menu__content button {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  padding: 8px 10px;
+  color: var(--portal-ink);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.cohamy-crm .portal-user-menu__content a:hover,
+.cohamy-crm .portal-user-menu__content button:hover {
+  background: var(--portal-paper-muted);
+}
+
+.cohamy-crm .portal-user-menu__content button {
+  color: var(--portal-danger);
+}
+
+.cohamy-crm .portal-user-menu__content p {
+  border-top: 1px solid var(--portal-rule);
+  padding: 8px 10px 4px;
+  color: var(--portal-danger);
+  font-size: 11px;
+}
+
+.cohamy-crm .portal-shell .icon-button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--portal-rule-strong);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+  color: var(--portal-ink);
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-content {
+  width: min(calc(100% - 64px), 1440px);
+  margin: 0 auto;
+  padding: 44px 0 80px;
+}
+
+.cohamy-crm .portal-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--portal-rule-strong);
+  padding-bottom: 23px;
+}
+
+.cohamy-crm .portal-page-header > div {
+  min-width: 0;
+}
+
+.cohamy-crm .portal-page-header h1 {
+  max-width: 22ch;
+  color: var(--portal-ink);
+  font-size: clamp(28px, 3vw, 38px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+}
+
+.cohamy-crm .portal-page-header p {
+  max-width: 68ch;
+  margin-top: 7px;
+  color: var(--portal-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.cohamy-crm .portal-shell
+  :where(
+    .detail-card,
+    .form-card,
+    .resource-facts
+  ) {
+  border-color: var(--portal-rule);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .state-panel {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--portal-rule);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+  padding: 24px;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .state-panel--error {
+  border-color: #d6a7ab;
+  background: var(--portal-danger-soft);
+}
+
+.cohamy-crm .portal-shell .state-panel__icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border: 1px solid var(--portal-green);
+  border-radius: 2px;
+  background: var(--portal-green-soft);
+  color: var(--portal-green-deep);
+}
+
+.cohamy-crm .portal-shell .state-panel--error .state-panel__icon {
+  border-color: var(--portal-danger);
+  background: #f3dfe1;
+  color: var(--portal-danger);
+}
+
+.cohamy-crm .portal-shell .state-panel h2 {
+  color: var(--portal-ink);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.cohamy-crm .portal-shell .state-panel p {
+  margin: 5px 0 16px;
+  color: var(--portal-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.cohamy-crm .portal-shell .table-toolbar {
+  border: 1px solid var(--portal-rule);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+  padding: 13px;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .table-shell {
+  overflow: auto;
+  border: 1px solid var(--portal-rule-strong);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+  scrollbar-color: var(--portal-rule-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.cohamy-crm .portal-shell .table-shell:focus-visible {
+  outline-offset: 3px;
+}
+
+.cohamy-crm .portal-shell .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--portal-ink);
+  font-size: 11px;
+}
+
+.cohamy-crm .portal-shell .data-table th {
+  background: var(--portal-paper-muted);
+  color: var(--portal-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .portal-shell .data-table th,
+.cohamy-crm .portal-shell .data-table td {
+  border-bottom: 1px solid var(--portal-rule);
+  padding: 13px 14px;
+  vertical-align: middle;
+}
+
+.cohamy-crm .portal-shell .data-table thead th {
+  border-bottom-color: var(--portal-rule-strong);
+}
+
+.cohamy-crm .portal-shell .data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.cohamy-crm .portal-shell .data-table tbody tr:hover {
+  background: var(--portal-green-soft);
+}
+
+.cohamy-crm .portal-shell .table-primary:hover strong {
+  color: var(--portal-green-deep);
+}
+
+.cohamy-crm .portal-shell .table-primary {
+  display: grid;
+  gap: 3px;
+}
+
+.cohamy-crm .portal-shell .table-primary strong {
+  color: var(--portal-ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cohamy-crm .portal-shell .table-primary span {
+  color: var(--portal-muted);
+  font-size: 11px;
+}
+
+.cohamy-crm .portal-shell .field label {
+  color: var(--portal-ink);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cohamy-crm .portal-shell .field input,
+.cohamy-crm .portal-shell .field select,
+.cohamy-crm .portal-shell .field textarea {
+  border-color: var(--portal-rule-strong);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+  color: var(--portal-ink);
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .field input::placeholder,
+.cohamy-crm .portal-shell .field textarea::placeholder {
+  color: #68756f;
+}
+
+.cohamy-crm .portal-shell .field input:focus,
+.cohamy-crm .portal-shell .field select:focus,
+.cohamy-crm .portal-shell .field textarea:focus {
+  border-color: var(--portal-green);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--portal-green) 18%, transparent);
+}
+
+.cohamy-crm .portal-shell .field-help {
+  color: var(--portal-muted);
+}
+
+.cohamy-crm .portal-shell .button {
+  min-height: 42px;
+  border-radius: var(--portal-radius);
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .button--compact {
+  min-height: 36px;
+}
+
+.cohamy-crm .portal-shell .button--primary {
+  border-color: var(--portal-green-deep);
+  background: var(--portal-green-deep);
+  color: #f4f8f6;
+}
+
+.cohamy-crm .portal-shell .button--primary:hover:not(:disabled) {
+  border-color: var(--portal-green);
+  background: var(--portal-green);
+}
+
+.cohamy-crm .portal-shell .button--secondary,
+.cohamy-crm .portal-shell .button--quiet,
+.cohamy-crm .portal-shell .button--ghost {
+  border-color: var(--portal-rule-strong);
+  background: var(--portal-paper);
+  color: var(--portal-ink);
+}
+
+.cohamy-crm .portal-shell .button--secondary:hover:not(:disabled),
+.cohamy-crm .portal-shell .button--quiet:hover:not(:disabled),
+.cohamy-crm .portal-shell .button--ghost:hover:not(:disabled) {
+  border-color: var(--portal-green);
+  background: var(--portal-green-soft);
+  color: var(--portal-green-deep);
+}
+
+.cohamy-crm .portal-shell .button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.cohamy-crm .portal-shell :where( .form-status) {
+  border-radius: var(--portal-radius);
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .pagination {
+  border-color: var(--portal-rule);
+  border-radius: var(--portal-radius);
+  background: var(--portal-paper);
+}
+
+@media (max-width: 1120px) {
+  .cohamy-crm .portal-shell {
+    grid-template-columns: 232px minmax(0, 1fr);
+  }
+
+  .cohamy-crm .portal-content {
+    width: min(calc(100% - 40px), 1440px);
+  }
+}
+
+@media (max-width: 820px) {
+  .cohamy-crm .portal-shell {
+    display: block;
+    min-height: 100dvh;
+  }
+
+  .cohamy-crm .portal-workspace {
+    min-height: calc(100dvh - var(--portal-banner-offset));
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .cohamy-crm .portal-topbar {
+    min-height: 62px;
+    height: auto;
+    padding: 0 15px;
+  }
+
+  .cohamy-crm .portal-user-summary {
+    display: none;
+  }
+
+  .cohamy-crm .portal-content {
+    width: min(calc(100% - 28px), 1440px);
+    padding: 32px 0 58px;
+  }
+
+  .cohamy-crm .portal-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+    padding-bottom: 19px;
+  }
+
+  .cohamy-crm .portal-page-header h1 {
+    font-size: clamp(27px, 8vw, 34px);
+  }
+}
+
+@media (max-width: 520px) {
+
+  .cohamy-crm .portal-user-menu {
+    margin-left: auto;
+  }
+
+  .cohamy-crm .portal-shell .state-panel {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cohamy-crm .portal-shell *,
+.cohamy-crm .portal-shell *::before,
+.cohamy-crm .portal-shell *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 100ms !important;
+    transition-property:
+      color, background-color, border-color, outline-color, box-shadow !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .cohamy-crm .portal-shell {
+    --portal-rule: #9aa8a2;
+    --portal-rule-strong: #64736d;
+  }
+}
+
+.cohamy-crm .portal-shell .form-section {
+  display: grid;
+  gap: 12px;
+  border: 1px solid var(--portal-rule);
+  background: var(--portal-paper-muted);
+  padding: 14px;
+}
+
+.cohamy-crm .portal-shell .form-section > header h3 {
+  color: var(--portal-ink);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.cohamy-crm .portal-shell
+  :where(
+    #customer-overview,
+    #customer-care,
+    #customer-classes,
+    #customer-finance,
+    #customer-source,
+    #staff-overview,
+    #staff-customers,
+    #staff-classes,
+    #staff-referrals
+  ) {
+  scroll-margin-top: 18px;
+}
+.cohamy-crm .button--danger {
+  border-color: var(--portal-danger);
+  background: var(--portal-danger);
+  color: #fff;
+}
+
+.cohamy-crm .button--danger:hover:not(:disabled) {
+  border-color: #842a32;
+  background: #842a32;
+}
+
+/* HumanBank dossier-design.css; original cascade order. */
+
+
+.cohamy-crm .table-shell::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.cohamy-crm .table-shell::-webkit-scrollbar-track {
+  background: var(--hb-bookcloth);
+}
+
+.cohamy-crm .table-shell::-webkit-scrollbar-thumb {
+  border: 2px solid var(--hb-bookcloth);
+  border-radius: 0;
+  background: var(--hb-gold-highlight);
+}
+
+.cohamy-crm .skip-link {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--hb-gold);
+  background: var(--hb-bookcloth);
+  color: var(--hb-ink);
+}
+
+.cohamy-crm .button,
+.cohamy-crm .portal-shell .button {
+  min-height: 44px;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: var(--hb-type-dense);
+  font-weight: 720;
+  line-height: 1.35;
+  transition:
+    background-color 160ms ease-out,
+    border-color 160ms ease-out,
+    color 160ms ease-out,
+    transform 120ms ease-out;
+}
+
+.cohamy-crm .button--primary,
+.cohamy-crm .portal-shell .button--primary {
+  border-color: var(--hb-accent);
+  background: var(--hb-accent);
+  color: var(--hb-bg);
+}
+
+.cohamy-crm .button--primary:hover:not(:disabled),
+.cohamy-crm .portal-shell .button--primary:hover:not(:disabled) {
+  border-color: var(--hb-accent-hover);
+  background: var(--hb-accent-hover);
+}
+
+.cohamy-crm .button--primary:active:not(:disabled),
+.cohamy-crm .portal-shell .button--primary:active:not(:disabled) {
+  border-color: var(--hb-accent-pressed);
+  background: var(--hb-accent-pressed);
+}
+
+.cohamy-crm .button--secondary,
+.cohamy-crm .button--quiet,
+.cohamy-crm .button--ghost,
+.cohamy-crm .portal-shell .button--secondary,
+.cohamy-crm .portal-shell .button--quiet,
+.cohamy-crm .portal-shell .button--ghost {
+  border-color: var(--hb-line-strong);
+  background: transparent;
+  color: var(--hb-ink);
+}
+
+.cohamy-crm .button:active:not(:disabled),
+.cohamy-crm .portal-shell .button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.cohamy-crm .button:disabled,
+.cohamy-crm .portal-shell .button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.cohamy-crm .field input,
+.cohamy-crm .field select,
+.cohamy-crm .field textarea,
+.cohamy-crm .portal-shell .field input,
+.cohamy-crm .portal-shell .field select,
+.cohamy-crm .portal-shell .field textarea {
+  border: 1px solid var(--hb-line-strong);
+  border-radius: 3px;
+  background-color: color-mix(in srgb, var(--hb-surface) 88%, transparent);
+  color: var(--hb-ink);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.cohamy-crm .field input,
+.cohamy-crm .field select,
+.cohamy-crm .portal-shell .field input,
+.cohamy-crm .portal-shell .field select {
+  min-height: 44px;
+}
+
+.cohamy-crm .field input:focus,
+.cohamy-crm .field select:focus,
+.cohamy-crm .field textarea:focus,
+.cohamy-crm .portal-shell .field input:focus,
+.cohamy-crm .portal-shell .field select:focus,
+.cohamy-crm .portal-shell .field textarea:focus {
+  border-color: var(--hb-accent);
+  outline: 2px solid var(--hb-accent);
+  outline-offset: 1px;
+  box-shadow: none;
+}
+
+.cohamy-crm .field input::placeholder,
+.cohamy-crm .field textarea::placeholder,
+.cohamy-crm .portal-shell .field input::placeholder,
+.cohamy-crm .portal-shell .field textarea::placeholder {
+  color: var(--hb-ink-faint);
+  opacity: 1;
+}
+
+.cohamy-crm .portal-shell {
+  color-scheme: dark;
+  --portal-canvas: var(--hb-bg);
+  --portal-paper: var(--hb-paper);
+  --portal-paper-muted: var(--hb-surface);
+  --portal-ink: var(--hb-ink);
+  --portal-muted: var(--hb-ink-muted);
+  --portal-rule: var(--hb-line);
+  --portal-rule-strong: var(--hb-line-strong);
+  --portal-green: var(--hb-accent);
+  --portal-green-deep: var(--hb-accent-hover);
+  --portal-green-soft: var(--hb-accent-soft);
+  --portal-accent: var(--hb-accent);
+  --portal-accent-hover: var(--hb-accent-hover);
+  --portal-accent-pressed: var(--hb-accent-pressed);
+  --portal-accent-soft: var(--hb-accent-soft);
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: var(--hb-sidebar) minmax(0, 1fr);
+  grid-template-rows: auto 64px minmax(0, 1fr);
+  background-color: var(--hb-bg);
+  color: var(--hb-ink);
+}
+
+.cohamy-crm .portal-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 70;
+  min-width: 0;
+  min-height: 64px;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  border-bottom: 1px solid var(--hb-line-strong);
+  background-color: color-mix(in srgb, var(--hb-paper) 96%, transparent);
+  padding: 0 20px 0 18px;
+}
+
+.cohamy-crm .portal-masthead-brand {
+  min-width: 294px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding-right: 24px;
+  border-right: 1px solid var(--hb-line);
+}
+
+.cohamy-crm .portal-system-title {
+  overflow: hidden;
+  color: var(--hb-ink-muted);
+  font-family: var(--hb-font-display);
+  font-size: 13px;
+  font-weight: 630;
+  letter-spacing: 0.045em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-topbar__actions {
+  min-width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cohamy-crm .portal-user-menu {
+  position: relative;
+}
+
+.cohamy-crm .portal-user-menu > summary {
+  min-width: 220px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.cohamy-crm .portal-user-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cohamy-crm .portal-user-summary {
+  display: grid;
+  justify-items: end;
+  line-height: 1.2;
+}
+
+.cohamy-crm .portal-user-summary strong {
+  max-width: 180px;
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-user-summary span {
+  max-width: 180px;
+  overflow: hidden;
+  color: var(--hb-ink-muted);
+  font-size: var(--hb-type-meta);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-user-avatar {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--hb-gold-highlight);
+  border-radius: 50%;
+  background: var(--hb-gold);
+  color: var(--hb-bg);
+  font-family: var(--hb-font-label);
+  font-size: 11px;
+  font-weight: 780;
+}
+
+.cohamy-crm .portal-user-menu__content {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  z-index: 90;
+  width: 248px;
+  display: grid;
+  border: 1px solid var(--hb-line-strong);
+  background-color: var(--hb-surface);
+  background-image: var(--texture-glassine);
+  background-blend-mode: multiply;
+  background-size: 480px;
+  box-shadow: var(--hb-shadow);
+  padding: 8px;
+}
+
+.cohamy-crm .portal-user-menu__content a,
+.cohamy-crm .portal-user-menu__content button {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: transparent;
+  color: var(--hb-ink);
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.cohamy-crm .portal-user-menu__content a:hover,
+.cohamy-crm .portal-user-menu__content button:hover:not(:disabled) {
+  background: var(--hb-accent-soft);
+}
+
+.cohamy-crm .portal-user-menu__content p {
+  color: var(--hb-danger);
+  padding: 8px 10px;
+  font-size: 11px;
+}
+
+.cohamy-crm .portal-workspace {
+  position: relative;
+  min-width: 0;
+  grid-column: 2;
+  grid-row: 3;
+  overflow: clip;
+  background-color: var(--hb-bg);
+  padding: 18px 78px 34px 20px;
+}
+
+.cohamy-crm .portal-content {
+  position: relative;
+  z-index: 2;
+  min-height: calc(100dvh - 116px);
+  width: 100%;
+  border: 1px solid var(--hb-line-strong);
+  border-radius: 1px;
+  background-color: var(--hb-paper);
+  background-image: var(--texture-glassine);
+  background-blend-mode: multiply;
+  background-size: 720px;
+  box-shadow: var(--hb-shadow);
+  padding: 30px 34px 42px;
+}
+
+.cohamy-crm .portal-content::before,
+.cohamy-crm .portal-content::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border: 1px solid var(--hb-line);
+  background-color: var(--hb-surface);
+  box-shadow: var(--hb-shadow-soft);
+}
+
+.cohamy-crm .portal-content::before {
+  inset: -8px -10px 9px 9px;
+  transform: rotate(0.22deg);
+}
+
+.cohamy-crm .portal-content::after {
+  inset: -14px -16px 15px 16px;
+  transform: rotate(-0.18deg);
+}
+
+.cohamy-crm .portal-content--dashboard {
+  margin-left: 0;
+  width: 100%;
+  padding: 26px 28px 34px;
+}
+
+.cohamy-crm .portal-workspace--dashboard {
+  padding: 18px 214px 34px 106px;
+}
+
+.cohamy-crm .portal-workspace--dashboard::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 8px 182px 18px 2px;
+  border: 10px solid #212922;
+  border-radius: 22px;
+  background-color: var(--hb-surface);
+  background-image: var(--texture-bookcloth);
+  background-size: 760px;
+  box-shadow:
+    inset 0 0 0 2px #59645b,
+    inset 0 0 0 11px #080d09,
+    0 20px 38px rgba(0, 0, 0, 0.38);
+  pointer-events: none;
+}
+
+.cohamy-crm .portal-page-header {
+  min-height: 92px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 2px solid var(--hb-accent);
+  margin: -4px 0 24px;
+  padding: 0 0 20px;
+}
+
+.cohamy-crm .portal-page-header::before {
+  content: "+";
+  position: absolute;
+  color: var(--hb-accent);
+  font-family: var(--hb-font-mono);
+  font-size: 25px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.cohamy-crm .portal-page-header h1 {
+  color: var(--hb-ink);
+  font-family: var(--hb-font-display);
+  font-size: 34px;
+  font-weight: 820;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+}
+
+.cohamy-crm .portal-page-header p {
+  max-width: 68ch;
+  margin-top: 8px;
+  color: var(--hb-ink-muted);
+  font-size: 12px;
+}
+
+.cohamy-crm .portal-shell
+  :where(
+    .detail-card,
+    .form-card,
+    .table-toolbar) {
+  border: 1px solid var(--hb-line-strong);
+  border-radius: 2px;
+  background-color: color-mix(in srgb, var(--hb-surface) 76%, transparent);
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .detail-card h2 {
+  color: var(--hb-ink);
+  font-family: var(--hb-font-display);
+  font-size: 16px;
+  font-weight: 740;
+  letter-spacing: -0.025em;
+}
+
+.cohamy-crm .portal-shell .table-shell {
+  overflow: auto;
+  border: 1px solid var(--hb-line-strong);
+  border-radius: 1px;
+  background-color: color-mix(in srgb, var(--hb-surface) 84%, transparent);
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .data-table {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.cohamy-crm .portal-shell .data-table th {
+  background: var(--hb-surface-subtle);
+  color: var(--hb-ink-muted);
+  font-family: var(--hb-font-label);
+  font-size: var(--hb-type-meta);
+  font-weight: 700;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .portal-shell .data-table th,
+.cohamy-crm .portal-shell .data-table td {
+  border-bottom: 1px solid var(--hb-line);
+  padding: 11px 13px;
+}
+
+.cohamy-crm .portal-shell .data-table tbody tr:hover {
+  background: color-mix(in srgb, var(--hb-accent) 10%, transparent);
+}
+
+.cohamy-crm .portal-shell :where( .form-status) {
+  border-radius: 2px;
+}
+
+.cohamy-crm .portal-shell .state-panel {
+  border: 1px dashed var(--hb-line-strong);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--hb-surface) 62%, transparent);
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell .state-panel__icon {
+  border-radius: 2px;
+  background: var(--hb-surface-subtle);
+}
+
+.cohamy-crm .portal-shell .text-link,
+.cohamy-crm .portal-shell .table-primary {
+  color: var(--hb-soft-orange);
+}
+
+.cohamy-crm .portal-shell :where(input[type="checkbox"], input[type="radio"]) {
+  accent-color: var(--hb-accent);
+}
+
+.cohamy-crm .portal-shell :where(button, [role="button"])[aria-pressed="true"] {
+  border-color: var(--hb-accent);
+  background: var(--hb-accent-soft);
+  color: var(--hb-soft-orange);
+}
+
+.cohamy-crm .portal-shell
+  :where(.button, button, a, input, select, textarea):focus-visible {
+  outline-color: var(--hb-accent);
+}
+
+.cohamy-crm .portal-shell .button--secondary:hover:not(:disabled),
+.cohamy-crm .portal-shell .button--quiet:hover:not(:disabled),
+.cohamy-crm .portal-shell .button--ghost:hover:not(:disabled),
+.cohamy-crm .portal-shell .pagination a:hover {
+  border-color: var(--hb-accent);
+  background: var(--hb-accent-soft);
+  color: var(--hb-soft-orange);
+}
+
+.cohamy-crm .portal-shell .data-table tbody tr:has(input[type="checkbox"]:checked) {
+  background: color-mix(in srgb, var(--hb-accent) 14%, transparent);
+}
+
+.cohamy-crm .portal-shell .table-primary strong {
+  color: var(--hb-soft-orange);
+}
+
+.cohamy-crm .portal-shell .table-primary:hover strong,
+.cohamy-crm .portal-shell .table-primary:focus-visible strong {
+  color: var(--hb-gold-highlight);
+}
+
+.cohamy-crm .portal-shell .pagination {
+  border-top: 1px solid var(--hb-line);
+  background: color-mix(in srgb, var(--hb-surface) 72%, transparent);
+  padding: 10px 12px;
+}
+
+.cohamy-crm .portal-shell .pagination > span {
+  color: var(--hb-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cohamy-crm .portal-content--dashboard::before {
+  inset: -11px -13px 12px 12px;
+  background-color: #202822;
+  box-shadow:
+    0 1px 0 #465047,
+    0 10px 18px rgba(0, 0, 0, 0.28);
+  transform: rotate(0.28deg);
+}
+
+.cohamy-crm .portal-content--dashboard::after {
+  inset: -18px -20px 19px 21px;
+  border-color: #566159;
+  background-color: #111713;
+  box-shadow:
+    0 1px 0 #465047,
+    0 16px 28px rgba(0, 0, 0, 0.34);
+  transform: rotate(-0.22deg);
+}
+
+.cohamy-crm .portal-shell :where(input, select, textarea) {
+  font-size: var(--hb-type-body);
+}
+
+.cohamy-crm .form-status--success {
+  position: relative;
+  overflow: hidden;
+  border-color: var(--hb-success);
+  background: var(--hb-success-soft);
+  color: var(--hb-success);
+}
+
+.cohamy-crm .form-status--error {
+  border-color: var(--hb-danger);
+  background: var(--hb-danger-soft);
+  color: var(--hb-danger);
+}
+
+.cohamy-crm .form-status--success::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: var(--hb-success);
+  animation: dossier-ledger-confirm 220ms var(--hb-ease-out) forwards;
+  pointer-events: none;
+}
+
+.cohamy-crm .form-status--success svg {
+  animation: dossier-ledger-check 180ms var(--hb-ease-out) both;
+}
+
+@media (max-width: 1380px) {
+
+  .cohamy-crm .portal-content--dashboard {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .cohamy-crm .portal-workspace--dashboard {
+    padding: 18px 166px 34px 92px;
+  }
+
+  .cohamy-crm .portal-workspace--dashboard::before {
+    inset: 8px 140px 18px 2px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .cohamy-crm .portal-system-title {
+    display: none;
+  }
+
+  .cohamy-crm .portal-topbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .cohamy-crm .portal-content--dashboard {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .cohamy-crm .portal-workspace--dashboard {
+    padding: 18px 78px 34px 96px;
+  }
+
+  .cohamy-crm .portal-workspace--dashboard::before {
+    inset: 8px 58px 18px 2px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .cohamy-crm .portal-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 60px minmax(0, 1fr);
+  }
+
+  .cohamy-crm .portal-topbar {
+    min-height: 60px;
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .cohamy-crm .portal-masthead-brand {
+    min-width: 0;
+    border-right: 0;
+    padding-right: 0;
+  }
+
+  .cohamy-crm .portal-workspace {
+    grid-column: 1;
+    grid-row: 3;
+    padding: 14px 58px 28px 14px;
+  }
+
+  .cohamy-crm .portal-workspace--dashboard::before {
+    display: none;
+  }
+
+  .cohamy-crm .portal-content,
+.cohamy-crm .portal-content--dashboard {
+    min-height: calc(100dvh - 90px);
+    width: 100%;
+    margin: 0;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  .cohamy-crm .portal-topbar {
+    gap: 10px;
+    padding-inline: 12px;
+  }
+
+  .cohamy-crm .portal-topbar__actions {
+    gap: 5px;
+  }
+
+  .cohamy-crm .portal-user-summary {
+    display: none;
+  }
+
+  .cohamy-crm .portal-user-menu > summary {
+    min-width: 44px;
+  }
+
+  .cohamy-crm .portal-workspace {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .cohamy-crm .portal-shell :where(input, select, textarea) {
+    font-size: 16px;
+  }
+
+  .cohamy-crm .portal-content,
+.cohamy-crm .portal-content--dashboard {
+    min-height: auto;
+    padding: 20px 16px 28px;
+  }
+
+  .cohamy-crm .portal-content::before,
+.cohamy-crm .portal-content::after {
+    display: none;
+  }
+
+  .cohamy-crm .portal-page-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cohamy-crm .portal-page-header h1 {
+    font-size: 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cohamy-crm .portal-shell *,
+.cohamy-crm .portal-shell *::before,
+.cohamy-crm .portal-shell *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 100ms !important;
+    transition-property:
+      color, background-color, border-color, outline-color, box-shadow !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .cohamy-crm .form-status--success::after {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-contrast: more) {
+
+  .cohamy-crm .portal-user-summary span {
+    color: currentColor;
+  }
+}
+
+/* HumanBank legacy-crm.css; original cascade order. */
+
+
+.cohamy-crm .portal-shell {
+  color-scheme: light;
+  --hb-accent: #f97316;
+  --hb-accent-hover: #ea580c;
+  --hb-accent-pressed: #c2410c;
+  --hb-accent-soft: #ffedd5;
+  --portal-canvas: #f8fafc;
+  --portal-paper: #ffffff;
+  --portal-paper-muted: #f8fafc;
+  --portal-ink: #1e293b;
+  --portal-muted: #64748b;
+  --portal-rule: #e2e8f0;
+  --portal-rule-strong: #cbd5e1;
+  --portal-green: #f97316;
+  --portal-green-deep: #ea580c;
+  --portal-green-soft: #ffedd5;
+  --portal-radius: 10px;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  color: #1e293b;
+  font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+}
+
+.cohamy-crm .portal-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  width: 100%;
+  min-height: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 14, 23, 0.97);
+  padding: 8px clamp(16px, 3vw, 34px);
+  box-shadow: 0 8px 24px rgba(2, 6, 23, 0.28);
+  backdrop-filter: blur(14px);
+}
+
+.cohamy-crm .portal-masthead-brand {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.cohamy-crm .portal-brand-logo {
+  width: auto;
+  height: 34px;
+  object-fit: contain;
+}
+
+.cohamy-crm .portal-system-title {
+  color: #f8fafc;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .portal-topbar__actions {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cohamy-crm .portal-user-menu {
+  position: relative;
+  min-width: 0;
+}
+
+.cohamy-crm .portal-user-menu > summary {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 4px 6px 4px 10px;
+  color: #f8fafc;
+  cursor: pointer;
+  list-style: none;
+  transition: background-color 180ms ease;
+}
+
+.cohamy-crm .portal-user-menu > summary::-webkit-details-marker {
+  display: none;
+}
+
+.cohamy-crm .portal-user-menu > summary:hover,
+.cohamy-crm .portal-user-menu[open] > summary {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.cohamy-crm .portal-user-menu[open] > summary > svg:last-child {
+  transform: rotate(180deg);
+}
+
+.cohamy-crm .portal-user-summary {
+  min-width: 0;
+  display: grid;
+  justify-items: end;
+  gap: 1px;
+  text-align: right;
+}
+
+.cohamy-crm .portal-user-summary strong {
+  overflow: hidden;
+  max-width: 230px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-user-summary span {
+  overflow: hidden;
+  max-width: 230px;
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-user-avatar {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 2px solid #f97316;
+  border-radius: 50%;
+  background: #273449;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.cohamy-crm .portal-user-menu__content {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 80;
+  width: min(270px, calc(100vw - 24px));
+  display: grid;
+  gap: 2px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 7px;
+  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.28);
+}
+
+.cohamy-crm .portal-user-menu__content a,
+.cohamy-crm .portal-user-menu__content button {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  padding: 9px 11px;
+  color: #334155;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.cohamy-crm .portal-user-menu__content a:hover,
+.cohamy-crm .portal-user-menu__content button:hover:not(:disabled) {
+  background: #f1f5f9;
+}
+
+.cohamy-crm .portal-user-menu__content button {
+  color: #dc2626;
+}
+
+.cohamy-crm .portal-user-menu__content p {
+  border-top: 1px solid #e2e8f0;
+  padding: 8px 10px 4px;
+  color: #dc2626;
+  font-size: 11px;
+}
+
+.cohamy-crm .portal-workspace {
+  min-width: 0;
+  flex: 1 1 auto;
+  background: #f8fafc;
+  padding: 0 0 100px;
+}
+
+.cohamy-crm .portal-workspace--dashboard {
+  min-height: calc(100dvh - 98px);
+  background: #0f172a;
+  padding-bottom: 0;
+}
+
+.cohamy-crm .portal-workspace--dashboard::before {
+  display: none;
+}
+
+.cohamy-crm .portal-content {
+  width: min(calc(100% - 40px), 1240px);
+  margin: 0 auto;
+  border: 0;
+  border-radius: 0;
+  background: #f8fafc;
+  padding: 34px 0 62px;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-content::before,
+.cohamy-crm .portal-content::after {
+  display: none;
+}
+
+.cohamy-crm .portal-content--dashboard {
+  width: 100%;
+  max-width: none;
+  min-height: calc(100dvh - 98px);
+  margin: 0;
+  background: #0f172a;
+  padding: 0;
+}
+
+.cohamy-crm .portal-bottom-navigation {
+  position: fixed;
+  right: auto;
+  bottom: 15px;
+  left: 50%;
+  z-index: 100;
+  width: min(95%, 600px);
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  background: rgba(10, 14, 23, 0.96);
+  padding: 5px 10px;
+  box-shadow: 0 16px 36px rgba(2, 6, 23, 0.42);
+  backdrop-filter: blur(16px);
+}
+
+.cohamy-crm .portal-bottom-navigation__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.cohamy-crm .portal-bottom-navigation a,
+.cohamy-crm .portal-bottom-navigation button {
+  position: relative;
+  min-width: 0;
+  height: 65px;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  transition:
+    background-color 220ms ease,
+    color 220ms ease,
+    transform 220ms ease;
+}
+
+.cohamy-crm .portal-bottom-navigation a svg,
+.cohamy-crm .portal-bottom-navigation button svg {
+  color: var(--module-color, #94a3b8);
+  transition: transform 420ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.cohamy-crm .portal-bottom-navigation small {
+  overflow: hidden;
+  max-width: 100%;
+  color: #94a3b8;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-bottom-navigation a:hover svg,
+.cohamy-crm .portal-bottom-navigation button:hover:not(:disabled) svg {
+  transform: translateY(-7px) scale(1.16);
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active svg {
+  transform: translateY(-10px) scale(1.24);
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.28));
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active small {
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active::after {
+  position: absolute;
+  bottom: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--module-color, #f97316);
+  content: "";
+  animation: legacy-crm-dot 420ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes legacy-crm-dot {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.cohamy-crm .crm-dashboard {
+  position: relative;
+  min-height: calc(100dvh - 98px);
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.cohamy-crm .particle-network {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cohamy-crm .crm-dashboard__content {
+  position: relative;
+  z-index: 1;
+  width: min(calc(100% - 40px), 1200px);
+  margin: 0 auto;
+  padding: 40px 0 138px;
+}
+
+.cohamy-crm .crm-dashboard__hero {
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.cohamy-crm .crm-dashboard__hero h1 {
+  margin: 0 0 5px;
+  color: #ffffff;
+  font-size: 44.8px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.cohamy-crm .crm-dashboard__hero p {
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 16.8px;
+  line-height: 1.6;
+}
+
+.cohamy-crm .crm-module-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(5, 180px);
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
+  margin: 0 auto;
+}
+
+.cohamy-crm .crm-module-tile {
+  --tile-start: #4e73df;
+  --tile-end: #224abe;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 32px;
+  background: linear-gradient(135deg, var(--tile-start), var(--tile-end));
+  color: #ffffff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  text-align: center;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  transition:
+    transform 400ms cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 400ms ease,
+    border-color 400ms ease,
+    filter 400ms ease;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="primary"] {
+  --tile-start: #4e73df;
+  --tile-end: #224abe;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="success"] {
+  --tile-start: #1cc88a;
+  --tile-end: #13875e;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="info"] {
+  --tile-start: #36b9cc;
+  --tile-end: #2a8a9a;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="orange"] {
+  --tile-start: #f97316;
+  --tile-end: #ea580c;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="warning"] {
+  --tile-start: #f6c23e;
+  --tile-end: #dbaa16;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="danger"] {
+  --tile-start: #e74a3b;
+  --tile-end: #c4291c;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="secondary"] {
+  --tile-start: #858796;
+  --tile-end: #606169;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="indigo"] {
+  --tile-start: #6610f2;
+  --tile-end: #480ca8;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="korea"] {
+  --tile-start: #be123c;
+  --tile-end: #881337;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="indigoDark"] {
+  --tile-start: #4338ca;
+  --tile-end: #312e81;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="emerald"] {
+  --tile-start: #10b981;
+  --tile-end: #064e3b;
+}
+
+.cohamy-crm .crm-module-tile svg {
+  flex: 0 0 auto;
+  margin-bottom: 15px;
+  color: #ffffff;
+  filter: drop-shadow(0 5px 12px rgba(0, 0, 0, 0.16));
+}
+
+.cohamy-crm .crm-module-tile span {
+  padding: 0 10px;
+  color: #ffffff;
+  font-size: 13.6px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.25;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .crm-module-tile:hover,
+.cohamy-crm .crm-module-tile:focus-visible {
+  transform: translateY(-15px) scale(1.05);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  filter: brightness(1.18);
+}
+
+.cohamy-crm .crm-module-tile:active {
+  transform: translateY(-4px) scale(0.97);
+  transition-duration: 100ms;
+}
+
+.cohamy-crm .crm-dashboard__empty {
+  display: flex;
+  justify-content: center;
+}
+
+.cohamy-crm .crm-dashboard__empty a {
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  padding: 13px 20px;
+  color: #ffffff;
+  font-weight: 700;
+}
+.cohamy-crm .portal-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 0 20px;
+}
+
+.cohamy-crm .portal-page-header::before,
+.cohamy-crm .portal-page-header::after {
+  display: none;
+}
+
+.cohamy-crm .portal-page-header h1 {
+  max-width: none;
+  color: #1e293b;
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+}
+
+.cohamy-crm .portal-page-header p {
+  margin-top: 6px;
+  color: #64748b;
+}
+
+.cohamy-crm .portal-shell
+  :where(
+    .detail-card,
+    .create-disclosure) {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.cohamy-crm .portal-shell
+  :where( .detail-card h2) {
+  color: #1e293b;
+}
+
+.cohamy-crm .portal-shell .table-shell {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.04);
+}
+
+.cohamy-crm .portal-shell .data-table {
+  background: #ffffff;
+}
+
+.cohamy-crm .portal-shell .data-table th {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .portal-shell .data-table th,
+.cohamy-crm .portal-shell .data-table td {
+  border-bottom-color: #e2e8f0;
+}
+
+.cohamy-crm .portal-shell .data-table tbody tr:hover {
+  background: #fff7ed;
+}
+
+.cohamy-crm .portal-shell .button--primary {
+  border-color: #ea580c;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(234, 88, 12, 0.2);
+}
+
+.cohamy-crm .portal-shell .button--primary:hover:not(:disabled) {
+  border-color: #c2410c;
+  background: linear-gradient(135deg, #fb923c, #ea580c);
+  transform: translateY(-2px);
+}
+
+.cohamy-crm .portal-shell .button--secondary,
+.cohamy-crm .portal-shell .button--quiet,
+.cohamy-crm .portal-shell .button--ghost {
+  border-color: #cbd5e1;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #334155;
+}
+
+.cohamy-crm .portal-shell .field input,
+.cohamy-crm .portal-shell .field select,
+.cohamy-crm .portal-shell .field textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #1e293b;
+}
+
+.cohamy-crm .portal-shell .field input:focus,
+.cohamy-crm .portal-shell .field select:focus,
+.cohamy-crm .portal-shell .field textarea:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.14);
+}
+
+.cohamy-crm .portal-shell .field input::placeholder,
+.cohamy-crm .portal-shell .field textarea::placeholder {
+  color: #94a3b8;
+}
+
+.cohamy-crm .portal-shell .field label {
+  color: #334155;
+}
+
+.cohamy-crm .crm-login {
+  position: relative;
+  min-height: calc(100dvh - 34px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #020617;
+  padding: 28px 14px;
+}
+
+.cohamy-crm .crm-login__box {
+  position: relative;
+  z-index: 2;
+  width: min(400px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  background: rgba(15, 23, 42, 0.82);
+  padding: 38px 40px 30px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  backdrop-filter: blur(15px);
+  transition: border-color 300ms ease;
+}
+
+.cohamy-crm .crm-login__box::before {
+  position: absolute;
+  inset: -50%;
+  z-index: -1;
+  background: radial-gradient(
+    circle,
+    rgba(249, 115, 22, 0.06) 0%,
+    transparent 68%
+  );
+  content: "";
+  pointer-events: none;
+}
+
+.cohamy-crm .crm-login__box:hover {
+  border-color: rgba(249, 115, 22, 0.34);
+}
+
+.cohamy-crm .crm-login__logo {
+  width: auto;
+  height: 38px;
+  margin: 0 auto 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.24));
+}
+
+.cohamy-crm .crm-login__box h1 {
+  margin: 0 0 8px;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.cohamy-crm .crm-login__lead {
+  margin: 0 0 26px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.cohamy-crm .crm-login__box .auth-form {
+  display: grid;
+  gap: 18px;
+  text-align: left;
+}
+
+.cohamy-crm .crm-login__box .field {
+  gap: 7px;
+}
+
+.cohamy-crm .crm-login__box .field label {
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.cohamy-crm .crm-login-input-wrap,
+.cohamy-crm .crm-login__box .password-wrap {
+  position: relative;
+}
+
+.cohamy-crm .crm-login-input-wrap > svg,
+.cohamy-crm .crm-login__box .password-wrap > svg {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  z-index: 2;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.cohamy-crm .crm-login__box .field input {
+  width: 100%;
+  min-height: 50px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  padding: 12px 46px;
+  outline: 0;
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.cohamy-crm .crm-login__box .field input::placeholder {
+  color: #64748b;
+}
+
+.cohamy-crm .crm-login__box .field input:focus {
+  border-color: #f97316;
+  background: rgba(255, 255, 255, 0.09);
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.2);
+}
+
+.cohamy-crm .crm-login__box
+  .field:focus-within
+  :where(.crm-login-input-wrap, .password-wrap)
+  > svg {
+  color: #f97316;
+}
+
+.cohamy-crm .crm-login__box .auth-field-heading a {
+  color: #fb923c;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.cohamy-crm .crm-login__box .password-toggle {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.cohamy-crm .crm-login__box .password-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.cohamy-crm .crm-login__box .auth-form > .button {
+  width: 100%;
+  min-height: 50px;
+  justify-content: center;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 20px rgba(249, 115, 22, 0.22);
+}
+
+.cohamy-crm .crm-login__box .auth-form > .button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 25px rgba(249, 115, 22, 0.32);
+  filter: brightness(1.08);
+}
+
+.cohamy-crm .crm-login__box :where(.field-error, .form-status--error) {
+  color: #fca5a5;
+}
+
+.cohamy-crm .crm-login__box .form-status--error {
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.16);
+  padding: 11px;
+}
+
+.cohamy-crm .crm-login__links {
+  display: grid;
+  gap: 8px;
+  margin-top: 23px;
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.cohamy-crm .crm-login__links a {
+  color: #fb923c;
+  font-weight: 600;
+}
+
+.cohamy-crm .crm-login__footer {
+  margin-top: 26px;
+  color: #64748b;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 1099px) {
+  .cohamy-crm .crm-module-grid {
+    grid-template-columns: repeat(4, 164px);
+    gap: 20px;
+  }
+
+  .cohamy-crm .crm-module-tile {
+    width: 164px;
+    height: 164px;
+    border-radius: 28px;
+  }
+}
+
+@media (max-width: 780px) {
+  .cohamy-crm .portal-system-title {
+    display: none;
+  }
+
+  .cohamy-crm .portal-user-summary {
+    display: none;
+  }
+
+  .cohamy-crm .portal-content {
+    width: min(calc(100% - 24px), 1240px);
+    padding-top: 24px;
+  }
+
+  .cohamy-crm .portal-shell .table-shell {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: auto;
+  }
+
+  .cohamy-crm .crm-dashboard__content {
+    width: min(calc(100% - 24px), 680px);
+    padding-top: 28px;
+  }
+
+  .cohamy-crm .crm-dashboard__hero {
+    margin-bottom: 24px;
+  }
+
+  .cohamy-crm .crm-dashboard__hero h1 {
+    font-size: 28px;
+    letter-spacing: 1px;
+  }
+
+  .cohamy-crm .crm-dashboard__hero p {
+    font-size: 14.08px;
+  }
+
+  .cohamy-crm .crm-module-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .cohamy-crm .crm-module-tile {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 22px;
+  }
+
+  .cohamy-crm .crm-module-tile svg {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+  }
+
+  .cohamy-crm .crm-module-tile span {
+    font-size: 11.2px;
+  }
+
+  .cohamy-crm .portal-bottom-navigation {
+    bottom: 0;
+    width: 100%;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 24px 24px 0 0;
+    padding: 5px 4px max(5px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 540px) {
+  .cohamy-crm .portal-topbar {
+    min-height: 60px;
+    height: 60px;
+    padding-right: 10px;
+    padding-left: 12px;
+  }
+
+  .cohamy-crm .portal-brand-logo {
+    height: 28px;
+  }
+
+  .cohamy-crm .portal-user-avatar {
+    width: 35px;
+    height: 35px;
+  }
+
+  .cohamy-crm .crm-dashboard,
+.cohamy-crm .portal-content--dashboard,
+.cohamy-crm .portal-workspace--dashboard {
+    min-height: calc(100dvh - 92px);
+  }
+
+  .cohamy-crm .crm-dashboard__content {
+    padding-bottom: 112px;
+  }
+
+  .cohamy-crm .crm-dashboard__hero h1 {
+    font-size: 23.2px;
+  }
+
+  .cohamy-crm .crm-module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .cohamy-crm .crm-module-tile {
+    border-radius: 20px;
+  }
+
+  .cohamy-crm .crm-module-tile svg {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 8px;
+  }
+
+  .cohamy-crm .crm-module-tile span {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 10.56px;
+    line-height: 1.15;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .cohamy-crm .portal-bottom-navigation a,
+.cohamy-crm .portal-bottom-navigation button {
+    height: 58px;
+  }
+
+  .cohamy-crm .portal-bottom-navigation small {
+    font-size: 8px;
+  }
+
+  .cohamy-crm .portal-bottom-navigation a svg,
+.cohamy-crm .portal-bottom-navigation button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .cohamy-crm .crm-login {
+    align-items: flex-start;
+    overflow-y: auto;
+    padding-top: 22px;
+  }
+
+  .cohamy-crm .crm-login__box {
+    padding: 30px 22px 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cohamy-crm .crm-module-tile,
+.cohamy-crm .portal-bottom-navigation a,
+.cohamy-crm .portal-bottom-navigation button,
+.cohamy-crm .portal-bottom-navigation svg {
+    transition-duration: 1ms;
+  }
+
+  .cohamy-crm .portal-bottom-navigation .is-active::after {
+    animation: none;
+  }
+}
+.cohamy-crm .portal-shell--operational {
+  color-scheme: light;
+  --hb-bg: #f8fafc;
+  --hb-surface: #ffffff;
+  --hb-surface-subtle: #f8fafc;
+  --hb-surface-strong: #f1f5f9;
+  --hb-ink: #1e293b;
+  --hb-ink-muted: #64748b;
+  --hb-line: #e2e8f0;
+  --hb-line-strong: #cbd5e1;
+  --hb-accent: #f97316;
+  --hb-accent-hover: #ea580c;
+  --hb-accent-pressed: #c2410c;
+  --hb-accent-soft: #fff7ed;
+  --hb-danger: #dc3545;
+  --hb-danger-soft: #fff1f2;
+  --hb-success: #10b981;
+  --hb-success-soft: #d1fae5;
+  --hb-warning: #f59e0b;
+  --hb-warning-soft: #fef3c7;
+  --portal-canvas: #f8fafc;
+  --portal-paper: #ffffff;
+  --portal-paper-muted: #f8fafc;
+  --portal-ink: #1e293b;
+  --portal-muted: #64748b;
+  --portal-rule: #e2e8f0;
+  --portal-rule-strong: #cbd5e1;
+  --portal-green: #f97316;
+  --portal-green-deep: #ea580c;
+  --portal-green-soft: #fff7ed;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.cohamy-crm:has(.portal-shell--operational) {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.cohamy-crm .portal-shell--operational .portal-topbar {
+  min-height: 58px;
+  height: 58px;
+  border-bottom: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.98);
+  padding-block: 8px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07);
+  backdrop-filter: blur(10px);
+}
+
+.cohamy-crm .portal-shell--operational .portal-brand-logo {
+  height: 32px;
+}
+
+.cohamy-crm .portal-shell--operational .portal-system-title {
+  border-left-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu > summary {
+  color: #1e293b;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu > summary:hover,
+.cohamy-crm .portal-shell--operational .portal-user-menu[open] > summary {
+  border-color: #e2e8f0;
+  background: #f8fafc;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-summary strong {
+  color: #334155;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-summary span {
+  color: #64748b;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-avatar {
+  border-color: #f97316;
+  background: #ffffff;
+  color: #475569;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu > summary > svg:last-child {
+  color: #64748b;
+}
+
+.cohamy-crm .portal-shell--operational .portal-workspace,
+.cohamy-crm .portal-shell--operational .portal-content {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.cohamy-crm .portal-shell--operational .portal-content {
+  width: min(calc(100% - 40px), 1600px);
+  padding: 30px 0 122px;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header {
+  align-items: center;
+  margin-bottom: 26px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 20px;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header h1 {
+  max-width: none;
+  color: #1e293b;
+  font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  font-size: clamp(24px, 2.5vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header p,
+.cohamy-crm .portal-shell--operational .field-help {
+  color: #64748b;
+}
+
+.cohamy-crm .portal-shell--operational .text-link {
+  color: #ea580c;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card,
+    .form-card,
+    .create-disclosure,
+    .resource-facts) {
+  border-color: #e2e8f0;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.07);
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card > header) {
+  border-bottom-color: #e2e8f0;
+  background: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card h2,
+    .detail-card h3,
+    .form-section h2,
+    .form-section h3) {
+  color: #1e293b;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.create-disclosure)
+  > summary {
+  color: #334155;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .create-disclosure)[open]
+  > summary {
+  border-bottom-color: #e2e8f0;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.cohamy-crm .portal-shell--operational .table-toolbar {
+  border-color: #e2e8f0;
+  border-radius: 9px;
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+}
+
+.cohamy-crm .portal-shell--operational .field label {
+  color: #334155;
+}
+
+.cohamy-crm .portal-shell--operational .field input,
+.cohamy-crm .portal-shell--operational .field select,
+.cohamy-crm .portal-shell--operational .field textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1e293b;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.cohamy-crm .portal-shell--operational .field input::placeholder,
+.cohamy-crm .portal-shell--operational .field textarea::placeholder {
+  color: #94a3b8;
+}
+
+.cohamy-crm .portal-shell--operational .field input:focus,
+.cohamy-crm .portal-shell--operational .field select:focus,
+.cohamy-crm .portal-shell--operational .field textarea:focus {
+  border-color: #f97316;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.14);
+}
+
+.cohamy-crm .portal-shell--operational .button--primary {
+  border-color: #f97316;
+  border-radius: 6px;
+  background: #f97316;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(249, 115, 22, 0.22);
+}
+
+.cohamy-crm .portal-shell--operational .button--primary:hover:not(:disabled) {
+  border-color: #ea580c;
+  background: #ea580c;
+  transform: translateY(-2px);
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.button--secondary, .button--quiet, .button--ghost) {
+  border-color: #cbd5e1;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #475569;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.button--secondary, .button--quiet, .button--ghost):hover:not(
+    :disabled
+  ) {
+  border-color: #f97316;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.cohamy-crm .portal-shell--operational .table-shell {
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  background: #ffffff;
+  padding: 8px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.07);
+}
+
+.cohamy-crm .portal-shell--operational .data-table {
+  border-collapse: separate;
+  border-spacing: 0 7px;
+  background: #ffffff;
+  color: #334155;
+}
+
+.cohamy-crm .portal-shell--operational .data-table thead th,
+.cohamy-crm .portal-shell--operational .data-table th {
+  border-top: 1px solid #d34614;
+  border-right: 1px solid #d34614;
+  border-bottom: 1px solid #d34614;
+  background: #f97316;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition:
+    transform 180ms ease,
+    background-color 180ms ease;
+}
+
+.cohamy-crm .portal-shell--operational .data-table th:first-child {
+  border-left: 1px solid #d34614;
+  border-radius: 5px 0 0 5px;
+}
+
+.cohamy-crm .portal-shell--operational .data-table th:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.cohamy-crm .portal-shell--operational .data-table th:hover {
+  background: #ea580c;
+  transform: translateY(-2px);
+}
+
+.cohamy-crm .portal-shell--operational .data-table td {
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #334155;
+}
+
+.cohamy-crm .portal-shell--operational .data-table td:first-child {
+  border-left: 1px solid #e5e7eb;
+  border-radius: 5px 0 0 5px;
+}
+
+.cohamy-crm .portal-shell--operational .data-table td:last-child {
+  border-right: 1px solid #e5e7eb;
+  border-radius: 0 5px 5px 0;
+}
+
+.cohamy-crm .portal-shell--operational .data-table tbody tr:hover td {
+  border-color: #f97316;
+  background: #fff7ed;
+}
+
+.cohamy-crm .portal-shell--operational .table-primary,
+.cohamy-crm .portal-shell--operational .table-primary strong,
+.cohamy-crm .portal-shell--operational .table-primary a {
+  color: #c2410c;
+}
+
+.cohamy-crm .portal-shell--operational .table-footer,
+.cohamy-crm .portal-shell--operational .pagination {
+  border-color: #e2e8f0;
+  background: #ffffff;
+  color: #64748b;
+}
+
+.cohamy-crm .portal-shell--operational .pagination .button[aria-current="page"],
+.cohamy-crm .portal-shell--operational .pagination .is-active {
+  border-color: #f97316;
+  background: #f97316;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation {
+  bottom: 15px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.13);
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation a,
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation button {
+  color: #94a3b8;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation small {
+  color: #94a3b8;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation .is-active {
+  background: #f8fafc;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation .is-active small {
+  color: #1e293b;
+}
+
+@media (max-width: 780px) {
+  .cohamy-crm .portal-shell--operational .portal-content {
+    width: min(calc(100% - 24px), 1600px);
+    padding-top: 22px;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-page-header {
+    align-items: stretch;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-page-header .button {
+    width: 100%;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-bottom-navigation {
+    bottom: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 25px 25px 0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .cohamy-crm .portal-shell--operational .portal-topbar {
+    min-height: 58px;
+    height: 58px;
+  }
+}
+.cohamy-crm .portal-user-menu__content a:has(svg) {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.cohamy-crm .portal-shell--operational {
+  color-scheme: dark;
+  --hb-bg: #191c1d;
+  --hb-surface: #1b1e1f;
+  --hb-surface-subtle: #171a1b;
+  --hb-surface-strong: #222627;
+  --hb-ink: #f2eee8;
+  --hb-ink-muted: #aaa59d;
+  --hb-line: #3d4244;
+  --hb-line-strong: #505659;
+  --hb-accent: #ff7412;
+  --hb-accent-hover: #e9650b;
+  --hb-accent-pressed: #c95100;
+  --hb-accent-soft: #5b2d00;
+  --hb-danger: #ff4055;
+  --hb-danger-soft: #4a1820;
+  --hb-success: #17c978;
+  --hb-success-soft: #0d4b35;
+  --hb-warning: #ffc107;
+  --hb-warning-soft: #4d3b05;
+  --portal-canvas: #191c1d;
+  --portal-paper: #1b1e1f;
+  --portal-paper-muted: #171a1b;
+  --portal-ink: #f2eee8;
+  --portal-muted: #aaa59d;
+  --portal-rule: #3d4244;
+  --portal-rule-strong: #505659;
+  --portal-green: #ff7412;
+  --portal-green-deep: #ff7412;
+  --portal-green-soft: #5b2d00;
+  background: #191c1d;
+  color: #f2eee8;
+  font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  font-size: 12px;
+}
+
+.cohamy-crm:has(.portal-shell--operational) {
+  background: #191c1d;
+  color: #f2eee8;
+}
+
+.cohamy-crm .portal-shell--operational .portal-topbar {
+  min-height: 62px;
+  height: 62px;
+  border-bottom: 1px solid #303538;
+  background: #0c121b;
+  padding: 8px 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.34);
+}
+
+.cohamy-crm .portal-shell--operational .portal-brand-logo {
+  height: 32px;
+}
+
+.cohamy-crm .portal-shell--operational .portal-system-title {
+  border-left-color: #595e61;
+  color: #f2eee8;
+  font-size: 12px;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu > summary {
+  color: #f2eee8;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu > summary:hover,
+.cohamy-crm .portal-shell--operational .portal-user-menu[open] > summary {
+  border-color: #343a3d;
+  background: #161c24;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-summary strong {
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-summary span {
+  color: #9ca3af;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-avatar {
+  border-color: #ff7412;
+  background: #202a38;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu > summary > svg:last-child {
+  color: #9ca3af;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu__content {
+  border-color: #414649;
+  border-radius: 5px;
+  background: #1b1e1f;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.42);
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu__content a,
+.cohamy-crm .portal-shell--operational .portal-user-menu__content button {
+  color: #e7e2da;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu__content a:hover,
+.cohamy-crm .portal-shell--operational
+  .portal-user-menu__content
+  button:hover:not(:disabled) {
+  background: #292d2f;
+}
+
+.cohamy-crm .portal-shell--operational .portal-user-menu__content button {
+  color: #ff5b66;
+}
+
+.cohamy-crm .portal-shell--operational .portal-workspace,
+.cohamy-crm .portal-shell--operational .portal-content {
+  background: #191c1d;
+  color: #f2eee8;
+}
+
+.cohamy-crm .portal-shell--operational .portal-content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 18px 0 108px;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header {
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin: 0;
+  border-bottom: 1px solid #242829;
+  padding: 2px 18px 20px;
+  text-align: center;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header > div {
+  display: grid;
+  justify-items: center;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header h1 {
+  max-width: none;
+  color: #e8e1d8;
+  font-family: "Be Vietnam Pro", "Segoe UI", sans-serif;
+  font-size: clamp(20px, 2vw, 27px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header p {
+  max-width: 780px;
+  margin-top: 4px;
+  border: 0;
+  padding: 0;
+  color: #a9a39b;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header .button--secondary {
+  border-color: #666d70;
+  background: #666d70;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header--customer {
+  min-height: 106px;
+  border-top: 1px solid #2f3436;
+  border-bottom-color: #2f3436;
+  padding-bottom: 16px;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-total-line {
+  color: #aaa59d;
+  font-size: 10px;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-total-line strong {
+  display: inline-flex;
+  min-width: 27px;
+  justify-content: center;
+  border-radius: 3px;
+  background: #147bc1;
+  color: #ffffff;
+  padding: 1px 6px;
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+.cohamy-crm .portal-shell--operational .text-link,
+.cohamy-crm .portal-shell--operational .table-primary,
+.cohamy-crm .portal-shell--operational .table-primary strong,
+.cohamy-crm .portal-shell--operational .table-primary a {
+  color: #25a7ff;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .create-disclosure,
+    .table-toolbar) {
+  margin-right: 12px;
+  margin-left: 12px;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card,
+    .form-card,
+    .create-disclosure,
+    .resource-facts) {
+  border-color: #3d4244;
+  border-radius: 3px;
+  background: #191c1d;
+  color: #f2eee8;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where( .detail-card, .form-card) {
+  margin-right: 12px;
+  margin-left: 12px;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card > header) {
+  min-height: 48px;
+  border-bottom-color: #3d4244;
+  background: #171a1b;
+  padding: 9px 12px;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card h2,
+    .detail-card h3,
+    .form-section h2,
+    .form-section h3) {
+  color: #f2eee8;
+  font-size: 13px;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .field-help) {
+  color: #aaa59d;
+}
+
+.cohamy-crm .portal-shell--operational .create-disclosure {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.create-disclosure)
+  > summary {
+  min-height: 42px;
+  color: #ddd7cf;
+  padding: 8px 12px;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .create-disclosure)[open]
+  > summary {
+  border-bottom-color: #3d4244;
+  background: #2a241e;
+  color: #ff8a33;
+}
+
+.cohamy-crm .portal-shell--operational .table-toolbar {
+  border: 1px solid #3d4244;
+  border-radius: 3px;
+  background: #191c1d;
+  padding: 10px 12px;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell--operational .field {
+  gap: 5px;
+}
+
+.cohamy-crm .portal-shell--operational .field label {
+  color: #e8e1d8;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.cohamy-crm .portal-shell--operational .field input,
+.cohamy-crm .portal-shell--operational .field select,
+.cohamy-crm .portal-shell--operational .field textarea {
+  min-height: 32px;
+  border: 1px solid #3d4244;
+  border-radius: 2px;
+  background: #171a1b;
+  color: #eee9e2;
+  padding: 6px 9px;
+  font-size: 11px;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell--operational .field textarea {
+  min-height: 88px;
+}
+
+.cohamy-crm .portal-shell--operational .field input::placeholder,
+.cohamy-crm .portal-shell--operational .field textarea::placeholder {
+  color: #777c7e;
+}
+
+.cohamy-crm .portal-shell--operational .field input:focus,
+.cohamy-crm .portal-shell--operational .field select:focus,
+.cohamy-crm .portal-shell--operational .field textarea:focus {
+  border-color: #ff7412;
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(255, 116, 18, 0.2);
+}
+
+.cohamy-crm .portal-shell--operational .button {
+  min-height: 32px;
+  border-radius: 2px;
+  padding: 6px 11px;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell--operational .button--primary {
+  border-color: #ff7412;
+  background: #ff7412;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .button--primary:hover:not(:disabled) {
+  border-color: #e9650b;
+  background: #e9650b;
+  transform: translateY(-1px);
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.button--secondary, .button--quiet, .button--ghost) {
+  border-color: #555b5e;
+  background: #555b5e;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.button--secondary, .button--quiet, .button--ghost):hover:not(
+    :disabled
+  ) {
+  border-color: #777d80;
+  background: #666c6f;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .table-shell {
+  width: 100%;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: #191c1d;
+  padding: 0;
+  box-shadow: none;
+}
+
+.cohamy-crm .portal-shell--operational .data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 1px 0;
+  background: #191c1d;
+  color: #ece7e0;
+  font-size: 11px;
+}
+
+.cohamy-crm .portal-shell--operational .data-table thead th,
+.cohamy-crm .portal-shell--operational .data-table th {
+  height: 42px;
+  border: 0;
+  border-radius: 3px 3px 0 0;
+  background: #ff7412;
+  color: #ffffff;
+  padding: 8px 11px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+  transition: background-color 150ms ease;
+}
+
+.cohamy-crm .portal-shell--operational .data-table th:hover {
+  background: #e9650b;
+  transform: none;
+}
+
+.cohamy-crm .portal-shell--operational .data-table td,
+.cohamy-crm .portal-shell--operational .data-table td:first-child,
+.cohamy-crm .portal-shell--operational .data-table td:last-child {
+  min-height: 56px;
+  border: 0;
+  border-right: 1px solid #414648;
+  border-bottom: 1px solid #414648;
+  border-radius: 0;
+  background: #191c1d;
+  color: #ece7e0;
+  padding: 9px 11px;
+  font-size: 11px;
+  line-height: 1.45;
+  vertical-align: middle;
+}
+
+.cohamy-crm .portal-shell--operational .data-table td:first-child {
+  border-left: 1px solid #414648;
+}
+
+.cohamy-crm .portal-shell--operational .data-table tbody tr:hover td {
+  border-color: #b85a05;
+  background: #542b00;
+}
+
+.cohamy-crm .portal-shell--operational .data-table :where(input, select, textarea) {
+  border: 1px solid #4b5052;
+  border-radius: 2px;
+  background: #171a1b;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .table-footer,
+.cohamy-crm .portal-shell--operational .pagination {
+  border-color: #3d4244;
+  border-radius: 0;
+  background: #191c1d;
+  color: #aaa59d;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-list-heading {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  border-top: 1px solid #242829;
+  border-bottom: 1px solid #242829;
+  background: #171a1b;
+  padding: 10px 12px;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-list-heading > strong {
+  color: #25a7ff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-list-heading > span {
+  color: #aaa59d;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-list-heading b {
+  display: inline-flex;
+  min-width: 28px;
+  justify-content: center;
+  border-radius: 3px;
+  background: #0da5bc;
+  color: #ffffff;
+  padding: 2px 5px;
+  font-size: 9px;
+}
+
+.cohamy-crm .portal-shell--operational .pagination .button[aria-current="page"],
+.cohamy-crm .portal-shell--operational .pagination .is-active {
+  border-color: #ff7412;
+  background: #ff7412;
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational :where( .form-status--success) {
+  border-color: #136f4b;
+  background: #0d3d2c;
+  color: #63e6ad;
+}
+
+.cohamy-crm .portal-shell--operational :where(.form-status--error, .field-error) {
+  color: #ff7c86;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation {
+  bottom: 12px;
+  border: 1px solid #4a4f52;
+  background: rgba(25, 28, 29, 0.98);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.36);
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation a,
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation button {
+  color: #929799;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation small {
+  color: #929799;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation .is-active {
+  background: #202425;
+}
+
+.cohamy-crm .portal-shell--operational .portal-bottom-navigation .is-active small {
+  color: #ffffff;
+}
+
+@media (min-width: 1100px) {
+  .cohamy-crm .portal-shell--operational .portal-content {
+    padding-top: 14px;
+  }
+}
+
+@media (max-width: 780px) {
+  .cohamy-crm .portal-shell--operational .portal-content {
+    width: 100%;
+    padding-top: 12px;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-page-header {
+    min-height: 0;
+    align-items: stretch;
+    padding: 8px 12px 16px;
+    text-align: left;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-page-header > div {
+    justify-items: start;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-page-header p {
+    text-align: left;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-page-header .button {
+    width: 100%;
+  }
+
+  .cohamy-crm .portal-shell--operational
+    :where(
+      .create-disclosure,
+      .table-toolbar,
+      .detail-card,
+      .form-card) {
+    margin-right: 8px;
+    margin-left: 8px;
+  }
+
+  .cohamy-crm .portal-shell--operational .portal-bottom-navigation {
+    bottom: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 24px 24px 0 0;
+  }
+}
+.cohamy-crm .portal-shell--operational .portal-workspace {
+  color-scheme: light;
+  --hb-bg: #ffffff;
+  --hb-surface: #ffffff;
+  --hb-surface-subtle: #f8fafc;
+  --hb-surface-strong: #f1f5f9;
+  --hb-ink: #111827;
+  --hb-ink-muted: #5b6472;
+  --hb-line: #d9dee6;
+  --hb-line-strong: #b8c0cc;
+  --hb-accent: #f97316;
+  --hb-accent-hover: #ea580c;
+  --hb-accent-pressed: #c2410c;
+  --hb-accent-soft: #fff7ed;
+  --hb-danger: #be123c;
+  --hb-danger-soft: #fff1f2;
+  --hb-success: #047857;
+  --hb-success-soft: #ecfdf5;
+  --hb-warning: #a16207;
+  --hb-warning-soft: #fffbeb;
+  --portal-canvas: #ffffff;
+  --portal-paper: #ffffff;
+  --portal-paper-muted: #f8fafc;
+  --portal-ink: #111827;
+  --portal-muted: #5b6472;
+  --portal-rule: #d9dee6;
+  --portal-rule-strong: #b8c0cc;
+  --portal-green: #f97316;
+  --portal-green-deep: #c2410c;
+  --portal-green-soft: #fff7ed;
+  background: #ffffff;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .portal-content,
+.cohamy-crm .portal-shell--operational .portal-page-header {
+  background: #ffffff;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header {
+  border-color: #e5e7eb;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header--customer {
+  border-color: #e5e7eb;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header h1,
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card h2,
+    .detail-card h3,
+    .form-section h2,
+    .form-section h3) {
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .portal-page-header p,
+.cohamy-crm .portal-shell--operational .legacy-total-line,
+.cohamy-crm .portal-shell--operational
+  :where(
+    .field-help) {
+  color: #5b6472;
+}
+
+.cohamy-crm .portal-shell--operational .text-link,
+.cohamy-crm .portal-shell--operational .table-primary,
+.cohamy-crm .portal-shell--operational .table-primary strong,
+.cohamy-crm .portal-shell--operational .table-primary a {
+  color: #075fba;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card,
+    .form-card,
+    .create-disclosure,
+    .resource-facts) {
+  border-color: #d9dee6;
+  background: #ffffff;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .detail-card > header) {
+  border-bottom-color: #d9dee6;
+  background: #f8fafc;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.create-disclosure)
+  > summary {
+  color: #1f2937;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(
+    .create-disclosure)[open]
+  > summary {
+  border-bottom-color: #d9dee6;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.cohamy-crm .portal-shell--operational .table-toolbar {
+  border-color: #d9dee6;
+  background: #ffffff;
+}
+
+.cohamy-crm .portal-shell--operational .field label {
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .field input,
+.cohamy-crm .portal-shell--operational .field select,
+.cohamy-crm .portal-shell--operational .field textarea,
+.cohamy-crm .portal-shell--operational .data-table :where(input, select, textarea) {
+  border-color: #b8c0cc;
+  background: #ffffff;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .field input::placeholder,
+.cohamy-crm .portal-shell--operational .field textarea::placeholder {
+  color: #7b8491;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.button--secondary, .button--quiet, .button--ghost) {
+  border-color: #b8c0cc;
+  background: #ffffff;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational
+  :where(.button--secondary, .button--quiet, .button--ghost):hover:not(
+    :disabled
+  ) {
+  border-color: #8e99a8;
+  background: #f8fafc;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .table-shell,
+.cohamy-crm .portal-shell--operational .data-table {
+  background: #ffffff;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .data-table td,
+.cohamy-crm .portal-shell--operational .data-table td:first-child,
+.cohamy-crm .portal-shell--operational .data-table td:last-child {
+  border-color: #d9dee6;
+  background: #ffffff;
+  color: #111827;
+}
+
+.cohamy-crm .portal-shell--operational .data-table tbody tr:hover td {
+  border-color: #fdba74;
+  background: #fff7ed;
+}
+
+.cohamy-crm .portal-shell--operational .table-footer,
+.cohamy-crm .portal-shell--operational .pagination,
+.cohamy-crm .portal-shell--operational .legacy-list-heading {
+  border-color: #d9dee6;
+  background: #ffffff;
+  color: #5b6472;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-list-heading > strong {
+  color: #075fba;
+}
+
+.cohamy-crm .portal-shell--operational .legacy-list-heading > span {
+  color: #5b6472;
+}
+
+.cohamy-crm .portal-shell--operational :where( .form-status--success) {
+  border-color: #6ee7b7;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.cohamy-crm .portal-shell--operational :where(.form-status--error, .field-error) {
+  color: #be123c;
+}
+
+/* HumanBank control-design.css; original cascade order. */
+
+.cohamy-crm :is(
+  .button,
+  .icon-button,
+  .portal-user-menu > summary,
+  .portal-user-menu__content > a,
+  .portal-user-menu__content > button,
+  .portal-bottom-navigation__inner > a,
+  .portal-bottom-navigation__inner > button,
+  .crm-module-tile
+) {
+  border-radius: var(--hb-control-radius) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  backdrop-filter: none !important;
+  transform: none !important;
+  transition-property:
+    background-color, border-color, color, opacity !important;
+  transition-duration: 140ms !important;
+  transition-timing-function: ease-out !important;
+}
+
+.cohamy-crm :is(
+  .button,
+  .icon-button,
+  .portal-user-menu > summary,
+  .portal-user-menu__content > a,
+  .portal-user-menu__content > button,
+  .portal-bottom-navigation__inner > a,
+  .portal-bottom-navigation__inner > button,
+  .crm-module-tile
+):focus-visible {
+  outline: 2px solid var(--hb-accent) !important;
+  outline-offset: 3px !important;
+}
+.cohamy-crm .crm-login__box .auth-form > .button,
+.cohamy-crm .crm-module-tile > span {
+  font-family: "Be Vietnam Pro", system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.cohamy-crm .crm-module-tile {
+  background-color: var(--tile-end);
+  filter: none;
+}
+
+.cohamy-crm .crm-module-tile:hover,
+.cohamy-crm .crm-module-tile:focus-visible {
+  background-color: color-mix(in srgb, var(--tile-end) 88%, black);
+  filter: none;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="success"] {
+  --tile-end: #117a55;
+}
+
+.cohamy-crm .crm-module-tile[data-tone="info"] {
+  --tile-end: #176b79;
+}
+
+.cohamy-crm .crm-module-tile:is([data-tone="warning"], [data-tone="orange"]),
+.cohamy-crm .crm-module-tile:is([data-tone="warning"], [data-tone="orange"]) > span,
+.cohamy-crm .crm-module-tile:is([data-tone="warning"], [data-tone="orange"]) > svg {
+  color: #101511;
+}
+
+.cohamy-crm .crm-module-tile > svg {
+  filter: none;
+}
+.cohamy-crm .portal-bottom-navigation__inner > :is(a, button) > :is(svg, small) {
+  transform: none !important;
+  filter: none !important;
+}
+
+.cohamy-crm .button--primary {
+  color: #101511 !important;
+}
+
+.cohamy-crm .button--primary {
+  background-color: var(--hb-accent) !important;
+}
+
+.cohamy-crm .button--primary:hover:not(:disabled) {
+  background-color: var(--hb-accent-hover) !important;
+}
+
+.cohamy-crm .button--primary:active:not(:disabled) {
+  background-color: var(--hb-accent-pressed) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cohamy-crm :is(.button, .icon-button, .crm-module-tile) {
+    transition-duration: 0s !important;
+  }
+}
+/* Cohamy additions: status disclosure, scoped layout safety and real-data forms. */
+.cohamy-crm .crm-release-note { max-width:760px;margin:32px auto 0;text-align:center;color:#cbd5e1;font-size:12px; }
+.cohamy-crm .crm-record-form { display:grid;gap:20px;padding:24px;max-width:900px;margin:12px; }
+.cohamy-crm .crm-form-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px; }
+.cohamy-crm .crm-form-actions { display:flex;gap:12px;align-items:center;flex-wrap:wrap; }
+.cohamy-crm .crm-status-note { padding:16px;margin:12px;border:1px solid #d9dee6;background:#f8fafc;color:#475569;font-size:13px; }
+.cohamy-crm .crm-failure { padding:40px 20px;display:grid;gap:20px;max-width:760px;margin:auto; }
+.cohamy-crm .crm-table-wrap { max-width:100%;min-width:0;overflow:auto;margin:12px;border:1px solid #d9dee6;scrollbar-color:#94a3b8 #f1f5f9; }
+.cohamy-crm .crm-table-wrap .data-table { width:100%;min-width:640px;border-collapse:collapse;font-size:13px; }
+.cohamy-crm .crm-table-wrap .data-table th,.cohamy-crm .crm-table-wrap .data-table td { padding:12px;text-align:left;border-bottom:1px solid #d9dee6;vertical-align:top; }
+.cohamy-crm .crm-table-wrap .data-table th { color:#475569;background:#f1f5f9; }
+.cohamy-crm .crm-table-wrap .table-primary { display:grid;gap:3px;color:#075fba; }
+.cohamy-crm .crm-table-wrap .table-primary span { color:#5b6472;font-size:12px; }
+.cohamy-crm .crm-readonly { display:grid;gap:12px;margin:12px;padding:24px;border:1px solid #d9dee6;background:#fff; }
+.cohamy-crm .crm-readonly dt { font-weight:600;font-size:12px;color:#5b6472; }
+.cohamy-crm .crm-readonly dd { margin:0;overflow-wrap:anywhere; }
+.cohamy-crm .crm-login__box .field input::placeholder { color:#a4afc0; }
+.cohamy-crm .crm-login__footer { color:#94a3b8; }
+.cohamy-crm .crm-login-page { min-height:100dvh;background:#020617;color:#fff; }
+.cohamy-crm [data-tone="primary"] { --module-color:#4e73df; }
+.cohamy-crm [data-tone="success"] { --module-color:#1cc88a; }
+.cohamy-crm [data-tone="info"] { --module-color:#36b9cc; }
+.cohamy-crm [data-tone="orange"] { --module-color:#f97316; }
+.cohamy-crm [data-tone="warning"] { --module-color:#f6c23e; }
+.cohamy-crm [data-tone="danger"] { --module-color:#e74a3b; }
+.cohamy-crm [data-tone="secondary"] { --module-color:#858796; }
+.cohamy-crm [data-tone="indigo"] { --module-color:#6610f2; }
+.cohamy-crm [data-tone="indigoDark"] { --module-color:#4338ca; }
+.cohamy-crm [data-tone="emerald"] { --module-color:#10b981; }
+.cohamy-crm .portal-brand-logo { max-width:160px; }
+.cohamy-crm .button:disabled { cursor:wait;opacity:.55; }
+.cohamy-crm .portal-content { min-width:0; }
+@media(max-width:540px) { .cohamy-crm .crm-form-grid {grid-template-columns:minmax(0,1fr);} .cohamy-crm .crm-record-form {padding:16px;margin:8px;} .cohamy-crm .crm-release-note {padding:0 8px;} }
+@media(prefers-reduced-motion:reduce) { .cohamy-crm *, .cohamy-crm *::before, .cohamy-crm *::after { animation:none !important;transition:none !important;scroll-behavior:auto !important; } }
+/* Match the source :is() group's specificity (including its element branches). */
+@media(prefers-reduced-motion:reduce) {
+  .cohamy-crm :is(.button,.icon-button,.portal-user-menu > summary,.portal-user-menu__content > a,.portal-user-menu__content > button,.portal-bottom-navigation__inner > a,.portal-bottom-navigation__inner > button,.crm-module-tile) {
+    transition-duration:0s !important;
+    transition-property:none !important;
+  }
+}

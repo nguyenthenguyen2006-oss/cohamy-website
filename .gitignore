@@ -41,3 +41,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/.local/
+/wordpress/.env
+/.headless-reports/
+/.impeccable/review/
+/giaodien/references/

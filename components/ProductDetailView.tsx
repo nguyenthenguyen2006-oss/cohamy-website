@@ -6,15 +6,18 @@ import { ProductGallery } from "@/components/ProductGallery";
 import { ProductFAQ } from "@/components/ProductFAQ";
 import { ProductGrid } from "@/components/ProductGrid";
 import type { Locale, Product } from "@/lib/types";
+import { useCartStore } from "@/store/cart";
 
 interface ProductDetailViewProps {
   product: Product;
   related: Product[];
   locale: Locale;
+  orderIntakeEnabled?: boolean;
 }
 
-export function ProductDetailView({ product, related, locale }: ProductDetailViewProps) {
+export function ProductDetailView({ product, related, locale, orderIntakeEnabled = false }: ProductDetailViewProps) {
   const t = useTranslations("products");
+  const addItem = useCartStore(state => state.addItem);
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
@@ -46,6 +49,7 @@ export function ProductDetailView({ product, related, locale }: ProductDetailVie
           >
             {t("contactCta")}
           </Link>
+          {orderIntakeEnabled && <button type="button" className="btn-primary mt-3 inline-flex h-14 items-center rounded-2xl px-10 md:ml-3" onClick={() => addItem({productId:product.id,price:product.price,name:product.name,image:product.images[0]})}>{t("addOrderItem")}</button>}
         </div>
       </div>
 

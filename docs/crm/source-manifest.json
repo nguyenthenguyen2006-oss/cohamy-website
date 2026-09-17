@@ -1,0 +1,121 @@
+{
+  "capturedAt": "2026-09-17T19:09:15.202Z",
+  "source": "C:/Users/ACER/OneDrive/Desktop/EDUHMB/humanbank-edu",
+  "readOnly": true,
+  "remBase": 16,
+  "finalControlFinish": "control-design.css overrides radius to 4px and gradients to flat colors",
+  "files": [
+    {
+      "file": "apps/web/app/globals.css",
+      "sha256": "cb0fd94e1e82cb781467bc7cc16cbebe50f34f1a88863402ac4927780bc9d000",
+      "selectedRules": 101
+    },
+    {
+      "file": "apps/web/app/foundation-design.css",
+      "sha256": "39bd71c71ce656db39f2f1f093d34328e112878d1085d6f7f917ab7d15c30937",
+      "selectedRules": 39
+    },
+    {
+      "file": "apps/web/app/public-design.css",
+      "sha256": "4b6abd434eb813a98f939ab57b51f203b2a21c5d9212283674b3e8b6561f5a21",
+      "selectedRules": 2
+    },
+    {
+      "file": "apps/web/app/public-utility-design.css",
+      "sha256": "8854c6a2843bf2cf6fa5f710ad2ed11b6a38638ab750588b7f6cd5653900fecb",
+      "selectedRules": 0
+    },
+    {
+      "file": "apps/web/app/portal-design.css",
+      "sha256": "01c5c0a3be158b8cab952af216de31911780b071cbf834dd1948c2972cc75a95",
+      "selectedRules": 70
+    },
+    {
+      "file": "apps/web/app/dossier-design.css",
+      "sha256": "2cb36eb8ecdab6be8fc13179b04b3905a0ec92e8f2b30687b79f6d02574eabd3",
+      "selectedRules": 76
+    },
+    {
+      "file": "apps/web/app/legacy-crm.css",
+      "sha256": "fe8395c9b759943edad92dba81d359274862500ae59ae76c549405280b0dd4cd",
+      "selectedRules": 257
+    },
+    {
+      "file": "apps/web/app/landing-teachers.css",
+      "sha256": "6cac08a8b6fdac851f5026fd024c268ad710d91a463a820849d224ab3667bfa3",
+      "selectedRules": 0
+    },
+    {
+      "file": "apps/web/app/landing-banners.css",
+      "sha256": "f87e5864b956a159631ab6ffc97b2442951396c7a1346ab307c262756adb5e75",
+      "selectedRules": 0
+    },
+    {
+      "file": "apps/web/app/finance-design.css",
+      "sha256": "723aaf4fbb75a4246c1583bbbb45efbd5d4243b40b4687dca938e37be1ee29a3",
+      "selectedRules": 0
+    },
+    {
+      "file": "apps/web/app/control-design.css",
+      "sha256": "752413fb406afc14dda3c91e266c7790d1f5ad34ab9ce6cd3f01fe3e2e676859",
+      "selectedRules": 15
+    },
+    {
+      "file": "apps/web/app/components/portal-shell.tsx",
+      "sha256": "dfb751bb905154b891bd05154205003bc7d802029f71b89c68b5a89607c236a7"
+    },
+    {
+      "file": "apps/web/app/portal/layout.tsx",
+      "sha256": "1b9e052641421d19df72c46f52155bf1cb2af51afc25b3fdceb1b8d4866803c6"
+    },
+    {
+      "file": "apps/web/app/portal/dashboard/page.tsx",
+      "sha256": "89094e51c89892cc93c0872f7cc1bf38fdf1c3cf1dbe0d670ea99869efa54745"
+    },
+    {
+      "file": "apps/web/app/components/particle-network.tsx",
+      "sha256": "8287eb127b33ce01eb936eded92f6842f2943378f3eb6f073bdf680dbda14c7d"
+    },
+    {
+      "file": "apps/web/app/components/portal-module-icon.tsx",
+      "sha256": "7dc89b99550a11ed2dd6706144f276de90b9b5d496d2ab173c35d2a344514b4c"
+    },
+    {
+      "file": "apps/web/app/lib/portal-modules.ts",
+      "sha256": "b8f3e464a0335fa0b4e755b32603a98dbf1e83f5a761f7db7db785385dfaa834"
+    },
+    {
+      "file": "apps/web/app/lib/portal-navigation.ts",
+      "sha256": "90161a10ca3b6a59557903d681f8c9516dd4f473728d6aaf43457336a2c77a7f"
+    },
+    {
+      "file": "apps/web/app/dang-nhap/page.tsx",
+      "sha256": "ffd6e8900fdada48a76afdddeee2ae47621a8d91ac3295e58c037b01ecb309b1"
+    },
+    {
+      "file": "apps/web/app/components/login-form.tsx",
+      "sha256": "bb75f00900c965125f8ff6fee2d56da5018d0baa608189a8dc53f6089863312d"
+    },
+    {
+      "file": "apps/web/app/layout.tsx",
+      "sha256": "1b22b7fdcb6e218b8bb483665cdb90c80e992129a48c5c427b235a153ece4322"
+    },
+    {
+      "file": "apps/web/app/portal/crm/customers/page.tsx",
+      "sha256": "d9e9c6f3ce184c653f3e2fd47b9b372daa2241c17376c3a1ed65fd6b595776d6"
+    },
+    {
+      "file": "apps/web/app/portal/crm/customers/new/page.tsx",
+      "sha256": "4b8b313e1aeaead3e0e0e65d0e509babb2e3d4564de0a5a0907c4690355a5d4d"
+    },
+    {
+      "file": "apps/web/app/components/resource-table.tsx",
+      "sha256": "2ea3cf990cf6719b660a930d1a72edd9e52da14aee2fb80dd0f83433ed49bb65"
+    },
+    {
+      "file": "apps/web/app/portal/finance/settlements/page.tsx",
+      "sha256": "4e937cc20fe53e6cbcaa781f601485797558c55d2996669e6928b53bcc843c2b"
+    }
+  ]
+}
+

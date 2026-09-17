@@ -1,0 +1,71 @@
+name: cohamy-headless
+x-wordpress-env: &wordpress-env
+  WORDPRESS_DB_HOST: db:3306
+  WORDPRESS_DB_NAME: cohamy_wordpress
+  WORDPRESS_DB_USER: cohamy
+  WORDPRESS_DB_PASSWORD: ${COHAMY_DB_PASSWORD:?Set COHAMY_DB_PASSWORD in wordpress/.env}
+  COHAMY_CMS_URL: ${COHAMY_CMS_URL:-http://127.0.0.1:8081}
+  COHAMY_PUBLIC_URL: ${COHAMY_PUBLIC_URL:-https://cohamy.vn}
+  COHAMY_PREVIEW_URL: ${COHAMY_PREVIEW_URL:-http://127.0.0.1:3001}
+  COHAMY_WEBHOOK_URL: ${COHAMY_WEBHOOK_URL:-http://host.docker.internal:3001/api/wordpress/webhook}
+  COHAMY_WEBHOOK_SECRET: ${COHAMY_WEBHOOK_SECRET:?Set COHAMY_WEBHOOK_SECRET}
+  COHAMY_ENVIRONMENT: ${COHAMY_ENVIRONMENT:-local}
+  WORDPRESS_CONFIG_EXTRA: |
+    define('WP_HOME', getenv('COHAMY_CMS_URL'));
+    define('WP_SITEURL', getenv('COHAMY_CMS_URL'));
+    define('WP_ENVIRONMENT_TYPE', getenv('COHAMY_ENVIRONMENT'));
+    define('COHAMY_PUBLIC_URL', getenv('COHAMY_PUBLIC_URL'));
+    define('COHAMY_PREVIEW_URL', getenv('COHAMY_PREVIEW_URL'));
+    define('COHAMY_WEBHOOK_URL', getenv('COHAMY_WEBHOOK_URL'));
+    define('COHAMY_WEBHOOK_SECRET', getenv('COHAMY_WEBHOOK_SECRET'));
+    define('DISABLE_WP_CRON', true);
+    define('DISALLOW_FILE_EDIT', true);
+services:
+  db:
+    image: ${COHAMY_DATABASE_IMAGE:-mariadb:11.4}
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: cohamy_wordpress
+      MARIADB_USER: cohamy
+      MARIADB_PASSWORD: ${COHAMY_DB_PASSWORD:?Set COHAMY_DB_PASSWORD}
+      MARIADB_RANDOM_ROOT_PASSWORD: "1"
+    volumes: ["database:/var/lib/mysql"]
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+  wordpress:
+    image: ${COHAMY_WORDPRESS_IMAGE:-wordpress:php8.3-apache}
+    restart: unless-stopped
+    depends_on: {db: {condition: service_healthy}}
+    environment: *wordpress-env
+    ports: ["127.0.0.1:${COHAMY_CMS_PORT:-8081}:80"]
+    volumes:
+      - wordpress:/var/www/html
+      - ./cohamy-headless-bridge:/var/www/html/wp-content/plugins/cohamy-headless-bridge:ro
+  cli:
+    image: ${COHAMY_CLI_IMAGE:-wordpress:cli}
+    user: "33:33"
+    depends_on: {db: {condition: service_healthy}}
+    environment: *wordpress-env
+    volumes:
+      - wordpress:/var/www/html
+      - ./cohamy-headless-bridge:/var/www/html/wp-content/plugins/cohamy-headless-bridge:ro
+    profiles: ["tools"]
+  cron:
+    image: ${COHAMY_CLI_IMAGE:-wordpress:cli}
+    user: "33:33"
+    restart: unless-stopped
+    depends_on: [wordpress]
+    environment: *wordpress-env
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    volumes:
+      - wordpress:/var/www/html
+      - ./cohamy-headless-bridge:/var/www/html/wp-content/plugins/cohamy-headless-bridge:ro
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - "while true; do wp --path=/var/www/html cron event run --due-now; wp --path=/var/www/html action-scheduler run --group=cohamy --batch-size=25 --batches=4; sleep 60; done"
+volumes:
+  database:
+  wordpress:

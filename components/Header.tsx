@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 
@@ -15,7 +15,7 @@ const navItems = [
   { href: "/contact" as const, label: "contact" },
 ];
 
-export function Header() {
+export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean}) {
   const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
 
@@ -36,6 +36,7 @@ export function Header() {
 
         <div className="flex items-center gap-3">
           <LocaleSwitcher />
+          {orderIntakeEnabled && <Link href="/cart" className="p-2" aria-label={t("cart")}><ShoppingBag size={20}/></Link>}
           <button
             type="button"
             onClick={() => setOpen(!open)}

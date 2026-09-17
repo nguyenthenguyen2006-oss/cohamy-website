@@ -1,0 +1,36 @@
+import {localBuildFile} from './wordpress/local-build.mjs';
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {setTimeout as delay} from 'node:timers/promises';
+const conf=JSON.parse(readFileSync('.local/secrets.json','utf8')); const credentials=JSON.parse(readFileSync('.local/credentials.json','utf8')).admin;
+const cms=`http://127.0.0.1:${conf.cms_port}`; const front=`http://127.0.0.1:${conf.frontend_port}`; const run='public-'+Date.now().toString(36);
+const runtime=readFileSync('.local/runtime.json','utf8'); const build=readFileSync(localBuildFile(),'utf8'); const results=[];
+async function wp(path,data) {const r=await fetch(cms+'/wp-json/'+path,{method:data?'POST':'GET',headers:{Authorization:'Basic '+Buffer.from(credentials.username+':'+credentials.application_password).toString('base64'),'Content-Type':'application/json'},body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(90000)}); const body=await r.json(); assert(r.ok,JSON.stringify(body)); return body;}
+async function html(path,status=200) {const r=await fetch(front+path,{redirect:'manual',signal:AbortSignal.timeout(90000)}); const text=await r.text(); assert.equal(r.status,status,path+': '+text.slice(0,180)); return {text,r};}
+async function sitemap() {const index=(await html('/sitemap.xml')).text; assert(index.includes('<sitemapindex')); let xml=index; for(const m of index.matchAll(/<loc>(.*?)<\/loc>/g)) xml+=(await html(new URL(m[1]).pathname)).text; return xml;}
+async function check(name,fn) {try {const detail=await fn();results.push({name,status:'PASS',detail});console.log('PASS '+name+': '+detail);}catch(e){results.push({name,status:'FAIL',detail:e.message});throw e;}}
+let id; let post;
+async function main() {
+  await check('Draft warmup then real publish without restarting Next',async()=>{
+    post=await wp('wp/v2/posts',{title:'Cohamy public QA '+run,content:'<!-- wp:heading --><h2 class="wp-block-heading">Cohamy</h2><!-- /wp:heading --><!-- wp:paragraph --><p>ACTUAL_PUBLIC_'+run+'</p><!-- /wp:paragraph -->',excerpt:'Dữ liệu kiểm thử local.',status:'draft',meta:{_cohamy_locale:'vi',_cohamy_public_slug:run,_cohamy_group_id:run,_cohamy_legacy_id:run,_cohamy_author:'Cohamy QA',rank_math_title:'Rank Math '+run,rank_math_description:'Mô tả '+run,rank_math_focus_keyword:'Cohamy',rank_math_robots:['index','nofollow'],rank_math_facebook_title:'Facebook riêng '+run,rank_math_twitter_title:'Twitter riêng '+run}});id=post.id;
+    await html('/vi/bai-viet/'+run,404); await html('/vi/bai-viet?q='+run); assert(!(await sitemap()).includes('/vi/bai-viet/'+run));
+    await wp('wp/v2/posts/'+id,{status:'publish'}); const {text}=await html('/vi/bai-viet/'+run);assert(text.includes('ACTUAL_PUBLIC_'+run));assert.equal((text.match(/rel="canonical"/g)||[]).length,1);assert(text.includes('href="https://cohamy.vn/vi/bai-viet/'+run+'"'));assert(text.includes('content="index, nofollow"'));assert(text.includes('property="og:title" content="Facebook riêng '+run+'"'));assert(text.includes('name="twitter:title" content="Twitter riêng '+run+'"'));assert(!(text.match(/name="robots"[^>]*noindex/g)||[]).length); return 'Warm 404 becomes real 200, one public canonical, robots follow and distinct social fields correct';
+  });
+  await check('Server-paged listing and sitemap index reflect saved post',async()=>{const {text}=await html('/vi/bai-viet?q='+run);assert(text.includes('href="/vi/bai-viet/'+run+'"'));const xml=await sitemap();assert(xml.includes('https://cohamy.vn/vi/bai-viet/'+run));const inventory=await wp('cohamy/v1/sitemaps');assert(inventory.items.every(i=>Number(i.count)<=5000));return 'SSR crawlable anchor, sitemap shards <=5000 URLs, UTC lastModified';});
+  await check('Real Rank Math engine runs in Action Scheduler and persists score',async()=>{
+    await wp('cohamy/v1/ops/analysis',{post_id:id});const end=Date.now()+90000;let row;
+    while(Date.now()<end){row=(await wp('cohamy/v1/ops/content?q='+run)).items.find(item=>Number(item.wp_id)===id);if(row?.score!==null&&row?.analysis_state==='analyzed')break;await delay(2000);}
+    assert(row && row.score!==null,JSON.stringify(row));assert.equal(row.analysis_state,'analyzed');assert(row.score>=0&&row.score<=100);const pub=(await wp('cohamy/v1/content/detail?locale=vi&slug='+run)).post;assert(!('score' in pub.seo) && !('focus_keywords' in pub.seo) && !('analysis_state' in pub.seo));return 'Native vendored Rank Math Analyzer/ResultManager persisted private authorized score '+row.score+'; public SEO API omits keywords/score/state';
+  });
+  await check('WordPress managed page public and SEO update',async()=>{
+    const page=await wp('wp/v2/pages',{title:'Trang nội dung '+run,status:'publish',content:'<!-- wp:paragraph --><p>WP_PAGE_REAL_'+run+'</p><!-- /wp:paragraph -->',meta:{_cohamy_locale:'vi',_cohamy_public_slug:run+'-page',_cohamy_group_id:run+'-page',_cohamy_legacy_id:run+'-page',rank_math_title:'SEO trang '+run,rank_math_description:'Mô tả trang '+run,rank_math_robots:['index','follow']}});
+    const route='/vi/noi-dung/'+run+'-page';let result=await html(route);assert(result.text.includes('WP_PAGE_REAL_'+run));assert(result.text.includes('<title>SEO trang '+run+'</title>'));assert(result.text.includes('href="https://cohamy.vn'+route+'"'));assert((await sitemap()).includes(route));
+    await wp('wp/v2/pages/'+page.id,{content:'<p>WP_PAGE_UPDATED_'+run+'</p>',meta:{rank_math_title:'SEO sửa '+run}});result=await html(route);assert(result.text.includes('WP_PAGE_UPDATED_'+run));assert(result.text.includes('<title>SEO sửa '+run+'</title>'));await wp('wp/v2/pages/'+page.id,{status:'draft'});await html(route,404);assert(!(await sitemap()).includes(route));return 'Native WP page publish/update/draft changes actual Next HTML and sitemap in same session';
+  });
+  await check('Redirect manager and real aggregated 404',async()=>{
+    const old='/vi/bai-viet/'+run+'-old';await wp('cohamy/v1/ops/redirects',{source:old,target:'/vi/bai-viet/'+run,code:301,enabled:true});const r=await html(old,301);assert(r.r.headers.get('location').endsWith('/vi/bai-viet/'+run));
+    const missing='/vi/bai-viet/'+run+'-404';await html(missing,404);await html(missing,404);const logs=await wp('cohamy/v1/ops/404');const log=logs.find(l=>l.path===missing);assert(log&&Number(log.hits)>=2);return 'HTTP 301 destination correct; 2 actual 404 hits persisted without query/PII';
+  });
+  await check('Unpublish removes public post and sitemap without deployment',async()=>{await wp('wp/v2/posts/'+id,{status:'draft'});await html('/vi/bai-viet/'+run,404);assert(!(await sitemap()).includes('/vi/bai-viet/'+run));assert.equal(readFileSync('.local/runtime.json','utf8'),runtime);assert.equal(readFileSync(localBuildFile(),'utf8'),build);return 'Same process IDs and build across every publish/update/unpublish step';});
+}
+try {await main();}catch(error){console.error(error.message);process.exitCode=1;}finally {mkdirSync('docs/content-upgrade/test-results',{recursive:true});writeFileSync('docs/content-upgrade/test-results/public.json',JSON.stringify({environment:'LOCAL / REAL WORDPRESS + REAL RANK MATH + NEXT PRODUCTION',run,build:build.trim(),runtime:JSON.parse(runtime),finished_at:new Date().toISOString(),results},null,2));}

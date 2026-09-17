@@ -1,0 +1,33 @@
+{
+  "environment": "LOCAL",
+  "engine": "PGlite, single-process QA only",
+  "testedAt": "2026-09-17T19:39:51.178Z",
+  "source": ".local/crm-qa-browser-20260918",
+  "retainedRestore": ".local\\crm-qa-restore-f6c020de-dd52-413e-9ba0-ebc51aa16949",
+  "snapshot": {
+    "counts": {
+      "organizations": 10,
+      "products": 10,
+      "warehouses": 2,
+      "website_orders": 4,
+      "audit_events": 38
+    },
+    "logicalSha256": "0f3accad5d8378dd432b70ddc490cfc279acca938159e431c9abbe1a0526cefb"
+  },
+  "cases": [
+    {
+      "name": "Closed database reopen preserves records and unpaid order intake",
+      "status": "PASS"
+    },
+    {
+      "name": "Restore closed QA copy preserves logical digest and record totals",
+      "status": "PASS"
+    }
+  ],
+  "limits": [
+    "Stop all owners before running; no concurrent-process safety claim",
+    "Not pg_dump/pg_restore or a standalone PostgreSQL server backup exercise",
+    "No stock, debt or financial ledgers exist in this snapshot",
+    "Hashes exclude credentials, session tokens and customer contacts"
+  ]
+}

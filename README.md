@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cohamy Website + Google Sheets Blog CMS
 
-## Getting Started
+Website Next.js 16 đa ngôn ngữ của Cohamy, kèm CMS nội bộ tại `/admin`.
 
-First, run the development server:
+## Chức năng CMS
+
+- Google Sheet `Posts` là nguồn dữ liệu bài viết với đúng 23 cột.
+- CRUD, nhân bản, lưu nháp, đặt lịch, xuất bản và lưu trữ bài viết.
+- Soạn thảo TipTap; HTML được làm sạch ở server trước khi ghi.
+- Upload JPEG/PNG/WebP tối đa 8 MB; Sharp xoay theo EXIF, thu nhỏ tối đa
+  1920 px và xuất WebP.
+- Import CSV có xem trước, kiểm tra từng dòng và bỏ qua dòng lỗi.
+- Blog công khai 5 ngôn ngữ, tìm kiếm, lọc danh mục, phân trang, SEO,
+  JSON-LD, hreflang và sitemap động.
+- JWT cookie `HttpOnly`, bcrypt, giới hạn đăng nhập và kiểm tra same-origin.
+
+## Chạy local
+
+Yêu cầu Node.js 20 LTS trở lên.
 
 ```bash
+npm ci
+cp .env.example .env.local
+npm run admin:hash -- "mat-khau-can-bam"
+npm run test:cms
+npm run lint
+npx tsc --noEmit
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Điền thông tin Google service account, Sheet ID, tài khoản admin và thư mục
+upload trong `.env.local` trước khi kiểm thử luồng có dữ liệu thật.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Khởi tạo Sheet và nhập 8 bài cũ cho 5 ngôn ngữ:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run sheet:init
+npm run sheet:seed-blog
+```
 
-## Learn More
+Script seed dùng `group_id + locale` để upsert nên có thể chạy lại an toàn.
+Kết quả mong đợi là 8 nhóm và 40 dòng.
 
-To learn more about Next.js, take a look at the following resources:
+## Kiểm tra production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm ci
+npm run test:cms
+npm run lint
+npx tsc --noEmit
+npm run build
+npm audit --omit=dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Hướng dẫn đầy đủ về Google Cloud, biến môi trường, Nginx, PM2, backup,
+deploy, smoke test và rollback nằm tại [docs/CMS-DEPLOY.md](docs/CMS-DEPLOY.md).
+Mẫu CSV nằm tại [docs/posts-import-template.csv](docs/posts-import-template.csv).
+Danh sách file, package và bằng chứng kiểm thử nằm tại
+[docs/CMS-HANDOFF.md](docs/CMS-HANDOFF.md).
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Không commit `.env.local`, `.env.production`, JSON service account hoặc file
+backup có dữ liệu thật.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useCartStore } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
@@ -42,9 +43,11 @@ export function CartView({ locale }: CartViewProps) {
             key={item.productId}
             className="flex gap-4 p-4 bg-white rounded-2xl border border-[#4A2418]/10"
           >
-            <img
+            <Image
               src={item.image}
               alt={item.name[locale]}
+              width={80}
+              height={80}
               className="w-20 h-20 rounded-xl object-cover"
             />
             <div className="flex-1">
@@ -55,6 +58,7 @@ export function CartView({ locale }: CartViewProps) {
                   type="button"
                   onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                   className="p-1 border rounded-lg"
+                  aria-label={`${t("quantity")} -`}
                 >
                   <Minus size={14} />
                 </button>
@@ -63,6 +67,7 @@ export function CartView({ locale }: CartViewProps) {
                   type="button"
                   onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                   className="p-1 border rounded-lg"
+                  aria-label={`${t("quantity")} +`}
                 >
                   <Plus size={14} />
                 </button>
@@ -70,6 +75,7 @@ export function CartView({ locale }: CartViewProps) {
                   type="button"
                   onClick={() => removeItem(item.productId)}
                   className="ml-auto text-[#4A2418]/50 hover:text-red-600"
+                  aria-label={t("remove")}
                 >
                   <Trash2 size={16} />
                 </button>

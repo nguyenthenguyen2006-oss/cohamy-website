@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { generatePageMetadata } from "@/lib/seo";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -37,9 +38,11 @@ export default async function AboutPage({
       <p className="text-[#4A2418]/70 mb-12">{t("subtitle")}</p>
 
       <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
-        <img
+        <Image
           src="/images/activities/team-factory.jpg"
           alt={t("story.title")}
+          width={960}
+          height={720}
           className="rounded-3xl shadow-lg w-full aspect-[4/3] object-cover"
         />
         <div>

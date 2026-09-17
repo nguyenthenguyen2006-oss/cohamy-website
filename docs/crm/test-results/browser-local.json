@@ -1,0 +1,241 @@
+{
+  "environment": "LOCAL",
+  "backend": "PGlite database, fictitious .invalid users",
+  "cmsSource": "Explicit legacy static catalog in QA server only; no proof of live Sheets/WordPress availability or delivery",
+  "pageCacheControl": "no-cache, must-revalidate",
+  "cacheLimit": "Next dev overrides page Cache-Control to no-cache, must-revalidate (installed base-server.js). Private API no-store verified; production page header NOT RUN.",
+  "reference": "Actual HumanBank shell/dashboard/login components and full current CSS cascade; mocked auth/router, no HumanBank backend or production session",
+  "testedAt": "2026-09-17T19:38:10.529Z",
+  "cases": [
+    {
+      "name": "anonymous CRM page redirects to non-localized login",
+      "status": "PASS"
+    },
+    {
+      "name": "anonymous APIs reject private reads",
+      "status": "PASS"
+    },
+    {
+      "name": "cross-origin and missing-origin writes rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "real browser form login and persisted session",
+      "status": "PASS"
+    },
+    {
+      "name": "visual capture and no page overflow desktop",
+      "status": "PASS"
+    },
+    {
+      "name": "visual capture and no page overflow mobile",
+      "status": "PASS"
+    },
+    {
+      "name": "visual capture and no page overflow 320",
+      "status": "PASS"
+    },
+    {
+      "name": "keyboard focus, menu and reduced motion",
+      "status": "PASS"
+    },
+    {
+      "name": "create and edit a dealer through real UI",
+      "status": "PASS"
+    },
+    {
+      "name": "dealer A cannot access B by ID/API or account list",
+      "status": "PASS"
+    },
+    {
+      "name": "dealer portal menu excludes internal account administration",
+      "status": "PASS"
+    },
+    {
+      "name": "public website, product URLs and five locales remain available",
+      "status": "PASS"
+    },
+    {
+      "name": "checkout preserves cart on 503, saves once on double-submit and remains unpaid",
+      "status": "PASS"
+    },
+    {
+      "name": "private API no-store, CRM noindex and robots exclusion",
+      "status": "PASS"
+    },
+    {
+      "name": "logout revokes database session",
+      "status": "PASS"
+    }
+  ],
+  "captures": [
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dealer-portal-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dealer-portal-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-orders-intake-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-orders-intake-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-checkout-receipt-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-checkout-receipt-desktop-full.png"
+  ],
+  "metrics": [
+    {
+      "viewport": {
+        "width": 1366,
+        "height": 768,
+        "name": "desktop"
+      },
+      "source": {
+        "tile": {
+          "width": 180,
+          "height": 180,
+          "radius": "4px",
+          "background": "none"
+        },
+        "grid": {
+          "columns": "180px 180px 180px 180px 180px",
+          "gap": "25px"
+        },
+        "headingSize": "44.8px",
+        "dock": {
+          "width": 600,
+          "left": 383,
+          "bottom": 15
+        }
+      },
+      "target": {
+        "tile": {
+          "width": 180,
+          "height": 180,
+          "radius": "4px",
+          "background": "none"
+        },
+        "grid": {
+          "columns": "180px 180px 180px 180px 180px",
+          "gap": "25px"
+        },
+        "headingSize": "44.8px",
+        "dock": {
+          "width": 600,
+          "left": 383,
+          "bottom": 15
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844,
+        "name": "mobile"
+      },
+      "source": {
+        "tile": {
+          "width": 165,
+          "height": 165,
+          "radius": "4px",
+          "background": "none"
+        },
+        "grid": {
+          "columns": "165px 165px",
+          "gap": "12px"
+        },
+        "headingSize": "23.2px",
+        "dock": {
+          "width": 390,
+          "left": 0,
+          "bottom": 0
+        }
+      },
+      "target": {
+        "tile": {
+          "width": 165,
+          "height": 165,
+          "radius": "4px",
+          "background": "none"
+        },
+        "grid": {
+          "columns": "165px 165px",
+          "gap": "12px"
+        },
+        "headingSize": "23.2px",
+        "dock": {
+          "width": 390,
+          "left": 0,
+          "bottom": 0
+        }
+      }
+    },
+    {
+      "viewport": {
+        "width": 320,
+        "height": 844,
+        "name": "320"
+      },
+      "source": {
+        "tile": {
+          "width": 130,
+          "height": 130,
+          "radius": "4px",
+          "background": "none"
+        },
+        "grid": {
+          "columns": "130px 130px",
+          "gap": "12px"
+        },
+        "headingSize": "23.2px",
+        "dock": {
+          "width": 320,
+          "left": 0,
+          "bottom": 0
+        }
+      },
+      "target": {
+        "tile": {
+          "width": 130,
+          "height": 130,
+          "radius": "4px",
+          "background": "none"
+        },
+        "grid": {
+          "columns": "130px 130px",
+          "gap": "12px"
+        },
+        "headingSize": "23.2px",
+        "dock": {
+          "width": 320,
+          "left": 0,
+          "bottom": 0
+        }
+      }
+    }
+  ],
+  "errors": []
+}

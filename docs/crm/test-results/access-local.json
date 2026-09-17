@@ -1,0 +1,94 @@
+{
+  "environment": "LOCAL",
+  "engine": "PGlite (PostgreSQL WASM, single exclusive connection)",
+  "fixture": "separate .local/crm-qa-* directory; fictitious .invalid users",
+  "testedAt": "2026-09-17T22:06:17.539Z",
+  "cases": [
+    {
+      "name": "migration retry and catalog import are idempotent",
+      "status": "PASS"
+    },
+    {
+      "name": "opaque session authenticates persisted database user",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong/unknown credentials rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "dealer A cannot fetch or mutate dealer B",
+      "status": "PASS"
+    },
+    {
+      "name": "dealer cannot create account, confirm money or raise limit",
+      "status": "PASS"
+    },
+    {
+      "name": "warehouse ownership and assigned scope isolate A/B",
+      "status": "PASS"
+    },
+    {
+      "name": "sales sees only assigned partners",
+      "status": "PASS"
+    },
+    {
+      "name": "create, edit, version conflict and unique constraint",
+      "status": "PASS"
+    },
+    {
+      "name": "creation options preserve central organization beyond pagination and deny dealer enumeration",
+      "status": "PASS"
+    },
+    {
+      "name": "browser role/credit fields are not trusted",
+      "status": "PASS"
+    },
+    {
+      "name": "account lock revokes existing access immediately",
+      "status": "PASS"
+    },
+    {
+      "name": "expired and logged-out sessions denied",
+      "status": "PASS"
+    },
+    {
+      "name": "transaction rollback leaves no partial business record",
+      "status": "PASS"
+    },
+    {
+      "name": "audit is append-only",
+      "status": "PASS"
+    },
+    {
+      "name": "account role cannot cross organization kind",
+      "status": "PASS"
+    },
+    {
+      "name": "login throttling uses persistent atomic counter",
+      "status": "PASS"
+    },
+    {
+      "name": "dealer table response exposes no password/session data",
+      "status": "PASS"
+    },
+    {
+      "name": "intake disabled until explicitly configured",
+      "status": "PASS"
+    },
+    {
+      "name": "website order saved once under parallel retry, unpaid with no posting",
+      "status": "PASS"
+    },
+    {
+      "name": "changed request cannot reuse key; client price injection rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "unassigned website orders hidden from dealers and sales",
+      "status": "PASS"
+    }
+  ],
+  "standalonePostgres": "NOT RUN",
+  "stockFinance": "NOT RUN"
+}

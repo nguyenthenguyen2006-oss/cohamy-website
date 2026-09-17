@@ -1,0 +1,21 @@
+{
+  "scan": "design-detector.json",
+  "scans": 1,
+  "findings": 3,
+  "dispositions": [
+    {
+      "file": "app/globals.css:102",
+      "patterns": [
+        "side-tab",
+        "gray-on-color"
+      ],
+      "decision": "Retained semantic Gutenberg blockquote styling. This is an existing content quote treatment, not an operations card. Slate700 on amber50 has sufficient text contrast; user requested existing public design be preserved."
+    },
+    {
+      "file": "app/globals.css:307",
+      "pattern": "codex-grid-background",
+      "decision": "Concurrent user CRM editorial grid style. Outside blog migration ownership; retained."
+    }
+  ],
+  "browser_check": "Public article actual mobile430x900 and desktop1280x900; document widths414/1264, images loaded, canonical one, saved content visible. Native operations mobile label overflow fixed in bounded polish. Console errors observed are chrome-extension onboarding, not app source."
+}

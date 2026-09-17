@@ -1,0 +1,554 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-17T22:28:35.727Z",
+  "title": "Design System: Cohamy CRM workspace",
+  "extensions": {
+    "colorMeta": {
+      "action-orange": {
+        "role": "primary",
+        "displayName": "Action Orange (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1640 39.87)",
+          "oklch(27% 0.1640 39.87)",
+          "oklch(39% 0.1640 39.87)",
+          "oklch(51% 0.1640 39.87)",
+          "oklch(63% 0.1640 39.87)",
+          "oklch(75% 0.1640 39.87)",
+          "oklch(87% 0.1640 39.87)",
+          "oklch(95% 0.1640 39.87)"
+        ]
+      },
+      "action-hover": {
+        "role": "primary",
+        "displayName": "Action Hover (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1423 39.35)",
+          "oklch(27% 0.1423 39.35)",
+          "oklch(39% 0.1423 39.35)",
+          "oklch(51% 0.1423 39.35)",
+          "oklch(63% 0.1423 39.35)",
+          "oklch(75% 0.1423 39.35)",
+          "oklch(87% 0.1423 39.35)",
+          "oklch(95% 0.1423 39.35)"
+        ]
+      },
+      "action-pressed": {
+        "role": "primary",
+        "displayName": "Action Pressed (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1270 38.65)",
+          "oklch(27% 0.1270 38.65)",
+          "oklch(39% 0.1270 38.65)",
+          "oklch(51% 0.1270 38.65)",
+          "oklch(63% 0.1270 38.65)",
+          "oklch(75% 0.1270 38.65)",
+          "oklch(87% 0.1270 38.65)",
+          "oklch(95% 0.1270 38.65)"
+        ]
+      },
+      "focus-orange": {
+        "role": "primary",
+        "displayName": "Focus Orange (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1613 41.47)",
+          "oklch(27% 0.1613 41.47)",
+          "oklch(39% 0.1613 41.47)",
+          "oklch(51% 0.1613 41.47)",
+          "oklch(63% 0.1613 41.47)",
+          "oklch(75% 0.1613 41.47)",
+          "oklch(87% 0.1613 41.47)",
+          "oklch(95% 0.1613 41.47)"
+        ]
+      },
+      "navy": {
+        "role": "secondary",
+        "displayName": "Navy (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0515 253.90)",
+          "oklch(27% 0.0515 253.90)",
+          "oklch(39% 0.0515 253.90)",
+          "oklch(51% 0.0515 253.90)",
+          "oklch(63% 0.0515 253.90)",
+          "oklch(75% 0.0515 253.90)",
+          "oklch(87% 0.0515 253.90)",
+          "oklch(95% 0.0515 253.90)"
+        ]
+      },
+      "nav-hover": {
+        "role": "secondary",
+        "displayName": "Nav Hover (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0557 249.64)",
+          "oklch(27% 0.0557 249.64)",
+          "oklch(39% 0.0557 249.64)",
+          "oklch(51% 0.0557 249.64)",
+          "oklch(63% 0.0557 249.64)",
+          "oklch(75% 0.0557 249.64)",
+          "oklch(87% 0.0557 249.64)",
+          "oklch(95% 0.0557 249.64)"
+        ]
+      },
+      "nav-text": {
+        "role": "neutral",
+        "displayName": "Nav Text (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0174 248.02)",
+          "oklch(27% 0.0174 248.02)",
+          "oklch(39% 0.0174 248.02)",
+          "oklch(51% 0.0174 248.02)",
+          "oklch(63% 0.0174 248.02)",
+          "oklch(75% 0.0174 248.02)",
+          "oklch(87% 0.0174 248.02)",
+          "oklch(95% 0.0174 248.02)"
+        ]
+      },
+      "white-paper": {
+        "role": "neutral",
+        "displayName": "White Paper (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(27% 0.0000 89.88)",
+          "oklch(39% 0.0000 89.88)",
+          "oklch(51% 0.0000 89.88)",
+          "oklch(63% 0.0000 89.88)",
+          "oklch(75% 0.0000 89.88)",
+          "oklch(87% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "canvas": {
+        "role": "neutral",
+        "displayName": "Canvas (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0034 247.86)",
+          "oklch(27% 0.0034 247.86)",
+          "oklch(39% 0.0034 247.86)",
+          "oklch(51% 0.0034 247.86)",
+          "oklch(63% 0.0034 247.86)",
+          "oklch(75% 0.0034 247.86)",
+          "oklch(87% 0.0034 247.86)",
+          "oklch(95% 0.0034 247.86)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0402 257.77)",
+          "oklch(27% 0.0402 257.77)",
+          "oklch(39% 0.0402 257.77)",
+          "oklch(51% 0.0402 257.77)",
+          "oklch(63% 0.0402 257.77)",
+          "oklch(75% 0.0402 257.77)",
+          "oklch(87% 0.0402 257.77)",
+          "oklch(95% 0.0402 257.77)"
+        ]
+      },
+      "muted-ink": {
+        "role": "neutral",
+        "displayName": "Muted Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0329 256.56)",
+          "oklch(27% 0.0329 256.56)",
+          "oklch(39% 0.0329 256.56)",
+          "oklch(51% 0.0329 256.56)",
+          "oklch(63% 0.0329 256.56)",
+          "oklch(75% 0.0329 256.56)",
+          "oklch(87% 0.0329 256.56)",
+          "oklch(95% 0.0329 256.56)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0111 243.66)",
+          "oklch(27% 0.0111 243.66)",
+          "oklch(39% 0.0111 243.66)",
+          "oklch(51% 0.0111 243.66)",
+          "oklch(63% 0.0111 243.66)",
+          "oklch(75% 0.0111 243.66)",
+          "oklch(87% 0.0111 243.66)",
+          "oklch(95% 0.0111 243.66)"
+        ]
+      },
+      "field-rule": {
+        "role": "neutral",
+        "displayName": "Field Rule (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0224 245.92)",
+          "oklch(27% 0.0224 245.92)",
+          "oklch(39% 0.0224 245.92)",
+          "oklch(51% 0.0224 245.92)",
+          "oklch(63% 0.0224 245.92)",
+          "oklch(75% 0.0224 245.92)",
+          "oklch(87% 0.0224 245.92)",
+          "oklch(95% 0.0224 245.92)"
+        ]
+      },
+      "button-rule": {
+        "role": "neutral",
+        "displayName": "Button Rule (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0200 240.79)",
+          "oklch(27% 0.0200 240.79)",
+          "oklch(39% 0.0200 240.79)",
+          "oklch(51% 0.0200 240.79)",
+          "oklch(63% 0.0200 240.79)",
+          "oklch(75% 0.0200 240.79)",
+          "oklch(87% 0.0200 240.79)",
+          "oklch(95% 0.0200 240.79)"
+        ]
+      },
+      "quiet-hover": {
+        "role": "neutral",
+        "displayName": "Quiet Hover (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0059 239.82)",
+          "oklch(27% 0.0059 239.82)",
+          "oklch(39% 0.0059 239.82)",
+          "oklch(51% 0.0059 239.82)",
+          "oklch(63% 0.0059 239.82)",
+          "oklch(75% 0.0059 239.82)",
+          "oklch(87% 0.0059 239.82)",
+          "oklch(95% 0.0059 239.82)"
+        ]
+      },
+      "record-link": {
+        "role": "secondary",
+        "displayName": "Record Link (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0917 244.79)",
+          "oklch(27% 0.0917 244.79)",
+          "oklch(39% 0.0917 244.79)",
+          "oklch(51% 0.0917 244.79)",
+          "oklch(63% 0.0917 244.79)",
+          "oklch(75% 0.0917 244.79)",
+          "oklch(87% 0.0917 244.79)",
+          "oklch(95% 0.0917 244.79)"
+        ]
+      },
+      "status-paper": {
+        "role": "neutral",
+        "displayName": "Status Paper (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0069 247.90)",
+          "oklch(27% 0.0069 247.90)",
+          "oklch(39% 0.0069 247.90)",
+          "oklch(51% 0.0069 247.90)",
+          "oklch(63% 0.0069 247.90)",
+          "oklch(75% 0.0069 247.90)",
+          "oklch(87% 0.0069 247.90)",
+          "oklch(95% 0.0069 247.90)"
+        ]
+      },
+      "status-ink": {
+        "role": "neutral",
+        "displayName": "Status Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0361 256.12)",
+          "oklch(27% 0.0361 256.12)",
+          "oklch(39% 0.0361 256.12)",
+          "oklch(51% 0.0361 256.12)",
+          "oklch(63% 0.0361 256.12)",
+          "oklch(75% 0.0361 256.12)",
+          "oklch(87% 0.0361 256.12)",
+          "oklch(95% 0.0361 256.12)"
+        ]
+      },
+      "pending-paper": {
+        "role": "neutral",
+        "displayName": "Pending Paper (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0277 70.95)",
+          "oklch(27% 0.0277 70.95)",
+          "oklch(39% 0.0277 70.95)",
+          "oklch(51% 0.0277 70.95)",
+          "oklch(63% 0.0277 70.95)",
+          "oklch(75% 0.0277 70.95)",
+          "oklch(87% 0.0277 70.95)",
+          "oklch(95% 0.0277 70.95)"
+        ]
+      },
+      "pending-ink": {
+        "role": "neutral",
+        "displayName": "Pending Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1088 55.62)",
+          "oklch(27% 0.1088 55.62)",
+          "oklch(39% 0.1088 55.62)",
+          "oklch(51% 0.1088 55.62)",
+          "oklch(63% 0.1088 55.62)",
+          "oklch(75% 0.1088 55.62)",
+          "oklch(87% 0.1088 55.62)",
+          "oklch(95% 0.1088 55.62)"
+        ]
+      },
+      "progress-paper": {
+        "role": "neutral",
+        "displayName": "Progress Paper (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0203 264.47)",
+          "oklch(27% 0.0203 264.47)",
+          "oklch(39% 0.0203 264.47)",
+          "oklch(51% 0.0203 264.47)",
+          "oklch(63% 0.0203 264.47)",
+          "oklch(75% 0.0203 264.47)",
+          "oklch(87% 0.0203 264.47)",
+          "oklch(95% 0.0203 264.47)"
+        ]
+      },
+      "progress-ink": {
+        "role": "neutral",
+        "displayName": "Progress Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1129 258.59)",
+          "oklch(27% 0.1129 258.59)",
+          "oklch(39% 0.1129 258.59)",
+          "oklch(51% 0.1129 258.59)",
+          "oklch(63% 0.1129 258.59)",
+          "oklch(75% 0.1129 258.59)",
+          "oklch(87% 0.1129 258.59)",
+          "oklch(95% 0.1129 258.59)"
+        ]
+      },
+      "ready-paper": {
+        "role": "neutral",
+        "displayName": "Ready Paper (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0190 162.93)",
+          "oklch(27% 0.0190 162.93)",
+          "oklch(39% 0.0190 162.93)",
+          "oklch(51% 0.0190 162.93)",
+          "oklch(63% 0.0190 162.93)",
+          "oklch(75% 0.0190 162.93)",
+          "oklch(87% 0.0190 162.93)",
+          "oklch(95% 0.0190 162.93)"
+        ]
+      },
+      "ready-ink": {
+        "role": "neutral",
+        "displayName": "Ready Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0869 160.23)",
+          "oklch(27% 0.0869 160.23)",
+          "oklch(39% 0.0869 160.23)",
+          "oklch(51% 0.0869 160.23)",
+          "oklch(63% 0.0869 160.23)",
+          "oklch(75% 0.0869 160.23)",
+          "oklch(87% 0.0869 160.23)",
+          "oklch(95% 0.0869 160.23)"
+        ]
+      },
+      "error-paper": {
+        "role": "neutral",
+        "displayName": "Error Paper (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0163 22.08)",
+          "oklch(27% 0.0163 22.08)",
+          "oklch(39% 0.0163 22.08)",
+          "oklch(51% 0.0163 22.08)",
+          "oklch(63% 0.0163 22.08)",
+          "oklch(75% 0.0163 22.08)",
+          "oklch(87% 0.0163 22.08)",
+          "oklch(95% 0.0163 22.08)"
+        ]
+      },
+      "rejected-ink": {
+        "role": "neutral",
+        "displayName": "Rejected Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1524 25.38)",
+          "oklch(27% 0.1524 25.38)",
+          "oklch(39% 0.1524 25.38)",
+          "oklch(51% 0.1524 25.38)",
+          "oklch(63% 0.1524 25.38)",
+          "oklch(75% 0.1524 25.38)",
+          "oklch(87% 0.1524 25.38)",
+          "oklch(95% 0.1524 25.38)"
+        ]
+      },
+      "error-ink": {
+        "role": "neutral",
+        "displayName": "Error Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.1624 26.15)",
+          "oklch(27% 0.1624 26.15)",
+          "oklch(39% 0.1624 26.15)",
+          "oklch(51% 0.1624 26.15)",
+          "oklch(63% 0.1624 26.15)",
+          "oklch(75% 0.1624 26.15)",
+          "oklch(87% 0.1624 26.15)",
+          "oklch(95% 0.1624 26.15)"
+        ]
+      },
+      "success-ink": {
+        "role": "neutral",
+        "displayName": "Success Ink (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0892 161.42)",
+          "oklch(27% 0.0892 161.42)",
+          "oklch(39% 0.0892 161.42)",
+          "oklch(51% 0.0892 161.42)",
+          "oklch(63% 0.0892 161.42)",
+          "oklch(75% 0.0892 161.42)",
+          "oklch(87% 0.0892 161.42)",
+          "oklch(95% 0.0892 161.42)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Login story",
+        "purpose": "Desktop login story only."
+      },
+      "headline": {
+        "displayName": "Page heading",
+        "purpose": "Operations page heading; 23px on mobile."
+      },
+      "title": {
+        "displayName": "Section heading",
+        "purpose": "Task groups and work sections; 16px on mobile."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Boundary default body text."
+      },
+      "label": {
+        "displayName": "Field label",
+        "purpose": "Explicit labels above controls."
+      },
+      "button": {
+        "displayName": "Button label",
+        "purpose": "Primary and secondary actions."
+      },
+      "status": {
+        "displayName": "Request status",
+        "purpose": "Compact text-labeled status badge."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "button-state",
+        "value": "background-color 160ms ease, color 160ms ease",
+        "purpose": "Color state changes only; reduced motion disables transitions."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-content-padding-min",
+        "value": "1700px"
+      },
+      {
+        "name": "compact-sidebar-max",
+        "value": "1100px"
+      },
+      {
+        "name": "mobile-workspace-max",
+        "value": "760px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Orange work-form action; preview button does not save data.",
+      "html": "<button type=\"button\" class=\"ds-primary\">Lưu thay đổi</button>",
+      "css": ".ds-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #bac7d1;border-radius:6px;min-height:42px;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:13px;font-weight:600;text-decoration:none;line-height:1.4;cursor:pointer;transition:background-color 160ms ease,color 160ms ease;background:#b9420c;border-color:#b9420c;color:#fff}.ds-primary:hover{background:#983409}.ds-primary:active{background:#802906}.ds-primary:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-primary:disabled{opacity:.6;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-primary{transition:none}}"
+    },
+    {
+      "name": "Secondary action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined white secondary action with the current quiet hover.",
+      "html": "<button type=\"button\" class=\"ds-secondary\">Quay lại</button>",
+      "css": ".ds-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #bac7d1;border-radius:6px;min-height:42px;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:13px;font-weight:600;text-decoration:none;line-height:1.4;cursor:pointer;transition:background-color 160ms ease,color 160ms ease;background:#fff;color:#182538}.ds-secondary:hover{background:#eef2f5}.ds-secondary:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-secondary:disabled{opacity:.6;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-secondary{transition:none}}"
+    },
+    {
+      "name": "Labeled field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Explicit label, white outlined input and shared keyboard focus; no invented error-border variant.",
+      "html": "<label class=\"ds-field\" for=\"ds-task-title\">Việc cần làm<input id=\"ds-task-title\" class=\"ds-field-input\" name=\"title\" placeholder=\"Ví dụ: gọi lại xác nhận số lượng\" /></label>",
+      "css": ".ds-field{display:grid;gap:7px;color:#182538;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:12px;font-weight:500;line-height:1.6}.ds-field-input{min-width:0;min-height:42px;border:1px solid #aebbc7;background:#fff;color:#182538;padding:9px 11px;border-radius:5px;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:14px;font-weight:400;line-height:1.5;caret-color:#b9420c}.ds-field-input::placeholder{color:#667485}.ds-field-input:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}"
+    },
+    {
+      "name": "Sidebar navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Representative active/default sidebar rows; fragment links are preview destinations. Icons are omitted from this text-state primitive.",
+      "html": "<nav class=\"ds-navigation\" aria-label=\"Điều hướng mẫu\"><a class=\"ds-nav-link\" href=\"#ds-desk\" aria-current=\"page\">Bàn làm việc</a><a class=\"ds-nav-link\" href=\"#ds-orders\">Yêu cầu đặt hàng</a></nav>",
+      "css": ".ds-navigation{display:grid;gap:5px;background:#172b43;padding:24px 14px 18px;font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-nav-link{display:flex;align-items:center;gap:12px;padding:11px 13px;color:#dae4ee;text-decoration:none;border-radius:6px;font-size:13px}.ds-nav-link[aria-current=page]{background:#fff;color:#172b43;font-weight:600}.ds-nav-link:hover:not([aria-current=page]){background:#243e58;color:#fff}.ds-nav-link:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}"
+    },
+    {
+      "name": "Request status",
+      "kind": "chip",
+      "refersTo": "status",
+      "description": "Four non-interactive request status variants with written labels; ready is not a stock or financial posting.",
+      "html": "<div class=\"ds-status-sample\"><span class=\"ds-status ds-pending\">Mới nhận</span> <span class=\"ds-status ds-progress\">Đang tư vấn</span> <span class=\"ds-status ds-ready\">Đã chốt yêu cầu</span> <span class=\"ds-status ds-rejected\">Từ chối</span></div>",
+      "css": ".ds-status-sample{font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-status{display:inline-flex;border-radius:5px;background:#eef2f6;color:#455366;padding:5px 8px;white-space:nowrap;font-size:11px;font-weight:500}.ds-pending{background:#fff0df;color:#854509}.ds-progress{background:#eaf1ff;color:#244d8b}.ds-ready{background:#e6f5ed;color:#175f40}.ds-rejected{background:#fff0ef;color:#9d2929}"
+    },
+    {
+      "name": "Work section",
+      "kind": "card",
+      "refersTo": "section",
+      "description": "Flat white task group with a heading and actual empty-record copy.",
+      "html": "<section class=\"ds-section\"><h2 class=\"ds-section-title\">Việc tiếp theo</h2><p class=\"ds-section-help\">Chưa có việc tiếp theo cho hồ sơ này. Thêm việc và hạn hoàn thành ngay bên dưới.</p></section>",
+      "css": ".ds-section{background:#fff;color:#182538;border:1px solid #dbe2e8;border-radius:10px;padding:24px;margin-bottom:24px;min-width:0;font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-section-title{font-size:17px;font-weight:600;line-height:1.45;margin:0 0 20px}.ds-section-help{font-size:12px;color:#586577;line-height:1.7;margin:0}@media(max-width:760px){.ds-section{padding:18px;margin-bottom:18px;border-radius:8px}.ds-section-title{font-size:16px}}"
+    },
+    {
+      "name": "Inline disclosure",
+      "kind": "custom",
+      "refersTo": "disclosure",
+      "description": "Native expandable control used for contextual task creation; preview contains representative help text only.",
+      "html": "<details class=\"ds-disclosure\"><summary class=\"ds-disclosure-summary\">Tạo việc và đặt hạn</summary><p class=\"ds-disclosure-help\">Người được giao cần có quyền xem hồ sơ này. Thời gian theo thiết bị của bạn.</p></details>",
+      "css": ".ds-disclosure{margin-top:16px;font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-disclosure-summary{cursor:pointer;color:#225b86;padding:10px 0;font-size:13px;font-weight:500}.ds-disclosure-summary:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-disclosure[open]>.ds-disclosure-summary{margin-bottom:12px}.ds-disclosure-help{margin:0;font-size:12px;color:#586577;line-height:1.7}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Cohamy work desk",
+    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented replacement workspace. `app/(operations)/layout.tsx` loads `components/crm/work.css`; that stylesheet and the current shell, pages and forms are the visual authority. The former HumanBank launcher, floating dock and glass login are superseded. The surface contract records the task strategy; this document records the reusable visual system.",
+    "keyCharacteristics": [
+      "Persistent navy navigation beside white operational surfaces.",
+      "Be Vietnam Pro with compact labels and clear page headings.",
+      "Orange primary actions, text-labeled statuses and visible keyboard focus.",
+      "Mobile request lists and early customer-context disclosures.",
+      "Explicit pending, empty, error and success feedback."
+    ],
+    "rules": [
+      {
+        "name": "The Boundary Rule",
+        "body": "CRM color assignments stay inside `.cohamy-crm`; they do not become public-site or CMS tokens.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "Use Be Vietnam Pro throughout the operations boundary, including forms and navigation.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Surface Rule",
+        "body": "Separate working surfaces with borders and tone; the current workspace has no box shadows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do apply this system only inside `.cohamy-crm`.",
+      "Do preserve the Cohamy logo, Be Vietnam Pro and navy/orange identity.",
+      "Do retain visible labels, keyboard focus and accessible names when visible account text is hidden.",
+      "Do keep order/customer follow-up creation within the current record.",
+      "Do keep tables in their own overflow region and use the implemented mobile request lists.",
+      "Do distinguish request status and request value from stock, payment and debt."
+    ],
+    "donts": [
+      "Don't copy the superseded launcher, floating dock or glass login into this workspace.",
+      "Don't export CRM tokens into the public website or CMS.",
+      "Don't encode status through color alone.",
+      "Don't turn preview-only tonal ramps into application tokens.",
+      "Don't describe the finish review as backend correctness or production approval."
+    ]
+  }
+}

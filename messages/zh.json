@@ -214,6 +214,7 @@
     "emptyHint": "请尝试调整筛选条件或搜索关键词",
     "contactForPrice": "联系我们",
     "contactCta": "联系订购",
+    "addOrderItem": "添加到订单申请",
     "outOfStock": "缺货",
     "inStock": "有货",
     "weight": "重量",
@@ -265,7 +266,7 @@
     "grandTotal": "总计",
     "remove": "删除",
     "update": "更新",
-    "checkout": "结账",
+    "checkout": "发送订单申请",
     "coupon": "优惠码",
     "couponPlaceholder": "输入优惠码",
     "applyCoupon": "应用",
@@ -274,15 +275,15 @@
     "itemsCount": "{count} 件商品"
   },
   "checkout": {
-    "title": "结账",
-    "subtitle": "完成您的订单",
+    "title": "订单申请",
+    "subtitle": "提交资料供Cohamy审核",
     "contactInfo": "联系信息",
     "shippingInfo": "配送信息",
-    "paymentMethod": "支付方式",
+    "paymentMethod": "预计支付方式",
     "orderSummary": "订单摘要",
-    "placeOrder": "提交订单",
+    "placeOrder": "发送申请",
     "processing": "处理中...",
-    "success": "订单提交成功！",
+    "success": "订单申请已保存",
     "successMessage": "感谢您的订购！我们将尽快联系您确认订单。",
     "backToHome": "返回首页",
     "fields": {
@@ -306,7 +307,13 @@
       "required": "请填写所有必填项",
       "invalidEmail": "邮箱格式无效",
       "invalidPhone": "电话号码无效"
-    }
+    },
+    "receivedMessage": "Cohamy已保存订单申请，等待审核。尚未预留库存、记账或确认付款；运费需确认。",
+    "orderCode": "申请编号",
+    "confirmedSubtotal": "已保存商品小计（不含运费）",
+    "saveFailed": "尚未确认订单已保存，购物车保持不变。请检查网络或联系Cohamy后重试。",
+    "pendingNotice": "您提交的是待审核订单申请。选择银行转账或MoMo不代表已付款；Cohamy将确认价格和运费。",
+    "saving": "正在保存..."
   },
   "blog": {
     "title": "博客",
@@ -327,6 +334,11 @@
     "featuredLabel": "精选",
     "featuredProduct": "精选产品",
     "viewProduct": "查看产品",
+    "searchButton": "搜索",
+    "pagination": "博客分页",
+    "previousPage": "上一页",
+    "nextPage": "下一页",
+    "pageStatus": "第 {page} / {total} 页",
     "categoryLabels": {
       "all": "全部",
       "chocolate": "巧克力",

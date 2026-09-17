@@ -214,6 +214,7 @@
     "emptyHint": "필터나 검색어를 변경해 보세요",
     "contactForPrice": "문의하기",
     "contactCta": "주문 문의",
+    "addOrderItem": "주문 요청에 추가",
     "outOfStock": "품절",
     "inStock": "재고 있음",
     "weight": "중량",
@@ -265,7 +266,7 @@
     "grandTotal": "총 결제금액",
     "remove": "삭제",
     "update": "업데이트",
-    "checkout": "결제하기",
+    "checkout": "주문 요청 보내기",
     "coupon": "쿠폰 코드",
     "couponPlaceholder": "쿠폰 코드 입력",
     "applyCoupon": "적용",
@@ -274,15 +275,15 @@
     "itemsCount": "상품 {count}개"
   },
   "checkout": {
-    "title": "결제",
-    "subtitle": "주문을 완료하세요",
+    "title": "주문 요청",
+    "subtitle": "Cohamy의 검토를 위해 정보를 보내세요",
     "contactInfo": "연락처 정보",
     "shippingInfo": "배송 정보",
-    "paymentMethod": "결제 방법",
+    "paymentMethod": "희망 결제 방법",
     "orderSummary": "주문 요약",
-    "placeOrder": "주문하기",
+    "placeOrder": "요청 보내기",
     "processing": "처리 중...",
-    "success": "주문이 완료되었습니다!",
+    "success": "주문 요청이 저장되었습니다",
     "successMessage": "감사합니다! 곧 주문 확인을 위해 연락드리겠습니다.",
     "backToHome": "홈으로",
     "fields": {
@@ -306,7 +307,13 @@
       "required": "필수 항목을 모두 입력해 주세요",
       "invalidEmail": "유효하지 않은 이메일입니다",
       "invalidPhone": "유효하지 않은 전화번호입니다"
-    }
+    },
+    "receivedMessage": "Cohamy가 주문 요청을 저장했습니다. 승인 대기 중이며 재고 예약, 채무 기록 또는 결제 확인은 아직 이루어지지 않았습니다. 배송비 확인이 필요합니다.",
+    "orderCode": "요청 번호",
+    "confirmedSubtotal": "저장된 상품 소계 (배송비 제외)",
+    "saveFailed": "주문 저장을 확인하지 못했습니다. 장바구니는 유지됩니다. 연결을 확인하거나 Cohamy에 문의 후 다시 시도하세요.",
+    "pendingNotice": "승인 대기 주문 요청입니다. 계좌이체나 MoMo 선택은 결제 완료를 의미하지 않습니다. Cohamy가 가격과 배송비를 확인합니다.",
+    "saving": "저장 중..."
   },
   "blog": {
     "title": "블로그",
@@ -327,6 +334,11 @@
     "featuredLabel": "추천",
     "featuredProduct": "추천 제품",
     "viewProduct": "제품 보기",
+    "searchButton": "검색",
+    "pagination": "블로그 페이지",
+    "previousPage": "이전",
+    "nextPage": "다음",
+    "pageStatus": "{page} / {total} 페이지",
     "categoryLabels": {
       "all": "전체",
       "chocolate": "초콜릿",

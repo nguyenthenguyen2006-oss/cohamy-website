@@ -1,0 +1,25 @@
+{
+  "environment": "LOCAL / ALREADY INSTALLED OFFICIAL PACKAGES",
+  "versions": {
+    "wordpress": "7.1",
+    "rank_math": "1.0.278",
+    "sqlite_integration": "3.0.2"
+  },
+  "archives": [
+    {
+      "file": "wordpress.zip",
+      "official_url": "https://wordpress.org/wordpress-7.1.zip",
+      "sha256": "d1ae02b5ae18428031ffc3943659fa87ab361d827f4aa804adf9276e4dc75df6"
+    },
+    {
+      "file": "rank-math.zip",
+      "official_url": "https://downloads.wordpress.org/plugin/seo-by-rank-math.1.0.278.zip",
+      "sha256": "06b7b30b0d7f350fae929519c9c5265488c7b1f24ebe5650988de90975a1e73f"
+    },
+    {
+      "file": "sqlite.zip",
+      "official_url": "https://downloads.wordpress.org/plugin/sqlite-database-integration.3.0.2.zip",
+      "sha256": "1602e75577ad9b3a7e3e4a6a44a81b9541cdee2124d48928faf61c6fd3cd4f74"
+    }
+  ]
+}

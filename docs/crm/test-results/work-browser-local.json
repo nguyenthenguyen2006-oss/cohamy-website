@@ -1,0 +1,58 @@
+{
+  "testedAt": "2026-09-17T22:22:35.945Z",
+  "environment": "LOCAL real persisted QA database, fictitious users, static website source",
+  "cases": [
+    {
+      "name": "real login opens task-oriented desk",
+      "status": "PASS"
+    },
+    {
+      "name": "order detail shows lines, full delivery address and assignment form",
+      "status": "PASS"
+    },
+    {
+      "name": "notes and due tasks persist through actual UI and refresh",
+      "status": "PASS"
+    },
+    {
+      "name": "customer form saves extended profile, note, task and sales assignment",
+      "status": "PASS"
+    },
+    {
+      "name": "catalog manager edits SKU units and keeps website price",
+      "status": "PASS"
+    },
+    {
+      "name": "tasks, accounts and report pages expose working controls",
+      "status": "PASS"
+    },
+    {
+      "name": "mobile navigation, detail and 320px do not overflow or hide actions",
+      "status": "PASS"
+    },
+    {
+      "name": "sales sees assigned request; dealer cannot read its API or work tasks",
+      "status": "PASS"
+    },
+    {
+      "name": "CRM stylesheet stays isolated from public products",
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    ".impeccable/review/work/login-desktop.png",
+    ".impeccable/review/work/desktop.png",
+    ".impeccable/review/work/orders-desktop.png",
+    ".impeccable/review/work/order-detail-desktop.png",
+    ".impeccable/review/work/customer-desktop.png",
+    ".impeccable/review/work/catalog-detail-desktop.png",
+    ".impeccable/review/work/tasks-desktop.png",
+    ".impeccable/review/work/accounts-desktop.png",
+    ".impeccable/review/work/account-detail-desktop.png",
+    ".impeccable/review/work/mobile.png",
+    ".impeccable/review/work/order-detail-mobile.png",
+    ".impeccable/review/work/user-320.png",
+    ".impeccable/review/work/login-mobile.png"
+  ],
+  "consoleErrors": []
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 
 interface ProductGalleryProps {
   images: string[];
@@ -13,9 +14,12 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
 
   return (
     <div className="space-y-4">
-      <img
+      <Image
         src={gallery[active]}
         alt={alt}
+        width={900}
+        height={900}
+        priority
         className="rounded-3xl w-full aspect-square object-cover"
       />
       {gallery.length > 1 && (
@@ -29,7 +33,13 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
                 active === index ? "border-[#D9A441]" : "border-transparent"
               }`}
             >
-              <img src={image} alt="" className="w-16 h-16 object-cover" />
+              <Image
+                src={image}
+                alt=""
+                width={64}
+                height={64}
+                className="w-16 h-16 object-cover"
+              />
             </button>
           ))}
         </div>

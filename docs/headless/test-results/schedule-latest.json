@@ -1,0 +1,29 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS + REAL RANK MATH",
+  "database": "SQLite 3 via official WordPress SQLite Database Integration",
+  "runtime": {
+    "harness": 30708,
+    "cms": 5308,
+    "frontend": 38656,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T21:30:05.681Z"
+  },
+  "runId": "e2e-mu627dax",
+  "cms": "http://127.0.0.1:8081",
+  "front": "http://127.0.0.1:3001",
+  "startedBuild": "5CuZsCRQV0qILSzmZCUi2",
+  "finishedAt": "2026-09-17T21:48:03.502Z",
+  "results": [
+    {
+      "name": "11 scheduled publish without WP HTTP traffic",
+      "status": "PASS",
+      "detail": "CLI cron published 11012 at UTC schedule; no WP page traffic during wait; CONTROLLED missing native event repaired before publication"
+    },
+    {
+      "name": "17 same Next process and build",
+      "status": "PASS",
+      "detail": "Same Next production PID 38656; no restart/build/deploy during all mutations; build 5CuZsCRQV0qILSzmZCUi2"
+    }
+  ]
+}

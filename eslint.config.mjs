@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    ".local/**",
+    ".headless-reports/**",
+    "wordpress/rank-math-analysis/assets/**",
   ]),
 ]);
 

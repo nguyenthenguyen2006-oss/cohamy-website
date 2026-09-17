@@ -1,0 +1,17 @@
+'use client';
+import {House,SignOut,List,X,UserCircle} from '@phosphor-icons/react';
+import Image from 'next/image';
+import Link from 'next/link';
+import {usePathname,useRouter} from 'next/navigation';
+import {useState,type ReactNode} from 'react';
+import {roleLabels,type Principal} from '@/lib/crm/types';
+import {visibleModules} from '@/lib/crm/modules';
+import {CrmModuleIcon} from './ModuleIcon';
+export function CrmShell({children,user}:{children:ReactNode;user:Principal}){
+ const pathname=usePathname(),router=useRouter(),root='/'+user.area;const[open,setOpen]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState('');const modules=visibleModules(user);
+ async function logout(){if(busy)return;setBusy(true);try{const r=await fetch('/api/crm/auth/logout',{method:'POST'});if(!r.ok)throw new Error();router.replace(root+'/login');router.refresh();}catch{setError('Chưa đăng xuất được. Thử lại khi có kết nối.');setBusy(false);}}
+ const active=modules.find(m=>pathname===root+'/'+m.id||pathname.startsWith(root+'/'+m.id+'/'));
+ return <div className="work-shell"><a className="skip-link" href="#portal-content">Đến nội dung chính</a><header className="work-topbar"><button className="work-menu-toggle" type="button" aria-expanded={open} aria-controls="work-navigation" aria-label={open?'Đóng menu':'Mở menu'} onClick={()=>setOpen(!open)}>{open?<X size={24}/>:<List size={24}/>}</button><Link className="work-brand" href={root}><Image src="/images/logo/cohamy-brand-logo.png" width={153} height={32} alt="Cohamy" priority/><span>{user.area==='crm'?'Quản lý kinh doanh':'Cổng đại lý'}</span></Link><Link className="work-user" href={root+'/profile'} aria-label={'Hồ sơ và bảo mật của '+user.displayName}><UserCircle size={28} aria-hidden/><span><strong>{user.displayName}</strong><small>{roleLabels[user.role]}</small></span></Link></header>
+ <aside id="work-navigation" className={'work-sidebar'+(open?' is-open':'')}><nav aria-label="Điều hướng chính"><Link href={root} className={pathname===root?'active':''} aria-current={pathname===root?'page':undefined} onClick={()=>setOpen(false)}><House size={21} aria-hidden/><span>Bàn làm việc</span></Link><p className="work-nav-label">Công việc hằng ngày</p>{modules.filter(m=>m.status==='CONNECTED').map(m=><Link key={m.id} href={root+'/'+m.id} className={active?.id===m.id?'active':''} aria-current={active?.id===m.id?'page':undefined} onClick={()=>setOpen(false)}><CrmModuleIcon name={m.icon} size={21} aria-hidden/><span>{m.label}</span></Link>)}<details className="work-nav-pending"><summary>Chưa mở giao dịch</summary>{modules.filter(m=>m.status==='PENDING').map(m=><Link href={root+'/'+m.id} key={m.id} onClick={()=>setOpen(false)}><CrmModuleIcon name={m.icon} size={19} aria-hidden/><span>{m.label}</span></Link>)}</details></nav><div className="work-sidebar-footer"><Link href={root+'/profile'}>Hồ sơ và bảo mật</Link><button type="button" disabled={busy} onClick={logout}><SignOut size={20} aria-hidden/>{busy?'Đang đăng xuất…':'Đăng xuất'}</button>{error&&<p role="alert">{error}</p>}</div></aside>
+ {open&&<button className="work-menu-backdrop" onClick={()=>setOpen(false)} aria-label="Đóng menu điều hướng"/>}<div className="work-main"><nav className="work-breadcrumb" aria-label="Đường dẫn"><Link href={root}>Cohamy</Link><span>/</span><span>{active?.label??(pathname.endsWith('/profile')?'Hồ sơ cá nhân':'Bàn làm việc')}</span></nav><main id="portal-content">{children}</main><footer className="work-footer">Cohamy · {user.organizationName}</footer></div></div>;
+}

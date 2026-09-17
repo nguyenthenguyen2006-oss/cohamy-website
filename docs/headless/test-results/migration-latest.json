@@ -1,0 +1,37 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS",
+  "source": "legacy",
+  "sourceHash": "8b7ab62b13340c0c55c18dd2db7ca8bb7d4835c024a6009b31e3eb815c7726db",
+  "rows": 40,
+  "groups": 8,
+  "localeCounts": {
+    "vi": 8,
+    "en": 8,
+    "zh": 8,
+    "ko": 8,
+    "ja": 8
+  },
+  "mode": "apply",
+  "warnings": [
+    "Bundled content only; not proof of current Google Sheets contents. Legacy source has no updated_at; using publishedAt as the only known source timestamp."
+  ],
+  "destination": {
+    "existing": 40,
+    "conflicts": [],
+    "overwriteExplicitlyAllowed": false
+  },
+  "import": {
+    "created": 0,
+    "updated": 0,
+    "failed": 0,
+    "done": true
+  },
+  "skippedUnchanged": 40,
+  "reconciliation": {
+    "matched": 40,
+    "mismatches": [],
+    "targetScope": "source legacy IDs",
+    "totalTargetRows": 40
+  },
+  "verifiedAt": "2026-09-17T21:48:53.957Z"
+}

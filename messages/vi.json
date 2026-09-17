@@ -214,6 +214,7 @@
     "emptyHint": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm",
     "contactForPrice": "Liên hệ",
     "contactCta": "Liên hệ đặt hàng",
+    "addOrderItem": "Thêm vào yêu cầu đặt hàng",
     "outOfStock": "Hết hàng",
     "inStock": "Còn hàng",
     "weight": "Trọng lượng",
@@ -265,7 +266,7 @@
     "grandTotal": "Tổng cộng",
     "remove": "Xóa",
     "update": "Cập nhật",
-    "checkout": "Thanh toán",
+    "checkout": "Gửi yêu cầu đặt hàng",
     "coupon": "Mã giảm giá",
     "couponPlaceholder": "Nhập mã giảm giá",
     "applyCoupon": "Áp dụng",
@@ -274,15 +275,15 @@
     "itemsCount": "{count} sản phẩm"
   },
   "checkout": {
-    "title": "Thanh toán",
-    "subtitle": "Hoàn tất đơn hàng của bạn",
+    "title": "Yêu cầu đặt hàng",
+    "subtitle": "Gửi thông tin để Cohamy kiểm tra và duyệt",
     "contactInfo": "Thông tin liên hệ",
     "shippingInfo": "Thông tin giao hàng",
-    "paymentMethod": "Phương thức thanh toán",
+    "paymentMethod": "Phương thức thanh toán dự kiến",
     "orderSummary": "Tóm tắt đơn hàng",
-    "placeOrder": "Đặt hàng",
+    "placeOrder": "Gửi yêu cầu",
     "processing": "Đang xử lý...",
-    "success": "Đặt hàng thành công!",
+    "success": "Đã lưu yêu cầu đặt hàng",
     "successMessage": "Cảm ơn bạn! Chúng tôi sẽ liên hệ xác nhận đơn hàng trong thời gian sớm nhất.",
     "backToHome": "Về trang chủ",
     "fields": {
@@ -306,7 +307,13 @@
       "required": "Vui lòng điền đầy đủ thông tin bắt buộc",
       "invalidEmail": "Email không hợp lệ",
       "invalidPhone": "Số điện thoại không hợp lệ"
-    }
+    },
+    "receivedMessage": "Cohamy đã lưu yêu cầu đặt hàng và đang chờ duyệt. Chưa giữ hàng, chưa ghi nợ và chưa xác nhận thanh toán; phí giao hàng cần xác nhận.",
+    "orderCode": "Mã yêu cầu",
+    "confirmedSubtotal": "Tổng hàng server đã lưu (chưa gồm phí giao)",
+    "saveFailed": "Chưa xác nhận lưu được đơn. Giỏ hàng được giữ nguyên. Kiểm tra kết nối hoặc liên hệ Cohamy rồi thử lại.",
+    "pendingNotice": "Bạn gửi yêu cầu đặt hàng chờ duyệt. Chọn chuyển khoản/MoMo không có nghĩa đã thanh toán; Cohamy sẽ xác nhận giá và phí giao hàng.",
+    "saving": "Đang lưu..."
   },
   "blog": {
     "title": "Bài viết",
@@ -327,6 +334,11 @@
     "featuredLabel": "Nổi bật",
     "featuredProduct": "Sản phẩm nổi bật",
     "viewProduct": "Xem sản phẩm",
+    "searchButton": "Tìm",
+    "pagination": "Phân trang bài viết",
+    "previousPage": "Trang trước",
+    "nextPage": "Trang sau",
+    "pageStatus": "Trang {page} / {total}",
     "categoryLabels": {
       "all": "Tất cả",
       "chocolate": "Chocolate",

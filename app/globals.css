@@ -1,5 +1,25 @@
 @import "tailwindcss";
 
+/* Supported Gutenberg blocks use the existing article typography and colors. */
+.prose-cohamy { min-width: 0; overflow-wrap: anywhere; }
+.prose-cohamy img { max-width: 100%; height: auto; }
+.prose-cohamy figure { margin: 1.8rem 0; }
+.prose-cohamy figcaption { font-size: .875rem; opacity: .75; margin-top: .6rem; text-align: center; }
+.prose-cohamy .wp-block-gallery { display: flex; flex-wrap: wrap; gap: 1rem; }
+.prose-cohamy .wp-block-gallery figure { flex: 1 1 240px; margin: 0; }
+.prose-cohamy .wp-block-gallery img { width: 100%; height: auto; }
+.prose-cohamy .wp-block-table { overflow-x: auto; }
+.prose-cohamy .wp-block-embed iframe { width: 100%; aspect-ratio: 16 / 9; border: 0; }
+.prose-cohamy video { max-width: 100%; height: auto; }
+.prose-cohamy .wp-block-buttons { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1.5rem; }
+.prose-cohamy .wp-block-button__link { display: inline-block; padding: .75rem 1.25rem; background: #4a2418; color: #fff; border-radius: .25rem; }
+.prose-cohamy .wp-block-separator { border: 0; border-top: 1px solid #4a241830; margin-block: 2rem; }
+.prose-cohamy table { width: 100%; border-collapse: collapse; }
+.prose-cohamy th, .prose-cohamy td { border: 1px solid #4A241830; padding: .75rem; text-align: start; }
+.prose-cohamy .aligncenter { margin-inline: auto; text-align: center; }
+.prose-cohamy .alignright { text-align: right; }
+.prose-cohamy h4, .prose-cohamy h5, .prose-cohamy h6 { font-weight: 600; margin-top: 1.5rem; }
+
 @theme inline {
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -20,6 +40,83 @@ body {
   font-size: 1rem;
   line-height: 1.65;
   color: #2a120c;
+}
+
+.admin-panel {
+  @apply rounded-2xl border border-slate-200 bg-white;
+}
+
+.admin-label {
+  @apply block text-sm font-semibold text-slate-800;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-3.5 text-sm text-slate-950 outline-none transition placeholder:text-slate-400 focus:border-amber-700 focus:ring-2 focus:ring-amber-700/15;
+}
+
+.admin-input,
+.admin-select {
+  @apply h-11;
+}
+
+.admin-textarea {
+  @apply resize-y py-3 leading-relaxed;
+}
+
+.admin-button,
+.admin-button-secondary {
+  @apply inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 text-sm font-semibold transition active:translate-y-px disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.admin-button {
+  @apply bg-slate-950 text-white hover:bg-slate-800;
+}
+
+.admin-button-secondary {
+  @apply border border-slate-300 bg-white text-slate-800 hover:border-slate-500 hover:bg-slate-50;
+}
+
+.admin-editor-content p {
+  @apply my-3 leading-7 text-slate-700;
+}
+
+.admin-editor-content h2 {
+  @apply mb-3 mt-7 text-2xl font-semibold tracking-tight text-slate-950;
+}
+
+.admin-editor-content h3 {
+  @apply mb-2 mt-6 text-xl font-semibold text-slate-950;
+}
+
+.admin-editor-content ul {
+  @apply my-4 list-disc space-y-1 pl-6 text-slate-700;
+}
+
+.admin-editor-content ol {
+  @apply my-4 list-decimal space-y-1 pl-6 text-slate-700;
+}
+
+.admin-editor-content blockquote {
+  @apply my-5 border-l-4 border-amber-500 bg-amber-50 px-4 py-2 text-slate-700;
+}
+
+.admin-editor-content a {
+  @apply text-amber-800 underline underline-offset-2;
+}
+
+.admin-editor-content img {
+  @apply my-5 max-h-[32rem] rounded-xl object-contain;
+}
+
+.admin-editor-content table {
+  @apply my-5 w-full border-collapse text-sm;
+}
+
+.admin-editor-content th,
+.admin-editor-content td {
+  @apply border border-slate-300 px-3 py-2;
 }
 
 /* Typography scale — bumped ~1 step sitewide */

@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { filterProducts as filterByLib } from "@/lib/products";
-import { products as allProducts } from "@/data/products";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/lib/types";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -46,11 +45,10 @@ export function ProductGrid({
     flavor: initialFilters?.flavor ?? "all",
   });
 
-  const sourceProducts = productsProp ?? allProducts;
   const filteredProducts = useMemo(() => {
     if (productsProp) return productsProp;
     return applyFilters(filters);
-  }, [productsProp, sourceProducts, filters]);
+  }, [productsProp, filters]);
 
   const isStandalone = !productsProp;
 

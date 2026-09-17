@@ -2,11 +2,11 @@
 # One-time setup on Hostinger VPS (run as root or with sudo)
 set -euo pipefail
 
-APP_DIR="/var/www/cohamy"
 REPO_URL="${1:-}"
+APP_DIR="${2:-}"
 
-if [ -z "$REPO_URL" ]; then
-  echo "Usage: bash vps-first-setup.sh https://github.com/USER/cohamy-website.git"
+if [ -z "$REPO_URL" ] || [ -z "$APP_DIR" ]; then
+  echo "Usage: bash vps-first-setup.sh https://github.com/USER/cohamy-website.git /duong/dan/app"
   exit 1
 fi
 

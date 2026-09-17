@@ -214,6 +214,7 @@
     "emptyHint": "フィルターや検索キーワードを変更してみてください",
     "contactForPrice": "お問い合わせ",
     "contactCta": "注文のお問い合わせ",
+    "addOrderItem": "注文リクエストに追加",
     "outOfStock": "在庫切れ",
     "inStock": "在庫あり",
     "weight": "重量",
@@ -265,7 +266,7 @@
     "grandTotal": "合計金額",
     "remove": "削除",
     "update": "更新",
-    "checkout": "お支払いへ",
+    "checkout": "注文リクエストを送信",
     "coupon": "クーポンコード",
     "couponPlaceholder": "クーポンコードを入力",
     "applyCoupon": "適用",
@@ -274,15 +275,15 @@
     "itemsCount": "{count}点の商品"
   },
   "checkout": {
-    "title": "お支払い",
-    "subtitle": "ご注文を完了してください",
+    "title": "注文リクエスト",
+    "subtitle": "Cohamyの確認用に情報を送信してください",
     "contactInfo": "連絡先情報",
     "shippingInfo": "配送情報",
-    "paymentMethod": "お支払い方法",
+    "paymentMethod": "ご希望のお支払い方法",
     "orderSummary": "注文概要",
-    "placeOrder": "注文する",
+    "placeOrder": "リクエストを送信",
     "processing": "処理中...",
-    "success": "ご注文が完了しました！",
+    "success": "注文リクエストを保存しました",
     "successMessage": "ありがとうございます！まもなくご注文確認のご連絡をいたします。",
     "backToHome": "ホームに戻る",
     "fields": {
@@ -306,7 +307,13 @@
       "required": "必須項目をすべて入力してください",
       "invalidEmail": "無効なメールアドレスです",
       "invalidPhone": "無効な電話番号です"
-    }
+    },
+    "receivedMessage": "Cohamyが注文リクエストを保存しました。承認待ちで、在庫確保、債務記録、支払確認はまだ行われていません。送料の確認が必要です。",
+    "orderCode": "受付番号",
+    "confirmedSubtotal": "保存された商品小計（送料別）",
+    "saveFailed": "注文の保存を確認できませんでした。カートは保持されています。接続を確認するかCohamyにお問い合わせのうえ再試行してください。",
+    "pendingNotice": "承認待ちの注文リクエストです。銀行振込やMoMoの選択は支払完了を意味しません。Cohamyが価格と送料を確認します。",
+    "saving": "保存中..."
   },
   "blog": {
     "title": "ブログ",
@@ -327,6 +334,11 @@
     "featuredLabel": "注目",
     "featuredProduct": "おすすめ製品",
     "viewProduct": "製品を見る",
+    "searchButton": "検索",
+    "pagination": "ブログのページ送り",
+    "previousPage": "前へ",
+    "nextPage": "次へ",
+    "pageStatus": "{page} / {total} ページ",
     "categoryLabels": {
       "all": "すべて",
       "chocolate": "チョコレート",

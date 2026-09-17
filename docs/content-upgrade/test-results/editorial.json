@@ -1,0 +1,26 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS REST + NATIVE TABLES + ACTION SCHEDULER",
+  "run": "editorial-mu6066jt",
+  "results": [
+    {
+      "name": "CSV UTF-8 mapping imports multiline record in durable queue",
+      "status": "PASS",
+      "detail": "One actual approved stable record persisted by Action Scheduler after prevalidation"
+    },
+    {
+      "name": "JSON upsert default draft and CAS conflict after preview",
+      "status": "PASS",
+      "detail": "Reimport uses stable ID, draft default, stale version fails per row"
+    },
+    {
+      "name": "Native post quick edit preview, save, stale hash and role checks",
+      "status": "PASS",
+      "detail": "Actual native REST persistence, stale hash refused and writer cannot access operation imports"
+    },
+    {
+      "name": "Duplicate produces distinct draft identity and server filters work",
+      "status": "PASS",
+      "detail": "Duplicate keeps content and SEO, no old identity/job lock; search/missingSEO/status paginated on server"
+    }
+  ]
+}

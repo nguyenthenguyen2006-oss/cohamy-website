@@ -1,0 +1,17 @@
+{
+  "environment": "LOCAL / ACTUAL PHP CMS PROCESS RESTART WITH PERSISTED PENDING ACTION SCHEDULER JOB",
+  "status": "PASS",
+  "scope": "HTTP PHP server restarted; system cron dispatch paused then resumed with new PHP CLI workers. This is not an OS/VPS reboot or hard-kill inside an open transaction.",
+  "due_utc": "2026-09-17T21:50:00.000Z",
+  "daily_at_vn": "04:50",
+  "campaign_id": "f568c383-7b97-4433-b6dc-4866a7ecfd22",
+  "items_at_stop": 6,
+  "pending_items_survived_restart": 6,
+  "published_after_restart": 6,
+  "rerun_new": 0,
+  "cms_pid_before": 5308,
+  "cms_pid_after": 43620,
+  "next_pid": 38656,
+  "build": "5CuZsCRQV0qILSzmZCUi2",
+  "finished_at": "2026-09-17T21:50:59.300Z"
+}

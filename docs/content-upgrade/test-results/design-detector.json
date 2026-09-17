@@ -1,0 +1,32 @@
+[
+  {
+    "antipattern": "side-tab",
+    "name": "Side-tab accent border",
+    "description": "Thick colored border on one side of a card — the most recognizable tell of AI-generated UIs. Use a subtler accent or remove it entirely.",
+    "severity": "warning",
+    "category": "slop",
+    "file": "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\app\\globals.css",
+    "line": 102,
+    "snippet": "border-l-4"
+  },
+  {
+    "antipattern": "gray-on-color",
+    "name": "Gray text on colored background",
+    "description": "Gray text looks washed out on colored backgrounds. Use a darker shade of the background color instead, or white/near-white for contrast.",
+    "severity": "warning",
+    "category": "quality",
+    "file": "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\app\\globals.css",
+    "line": 102,
+    "snippet": "text-slate-700 on bg-amber-50"
+  },
+  {
+    "antipattern": "codex-grid-background",
+    "name": "Decorative grid-line background",
+    "description": "A decorative grid or line-field background drawn with hairline linear-gradient layers tiled by a fixed pixel cell is a recurring generated-UI signature. Reserve grid overlays for actual canvas, map, blueprint, or measurement surfaces; elsewhere use product structure or a plain surface.",
+    "severity": "advisory",
+    "category": "slop",
+    "file": "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\app\\globals.css",
+    "line": 307,
+    "snippet": "px-tiled hairline line-field background"
+  }
+]

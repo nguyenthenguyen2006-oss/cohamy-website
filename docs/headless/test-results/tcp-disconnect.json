@@ -1,0 +1,26 @@
+{
+  "environment": "LOCAL / ACTUAL WORDPRESS PROCESS STOP AND RESTORE / NEXT UNCHANGED",
+  "next_pid": 38656,
+  "build": "5CuZsCRQV0qILSzmZCUi2",
+  "results": [
+    {
+      "path": "/vi/bai-viet/e2e-mu5skjxi",
+      "status": "PASS",
+      "http_status": 503,
+      "cms_transport": "TCP_CONNECTION_REFUSED"
+    },
+    {
+      "path": "/vi/bai-viet",
+      "status": "PASS",
+      "http_status": 503,
+      "cms_transport": "TCP_CONNECTION_REFUSED"
+    },
+    {
+      "path": "/sitemap.xml",
+      "status": "PASS",
+      "http_status": 503,
+      "cms_transport": "TCP_CONNECTION_REFUSED"
+    }
+  ],
+  "finished_at": "2026-09-17T21:51:34.794Z"
+}

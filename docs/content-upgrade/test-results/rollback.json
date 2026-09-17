@@ -1,0 +1,13 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS DATABASE FIXTURE + REST + NATIVE ACTION SCHEDULER",
+  "status": "PASS",
+  "campaign_id": "f17aff83-835c-46f2-a793-5e34f932e962",
+  "job_id": "e2af7e9a-a1ba-4b44-bcb1-e8fef5e37230",
+  "total": 101,
+  "drafted": 100,
+  "human_edit_preserved": 1,
+  "worker_finished_ms": 23246,
+  "scope": "101 isolated fixture posts; rollback performance only, not campaign generation throughput",
+  "next_pid": 41084,
+  "build": "cXKbyMkGE6CIZQ3fw-b3c"
+}

@@ -1,0 +1,11 @@
+[Unit]
+Description=Cohamy WordPress scheduled publication and webhook outbox
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=www-data
+WorkingDirectory=/srv/cohamy-cms
+ExecStart=/usr/local/bin/wp --path=/srv/cohamy-cms cron event run --due-now
+ExecStart=/usr/local/bin/wp --path=/srv/cohamy-cms action-scheduler run --group=cohamy --batch-size=25 --batches=4
+TimeoutStartSec=180

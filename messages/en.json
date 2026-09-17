@@ -214,6 +214,7 @@
     "emptyHint": "Try adjusting your filters or search keywords",
     "contactForPrice": "Contact us",
     "contactCta": "Contact to order",
+    "addOrderItem": "Add to order request",
     "outOfStock": "Out of Stock",
     "inStock": "In Stock",
     "weight": "Weight",
@@ -265,7 +266,7 @@
     "grandTotal": "Grand Total",
     "remove": "Remove",
     "update": "Update",
-    "checkout": "Checkout",
+    "checkout": "Send order request",
     "coupon": "Coupon Code",
     "couponPlaceholder": "Enter coupon code",
     "applyCoupon": "Apply",
@@ -274,15 +275,15 @@
     "itemsCount": "{count} items"
   },
   "checkout": {
-    "title": "Checkout",
-    "subtitle": "Complete your order",
+    "title": "Order request",
+    "subtitle": "Send details for Cohamy to review",
     "contactInfo": "Contact Information",
     "shippingInfo": "Shipping Information",
-    "paymentMethod": "Payment Method",
+    "paymentMethod": "Requested payment method",
     "orderSummary": "Order Summary",
-    "placeOrder": "Place Order",
+    "placeOrder": "Send request",
     "processing": "Processing...",
-    "success": "Order Placed Successfully!",
+    "success": "Order request saved",
     "successMessage": "Thank you! We will contact you to confirm your order shortly.",
     "backToHome": "Back to Home",
     "fields": {
@@ -306,7 +307,13 @@
       "required": "Please fill in all required fields",
       "invalidEmail": "Invalid email address",
       "invalidPhone": "Invalid phone number"
-    }
+    },
+    "receivedMessage": "Cohamy saved your order request for review. Stock is not reserved, no debt or payment is recorded, and shipping needs confirmation.",
+    "orderCode": "Request code",
+    "confirmedSubtotal": "Saved item subtotal (shipping excluded)",
+    "saveFailed": "The order could not be confirmed. Your cart is unchanged. Check the connection or contact Cohamy and retry.",
+    "pendingNotice": "This is an order request awaiting review. Selecting bank transfer or MoMo does not confirm payment. Cohamy will confirm pricing and shipping.",
+    "saving": "Saving..."
   },
   "blog": {
     "title": "Blog",
@@ -327,6 +334,11 @@
     "featuredLabel": "Featured",
     "featuredProduct": "Featured Product",
     "viewProduct": "View Product",
+    "searchButton": "Search",
+    "pagination": "Blog pagination",
+    "previousPage": "Previous",
+    "nextPage": "Next",
+    "pageStatus": "Page {page} / {total}",
     "categoryLabels": {
       "all": "All",
       "chocolate": "Chocolate",

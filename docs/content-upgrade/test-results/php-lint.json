@@ -1,0 +1,112 @@
+[
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\webhooks.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\webhooks.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\transfer-preview.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\transfer-preview.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\rest.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\rest.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\operations.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\operations.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\operations-transfer-screen.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\operations-transfer-screen.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\operations-content-screen.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\operations-content-screen.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\operations-admin.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\operations-admin.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\maintenance.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\maintenance.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\links.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\links.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\indexnow-selection.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\indexnow-selection.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\import.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\import.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\identity.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\identity.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\editorial.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\editorial.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\distribution.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\distribution.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\data-transfer.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\data-transfer.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\connections.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\connections.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\cohamy-headless-bridge.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\cohamy-headless-bridge.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\campaigns.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\campaigns.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\atomic-rest.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\atomic-rest.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\analysis.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\analysis.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\ai-jobs.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\ai-jobs.php"
+  },
+  {
+    "status": "PASS",
+    "file": "wordpress/cohamy-headless-bridge\\admin.php",
+    "output": "No syntax errors detected in wordpress/cohamy-headless-bridge\\admin.php"
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "environment": "LOCAL / REAL WORDPRESS + NEXT / NO EXTERNAL LIVE CALLS",
+  "run": "extra-mu5zivv3",
+  "results": [
+    {
+      "name": "Actual UI campaign runs after tab closes before its due time",
+      "status": "PASS",
+      "detail": "Both queued IDs were zero at close; two native posts created later and present in actual Next HTML/XML"
+    },
+    {
+      "name": "Campaign progress and paged public/editor links reflect native rows",
+      "status": "PASS",
+      "detail": "Expected/created/published/remaining, measured item time, original skip policy and 100-row paging"
+    },
+    {
+      "name": "IndexNow manual file + selected IDs preview before queue, separate deleted mode",
+      "status": "PASS",
+      "detail": "UTF-8 BOM semicolon CSV, dedup, invalid foreign host refused before write; live published URL cannot be submitted as deleted; disabled provider is honest 503"
+    },
+    {
+      "name": "Redirect import rejects cycles across incoming rows before any write",
+      "status": "PASS",
+      "detail": "Two-row loop produces two row errors with zero stored rules"
+    },
+    {
+      "name": "Actual robots inspector and orphan filter use public/native evidence",
+      "status": "PASS",
+      "detail": "Server job reads real robots.txt, public sitemap declaration and warnings; only analyzed native link records count as orphans"
+    },
+    {
+      "name": "CSV export contains frozen locale/status/time metadata",
+      "status": "PASS",
+      "detail": "Actual private ZIP contains UTF-8 BOM, semicolon columns URL/wp_id/locale/type/status/UTC modified"
+    }
+  ],
+  "build": "izO7CdfK8W0nZOh6h_9Lz",
+  "runtime": {
+    "harness": 26264,
+    "cms": 25720,
+    "frontend": 11172,
+    "mode": "production",
+    "distDir": ".local/next-headless",
+    "startedAt": "2026-09-17T19:44:00.769Z"
+  },
+  "finished_at": "2026-09-17T20:31:36.085Z"
+}

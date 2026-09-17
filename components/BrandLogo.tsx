@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
+import Image from "next/image";
 import type { Locale } from "@/lib/types";
 import { getAssetById } from "@/lib/assets/manifest";
 
@@ -16,11 +17,11 @@ export function BrandLogo({ className = "", height = 40 }: BrandLogoProps) {
   const logoAsset = getAssetById("cohamy-logo");
 
   return (
-    <img
+    <Image
       src={LOGO_PATH}
       alt={logoAsset?.alt[locale] ?? "Cohamy"}
+      width={Math.max(1, Math.round(height * 4))}
       height={height}
-      decoding="async"
       className={`block w-auto max-w-none object-contain ${className}`}
       style={{ height }}
     />
