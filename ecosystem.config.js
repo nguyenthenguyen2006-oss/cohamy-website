@@ -4,6 +4,7 @@ module.exports = {
     {
       name: "cohamy",
       script: "node_modules/next/dist/bin/next",
+      interpreter: process.env.COHAMY_NODE_BINARY || process.execPath,
       args: "start",
       cwd: __dirname,
       instances: 1,

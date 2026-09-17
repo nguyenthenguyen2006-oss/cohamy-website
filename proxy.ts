@@ -8,6 +8,15 @@ import { randomUUID } from "node:crypto";
 const intl = createMiddleware(routing);
 export default async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  // Old locale middleware sent CRM links to /vi/crm/...; recover those bookmarks.
+  if (/^\/(vi|en|zh|ko|ja)\/(crm|portal)(?:\/|$)/u.test(pathname)) {
+    const target = new URL(pathname.replace(/^\/(vi|en|zh|ko|ja)/u, ''), process.env.NEXT_PUBLIC_SITE_URL || request.url);
+    target.search = request.nextUrl.search;
+    const response = NextResponse.redirect(target, 307);
+    response.headers.set('Cache-Control', 'private, no-store');
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    return response;
+  }
   const article = pathname.match(/^\/(vi|en|zh|ko|ja)\/(bai-viet|blog|noi-dung|pages)\/([a-z0-9]+(?:-[a-z0-9]+)*)$/u);
   const usesWordPressContent = Boolean(article) || /^\/(?:(?:vi|en|zh|ko|ja)(?:\/(?:bai-viet|blog))?|bai-viet|blog)?\/?$/u.test(pathname);
   const isPage = article && ["noi-dung", "pages"].includes(article[2]);

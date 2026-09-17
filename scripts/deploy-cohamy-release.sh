@@ -13,6 +13,21 @@ test -d "$PREVIOUS/.git"
 test ! -e "$RELEASE"
 mkdir -p "$SHARED" /root/cohamy-releases "$BACKUP"
 chmod 700 "$SHARED" /root/cohamy-releases /root/cohamy-backups "$BACKUP"
+# Install a checksum-verified Node 22 runtime without changing other applications.
+if [[ ! -x "$SHARED/node22/bin/node" ]]; then
+  curl -fsSL https://nodejs.org/dist/index.json -o "$BACKUP/node-index.json"
+  NODE_VERSION="$(node -e 'const v=require(process.argv[1]).find(v=>/^v22\./.test(v.version)&&v.lts);if(!v)process.exit(1);process.stdout.write(v.version)' "$BACKUP/node-index.json")"
+  NODE_ARCH="$(uname -m)"
+  case "$NODE_ARCH" in x86_64) NODE_ARCH=x64;; aarch64) NODE_ARCH=arm64;; *) exit 2;; esac
+  NODE_ARCHIVE="node-$NODE_VERSION-linux-$NODE_ARCH.tar.xz"
+  curl -fsSL "https://nodejs.org/dist/$NODE_VERSION/$NODE_ARCHIVE" -o "$BACKUP/$NODE_ARCHIVE"
+  curl -fsSL "https://nodejs.org/dist/$NODE_VERSION/SHASUMS256.txt" -o "$BACKUP/node-SHASUMS256.txt"
+  (cd "$BACKUP" && grep " $NODE_ARCHIVE\$" node-SHASUMS256.txt | sha256sum -c -)
+  mkdir -p "$SHARED/node22"
+  tar -xJf "$BACKUP/$NODE_ARCHIVE" --strip-components=1 -C "$SHARED/node22"
+fi
+export PATH="$SHARED/node22/bin:$PATH" COHAMY_NODE_BINARY="$SHARED/node22/bin/node"
+node --version
 cp "$PREVIOUS/.env.production" "$BACKUP/previous.env.production"
 git -C "$PREVIOUS" diff --binary > "$BACKUP/previous-working-tree.patch"
 git -C "$PREVIOUS" rev-parse HEAD > "$BACKUP/previous-sha.txt"
@@ -90,7 +105,7 @@ test "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d "$RESTORE_DB" -A
 test "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d "$RESTORE_DB" -Atc 'SELECT count(*) FROM cohamy_crm.users')" = 1
 (cd "$BACKUP" && sha256sum -c SHA256SUMS)
 
-PORT=4312 npm start > "$BACKUP/candidate.log" 2>&1 &
+node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 4312 > "$BACKUP/candidate.log" 2>&1 &
 CANDIDATE_PID=$!
 trap 'kill "$CANDIDATE_PID" 2>/dev/null || true' EXIT
 for attempt in {1..30}; do if curl -fsS http://localhost:4312/api/health > "$BACKUP/candidate-health.json"; then break; fi; sleep 2; done
