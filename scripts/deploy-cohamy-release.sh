@@ -105,7 +105,9 @@ test "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d "$RESTORE_DB" -A
 test "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d "$RESTORE_DB" -Atc 'SELECT count(*) FROM cohamy_crm.users')" = 1
 (cd "$BACKUP" && sha256sum -c SHA256SUMS)
 
-node node_modules/next/dist/bin/next start --hostname 127.0.0.1 --port 4312 > "$BACKUP/candidate.log" 2>&1 &
+# Next normalizes rewrite hosts to localhost; use the same loopback hostname
+# to avoid self-proxying localized rewrites on the production server.
+node node_modules/next/dist/bin/next start --hostname localhost --port 4312 > "$BACKUP/candidate.log" 2>&1 &
 CANDIDATE_PID=$!
 trap 'kill "$CANDIDATE_PID" 2>/dev/null || true' EXIT
 for attempt in {1..30}; do if curl -fsS http://localhost:4312/api/health > "$BACKUP/candidate-health.json"; then break; fi; sleep 2; done
