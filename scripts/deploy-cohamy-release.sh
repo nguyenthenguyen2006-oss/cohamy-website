@@ -118,7 +118,10 @@ node scripts/crm/verify-production-smoke.mjs http://localhost:4312 "$SHARED/init
 kill "$CANDIDATE_PID" 2>/dev/null || true
 trap - EXIT
 unset CRM_DATABASE_URL CRM_DATABASE_MODE CRM_ENVIRONMENT CRM_PUBLIC_ORIGIN CRM_WEBSITE_ORDER_INTAKE BLOG_SOURCE UPLOAD_DIR NEXT_PUBLIC_UPLOAD_BASE_URL POSTGRES_PASSWORD POSTGRES_USER POSTGRES_DB
-pm2 startOrReload "$RELEASE/ecosystem.config.js" --only cohamy --env production --update-env
+# Reload retains the old npm script/cwd when switching between release directories.
+# Replace only Cohamy's process registration; source/data and other apps are untouched.
+if pm2 describe cohamy >/dev/null 2>&1; then pm2 delete cohamy; fi
+pm2 start "$RELEASE/ecosystem.config.js" --only cohamy --env production --update-env
 pm2 save
 curl --retry 10 --retry-delay 2 --retry-connrefused -fsS https://cohamy.vn/api/health > "$BACKUP/public-health.json"
 printf '%s\n' "$SHA" > "$SHARED/current-sha"
