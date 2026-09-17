@@ -7,6 +7,7 @@ module.exports = {
       interpreter: process.env.COHAMY_NODE_BINARY || process.execPath,
       args: "start",
       cwd: __dirname,
+      exec_mode: "fork",
       instances: 1,
       autorestart: true,
       watch: false,
