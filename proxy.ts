@@ -57,12 +57,12 @@ export default async function proxy(request: NextRequest) {
       return new NextResponse("Nguồn bài viết tạm thời không kết nối được. Vui lòng thử lại sau.", { status: 503, headers: { "Retry-After": "30", "Cache-Control": "no-store", "X-Robots-Tag": "noindex" } });
     }
   }
-  const forwarded=new Headers(request.headers);
   // Always replace a client-supplied value. No query, IP, cookie or referrer is logged.
-  forwarded.set("x-cohamy-public-path",pathname);
-  forwarded.set("x-cohamy-request-time",String(Math.floor(Date.now()/1000)));
-  forwarded.set("x-cohamy-request-id",randomUUID());
-  return intl(new NextRequest(request,{headers:forwarded}));
+  // Preserve Next's original request metadata so localized rewrites are not processed twice.
+  request.headers.set("x-cohamy-public-path",pathname);
+  request.headers.set("x-cohamy-request-time",String(Math.floor(Date.now()/1000)));
+  request.headers.set("x-cohamy-request-id",randomUUID());
+  return intl(request);
 }
 
 export const config = {
