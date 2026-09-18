@@ -53,7 +53,11 @@
     "test:crm:backup": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-backup-guards.ts",
     "test:crm:public-backup": "node --import tsx scripts/crm/verify-public-backup.ts",
     "crm:backup": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/backup-restore.ts",
-    "test:crm:worker-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-worker-postgres.ts"
+    "test:crm:worker-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-worker-postgres.ts",
+    "test:crm:automation": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-care-automation.ts",
+    "test:crm:care-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-care-postgres.ts",
+    "test:crm:care-worker-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-care-worker-postgres.ts",
+    "test:crm:care-browser": "node scripts/crm/verify-care-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

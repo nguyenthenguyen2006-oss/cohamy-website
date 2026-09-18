@@ -1,0 +1,25 @@
+{
+  "testedAt": "2026-09-18T20:51:13.962Z",
+  "environment": "STAGING independent PostgreSQL, actual temporary PM2 worker, fictitious care schedule",
+  "status": "PASS",
+  "elapsedMs": 15353,
+  "clockOrScheduleAdvancedByFixture": false,
+  "cases": [
+    {
+      "name": "Actual worker waits on parent row lock with no committed task or schedule outcome",
+      "status": "PASS"
+    },
+    {
+      "name": "PM2 automatically restarts the killed worker; PostgreSQL aborts its unfinished transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "Restarted worker recovers the unchanged due occurrence and commits exactly one task",
+      "status": "PASS"
+    },
+    {
+      "name": "Another supervised restart preserves one successful occurrence without duplicate work",
+      "status": "PASS"
+    }
+  ]
+}

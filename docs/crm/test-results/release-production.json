@@ -1,0 +1,139 @@
+{
+  "testedAt": "2026-09-18T20:58:37.526Z",
+  "environment": "PRODUCTION read-only release/process/migration/timer verification; no business writes or messages",
+  "status": "PASS",
+  "sourceSha": "9ca064d5a2487c50edb19958962cd9ebb1cf6318",
+  "release": "/root/cohamy-releases/9ca064d5a2487c50edb19958962cd9ebb1cf6318",
+  "nodeVersion": "v22.23.2",
+  "processes": [
+    {
+      "name": "cohamy",
+      "pid": 1925950,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/9ca064d5a2487c50edb19958962cd9ebb1cf6318",
+      "restarts": 0,
+      "nodeBinary": "/root/cohamy-shared/node22/bin/node",
+      "nodeArgs": [
+        "--max-old-space-size=512"
+      ],
+      "maxMemoryBytes": 1073741824
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 1925951,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/9ca064d5a2487c50edb19958962cd9ebb1cf6318",
+      "restarts": 0,
+      "nodeBinary": "/root/cohamy-shared/node22/bin/node",
+      "nodeArgs": [
+        "--env-file=.env.production",
+        "--require",
+        "./scripts/register-server-only.cjs",
+        "--import",
+        "tsx"
+      ],
+      "maxMemoryBytes": 536870912
+    }
+  ],
+  "migrations": [
+    {
+      "name": "001-access-catalog.sql",
+      "checksum": "c51d2c6fc2eec6daac13a2cb4096e888446538897d8dfbe02160169a606e7a3a",
+      "applied_at": "2026-09-17T22:52:52.672Z"
+    },
+    {
+      "name": "002-website-order-intake.sql",
+      "checksum": "984fb3e8fe13fa93fcb33449b3c9892a46a0086c34f2af6a6ae845f6c0ad1b09",
+      "applied_at": "2026-09-17T22:52:52.774Z"
+    },
+    {
+      "name": "003-work-management.sql",
+      "checksum": "579ae67c6c30584e1ac2fbf22bb37b6c3df963173331baa97bfc1c738bd7bc57",
+      "applied_at": "2026-09-17T22:52:52.794Z"
+    },
+    {
+      "name": "004-catalog-management.sql",
+      "checksum": "8d715fac58804e53f85c58bb1e2babd84f972a4490c3968175f52b99f174b5e8",
+      "applied_at": "2026-09-17T22:52:52.831Z"
+    },
+    {
+      "name": "005-workspace-foundation.sql",
+      "checksum": "ce9f3ca39c2a382989b77b3b8f686676d8ca33c86e3caae16a88fddd5cee87c4",
+      "applied_at": "2026-09-18T20:16:28.587Z"
+    },
+    {
+      "name": "006-partner-onboarding.sql",
+      "checksum": "8efe0b6cb384d4a501f12d42a38358acfa579753d67d62540e576d1387163621",
+      "applied_at": "2026-09-18T20:16:28.700Z"
+    },
+    {
+      "name": "007-data-jobs.sql",
+      "checksum": "477edc9d376830723edfa7942498c130c4eb570be070ddf9f0fae6f177810b4c",
+      "applied_at": "2026-09-18T20:16:28.754Z"
+    },
+    {
+      "name": "008-portal-services.sql",
+      "checksum": "686313090388d607f4b019fca0a2d2363ecc7e1c3fd3aa5d055d0ab24573ba2e",
+      "applied_at": "2026-09-18T20:16:28.782Z"
+    },
+    {
+      "name": "009-partner-library.sql",
+      "checksum": "2bdb822918e785812c014667876f694165fe7ab08a8e30cbe266ca8388e35935",
+      "applied_at": "2026-09-18T20:16:28.826Z"
+    },
+    {
+      "name": "010-relationship-care.sql",
+      "checksum": "da47c415fcbb4893cefa2276b67b5271830b956c09c7e1dce68b06ba12482e9d",
+      "applied_at": "2026-09-18T20:16:28.852Z"
+    },
+    {
+      "name": "011-workspace-governance.sql",
+      "checksum": "02c1511214c0b967a1f33b9a8144d66a24ee8f3dd14d0d0503b7e551c3ef8909",
+      "applied_at": "2026-09-18T20:16:28.920Z"
+    }
+  ],
+  "timer": {
+    "status": "active",
+    "nextRun": "Sat 2026-09-19 19:30:05 UTC"
+  },
+  "backup": {
+    "status": "PASS",
+    "at": "2026-09-18T20:37:01.467323+00:00",
+    "release": "/root/cohamy-releases/9ca064d5a2487c50edb19958962cd9ebb1cf6318"
+  },
+  "publicHealth": {
+    "ok": true,
+    "app": "cohamy",
+    "blogSource": "legacy",
+    "blogReady": true,
+    "sheetsConfigured": false,
+    "uploadDirectoryWritable": true,
+    "timestamp": "2026-09-18T20:58:37.517Z"
+  },
+  "cases": [
+    {
+      "name": "Source Git SHA, current release marker and current SHA agree",
+      "status": "PASS"
+    },
+    {
+      "name": "Only Cohamy web/worker checked: exact release cwd and interpreter, online with zero restarts",
+      "status": "PASS"
+    },
+    {
+      "name": "Every deployed SQL migration exists once with its unchanged source checksum",
+      "status": "PASS"
+    },
+    {
+      "name": "Daily Cohamy backup timer is active with a next run",
+      "status": "PASS"
+    },
+    {
+      "name": "Latest scheduled backup completed successfully using the actual deployed release",
+      "status": "PASS"
+    },
+    {
+      "name": "Public HTTPS health responds after metadata verification",
+      "status": "PASS"
+    }
+  ]
+}

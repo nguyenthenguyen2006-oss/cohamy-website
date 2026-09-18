@@ -2,7 +2,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { database, type Sql } from "./db";
-import { audit } from "./auth";
+import { audit, assertCurrentPrincipal } from "./auth";
 import { allPartners, assertPermission, CrmError } from "./permissions";
 import { roles, type CatalogProduct, type Organization, type Principal, type Warehouse } from "./types";
 import bcrypt from "bcryptjs";
@@ -150,8 +150,10 @@ export async function setAccountActive(user: Principal, membershipId: string, in
   if (user.membershipId === membershipId) throw new CrmError("CANNOT_LOCK_OWN_ACCOUNT", 409);
   const db = await database();
   return db.transaction(async tx => {
-    const result = await tx.query<{ user_id: string }>("UPDATE cohamy_crm.memberships SET active=$1 WHERE id=$2 RETURNING user_id", [data.active, membershipId]);
+    await tx.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');await assertCurrentPrincipal(tx,user);
+    const result = await tx.query<{ user_id: string }>("UPDATE cohamy_crm.memberships SET active=$1,version=version+1 WHERE id=$2 RETURNING user_id", [data.active, membershipId]);
     if (!result.rows[0]) throw new CrmError("NOT_FOUND", 404);
+    await tx.query('UPDATE cohamy_crm.sessions SET revoked_at=now() WHERE membership_id=$1 AND revoked_at IS NULL',[membershipId]);
     await audit(tx, user.id, data.active ? "account.unlocked" : "account.locked", membershipId);
     return { id: membershipId, active: data.active };
   });

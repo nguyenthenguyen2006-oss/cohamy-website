@@ -1,0 +1,63 @@
+{
+  "testedAt": "2026-09-18T21:10:34.492Z",
+  "environment": "LOCAL isolated PGlite; fictitious users, no live delivery or business postings",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F103 monthly last-day clamp preserves original day across leap/non-leap months in Vietnam",
+      "status": "PASS"
+    },
+    {
+      "name": "F103 due schedule creates one persisted task; repeat worker ticks create no duplicate",
+      "status": "PASS"
+    },
+    {
+      "name": "F103 pause/edit guards version and source; invalid dates and foreign organization are blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "F103 permission lost before execution pauses schedule and records BLOCKED without partial effects",
+      "status": "PASS"
+    },
+    {
+      "name": "F110 actual application approval event creates exactly one task under enabled template",
+      "status": "PASS"
+    },
+    {
+      "name": "F110 template disable/edit never rewrites an already created task; inactive actor/assignee blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "F105 mentions validate current source scope atomically and never grant assignments",
+      "status": "PASS"
+    },
+    {
+      "name": "F105 follows are durable, idempotent and revoked source scope hides future watcher notifications",
+      "status": "PASS"
+    },
+    {
+      "name": "F109 source deadline/type policy escalates once to configured recipient and stops completed work",
+      "status": "PASS"
+    },
+    {
+      "name": "F121 direct task SQL searches beyond first 200 and paginates without leaking foreign work",
+      "status": "PASS"
+    },
+    {
+      "name": "F101 Vietnam Today cutoff excludes past and tomorrow and keeps source scope",
+      "status": "PASS"
+    },
+    {
+      "name": "F134 latest and effective-current labels are independent of filtering and read receipts",
+      "status": "PASS"
+    },
+    {
+      "name": "F106 preview cannot write; intervening task/assignment version prevents all transfer",
+      "status": "PASS"
+    },
+    {
+      "name": "F106 atomic confirmed handover revokes old scope/session, preserves note actor and retries exactly",
+      "status": "PASS"
+    }
+  ]
+}

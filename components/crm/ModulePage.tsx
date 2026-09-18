@@ -1,4 +1,5 @@
 import {RelationshipPanel,VisitPage,CareDictionaryPage,VisitsIndexPage} from './RelationshipPages';
+import {AutomationPage} from './CareAutomationPages';
 import {SupportPage,AddressesPage,CartPage} from './PortalServicePages';
 import {LibraryPage,DealerMembersPage} from './PartnerLibraryPages';
 import {markCatalogSeen} from '@/lib/crm/partner-library';
@@ -36,6 +37,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   const workQuery=Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string'));
   if(slug==='visits')return id?<VisitPage user={user} id={id}/>:<VisitsIndexPage user={user} query={workQuery}/>;
   if(slug==='care'&&!id)return <CareDictionaryPage user={user}/>;
+  if(slug==='automation'&&area==='crm'&&!id)return <AutomationPage user={user}/>;
   if(slug==='library')return <LibraryPage user={user} id={id} query={workQuery}/>;
   if(slug==='members'&&area==='portal'&&!id)return <DealerMembersPage user={user}/>;
   if(slug==='support')return <SupportPage user={user} id={id} query={workQuery}/>;

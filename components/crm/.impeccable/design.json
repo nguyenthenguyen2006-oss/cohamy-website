@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-18T19:59:39.405Z",
+  "generatedAt": "2026-09-18T21:08:10.485Z",
   "title": "Design System: Cohamy CRM workspace",
   "extensions": {
     "colorMeta": {
@@ -517,7 +517,7 @@
       "name": "Inline disclosure",
       "kind": "custom",
       "refersTo": "disclosure",
-      "description": "Native expandable control used for contextual task creation; preview contains representative help text only.",
+      "description": "Native expandable control shared by contextual task creation, source-record care schedules and configuration histories; preview contains representative help text only and does not create work.",
       "html": "<details class=\"ds-disclosure\"><summary class=\"ds-disclosure-summary\">Tạo việc và đặt hạn</summary><p class=\"ds-disclosure-help\">Người được giao cần có quyền xem hồ sơ này. Thời gian theo thiết bị của bạn.</p></details>",
       "css": ".ds-disclosure{margin-top:16px;font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-disclosure-summary{cursor:pointer;color:#225b86;padding:10px 0;font-size:13px;font-weight:500}.ds-disclosure-summary:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-disclosure[open]>.ds-disclosure-summary{margin-bottom:12px}.ds-disclosure-help{margin:0;font-size:12px;color:#586577;line-height:1.7}"
     },
@@ -556,7 +556,7 @@
   ],
   "narrative": {
     "northStar": "The Cohamy work desk",
-    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented workspace and its CRM/portal extensions, including governance. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.",
+    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented workspace and its CRM/portal extensions, including governance and care automation. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.",
     "keyCharacteristics": [
       "Persistent navy navigation beside white operational surfaces.",
       "Be Vietnam Pro with compact labels and clear page headings.",
@@ -566,7 +566,8 @@
       "Native dialogs and disclosures keep quick actions close to their record.",
       "Dated document-version receipts distinguish acknowledged and current versions.",
       "Explicit impact previews precede bulk updates and role changes.",
-      "Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese."
+      "Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.",
+      "Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language."
     ],
     "rules": [
       {
@@ -599,7 +600,10 @@
       "Do show actual bulk/role impacts before a separate confirmation, and invalidate stale previews.",
       "Do associate custom-key guidance with its control and retain typed values under their definition version.",
       "Do keep quiet-hour rules, mandatory security notices and the current-session marker readable.",
-      "Do lead audit detail with Vietnamese before/after values and keep redacted technical metadata secondary."
+      "Do lead audit detail with Vietnamese before/after values and keep redacted technical metadata secondary.",
+      "Do create recurring care work from its source record and retain named, dated configuration-version histories.",
+      "Do show the complete linked handover inventory, including schedules/rules and the outgoing-session impact, before separate confirmation.",
+      "Do distinguish overdue work, work still due today and effective-current document versions with written labels."
     ],
     "donts": [
       "Don't copy the superseded launcher, floating dock or glass login into this workspace.",
@@ -610,7 +614,9 @@
       "Don't turn a saved draft, won opportunity or acknowledged older file into a completed transaction or current-version receipt.",
       "Don't reinterpret older custom-field values under a new definition or imply that preview means committed change.",
       "Don't substitute raw JSON for readable audit detail or treat the display component as the redaction boundary.",
-      "Don't describe local Edge PASS or deploy permission as production/provider readiness."
+      "Don't describe local Edge PASS or deploy permission as production/provider readiness.",
+      "Don't imply that mentions/followers grant record access or that an automation saved receipt proves notification delivery.",
+      "Don't expand a care verdict scoring two fixes into whole-surface or F001–F140 acceptance."
     ]
   }
 }

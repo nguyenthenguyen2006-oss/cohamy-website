@@ -150,7 +150,7 @@ components:
 
 Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.
 
-This is a scan of the implemented workspace and its CRM/portal extensions, including governance. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
+This is a scan of the implemented workspace and its CRM/portal extensions, including governance and care automation. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
 
 **Key Characteristics:**
 
@@ -163,6 +163,7 @@ This is a scan of the implemented workspace and its CRM/portal extensions, inclu
 - Dated document-version receipts distinguish acknowledged and current versions.
 - Explicit impact previews precede bulk updates and role changes.
 - Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.
+- Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language.
 
 ## Colors
 
@@ -211,6 +212,8 @@ The opportunity board contains five columns, each at least (230px), with (20px) 
 Partner column preferences place visibility, a labeled numeric width and explicit up/down actions in three desktop columns with (16px) gaps and thin row dividers. At the mobile breakpoint, visibility and width share two columns; the wrapping movement actions span the full next row. Column width accepts (80–600px); the implemented defaults are (240px) for the record name and (150px) for other selected fields. The fixed-layout table follows the saved visible order and adds a (120px) quick-view column. Its width is the selected-column sum plus that action column, subject to the existing table minimum; horizontal overflow stays inside the named, keyboard-focusable list region. These widths do not expand the workspace viewport.
 
 Governance previews reuse ordinary forms, headings and record lists rather than a new overlay system. Custom-field definitions, older values and technical audit metadata use native disclosures. Notification hour controls follow the shared two-column form grid, then stack on mobile. Device/session rows wrap their actions on mobile. Technical audit payloads preserve line breaks, inherit the working text font and wrap long content; file checksums also break long strings inside their disclosure.
+
+Care schedules, event rules, escalation settings and handover previews reuse these paper sections, shared field grids and native disclosures. Record-level schedule creation keeps its source implicit; the inventory page links to customer, dealer and request lists to choose the source. Handover inventory groups use ordinary task lists and separate schedule/rule headings with written empty states. The shared mobile rule wraps task-list rows and stacks fields; care automation introduces no separate breakpoint, overlay or card style.
 
 The quick-create dialog uses the frontmatter width and padding with viewport margins (16px per side), a maximum height of (100dvh minus 32px), and centered placement. The quick-detail dialog occupies the right edge, uses the frontmatter width and padding, fills the viewport height and scrolls internally. On mobile the quick-create trigger hides its text and becomes (38px) wide, retaining the accessible name “Tạo nhanh”. These dialog behaviors are separate from the collapsing navigation.
 
@@ -302,11 +305,33 @@ Quick-create and quick-detail are labeled native `dialog` elements opened with `
 
 The record note draft uses an explicit textarea label, serializes overlapping saves and debounces edits by (700ms). Its key carries the record identifier and the request carries record type/version; it is recovered from the scoped draft source. Written receipts distinguish recovered, saving, saved and posted notes. Posting waits for the latest draft save, then clears the draft after adding the note to care history. A draft receipt is not a posted-note receipt, and this implementation does not establish an unload-time flush.
 
+### Care queues, recurrence and event histories
+
+The work desk separates “Việc quá hạn” from “Còn hạn hôm nay”, each with a link to its complete task list. Today help states the interval from now to the end of the Vietnam day; overdue work remains in the preceding group. These sections reuse actual task rows and the shared empty state rather than introducing metric tiles.
+
+“Tạo lịch trên hồ sơ này” opens a native disclosure inside the customer/dealer or request record. The source is supplied by that record, so this entry point does not ask the operator for an identifier. Labeled fields name the recurring work, assignee, work kind, daily/weekly/monthly frequency, interval and next date/time in Vietnam time. The enable checkbox is separate from saving and starts unchecked for a new schedule. Help explains monthly end-of-month handling and that pausing preserves already created work. The inventory writes enabled/paused state, cadence, assignee, kind, next run and a source-record link beside edit/history disclosures.
+
+Event-rule and escalation controls are shown to managers/admins. Rules label their event, generated task, assignee, kind and due interval; new rules start disabled. Escalation explicitly selects the task kind, additional delay and an admin/manager recipient, with its own enable checkbox. Help states that in-app notices follow recipient preferences and quiet hours. Schedule and rule histories retain dated written outcomes, the configuration version used and links to generated tasks where present. Escalation history names its task, policy, recipient and deadline. Empty or failed runs remain readable outcomes; editing a definition is not presented as rewriting an earlier result.
+
+Care configuration forms use a synchronous submission guard, a disabled pending action, “Đang lưu…” text, a written saved status and an alert for request errors. Version-keyed edit forms refresh from the returned inventory; the written “Đã lưu cấu hình.” receipt is local action feedback, not a provider delivery receipt.
+
+### Mentions and task followers
+
+Record notes offer native checkboxes under “Nhắc người có quyền xem hồ sơ”; names come from the candidates supplied for that record. The posted note action carries the selected people while draft feedback still refers to the text draft. The task's “Theo dõi công việc” section names current followers, or writes that none exist, and uses a labeled follow/stop action with distinct saved receipts. Its help states completion/reopen notices and permission checks for each notice. These controls do not imply that mentioning or following grants record access.
+
+### Complete Sales handover preview
+
+Sales handover uses two named Sales selects and a required reason, followed by the secondary “Xem trước bàn giao” action. The preview writes counts for partners, requests, unfinished tasks, schedules, rules and the outgoing person's sessions. It lists linked partner/request/task records and separate named inventories for “Lịch lặp sẽ chuyển” and “Quy tắc sẽ chuyển”; either empty inventory says that nothing needs transfer. Schedule/rule links lead to their anchored entries in the automation inventory, so counts alone do not substitute for inspectable scope.
+
+Before the primary “Xác nhận toàn bộ bàn giao” action, written impact help states that note/history authors remain intact, care scope moves to the recipient, their existing assignments remain, and outgoing sessions end. Changing a form input clears the preview and saved receipt. Submission is guarded and pending actions are disabled; errors use alert semantics. Confirmation clears the preview and reports “Đã bàn giao và kết thúc phiên cũ.” with status semantics. Keep the full inventory and session consequence adjacent to confirmation; preview remains distinct from completed handover.
+
 ### Private documents and current receipts
 
 Document rows link to a specific private-file version and show title, version number, filename and file size. The upload disclosure lets the user create a document or add a version using a native file input labeled PDF, PNG or JPEG, maximum (8 MB). Acknowledgement is attached to the version: an unacknowledged row offers “Xác nhận đã đọc”, while an acknowledged row replaces that action with “Đã xác nhận” and its dated own-user receipt. The shared action reports pending, error and successful acknowledgement states.
 
 Library lists and detail headings distinguish draft, published and withdrawn content with written labels. Publication controls expose audience, unit scope, effective/expiry dates and required reading; the form error explains that a file is required before publication. Required-reading text refers to acknowledgement of the current version. Older receipts remain attached to their earlier versions and do not make the current-version requirement complete.
+
+Record document rows additionally distinguish “Bản hiện hành”, “Bản mới nhất chưa có hiệu lực hoặc đã hết hạn” and “Bản lưu lịch sử”. Effective and expiry dates remain visible beside the version's file facts and its own acknowledgement receipt. The newest upload is not automatically described as the effective current version.
 
 ### Portal operation groups
 
@@ -315,6 +340,8 @@ Staff rows distinguish the owner from staff and active from locked state in writ
 The earlier scoped finish review ended with disposition ship after four UI fixes: the mobile profile accessible name, early mobile customer context, contextual task creation and removed login eyebrow. The extension's review scored its two action-state findings resolved and returned disposition ship. The final governance review also returned disposition ship after resolving two findings: readable Vietnamese audit comparisons with secondary technical metadata, and associated custom-key format/example/invalid-input guidance. Those verdicts score their recorded findings; they do not certify the whole CRM/portal inventory.
 
 Governance browser evidence in `docs/crm/test-results/governance-browser-local.json` reports (9/9) PASS in real Edge/Next with an isolated local QA database, no page errors and (19) screenshot paths spanning desktop (1366px), mobile (390px) and narrow mobile (320px). It covers persistence and the recorded governance workflows. This is local UI evidence, not a statement about production deployment, live provider readiness, complete backend correctness or unopened stock/financial workflows. The earlier local/staging-only scope in `PRODUCT.md` is superseded by the user's explicit push/deploy authorization; authorization is distinct from successful deployment evidence. No commercial policy is inferred here. The sidecar is a preview of visual primitives; its fragment links, inline-open dialog samples and sample text do not perform application actions.
+
+The care review packet at `.impeccable/review/care/packet.md` limits its cohort to Today, recurrence, mentions/followers, Sales handover, configured escalation, event-generated tasks and effective-current document labels. Its finish verdict scored two fixes resolved—inspectable schedule/rule handover inventories and saved-receipt evidence—and returned disposition ship at those fixes only. The packet records fictitious LOCAL QA captures at desktop (1366×900), mobile (390×844) and narrow mobile (320×844), with real Edge/Next behavior (9/9) PASS. These evidence statements do not extend the verdict to every state, the whole F001–F140 inventory, production deployment or live Brevo delivery.
 
 ## Do's and Don'ts
 
@@ -334,6 +361,9 @@ Governance browser evidence in `docs/crm/test-results/governance-browser-local.j
 - Do associate custom-key guidance with its control and retain typed values under their definition version.
 - Do keep quiet-hour rules, mandatory security notices and the current-session marker readable.
 - Do lead audit detail with Vietnamese before/after values and keep redacted technical metadata secondary.
+- Do create recurring care work from its source record and retain named, dated configuration-version histories.
+- Do show the complete linked handover inventory, including schedules/rules and the outgoing-session impact, before separate confirmation.
+- Do distinguish overdue work, work still due today and effective-current document versions with written labels.
 
 ### Don't:
 
@@ -346,3 +376,5 @@ Governance browser evidence in `docs/crm/test-results/governance-browser-local.j
 - Don't reinterpret older custom-field values under a new definition or imply that preview means committed change.
 - Don't substitute raw JSON for readable audit detail or treat the display component as the redaction boundary.
 - Don't describe local Edge PASS or deploy permission as production/provider readiness.
+- Don't imply that mentions/followers grant record access or that an automation saved receipt proves notification delivery.
+- Don't expand a care verdict scoring two fixes into whole-surface or F001–F140 acceptance.

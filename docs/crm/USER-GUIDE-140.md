@@ -4,11 +4,17 @@ Applicant: open localized Dành cho đối tác page -> register -> complete pro
 
 Admin: /crm/applications filters review queue; open application -> ask for details / reject with reason / choose existing dealer or create new dealer and assign dealer role + optional sales. /crm/invitations creates expiring links; revoke unused links.
 
-Sales/manager: customer/dealer record has contacts, contact preferences/tags/opportunities/visits, document versions, notes with autosaved drafts, tasks and checklist/prerequisites. Search and personal pinned list always follow current scope. Column picker persists visibility.
+Sales/manager: customer/dealer record has contacts, contact preferences/tags/opportunities/visits, document versions, notes with autosaved drafts, tasks and checklist/prerequisites. Search and personal pinned list always follow current scope. Column picker persists visibility, ordering and widths.
 
 Excel: /crm/data imports XLSX up to 2 MB / 500 rows, header in row 1, numeric column mapping; preview all errors before confirm. Import write is atomic if a code conflicts after preview. Export chooses partner kind, current keyword and columns; refresh job page until complete and download the private XLSX. Export limit 5000 records.
 
 Dealer: /portal/cart saves SKU/base-unit draft lines across sessions/devices; it does not create a priced commercial order. /portal/addresses allows owner to manage/default/deactivate addresses; staff reads them. /portal/support creates and follows support threads, replies and uploads PDF/PNG/JPEG; Cohamy internal notes remain hidden. Owner manages own staff lock/unlock in /portal/members; locks revoke sessions and unlocking requires fresh login. /portal/library shows only published role/organization-scoped documents and effective policy versions, with acknowledgements reflected in onboarding. Owner invitation link can only invite staff into their own dealer; Cohamy approves membership.
+
+Care automation: create a schedule inside the customer/dealer/request record. Choose assignee, task kind, Vietnam start time and daily/weekly/monthly cadence; enable explicitly (default off). Monthly cadence retains its original day and clamps to short months. /crm/automation lists named schedules, per-version run outcomes, configured event rules and escalation policies. Pausing affects future runs, preserves already created work; revoked scope records BLOCKED and pauses the schedule. A worker restart retries an uncommitted occurrence without creating a second task. Rules start with events committed after activation; changing a template does not rewrite earlier tasks. Escalation uses actual task due time/type and one configured manager; completed tasks are excluded and in-app preferences/quiet hours apply.
+
+Notes allow mentions only of current users permitted to read the source; mentioning never grants access. Task followers get scoped completion/reopen notices. Today separates overdue from work remaining before Vietnam midnight and shows the administrator applicant queue. Document files distinguish overall latest, effective-current and historical versions, with acknowledgement for each version.
+
+Sales handover: /crm/automation -> choose outgoing and receiving active Sales -> give reason -> preview. Inspect every customer/dealer, website request, unfinished task, future schedule and event rule. Nothing transfers until separate confirmation; changed versions invalidate the entire preview. Confirmation transfers current care responsibility, preserves historic authors and ends outgoing sessions.
 
 Notifications: mark messages read in /crm|portal/notifications. Task notification opt-out in workspace. Profile lists sessions and can revoke one immediately.
 

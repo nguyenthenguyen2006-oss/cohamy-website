@@ -1,0 +1,217 @@
+{
+  "status": "PASS",
+  "completedAt": "2026-09-18T20:37:01.436Z",
+  "sourceDatabase": "cohamy_crm",
+  "restoreDatabase": "cohamy_restore_40b8c5117a80472cb539f6ab1258c4ce",
+  "restoreRetained": false,
+  "sha256": "ce147915d480497483deee360f56e47e46a38fcb2a3b5c38837513e232c9fa78",
+  "tableCount": 49,
+  "rows": [
+    {
+      "table": "activities",
+      "count": "0"
+    },
+    {
+      "table": "applicant_sessions",
+      "count": "0"
+    },
+    {
+      "table": "application_history",
+      "count": "0"
+    },
+    {
+      "table": "application_verifications",
+      "count": "0"
+    },
+    {
+      "table": "audit_events",
+      "count": "27"
+    },
+    {
+      "table": "bulk_previews",
+      "count": "0"
+    },
+    {
+      "table": "care_reasons",
+      "count": "0"
+    },
+    {
+      "table": "care_tags",
+      "count": "0"
+    },
+    {
+      "table": "contact_preferences",
+      "count": "0"
+    },
+    {
+      "table": "custom_field_definitions",
+      "count": "0"
+    },
+    {
+      "table": "custom_field_values",
+      "count": "0"
+    },
+    {
+      "table": "custom_field_versions",
+      "count": "0"
+    },
+    {
+      "table": "custom_value_history",
+      "count": "0"
+    },
+    {
+      "table": "data_jobs",
+      "count": "0"
+    },
+    {
+      "table": "dealer_addresses",
+      "count": "0"
+    },
+    {
+      "table": "dealer_carts",
+      "count": "0"
+    },
+    {
+      "table": "document_reads",
+      "count": "0"
+    },
+    {
+      "table": "document_versions",
+      "count": "0"
+    },
+    {
+      "table": "login_attempts",
+      "count": "2"
+    },
+    {
+      "table": "memberships",
+      "count": "2"
+    },
+    {
+      "table": "migrations",
+      "count": "11"
+    },
+    {
+      "table": "notifications",
+      "count": "0"
+    },
+    {
+      "table": "onboarding_progress",
+      "count": "0"
+    },
+    {
+      "table": "opportunities",
+      "count": "0"
+    },
+    {
+      "table": "opportunity_history",
+      "count": "0"
+    },
+    {
+      "table": "organizations",
+      "count": "1"
+    },
+    {
+      "table": "partner_applications",
+      "count": "0"
+    },
+    {
+      "table": "partner_assignments",
+      "count": "0"
+    },
+    {
+      "table": "partner_contacts",
+      "count": "0"
+    },
+    {
+      "table": "partner_invitations",
+      "count": "0"
+    },
+    {
+      "table": "partner_library",
+      "count": "0"
+    },
+    {
+      "table": "partner_tags",
+      "count": "0"
+    },
+    {
+      "table": "partner_visits",
+      "count": "0"
+    },
+    {
+      "table": "private_documents",
+      "count": "0"
+    },
+    {
+      "table": "products",
+      "count": "10"
+    },
+    {
+      "table": "saved_filters",
+      "count": "0"
+    },
+    {
+      "table": "sessions",
+      "count": "13"
+    },
+    {
+      "table": "support_messages",
+      "count": "0"
+    },
+    {
+      "table": "support_tickets",
+      "count": "0"
+    },
+    {
+      "table": "task_checklist",
+      "count": "0"
+    },
+    {
+      "table": "task_dependencies",
+      "count": "0"
+    },
+    {
+      "table": "tasks",
+      "count": "0"
+    },
+    {
+      "table": "users",
+      "count": "2"
+    },
+    {
+      "table": "warehouse_assignments",
+      "count": "0"
+    },
+    {
+      "table": "warehouses",
+      "count": "0"
+    },
+    {
+      "table": "website_orders",
+      "count": "0"
+    },
+    {
+      "table": "workspace_bookmarks",
+      "count": "0"
+    },
+    {
+      "table": "workspace_drafts",
+      "count": "0"
+    },
+    {
+      "table": "workspace_preferences",
+      "count": "0"
+    }
+  ],
+  "fileIntegrityErrors": "0",
+  "documentSourceErrors": "0",
+  "directory": "/root/cohamy-backups/scheduled/2026-09-18T203659645Z-3e1a1d60",
+  "snapshotConsistent": true,
+  "publicFiles": {
+    "count": 0,
+    "bytes": 0,
+    "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "restored": true
+  }
+}

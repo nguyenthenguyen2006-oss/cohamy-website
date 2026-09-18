@@ -4,6 +4,7 @@ import {CrmError} from '@/lib/crm/permissions';
 import * as o from '@/lib/crm/onboarding';
 import {parse} from '@/lib/crm/workspace';
 import {z} from 'zod';
+import {afterCareCommit} from '@/lib/crm/after-care';
 type Context={params:Promise<{action:string}>};
 async function applicant(){const id=await o.applicantIdentity((await cookies()).get(o.APPLICANT_COOKIE)?.value);if(!id)throw new CrmError('UNAUTHORIZED',401);return id;}
 export async function GET(request:Request,context:Context){try{const {action}=await context.params,q=Object.fromEntries(new URL(request.url).searchParams);
@@ -23,7 +24,7 @@ export async function POST(request:Request,context:Context){try{sameOrigin(reque
  if(action==='invitation')return json(await o.createInvitation(await apiUser(),input));
  const d=parse(z.object({id:z.uuid(),data:z.unknown().optional()}).strict(),input);
  if(action==='reviewer')return json(await o.assignReviewer(await apiUser(),d.id,d.data));
- if(action==='review')return json(await o.reviewApplication(await apiUser(),d.id,d.data));
+ if(action==='review'){const result=await o.reviewApplication(await apiUser(),d.id,d.data);afterCareCommit();return json(result);}
  if(action==='invitation-revoke')return json(await o.revokeInvitation(await apiUser(),d.id));
  throw new CrmError('NOT_FOUND',404);
 }catch(e){return apiError(e);}}

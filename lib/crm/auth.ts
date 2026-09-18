@@ -69,6 +69,17 @@ export async function membershipPrincipal(id: string, sql?: Sql): Promise<Princi
   const result=await(sql??await database()).query<IdentityRow>(`${principalSelect} WHERE m.id=$1 AND u.active AND m.active AND o.active`,[id]);
   return result.rows[0]?principal(result.rows[0]):null;
 }
+// Request authentication can precede a lock or role change. Hold the current
+// identity rows until the write commits, rather than trusting that snapshot.
+export async function assertCurrentPrincipal(sql: Sql, user: Principal): Promise<void> {
+  const result = await sql.query<IdentityRow>(`${principalSelect}
+    WHERE m.id=$1 AND u.active AND m.active AND o.active FOR SHARE OF m,u,o`, [user.membershipId]);
+  const current = result.rows[0] ? principal(result.rows[0]) : null;
+  if (!current || current.id !== user.id || current.role !== user.role ||
+      current.organizationId !== user.organizationId || current.area !== user.area) {
+    throw new CrmError('FORBIDDEN', 403);
+  }
+}
 export async function logout(token?: string) {
   if (!token) return;
   const db = await database();

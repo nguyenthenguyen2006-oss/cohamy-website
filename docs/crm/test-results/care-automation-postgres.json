@@ -1,0 +1,35 @@
+{
+  "testedAt": "2026-09-18T21:11:15.274Z",
+  "environment": "STAGING dedicated QA PostgreSQL, real multi-connection contention; no real business postings",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F103 concurrent PostgreSQL scheduler ticks create exactly one task and immutable successful occurrence",
+      "status": "PASS"
+    },
+    {
+      "name": "F104 opposite concurrent dependencies cannot commit a cycle",
+      "status": "PASS"
+    },
+    {
+      "name": "F109 simultaneous PostgreSQL escalation ticks persist one log and one transactional notification",
+      "status": "PASS"
+    },
+    {
+      "name": "F110 concurrent PostgreSQL event consumers create one task per actual event/template",
+      "status": "PASS"
+    },
+    {
+      "name": "F110 actual approved application event is consumed once concurrently in PostgreSQL",
+      "status": "PASS"
+    },
+    {
+      "name": "Locked PostgreSQL identity cannot finish a task, post notes or edit checklist from a stale authenticated snapshot",
+      "status": "PASS"
+    },
+    {
+      "name": "F106 PostgreSQL handover competing with old-owner task creation commits a coherent complete outcome",
+      "status": "PASS"
+    }
+  ]
+}

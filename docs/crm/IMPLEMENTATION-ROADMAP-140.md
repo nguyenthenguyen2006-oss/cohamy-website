@@ -6,7 +6,7 @@ Delivered source batches: P1 private workspace/docs/jobs plus P2 open registrati
 
 1. Complete P1 UI details: column ordering/width, filter edit/default, bulk preview, custom fields, MFA/recovery, session metadata, richer audit and real restart/restore.
 2. Complete P2 acceptance: real authorized Brevo delivery, PostgreSQL competing reviews, applicant attachment requests, per-capability dealer permissions and first commercial request completion; duplicate preview, selected supplementation and staff locking/library are in source.
-3. Complete P3: merge preview/history, cross-source opportunity links and samples, recurrence/watchers/handoff/escalation/rules with durable event jobs.
+3. Complete P3: input duplicate/business-ID warnings, merge preview/history, cross-source opportunity links and samples. Recurrence/watchers/handoff/escalation/rules are implemented with PostgreSQL contention, actual worker recovery and Edge evidence, pending the current release.
 4. P4: configure versioned D04/D05; implement pricing/quotes, portal preview/checkout and commercial orders with immutable price/address/policy snapshots and independent order/delivery/payment states.
 5. P5: precise unit ratios, lot/owner ledger, reservations, transfer/count/quarantine and procurement. PostgreSQL multiconnection E06/E07/E08 gates mandatory.
 6. P6: source-linked picking/packing/parcels/trips/delivery/returns. Carrier callbacks only after contract and credentials are ready.

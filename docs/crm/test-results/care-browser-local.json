@@ -1,0 +1,66 @@
+{
+  "testedAt": "2026-09-18T21:02:55.036Z",
+  "environment": "LOCAL real Edge/Next, isolated fictitious QA data; actual committed events and after-response durable ticks, no real provider sends",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F103 contextual schedule form persists Vietnam time and a single actual occurrence/task",
+      "status": "PASS"
+    },
+    {
+      "name": "F105 actual mention selection creates scoped notification, then survives reload in history",
+      "status": "PASS"
+    },
+    {
+      "name": "F105 follow control and actual completion notify without granting scope",
+      "status": "PASS"
+    },
+    {
+      "name": "F110 UI event rule uses a newly committed actual partner event exactly once",
+      "status": "PASS"
+    },
+    {
+      "name": "F109 configured UI recipient receives one overdue escalation while completed work is excluded",
+      "status": "PASS"
+    },
+    {
+      "name": "F134 current document label is independent of future latest version and its own read receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "F101 dashboard separates overdue from remaining-today work and links the actual application queue",
+      "status": "PASS"
+    },
+    {
+      "name": "F106 UI handover preview makes no changes; explicit confirmation transfers scope and revokes old session",
+      "status": "PASS"
+    },
+    {
+      "name": "Care controls and history fit desktop, 390px and 320px viewports",
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    ".impeccable/review/care/context-schedule-desktop.png",
+    ".impeccable/review/care/schedule-history-desktop.png",
+    ".impeccable/review/care/mentions-desktop.png",
+    ".impeccable/review/care/follow-desktop.png",
+    ".impeccable/review/care/rule-desktop.png",
+    ".impeccable/review/care/rule-history-desktop.png",
+    ".impeccable/review/care/sla-desktop.png",
+    ".impeccable/review/care/sla-history-desktop.png",
+    ".impeccable/review/care/document-versions-desktop.png",
+    ".impeccable/review/care/today-desktop.png",
+    ".impeccable/review/care/handover-preview-desktop.png",
+    ".impeccable/review/care/handover-saved-desktop.png",
+    ".impeccable/review/care/automation-390.png",
+    ".impeccable/review/care/context-schedule-390.png",
+    ".impeccable/review/care/follow-390.png",
+    ".impeccable/review/care/today-390.png",
+    ".impeccable/review/care/automation-320.png",
+    ".impeccable/review/care/context-schedule-320.png",
+    ".impeccable/review/care/follow-320.png",
+    ".impeccable/review/care/today-320.png"
+  ],
+  "pageErrors": []
+}

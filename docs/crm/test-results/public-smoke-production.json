@@ -1,0 +1,39 @@
+{
+  "environment": "https://cohamy.vn",
+  "scope": "read-only except administrator login/logout; no order, partner, task or outbound-message writes",
+  "testedAt": "2026-09-18T20:38:14.773Z",
+  "cases": [
+    {
+      "name": "Health and retained configured blog source",
+      "status": "PASS"
+    },
+    {
+      "name": "Private request API requires authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "Old localized CRM links recover to login",
+      "status": "PASS"
+    },
+    {
+      "name": "Initial administrator authenticates against PostgreSQL",
+      "status": "PASS"
+    },
+    {
+      "name": "CRM pages render actual production data",
+      "status": "PASS"
+    },
+    {
+      "name": "Scoped intake/task APIs preserve valid persisted responses",
+      "status": "PASS"
+    },
+    {
+      "name": "Website and localized products remain available",
+      "status": "PASS"
+    },
+    {
+      "name": "Logout revokes server session",
+      "status": "PASS"
+    }
+  ]
+}
