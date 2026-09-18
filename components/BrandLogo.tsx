@@ -23,7 +23,7 @@ export function BrandLogo({ className = "", height = 40 }: BrandLogoProps) {
       width={Math.max(1, Math.round(height * 4))}
       height={height}
       className={`block w-auto max-w-none object-contain ${className}`}
-      style={{ height }}
+      style={{ height, width: "auto" }}
     />
   );
 }

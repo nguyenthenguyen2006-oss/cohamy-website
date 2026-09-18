@@ -11,6 +11,7 @@ export const organizationSchema = z.object({
   code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),
   name: z.string().trim().min(2).max(200), kind: z.enum(["DEALER", "CUSTOMER", "SUPPLIER"]),
   phone: z.string().trim().max(40).default(""), email: z.union([z.literal(""), z.email()]).default(""),
+  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(""),
   address: z.string().trim().max(500).default(""),
   source: z.string().trim().max(120).default(""), segment: z.string().trim().max(120).default(""),
   contactName: z.string().trim().max(120).default(""), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),
@@ -18,7 +19,7 @@ export const organizationSchema = z.object({
 const updateSchema = organizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() });
 const warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid() }).strict();
 const accountSchema = z.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() }).strict();
-const organizationColumns = "o.id,o.code,o.name,o.kind,o.phone,o.email,o.address,o.active,o.version,o.created_at,o.source,o.segment,o.contact_name,o.stage";
+const organizationColumns = "o.id,o.code,o.name,o.kind,o.phone,o.email,o.address,o.active,o.version,o.created_at,o.source,o.segment,o.contact_name,o.stage,o.business_id,o.merged_into_id";
 const parse = <T>(schema: z.ZodType<T>, input: unknown): T => {
   const result = schema.safeParse(input);
   if (!result.success) throw new CrmError("INVALID_FIELDS", 400);
@@ -26,8 +27,8 @@ const parse = <T>(schema: z.ZodType<T>, input: unknown): T => {
 };
 export function partnerScope(user: Principal): { sql: string; params: unknown[] } {
   if (allPartners(user)) return { sql: "true", params: [] };
-  if (user.area === "portal") return { sql: "o.id=$1", params: [user.organizationId] };
-  if (user.role === "SALES") return { sql: "EXISTS (SELECT 1 FROM cohamy_crm.partner_assignments a WHERE a.organization_id=o.id AND a.membership_id=$1)", params: [user.membershipId] };
+  if (user.area === "portal") return { sql: "(o.id=$1 OR o.merged_into_id=$1)", params: [user.organizationId] };
+  if (user.role === "SALES") return { sql: "EXISTS (SELECT 1 FROM cohamy_crm.partner_assignments a WHERE a.organization_id=COALESCE(o.merged_into_id,o.id) AND a.membership_id=$1)", params: [user.membershipId] };
   return { sql: "false", params: [] };
 }
 export async function listOrganizations(user: Principal, options: { kind?: string; q?: string; page?: number; tags?:string } = {}) {
@@ -35,7 +36,7 @@ export async function listOrganizations(user: Principal, options: { kind?: strin
   const db = await database();
   const scope = partnerScope(user);
   const params = [...scope.params];
-  let where = `(${scope.sql})`;
+  let where = `(${scope.sql}) AND o.merged_into_id IS NULL`;
   if (options.kind) { params.push(options.kind); where += ` AND o.kind=$${params.length}`; }
   if (options.q) { params.push(`%${options.q.slice(0, 120)}%`); where += ` AND (o.name ILIKE $${params.length} OR o.code ILIKE $${params.length} OR o.phone ILIKE $${params.length} OR o.email ILIKE $${params.length})`; }
   if(options.tags){const ids=options.tags.split(',');parse(z.array(z.uuid()).max(30),ids);for(const id of new Set(ids)){params.push(id);where+=` AND EXISTS(SELECT 1 FROM cohamy_crm.partner_tags t WHERE t.organization_id=o.id AND t.tag_id=$${params.length})`;}}
@@ -54,6 +55,7 @@ export async function getOrganization(user: Principal, id: string, tx?: Sql) {
   if (!result.rows[0]) throw new CrmError("NOT_FOUND", 404);
   return result.rows[0];
 }
+export async function assertWritableOrganization(sql:Sql,user:Principal,id:string) {const row=await getOrganization(user,id,sql);if(row.merged_into_id)throw new CrmError('PARTNER_MERGED',409);return row;}
 export async function listOrganizationOptions(user: Principal) {
   // Creation selectors must not lose Cohamy or older dealers after the first
   // paginated list fills up. Only privileged writers can enumerate these.
@@ -71,9 +73,10 @@ export async function createOrganization(user: Principal, input: unknown) {
   if (data.kind === "SUPPLIER" && !["ADMIN", "MANAGER"].includes(user.role)) throw new CrmError("FORBIDDEN", 403);
   const db = await database();
   return db.transaction(async tx => {
+    await assertCurrentPrincipal(tx,user);
     const id = randomUUID();
     await tx.query(`INSERT INTO cohamy_crm.organizations(id,code,name,kind,phone,email,address) VALUES ($1,$2,$3,$4,$5,$6,$7)`, [id, data.code, data.name, data.kind, data.phone, data.email, data.address]);
-    await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id]);
+    await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4,business_id=$6 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id,data.businessId]);
     if (user.role === "SALES") await tx.query("INSERT INTO cohamy_crm.partner_assignments(membership_id,organization_id) VALUES ($1,$2)", [user.membershipId, id]);
     await audit(tx, user.id, "partner.created", id, { kind: data.kind });
     return { id };
@@ -84,12 +87,14 @@ export async function updateOrganization(user: Principal, id: string, input: unk
   const data = parse(updateSchema, input);
   const db = await database();
   return db.transaction(async tx => {
+    await assertCurrentPrincipal(tx,user);
     const original = await getOrganization(user, id, tx);
+    if(original.merged_into_id)throw new CrmError("PARTNER_MERGED",409);
     if (original.kind === "COHAMY" || data.kind !== original.kind) throw new CrmError("ORGANIZATION_KIND_IMMUTABLE", 409);
     const result = await tx.query<{ id: string }>(`UPDATE cohamy_crm.organizations SET code=$1,name=$2,phone=$3,email=$4,address=$5,active=$6,version=version+1 WHERE id=$7 AND version=$8 RETURNING id`, [data.code, data.name, data.phone, data.email, data.address, data.active, id, data.version]);
     if (!result.rows.length) throw new CrmError("VERSION_CONFLICT", 409);
-    await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id]);
-    await audit(tx, user.id, "partner.updated", id, {before:{code:original.code,name:original.name,phone:original.phone,email:original.email,address:original.address,active:original.active,source:original.source,segment:original.segment,contactName:original.contact_name,stage:original.stage,version:original.version},after:{...data,version:data.version+1},reason:"Profile edited by authorized user"});
+    await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4,business_id=$6 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id,data.businessId]);
+    await audit(tx, user.id, "partner.updated", id, {before:{code:original.code,name:original.name,phone:original.phone,email:original.email,address:original.address,active:original.active,source:original.source,segment:original.segment,contactName:original.contact_name,stage:original.stage,businessId:original.business_id,version:original.version},after:{...data,version:data.version+1},reason:"Profile edited by authorized user"});
     return { id, version: data.version + 1 };
   });
 }

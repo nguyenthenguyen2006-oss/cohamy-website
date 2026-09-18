@@ -150,7 +150,7 @@ components:
 
 Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.
 
-This is a scan of the implemented workspace and its CRM/portal extensions, including governance and care automation. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
+This is a scan of the implemented workspace and its CRM/portal extensions, including governance, care automation and duplicate/merge controls. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
 
 **Key Characteristics:**
 
@@ -164,6 +164,7 @@ This is a scan of the implemented workspace and its CRM/portal extensions, inclu
 - Explicit impact previews precede bulk updates and role changes.
 - Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.
 - Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language.
+- Before-save duplicate warnings, explicit merge results and dated saved-impact disclosures preserve record context.
 
 ## Colors
 
@@ -215,6 +216,8 @@ Governance previews reuse ordinary forms, headings and record lists rather than 
 
 Care schedules, event rules, escalation settings and handover previews reuse these paper sections, shared field grids and native disclosures. Record-level schedule creation keeps its source implicit; the inventory page links to customer, dealer and request lists to choose the source. Handover inventory groups use ordinary task lists and separate schedule/rule headings with written empty states. The shared mobile rule wraps task-list rows and stacks fields; care automation introduces no separate breakpoint, overlay or card style.
 
+Duplicate warnings sit after the partner field grid and before the save actions. Merge choices use that same grid, then a flat paper preview groups before/after facts, resulting contact/default settings and native inventory disclosures beside the consequences and confirmation. Fact labels use muted (11px) text and values use (13px); long values wrap inside the workspace. Saved merge details reuse the same fact renderer within a native history disclosure. Source archives use ordinary read-only facts and a link to the retained record, with no edit or work-creation controls. These extensions use the existing mobile field stacking and introduce no new visual tokens or breakpoint.
+
 The quick-create dialog uses the frontmatter width and padding with viewport margins (16px per side), a maximum height of (100dvh minus 32px), and centered placement. The quick-detail dialog occupies the right edge, uses the frontmatter width and padding, fills the viewport height and scrolls internally. On mobile the quick-create trigger hides its text and becomes (38px) wide, retaining the accessible name “Tạo nhanh”. These dialog behaviors are separate from the collapsing navigation.
 
 The login uses equal story/form columns on desktop. Its form box has a maximum width of (460px), desktop padding (60px 36px), and logo width (180px). Mobile hides the story and uses padding (55px 25px); it does not shrink the inputs.
@@ -249,6 +252,8 @@ Login fields have minimum height (48px), left inset (42px), right inset (45px), 
 
 The custom-field key has associated guidance through `aria-describedby`: (2–40) characters, starting with a lowercase Latin letter, followed only by lowercase Latin letters, digits or underscores. The visible example is `muc_tieu_thang`. Native invalid-input feedback repeats that format in Vietnamese, and editing clears the custom validity message. Existing keys are read-only. Keep this help beside the field; it also tells the operator not to use keys for passwords, OTPs or tokens. Required custom values retain their written marker and type-appropriate control; a checkbox's false value is a valid boolean, not an absent required value.
 
+Partner forms include the labeled “Mã doanh nghiệp / mã số thuế” field alongside phone and email. Editing any of these identifiers clears earlier duplicate results and announces “Đang kiểm tra thông tin trùng…” in a polite live region; the request follows a (450ms) pause. Normalized matches appear before save in the ordinary status-note treatment, with linked accessible record names/codes and written match reasons. Results remain within the operator's record access; hidden records are not disclosed. Failed checks use an alert and explain that editing a contact field retries the check. The warning asks the operator to inspect existing records and explicitly states that it does not automatically merge or delete them; it is distinct from the save result.
+
 ### Cards / Containers
 
 Work sections and record forms are white, rule-bounded containers with the section corner and padding. Table sections remove side/bottom padding around the table while retaining inset headings. Filter bars use the medium corner, (18px) padding and a wrapping flex layout; mobile padding is (14px). These are task groups, not ornamental dashboard tiles.
@@ -280,6 +285,16 @@ Filter-saving remains inside its disclosure and separates the name, shared-use c
 Bulk actions select records on the current list page, choose a care stage or activate/deactivate action and require a reason. The first action is secondary and reads “Xem tác động trước khi áp dụng”; the preview lists each record with written before/after values. A separate primary confirmation applies that preview. Editing any form input invalidates the preview. The UI explains its (10-minute) lifetime and the all-or-nothing contract: changed permissions or versions block the whole batch. Errors identify affected records; success reports the applied count. Preserve this distinction between preview and committed change, without presenting a preview as a saved update.
 
 Changing an account role first displays the actual account, old/new roles, affected session count, new scope and written permissions. It also explains that earlier customer/warehouse assignments are cleared and need reassignment. “Áp dụng quyền đã xem” applies the membership version from that preview; changing the role selection clears the preview. The role choices remain within the account's internal/dealer role family. The profile's “Quyền đang áp dụng” panel states the effective scope and that server checks still govern actions. These impact summaries belong beside the action, before its primary confirmation.
+
+### Duplicate merge preview, saved impact and source archive
+
+“Gộp hồ sơ trùng có preview” is a native disclosure for CRM admins/managers on an active, unmerged source record. It names the source's future historical state, asks for a same-kind retained record and a required reason, and presents explicit source/target choices for identity/contact fields, care stage, contact preferences, primary contact and default address. Choices start at “Giữ từ hồ sơ đích”. The secondary “Xem tác động gộp” action is separate from the primary “Xác nhận toàn bộ lần gộp”; changing a form input clears the preview and saved receipt.
+
+The preview uses flat definition lists for written field before/after values, translating the care stage and naming missing values “Chưa ghi nhận”. “Kết quả liên hệ và mặc định sau gộp” exposes the resulting preferences, primary contact and default address before confirmation. Choosing a source without a primary contact explicitly shows no resulting primary contact and removal of earlier primary markers; an absent selected default address explicitly shows no default address. Missing source preferences instead retain existing target preferences and display the fallback explanation. A separate native disclosure retains the earlier settings. “Liên kết bị ảnh hưởng” groups named inventory items with counts and written “Theo hồ sơ đích” or “Giữ nguyên nguồn lịch sử” dispositions, including a written empty state. Counts alone do not substitute for this inspectable inventory.
+
+The preview states its (10-minute) lifetime and all-or-nothing confirmation contract. Changed data or links clear the failed confirmation preview and explain how to create a fresh one; expiry, busy data and conflicting memberships have written recovery messages. A synchronous guard and disabled pending actions serialize submission. A lost connection asks the operator to check merge history before sending confirmation again. Keep the scope and session consequences adjacent to confirmation: dealer accounts share the retained scope, Sales assignments remain, affected active dealer sessions end and require sign-in, and source invitations are revoked. Authors, files, read receipts and historical documents remain; closed ledger documents retain their source and amounts. A merge does not post stock, debt or payment.
+
+“Lịch sử gộp hồ sơ” keeps actor, Vietnam timestamp, reason and a link between the retained record and source archive. CRM admins/managers additionally receive the native “Xem lựa chọn và tác động đã lưu” disclosure, using `PartnerMergeDetails` for the saved choices, field changes, resulting defaults, earlier settings and named inventory. Its leading help says these values were saved at merge time and may differ from current record data. This is a durable history view rather than a reconstructed current-state preview; other roles do not receive its detailed manifest/choices. The source archive labels itself “Hồ sơ nguồn lịch sử”, shows read-only phone/email/business-ID/address facts and directs updates to “Mở hồ sơ giữ lại”. It exposes history without record editing, contact/task creation or other source-write controls.
 
 ### Typed custom fields and retained values
 
@@ -343,6 +358,8 @@ Governance browser evidence in `docs/crm/test-results/governance-browser-local.j
 
 The care review packet at `.impeccable/review/care/packet.md` limits its cohort to Today, recurrence, mentions/followers, Sales handover, configured escalation, event-generated tasks and effective-current document labels. Its finish verdict scored two fixes resolved—inspectable schedule/rule handover inventories and saved-receipt evidence—and returned disposition ship at those fixes only. The packet records fictitious LOCAL QA captures at desktop (1366×900), mobile (390×844) and narrow mobile (320×844), with real Edge/Next behavior (9/9) PASS. These evidence statements do not extend the verdict to every state, the whole F001–F140 inventory, production deployment or live Brevo delivery.
 
+The duplicate/merge packet at `.impeccable/review/merge/packet.md` limits CRM persistence to F023/F024. Its final verdict pass scored all four material fixes resolved and returned disposition ship at that fix list only. `docs/crm/test-results/partner-merge-browser-local.json` records real Edge/Next LOCAL evidence (5/5) PASS with fictitious users, persistence after reload and a deliberate stale-confirmation failure across desktop (1366×900), mobile (390×844) and narrow mobile (320×844). This does not establish whole-surface or F001–F140 acceptance, successful production deployment or provider readiness. The packet's public-header responsive repair preserves the public site's separate identity and lies outside this CRM design boundary; it adds no CRM tokens.
+
 ## Do's and Don'ts
 
 ### Do:
@@ -364,6 +381,9 @@ The care review packet at `.impeccable/review/care/packet.md` limits its cohort 
 - Do create recurring care work from its source record and retain named, dated configuration-version histories.
 - Do show the complete linked handover inventory, including schedules/rules and the outgoing-session impact, before separate confirmation.
 - Do distinguish overdue work, work still due today and effective-current document versions with written labels.
+- Do place scoped duplicate matches and their written reasons before save without exposing hidden records.
+- Do show resulting merge defaults, fallback/none outcomes, named inventory and access/session consequences before separate confirmation.
+- Do retain saved merge choices and impacts under native history disclosure, mark their saved-time context and keep source archives read-only.
 
 ### Don't:
 
@@ -378,3 +398,5 @@ The care review packet at `.impeccable/review/care/packet.md` limits its cohort 
 - Don't describe local Edge PASS or deploy permission as production/provider readiness.
 - Don't imply that mentions/followers grant record access or that an automation saved receipt proves notification delivery.
 - Don't expand a care verdict scoring two fixes into whole-surface or F001–F140 acceptance.
+- Don't treat a duplicate warning as automatic merge/deletion or a merge preview as a committed change.
+- Don't replace saved merge impacts with current data, imply that merge posts stock/debt/payment or expand a four-fix verdict into whole-surface approval.

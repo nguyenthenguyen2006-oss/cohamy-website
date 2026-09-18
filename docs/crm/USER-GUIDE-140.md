@@ -16,6 +16,10 @@ Notes allow mentions only of current users permitted to read the source; mention
 
 Sales handover: /crm/automation -> choose outgoing and receiving active Sales -> give reason -> preview. Inspect every customer/dealer, website request, unfinished task, future schedule and event rule. Nothing transfers until separate confirmation; changed versions invalidate the entire preview. Confirmation transfers current care responsibility, preserves historic authors and ends outgoing sessions.
 
+Duplicate warning: enter phone/email/business ID while creating or editing a partner; matching profiles appear before save and are limited to your current scope. Formatting differences and +84/0084 are normalized. A warning never combines records automatically. Optional business-ID mapping/column is available in XLSX import/export.
+
+Partner merge: manager opens the merge disclosure on a current profile, chooses a surviving profile of the same kind, gives a reason and selects each retained field, contact preferences, primary contact and default address. Preview shows both profiles, old settings and every affected source-link group. Inspect it before separate confirmation. Changes after preview or its10-minute expiry reject the entire operation; refresh preview instead of retrying stale data. Confirmation moves current scope, ends both profiles sessions, retains original file bytes/authors and closed balance sources, and records immutable history. The old profile remains a read-only historical page linked to the surviving profile. Conflicting same-user/same-role memberships require manual account reconciliation first.
+
 Notifications: mark messages read in /crm|portal/notifications. Task notification opt-out in workspace. Profile lists sessions and can revoke one immediately.
 
 The public website/product/blog/cart workflow remains separate. Price/order/warehouse/money/consignment functions not listed here are not delivered as working transactions by this batch.

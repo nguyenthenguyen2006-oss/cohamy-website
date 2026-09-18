@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-18T21:08:10.485Z",
+  "generatedAt": "2026-09-18T21:57:03.780Z",
   "title": "Design System: Cohamy CRM workspace",
   "extensions": {
     "colorMeta": {
@@ -552,11 +552,35 @@
       "description": "Representative before/after comparison from AuditChangeDetails, with known Vietnamese field/status/role labels and recorded reasons. The nested technical payload is already redacted by its supplier; this renderer is not the redaction boundary. Example values do not represent a real event.",
       "html": "<details class=\"ds-governance ds-audit\" open><summary class=\"ds-summary\">Nội dung thay đổi và lý do</summary><dl class=\"ds-audit-facts\"><div><dt>Giai đoạn chăm sóc</dt><dd>Trước: Tiềm năng<br />Sau: Đã liên hệ</dd></div></dl><details class=\"ds-audit\"><summary class=\"ds-summary\">Dữ liệu kỹ thuật của sự kiện</summary><pre class=\"ds-payload\">{\n  \"before\": {\"stage\": \"LEAD\"},\n  \"after\": {\"stage\": \"CONTACTED\"}\n}</pre></details></details>",
       "css": ".ds-governance{color:#182538;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:14px;line-height:1.6}.ds-governance .ds-summary{cursor:pointer;color:#225b86;padding:10px 0;font-size:13px;font-weight:500}.ds-governance .ds-summary:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-governance .ds-audit{margin-top:16px}.ds-governance[open]>.ds-summary,.ds-governance .ds-audit[open]>.ds-summary{margin-bottom:12px}.ds-governance .ds-audit-facts{display:grid;gap:5px;margin:0 0 24px;background:#fff;padding:24px;border:1px solid #dbe2e8;border-radius:10px;overflow-wrap:anywhere}.ds-governance .ds-audit-facts dt{font-size:11px;color:#586577;margin-top:14px}.ds-governance .ds-audit-facts dt:first-child{margin-top:0}.ds-governance .ds-audit-facts dd{margin:0;font-size:13px}.ds-governance .ds-payload{white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;font:inherit;line-height:1.6;padding:16px}"
+    },
+    {
+      "name": "Before-save duplicate warning",
+      "kind": "custom",
+      "refersTo": "field",
+      "description": "Static representative RecordForm warning after the fields and before save. Application checks normalize phone/email/business ID, pause 450ms after editing, announce checking/errors and only disclose accessible matches. This sample does not run a check or save; its fragment link and values are illustrative.",
+      "html": "<div class=\"ds-duplicate\" aria-live=\"polite\"><div class=\"ds-duplicate-note\"><strong>Có hồ sơ trùng thông tin đã nhập</strong><p>Kiểm tra các hồ sơ dưới đây trước khi lưu. Cảnh báo không tự gộp hoặc xóa hồ sơ.</p><ul><li><a href=\"#ds-existing-record\">Đại lý mẫu · DL-MAU</a> — điện thoại, email, mã doanh nghiệp</li></ul></div></div>",
+      "css": ".ds-duplicate{color:#182538;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.ds-duplicate-note{padding:24px;background:#fff;border:1px solid #dbe2e8;border-radius:8px;margin:16px 0;font-size:14px;max-width:80ch;overflow-wrap:anywhere}.ds-duplicate p{margin:0}.ds-duplicate a{color:#225b86;text-underline-offset:4px}.ds-duplicate a:hover{text-decoration:underline}.ds-duplicate a:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}"
+    },
+    {
+      "name": "Merge results and inventory",
+      "kind": "custom",
+      "refersTo": "section",
+      "description": "Representative flat PartnerMergeDetails facts inside a separate preview section: written before/after, resulting defaults, none/fallback explanations, earlier settings and named inventory. The live form selects source/target values before preview, invalidates edits/stale confirmations and has a 10-minute lifetime. Sample values, inventory and button are illustrative and do not confirm a merge.",
+      "html": "<section class=\"ds-merge ds-merge-section\"><h3>Preview: Hồ sơ nguồn → Hồ sơ giữ lại</h3><p>Hạn 10 phút. Mã hồ sơ đích giữ nguyên. Dữ liệu hoặc liên kết thay đổi sẽ chặn toàn bộ lần gộp.</p><dl class=\"ds-facts\"><div><dt>Giai đoạn</dt><dd>Tiềm năng → Đã liên hệ</dd></div></dl><h4>Kết quả liên hệ và mặc định sau gộp</h4><dl class=\"ds-facts\"><div><dt>Cách liên hệ và sở thích</dt><dd>Điện thoại · Chưa chọn giờ · Chưa có ghi chú · SKU quan tâm: Chưa chọn</dd></div><div><dt>Liên hệ chính</dt><dd>Không có liên hệ chính sau gộp; các dấu liên hệ chính trước đó được bỏ</dd></div><div><dt>Địa chỉ mặc định</dt><dd>Không có địa chỉ mặc định sau gộp</dd></div></dl><p>Hồ sơ nguồn chưa có cách liên hệ và sở thích: giữ thông tin đích hiện có, không xóa thông tin đích.</p><details class=\"ds-disclosure\"><summary>Thông tin liên hệ và mặc định trước khi gộp</summary><p>Hồ sơ đích: Điện thoại · Chưa chọn giờ · Chưa có ghi chú · SKU quan tâm: Chưa chọn</p></details><h4>Liên kết bị ảnh hưởng</h4><details class=\"ds-disclosure\"><summary>Công việc · 1 · Theo hồ sơ đích</summary><ul><li>Việc chăm sóc mẫu</li></ul></details><p>Hai tổ chức đại lý trở thành cùng một phạm vi truy cập; phiên đại lý liên quan kết thúc, tài khoản đăng nhập lại. Link mời của hồ sơ nguồn bị thu hồi.</p><p>Tác giả, file, lượt đọc và chứng từ lịch sử được giữ. Chứng từ sổ đã chốt giữ nguyên nguồn và số tiền; gộp không ghi kho, công nợ hoặc thanh toán.</p><button class=\"ds-confirm\" type=\"button\">Xác nhận toàn bộ lần gộp</button></section>",
+      "css": ".ds-merge{color:#182538;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.ds-merge-section{min-width:0;background:#fff;border:1px solid #dbe2e8;border-radius:10px;padding:24px;margin-bottom:24px}.ds-merge h3{margin:0;font-size:15px}.ds-merge p{margin:0}.ds-merge .ds-facts{margin:0;display:grid;gap:5px;overflow-wrap:anywhere}.ds-merge .ds-facts dt{font-size:11px;color:#586577;margin-top:14px}.ds-merge .ds-facts dt:first-child{margin-top:0}.ds-merge .ds-facts dd{margin:0;font-size:13px}.ds-merge .ds-disclosure{margin-top:16px}.ds-merge .ds-disclosure summary{cursor:pointer;color:#225b86;padding:10px 0;font-size:13px;font-weight:500}.ds-merge .ds-disclosure[open]>summary{margin-bottom:12px}.ds-merge a{color:#225b86;text-underline-offset:4px}.ds-merge a:hover{text-decoration:underline}.ds-merge :is(a,button,summary):focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-merge .ds-confirm{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:10px 16px;gap:8px;background:#b9420c;color:#fff;border:1px solid #b9420c;border-radius:6px;font-family:inherit;font-size:13px;font-weight:600;line-height:1.4;cursor:pointer;transition:background-color 160ms ease,color 160ms ease}.ds-merge .ds-confirm:hover{background:#983409}.ds-merge .ds-confirm:active{background:#802906}.ds-merge .ds-confirm:disabled{opacity:.6;cursor:not-allowed}@media(max-width:760px){.ds-merge-section{padding:18px;border-radius:8px;margin-bottom:18px}}@media(prefers-reduced-motion:reduce){.ds-merge .ds-confirm{transition:none}}"
+    },
+    {
+      "name": "Saved merge disclosure and source archive",
+      "kind": "custom",
+      "refersTo": "disclosure",
+      "description": "Representative manager/admin saved-impact disclosure from PartnerMergePanel, using the same PartnerMergeDetails fact treatment for recorded choices, fields, defaults and inventory. Historical help separates saved-time values from current state. The source archive has read-only facts, history and a retained-record link without source-write controls. Illustrative receipt, values and fragment link do not represent a real event.",
+      "html": "<section class=\"ds-merge ds-merge-history\"><h2>Lịch sử gộp hồ sơ</h2><ul class=\"ds-timeline\"><li><strong>Quản lý mẫu</strong><time datetime=\"2026-09-19T02:00:00Z\">19/09/2026, 09:00</time><p>Lý do mẫu: đối chiếu hai hồ sơ trùng.</p><details class=\"ds-disclosure\"><summary>Xem lựa chọn và tác động đã lưu</summary><p>Giá trị được lưu tại thời điểm gộp; thông tin hiện tại của hồ sơ có thể đã thay đổi.</p><dl class=\"ds-facts\"><div><dt>Giai đoạn · Lựa chọn đã lưu</dt><dd>Lấy từ hồ sơ nguồn</dd></div><div><dt>Giai đoạn</dt><dd>Tiềm năng → Đã liên hệ</dd></div></dl><h4>Kết quả liên hệ và mặc định sau gộp</h4><dl class=\"ds-facts\"><div><dt>Liên hệ chính</dt><dd>Không có liên hệ chính sau gộp; các dấu liên hệ chính trước đó được bỏ</dd></div><div><dt>Địa chỉ mặc định</dt><dd>Không có địa chỉ mặc định sau gộp</dd></div></dl><h4>Liên kết bị ảnh hưởng</h4><details class=\"ds-disclosure\"><summary>Công việc · 1 · Theo hồ sơ đích</summary><ul><li>Việc chăm sóc mẫu</li></ul></details></details></li></ul><h3>Hồ sơ nguồn lịch sử</h3><p>Hồ sơ lịch sử đã được gộp. <a href=\"#ds-retained-record\">Mở hồ sơ giữ lại</a> để cập nhật dữ liệu và xem toàn bộ liên kết.</p><dl class=\"ds-facts\"><div><dt>Mã doanh nghiệp</dt><dd>Chưa ghi nhận</dd></div></dl></section>",
+      "css": ".ds-merge{color:#182538;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:14px;line-height:1.6;overflow-wrap:anywhere}.ds-merge-history{min-width:0;background:#fff;border:1px solid #dbe2e8;border-radius:10px;padding:24px;margin-bottom:24px}.ds-merge-history h2{margin:0 0 20px;font-size:17px;font-weight:600;line-height:1.45}.ds-merge-history h3{margin:0;font-size:15px}.ds-merge-history p{margin:0}.ds-merge-history .ds-timeline{list-style:none;padding:0;margin:26px 0 0}.ds-merge-history .ds-timeline>li{padding:16px 0;border-top:1px solid #dbe2e8}.ds-merge-history .ds-timeline strong{font-size:12px}.ds-merge-history time{font-size:11px;color:#586577;margin-left:12px}.ds-merge-history .ds-timeline p{font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px}.ds-merge .ds-facts{margin:0;display:grid;gap:5px;overflow-wrap:anywhere}.ds-merge .ds-facts dt{font-size:11px;color:#586577;margin-top:14px}.ds-merge .ds-facts dt:first-child{margin-top:0}.ds-merge .ds-facts dd{margin:0;font-size:13px}.ds-merge .ds-disclosure{margin-top:16px}.ds-merge .ds-disclosure summary{cursor:pointer;color:#225b86;padding:10px 0;font-size:13px;font-weight:500}.ds-merge .ds-disclosure[open]>summary{margin-bottom:12px}.ds-merge a{color:#225b86;text-underline-offset:4px}.ds-merge a:hover{text-decoration:underline}.ds-merge :is(a,button,summary):focus-visible{outline:3px solid #bf4b14;outline-offset:3px}@media(max-width:760px){.ds-merge-history{padding:18px;border-radius:8px;margin-bottom:18px}.ds-merge-history h2{font-size:16px}.ds-merge-history time{display:block;margin:5px 0 0}}"
     }
   ],
   "narrative": {
     "northStar": "The Cohamy work desk",
-    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented workspace and its CRM/portal extensions, including governance and care automation. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.",
+    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented workspace and its CRM/portal extensions, including governance, care automation and duplicate/merge controls. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.",
     "keyCharacteristics": [
       "Persistent navy navigation beside white operational surfaces.",
       "Be Vietnam Pro with compact labels and clear page headings.",
@@ -567,7 +591,8 @@
       "Dated document-version receipts distinguish acknowledged and current versions.",
       "Explicit impact previews precede bulk updates and role changes.",
       "Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.",
-      "Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language."
+      "Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language.",
+      "Before-save duplicate warnings, explicit merge results and dated saved-impact disclosures preserve record context."
     ],
     "rules": [
       {
@@ -603,7 +628,10 @@
       "Do lead audit detail with Vietnamese before/after values and keep redacted technical metadata secondary.",
       "Do create recurring care work from its source record and retain named, dated configuration-version histories.",
       "Do show the complete linked handover inventory, including schedules/rules and the outgoing-session impact, before separate confirmation.",
-      "Do distinguish overdue work, work still due today and effective-current document versions with written labels."
+      "Do distinguish overdue work, work still due today and effective-current document versions with written labels.",
+      "Do place scoped duplicate matches and their written reasons before save without exposing hidden records.",
+      "Do show resulting merge defaults, fallback/none outcomes, named inventory and access/session consequences before separate confirmation.",
+      "Do retain saved merge choices and impacts under native history disclosure, mark their saved-time context and keep source archives read-only."
     ],
     "donts": [
       "Don't copy the superseded launcher, floating dock or glass login into this workspace.",
@@ -616,7 +644,9 @@
       "Don't substitute raw JSON for readable audit detail or treat the display component as the redaction boundary.",
       "Don't describe local Edge PASS or deploy permission as production/provider readiness.",
       "Don't imply that mentions/followers grant record access or that an automation saved receipt proves notification delivery.",
-      "Don't expand a care verdict scoring two fixes into whole-surface or F001–F140 acceptance."
+      "Don't expand a care verdict scoring two fixes into whole-surface or F001–F140 acceptance.",
+      "Don't treat a duplicate warning as automatic merge/deletion or a merge preview as a committed change.",
+      "Don't replace saved merge impacts with current data, imply that merge posts stock/debt/payment or expand a four-fix verdict into whole-surface approval."
     ]
   }
 }

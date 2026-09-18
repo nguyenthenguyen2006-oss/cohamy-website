@@ -4,7 +4,7 @@ import {z} from 'zod';
 import {database,type Sql} from './db';
 import {audit,membershipPrincipal,digest} from './auth';
 import {assertPermission,CrmError,can} from './permissions';
-import {getOrganization,listAccounts} from './repository';
+import {getOrganization,listAccounts,assertWritableOrganization} from './repository';
 import {roles,type Principal} from './types';
 import {parse} from './workspace';
 
@@ -13,7 +13,7 @@ export async function bulkPreview(user:Principal,input:unknown){
  internalWriter(user);
  const d=parse(z.object({ids:z.array(z.uuid()).min(1).max(50).refine(v=>new Set(v).size===v.length),action:z.enum(['DEACTIVATE','ACTIVATE','STAGE']),reason:z.string().trim().min(3).max(500),stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional()}).strict(),input);
  if(d.action==='STAGE'&&!d.stage)throw new CrmError('INVALID_FIELDS',400);
- const items=[];for(const id of d.ids){const row=await getOrganization(user,id);if(row.kind==='COHAMY')throw new CrmError('ORGANIZATION_KIND_IMMUTABLE',409);items.push({id,name:row.name,version:row.version,before:{active:row.active,stage:row.stage},after:d.action==='STAGE'?{stage:d.stage}:{active:d.action==='ACTIVATE'}});}
+ const items=[];for(const id of d.ids){const row=await getOrganization(user,id);if(row.merged_into_id)throw new CrmError('PARTNER_MERGED',409);if(row.kind==='COHAMY')throw new CrmError('ORGANIZATION_KIND_IMMUTABLE',409);items.push({id,name:row.name,version:row.version,before:{active:row.active,stage:row.stage},after:d.action==='STAGE'?{stage:d.stage}:{active:d.action==='ACTIVATE'}});}
  const id=randomUUID();await(await database()).query('INSERT INTO cohamy_crm.bulk_previews(id,user_id,action,reason,stage,items) VALUES ($1,$2,$3,$4,$5,$6::jsonb)',[id,user.id,d.action,d.reason,d.stage??null,JSON.stringify(items)]);
  return {id,items,atomic:true,expiresInMinutes:10};
 }
@@ -28,7 +28,7 @@ export async function bulkConfirm(user:Principal,input:unknown){
   const errors:{id:string;error:string}[]=[];
   // Stable lock order prevents two overlapping bulk requests taking reverse locks.
   for(const item of [...preview.items].sort((a,b)=>a.id.localeCompare(b.id))){
-   try{await tx.query('SELECT id FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[item.id]);const current=await getOrganization(fresh,item.id,tx);if(current.version!==item.version)errors.push({id:item.id,error:'VERSION_CONFLICT'});}catch(e){if(e instanceof CrmError)errors.push({id:item.id,error:e.code});else throw e;}
+   try{await tx.query('SELECT id FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[item.id]);const current=await getOrganization(fresh,item.id,tx);if(current.merged_into_id)throw new CrmError('PARTNER_MERGED',409);if(current.version!==item.version)errors.push({id:item.id,error:'VERSION_CONFLICT'});}catch(e){if(e instanceof CrmError)errors.push({id:item.id,error:e.code});else throw e;}
   }
   if(errors.length)return {applied:0,errors,atomic:true,retry:'Refresh the impacted records and create a new preview.'};
   for(const item of preview.items){await tx.query('UPDATE cohamy_crm.organizations SET active=COALESCE($1::boolean,active),stage=COALESCE($2,stage),version=version+1 WHERE id=$3',[item.after.active??null,item.after.stage??null,item.id]);await audit(tx,user.id,'partner.bulk',item.id,{previewId:id,before:item.before,after:item.after,reason:preview.reason});}
@@ -62,7 +62,7 @@ export async function customValues(user:Principal,organizationId:string,sql?:Sql
 export async function saveCustomValue(user:Principal,input:unknown){
  const d=parse(z.object({organizationId:z.uuid(),fieldId:z.uuid(),definitionVersion:z.number().int().positive(),version:z.number().int().min(0),value:z.unknown()}).strict(),input);
  return(await database()).transaction(async tx=>{
-  await getOrganization(user,d.organizationId,tx);const def=(await tx.query<FieldDefinition>('SELECT * FROM cohamy_crm.custom_field_definitions WHERE id=$1 FOR SHARE',[d.fieldId])).rows[0];
+  await assertWritableOrganization(tx,user,d.organizationId);const def=(await tx.query<FieldDefinition>('SELECT * FROM cohamy_crm.custom_field_definitions WHERE id=$1 FOR SHARE',[d.fieldId])).rows[0];
   if(!def||!def.active||!def.write_roles.includes(user.role)||!def.read_roles.includes(user.role))throw new CrmError('FORBIDDEN',403);if(def.version!==d.definitionVersion)throw new CrmError('VERSION_CONFLICT',409);
   const value=fieldValue(def,d.value),previous=(await tx.query<{value:unknown;version:number}>('SELECT value,version FROM cohamy_crm.custom_field_values WHERE organization_id=$1 AND field_id=$2 AND definition_version=$3 FOR UPDATE',[d.organizationId,d.fieldId,d.definitionVersion])).rows[0];
   if(previous&&previous.version!==d.version||!previous&&d.version!==0)throw new CrmError('VERSION_CONFLICT',409);

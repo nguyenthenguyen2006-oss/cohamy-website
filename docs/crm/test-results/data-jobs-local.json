@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-18T18:56:28.034Z",
+  "testedAt": "2026-09-18T21:36:44.688Z",
   "environment": "LOCAL isolated PGlite and actual XLSX parsing",
   "cases": [
     {

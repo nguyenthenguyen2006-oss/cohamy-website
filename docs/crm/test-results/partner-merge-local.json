@@ -1,0 +1,47 @@
+{
+  "testedAt": "2026-09-18T21:48:55.645Z",
+  "environment": "LOCAL isolated PGlite; fictitious businesses and explicitly fake closed balance fixture",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F023 normalization matches local/+84/0084 phones, case-insensitive email and formatted business IDs",
+      "status": "PASS"
+    },
+    {
+      "name": "F023 input suggestions apply current scope before limit, exclude current record and disclose no hidden count",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 fixture links contain files/read receipts, contacts/preferences, tasks/schedules, visits/opportunities and support",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 preview writes no business state and exposes all source-link groups without credentials",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 missing/self/mixed/inactive/foreign actor and duplicate memberships are rejected atomically",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 stale profile, newly linked note and new file version each invalidate full preview",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 expired or another administrator-owned preview cannot be confirmed",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 SQL failure during transfer rolls back memberships, session revocation and all parent links",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 confirmed merge preserves immutable source/bytes/actors/ledger and retries exactly once",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 fresh dealer identity receives combined scope; old sessions/snapshots blocked and unrelated dealer/private notes hidden",
+      "status": "PASS"
+    }
+  ]
+}

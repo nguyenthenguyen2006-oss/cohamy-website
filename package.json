@@ -57,7 +57,10 @@
     "test:crm:automation": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-care-automation.ts",
     "test:crm:care-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-care-postgres.ts",
     "test:crm:care-worker-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-care-worker-postgres.ts",
-    "test:crm:care-browser": "node scripts/crm/verify-care-browser.mjs"
+    "test:crm:care-browser": "node scripts/crm/verify-care-browser.mjs",
+    "test:crm:partner-merge": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-partner-merge.ts",
+    "test:crm:partner-merge-browser": "node scripts/crm/verify-partner-merge-browser.mjs",
+    "test:crm:production-browser": "node scripts/crm/verify-production-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

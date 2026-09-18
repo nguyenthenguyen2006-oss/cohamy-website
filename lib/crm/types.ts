@@ -19,7 +19,7 @@ export const roleLabels: Record<Role, string> = {
 export interface Organization {
   id: string; code: string; name: string; kind: OrganizationKind; phone: string;
   email: string; address: string; active: boolean; version: number; created_at: string;
-  source?: string; segment?: string; contact_name?: string; stage?: string;
+  merged_into_id?: string|null; business_id?: string; source?: string; segment?: string; contact_name?: string; stage?: string;
 }
 export interface CatalogProduct {
   id: string; website_id: string; sku: string; name: string; category: string;

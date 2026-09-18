@@ -1,0 +1,49 @@
+{
+  "testedAt": "2026-09-18T21:50:51.011Z",
+  "environment": "LOCAL actual Edge/Next, fictitious users only",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F023 real input warns before save, normalization matches and business ID persists on reload",
+      "status": "PASS"
+    },
+    {
+      "name": "F023 Sales input warning hides foreign same-key dealer",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 inspectable preview changes no record; intervening note rejects complete confirmation visibly",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 confirmed GUI merge shows durable history and source archive after reload",
+      "status": "PASS"
+    },
+    {
+      "name": "Input warning, merge preview and public header fit desktop/390/320 with keyboard/native controls",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "screens": [
+    ".impeccable/review/merge/input-warning-desktop.png",
+    ".impeccable/review/merge/merge-preview-desktop.png",
+    ".impeccable/review/merge/merge-stale-desktop.png",
+    ".impeccable/review/merge/merge-saved-desktop.png",
+    ".impeccable/review/merge/merge-archive-desktop.png",
+    ".impeccable/review/merge/input-warning-390.png",
+    ".impeccable/review/merge/merge-preview-390.png",
+    ".impeccable/review/merge/public-vi-390.png",
+    ".impeccable/review/merge/public-en-390.png",
+    ".impeccable/review/merge/public-zh-390.png",
+    ".impeccable/review/merge/public-ko-390.png",
+    ".impeccable/review/merge/public-ja-390.png",
+    ".impeccable/review/merge/input-warning-320.png",
+    ".impeccable/review/merge/merge-preview-320.png",
+    ".impeccable/review/merge/public-vi-320.png",
+    ".impeccable/review/merge/public-en-320.png",
+    ".impeccable/review/merge/public-zh-320.png",
+    ".impeccable/review/merge/public-ko-320.png",
+    ".impeccable/review/merge/public-ja-320.png"
+  ]
+}

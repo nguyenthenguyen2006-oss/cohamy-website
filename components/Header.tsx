@@ -21,8 +21,8 @@ export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean
 
   return (
     <header className="sticky top-0 z-50 bg-[#FAF6EF]/95 border-b border-[#4A2418]/10 backdrop-blur">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <Link href="/" className="inline-flex shrink-0 items-center leading-none" aria-label="Cohamy">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-2">
+        <Link href="/" className="inline-flex shrink-0 items-center leading-none [&>img]:h-7! sm:[&>img]:h-12!" aria-label="Cohamy">
           <BrandLogo height={48} />
         </Link>
 
@@ -34,13 +34,13 @@ export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-3">
           <LocaleSwitcher />
-          {orderIntakeEnabled && <Link href="/cart" className="p-2" aria-label={t("cart")}><ShoppingBag size={20}/></Link>}
+          {orderIntakeEnabled && <Link href="/cart" className="inline-flex min-h-11 min-w-11 items-center justify-center" aria-label={t("cart")}><ShoppingBag size={20}/></Link>}
           <button
             type="button"
             onClick={() => setOpen(!open)}
-            className="md:hidden p-2"
+            className="md:hidden inline-flex min-h-11 min-w-11 items-center justify-center"
             aria-label={t("menu")}
           >
             {open ? <X size={20} /> : <Menu size={20} />}

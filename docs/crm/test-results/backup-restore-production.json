@@ -1,14 +1,18 @@
 {
   "status": "PASS",
-  "completedAt": "2026-09-18T20:37:01.436Z",
+  "completedAt": "2026-09-18T21:16:14.990Z",
   "sourceDatabase": "cohamy_crm",
-  "restoreDatabase": "cohamy_restore_40b8c5117a80472cb539f6ab1258c4ce",
+  "restoreDatabase": "cohamy_restore_c63c0b6871e24e83821cbd427cbe2206",
   "restoreRetained": false,
-  "sha256": "ce147915d480497483deee360f56e47e46a38fcb2a3b5c38837513e232c9fa78",
-  "tableCount": 49,
+  "sha256": "072f1d569e340431f8c8054684eae13b4159ef56cb350053879f5450975b4c76",
+  "tableCount": 58,
   "rows": [
     {
       "table": "activities",
+      "count": "0"
+    },
+    {
+      "table": "activity_mentions",
       "count": "0"
     },
     {
@@ -25,10 +29,18 @@
     },
     {
       "table": "audit_events",
-      "count": "27"
+      "count": "31"
     },
     {
       "table": "bulk_previews",
+      "count": "0"
+    },
+    {
+      "table": "care_escalations",
+      "count": "0"
+    },
+    {
+      "table": "care_handover_previews",
       "count": "0"
     },
     {
@@ -36,7 +48,27 @@
       "count": "0"
     },
     {
+      "table": "care_rule_runs",
+      "count": "0"
+    },
+    {
+      "table": "care_schedule_runs",
+      "count": "0"
+    },
+    {
+      "table": "care_schedules",
+      "count": "0"
+    },
+    {
+      "table": "care_sla_policies",
+      "count": "0"
+    },
+    {
       "table": "care_tags",
+      "count": "0"
+    },
+    {
+      "table": "care_task_rules",
       "count": "0"
     },
     {
@@ -89,7 +121,7 @@
     },
     {
       "table": "migrations",
-      "count": "11"
+      "count": "12"
     },
     {
       "table": "notifications",
@@ -153,7 +185,7 @@
     },
     {
       "table": "sessions",
-      "count": "13"
+      "count": "15"
     },
     {
       "table": "support_messages",
@@ -169,6 +201,10 @@
     },
     {
       "table": "task_dependencies",
+      "count": "0"
+    },
+    {
+      "table": "task_watchers",
       "count": "0"
     },
     {
@@ -206,7 +242,7 @@
   ],
   "fileIntegrityErrors": "0",
   "documentSourceErrors": "0",
-  "directory": "/root/cohamy-backups/scheduled/2026-09-18T203659645Z-3e1a1d60",
+  "directory": "/root/cohamy-backups/scheduled/2026-09-18T211613469Z-6839d83f",
   "snapshotConsistent": true,
   "publicFiles": {
     "count": 0,

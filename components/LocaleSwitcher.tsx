@@ -91,7 +91,7 @@ export function LocaleSwitcher({
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="inline-flex h-10 items-center gap-2 rounded-full border border-[#4A2418]/15 px-3 text-sm text-[#4A2418] transition-colors hover:border-[#4A2418]/30"
+        className="inline-flex h-11 items-center gap-1 sm:gap-2 rounded-full border border-[#4A2418]/15 px-2 sm:px-3 text-sm text-[#4A2418] transition-colors hover:border-[#4A2418]/30"
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={t("language")}

@@ -42,3 +42,5 @@
 }
 .cohamy-crm .upgrade-audit-payload {white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;font:inherit;line-height:1.6;padding:16px;}
 .cohamy-crm .upgrade-file-checksum {overflow-wrap:anywhere;word-break:break-all;}
+
+.cohamy-crm .crm-status-note { overflow-wrap: anywhere; }
