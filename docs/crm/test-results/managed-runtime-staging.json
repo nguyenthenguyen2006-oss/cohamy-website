@@ -1,0 +1,48 @@
+{
+  "testedAt": "2026-09-18T20:31:57.232Z",
+  "release": "/root/cohamy-releases/15627f469b09c016b19b8029cb451434174429b4",
+  "proposedConfig": "/root/cohamy-qa/governance-20260919/reports/ecosystem-memory.cjs",
+  "environment": "STAGING exact app/worker source, independent PostgreSQL, temporary PM2 names/port; no production business writes",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Exact committed web and worker remain online at release cwd with zero restarts",
+      "status": "PASS"
+    },
+    {
+      "name": "Isolated managed Next health responds on candidate port",
+      "status": "PASS"
+    },
+    {
+      "name": "Web and worker maintain original PIDs through another worker polling cycle",
+      "status": "PASS"
+    }
+  ],
+  "snapshots": [
+    {
+      "name": "cohamy-qa-runtime-80b93d3275fc494c944eda27aaf8d3b0",
+      "pid": 1917208,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/15627f469b09c016b19b8029cb451434174429b4",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-qa-runtime-80b93d3275fc494c944eda27aaf8d3b0-worker",
+      "pid": 1917209,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/15627f469b09c016b19b8029cb451434174429b4",
+      "restarts": 0
+    }
+  ],
+  "memory": [
+    {
+      "name": "cohamy-qa-runtime-80b93d3275fc494c944eda27aaf8d3b0",
+      "rssKiB": 481132
+    },
+    {
+      "name": "cohamy-qa-runtime-80b93d3275fc494c944eda27aaf8d3b0-worker",
+      "rssKiB": 101872
+    }
+  ],
+  "steadyWaitMs": 35000
+}

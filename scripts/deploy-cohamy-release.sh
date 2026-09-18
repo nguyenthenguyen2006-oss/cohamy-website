@@ -144,11 +144,10 @@ unset CRM_DATABASE_URL CRM_DATABASE_MODE CRM_ENVIRONMENT CRM_PUBLIC_ORIGIN CRM_W
 CUTOVER=1
 if pm2 describe cohamy >/dev/null 2>&1; then pm2 delete cohamy; fi
 if pm2 describe cohamy-crm-worker >/dev/null 2>&1; then pm2 delete cohamy-crm-worker; fi
-pm2 start "$RELEASE/ecosystem.config.js" --only cohamy --env production --update-env
-pm2 start "$RELEASE/ecosystem.config.js" --only cohamy-crm-worker --env production --update-env
+pm2 start "$RELEASE/ecosystem.config.js" --only cohamy,cohamy-crm-worker --env production --update-env
 # A registration response alone is not proof that the worker loaded its runtime.
 sleep 10
-pm2 jlist | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>{const apps=JSON.parse(s).filter(a=>["cohamy","cohamy-crm-worker"].includes(a.name));if(apps.length!==2||apps.some(a=>a.pm2_env.status!=="online"||a.pm2_env.pm_cwd!==process.argv[1]||a.pm2_env.restart_time!==0))process.exit(2);require("fs").writeFileSync(process.argv[2],JSON.stringify(apps.map(a=>({name:a.name,pid:a.pid,status:a.pm2_env.status,cwd:a.pm2_env.pm_cwd,restarts:a.pm2_env.restart_time}))),{mode:0o600});});' "$RELEASE" "$BACKUP/runtime-health.json"
+pm2 jlist | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>{const apps=JSON.parse(s).filter(a=>["cohamy","cohamy-crm-worker"].includes(a.name));require("fs").writeFileSync(process.argv[2],JSON.stringify(apps.map(a=>({name:a.name,pid:a.pid,status:a.pm2_env.status,cwd:a.pm2_env.pm_cwd,restarts:a.pm2_env.restart_time}))),{mode:0o600});if(apps.length!==2||apps.some(a=>a.pm2_env.status!=="online"||a.pm2_env.pm_cwd!==process.argv[1]||a.pm2_env.restart_time!==0))process.exit(2);});' "$RELEASE" "$BACKUP/runtime-health.json"
 pm2 save
 curl --retry 10 --retry-delay 2 --retry-connrefused -fsS https://cohamy.vn/api/health > "$BACKUP/public-health.json"
 printf '%s\n' "$SHA" > "$SHARED/current-sha"
