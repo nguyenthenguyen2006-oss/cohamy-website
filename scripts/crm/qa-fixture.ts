@@ -5,7 +5,9 @@ import { database } from "../../lib/crm/db";
 
 export const qaPassword="Local-QA-Only-2026!";
 export async function createQaFixture() {
-  if(process.env.CRM_ENVIRONMENT!=="LOCAL"||process.env.CRM_DATABASE_MODE!=="pglite"||!process.env.CRM_LOCAL_DATA_DIR?.includes("qa"))throw new Error("QA_REQUIRES_SEPARATE_LOCAL_DATABASE");
+  const local=process.env.CRM_ENVIRONMENT==='LOCAL'&&process.env.CRM_DATABASE_MODE==='pglite'&&process.env.CRM_LOCAL_DATA_DIR?.includes('qa');
+  let staging=false;try{const target=new URL(process.env.CRM_DATABASE_URL??'');staging=process.env.CRM_ENVIRONMENT==='STAGING'&&process.env.CRM_DATABASE_MODE==='postgres'&&['localhost','127.0.0.1'].includes(target.hostname)&&target.port==='55432'&&/^\/cohamy_qa_[a-z0-9_]+$/.test(target.pathname);}catch{}
+  if(!local&&!staging)throw new Error('QA_REQUIRES_SEPARATE_LOCAL_OR_STAGING_DATABASE');
   await migrate();await importWebsiteCatalog();
   const db=await database();
   const existing=await db.query<{id:string}>("SELECT id FROM cohamy_crm.users WHERE email='admin@crm-qa.invalid'");

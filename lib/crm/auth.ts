@@ -21,11 +21,22 @@ function principal(row: IdentityRow): Principal | null {
 }
 export async function audit(sql: Sql, actorId: string | null, action: string, entityId: string, payload: unknown = {}) {
   await sql.query("INSERT INTO cohamy_crm.audit_events(id,actor_id,action,entity_id,payload) VALUES ($1,$2,$3,$4,$5::jsonb)",
-    [randomUUID(), actorId, action, entityId, JSON.stringify(payload)]);
+    [randomUUID(), actorId, action, entityId, JSON.stringify(redactAudit(payload))]);
+}
+export function redactAudit(value:unknown,depth=0):unknown {
+  if(depth>8)return '[omitted]';
+  if(Array.isArray(value))return value.slice(0,100).map(item=>redactAudit(item,depth+1));
+  if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).slice(0,100).map(([key,item])=>[key,/(password|otp|token|secret|credential|database.?url)/i.test(key)?'[redacted]':redactAudit(item,depth+1)]));
+  return typeof value==='string'?value.slice(0,4000):value;
+}
+function deviceLabel(agent='') {
+  const browser=/Edg\//.test(agent)?'Edge':/Firefox\//.test(agent)?'Firefox':/Chrome\//.test(agent)?'Chrome':/Safari\//.test(agent)?'Safari':'Trình duyệt khác';
+  const platform=/Android/.test(agent)?'Android':/iPhone|iPad/.test(agent)?'iOS':/Windows/.test(agent)?'Windows':/Macintosh/.test(agent)?'macOS':/Linux/.test(agent)?'Linux':'Thiết bị khác';
+  return agent?browser+' · '+platform:'Thiết bị chưa ghi nhận';
 }
 // Constant cost comparison for unknown emails. Never creates an account or fallback session.
 const dummyHash = bcrypt.hashSync("not-a-usable-credential", 12);
-export async function login(email: string, password: string): Promise<{ token: string; user: Principal }> {
+export async function login(email: string, password: string, metadata:{userAgent?:string}={}): Promise<{ token: string; user: Principal }> {
   const db = await database();
   const key = digest(email);
   const attempt = await db.query<{ attempts: number }>(`INSERT INTO cohamy_crm.login_attempts(key_hash,attempts) VALUES ($1,1)
@@ -42,7 +53,7 @@ export async function login(email: string, password: string): Promise<{ token: s
     const user = identities.rows.map(principal).find((value): value is Principal => value !== null);
     if (!user) throw new CrmError("INVALID_CREDENTIALS", 401);
     const token = randomBytes(32).toString("base64url");
-    await tx.query("INSERT INTO cohamy_crm.sessions(token_hash,membership_id,expires_at) VALUES ($1,$2,$3)", [digest(token), user.membershipId, new Date(Date.now() + SESSION_SECONDS * 1000)]);
+    await tx.query("INSERT INTO cohamy_crm.sessions(token_hash,membership_id,expires_at,device_label) VALUES ($1,$2,$3,$4)", [digest(token), user.membershipId, new Date(Date.now() + SESSION_SECONDS * 1000),deviceLabel(metadata.userAgent?.slice(0,300))]);
     await audit(tx, user.id, "auth.login", user.membershipId);
     return { token, user };
   });

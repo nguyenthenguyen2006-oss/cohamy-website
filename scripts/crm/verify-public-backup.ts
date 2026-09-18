@@ -1,0 +1,8 @@
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {backupPublicFiles} from './backup-public-files';
+process.env.CRM_ENVIRONMENT='LOCAL';
+async function main(){const root=path.resolve('.local','crm-qa-site-files-'+randomUUID()),source=path.join(root,'source'),destination=path.join(root,'backups');await fs.mkdir(path.join(source,'folder'),{recursive:true});await fs.mkdir(destination);await fs.writeFile(path.join(source,'folder','qa.png'),Buffer.from([137,80,78,71,13,10,26,10,1,2,3]));const result=await backupPublicFiles(source,destination);assert.equal(result.count,1);assert.equal(result.bytes,11);assert.ok(result.restored);assert.deepEqual(await fs.readFile(path.join(destination,'restored-public-uploads','folder','qa.png')),await fs.readFile(path.join(source,'folder','qa.png')));await assert.rejects(backupPublicFiles(source,path.resolve('.local')),/COHAMY_PUBLIC_BACKUP_PATH_REQUIRED/);process.env.CRM_BACKUP_PUBLIC_FILE_LIMIT_BYTES='1';const other=path.join(root,'quota');await fs.mkdir(other);await assert.rejects(backupPublicFiles(source,other),/PUBLIC_UPLOAD_BACKUP_QUOTA_EXCEEDED/);await fs.writeFile('docs/crm/test-results/public-files-backup-local.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'LOCAL isolated public-file fixture',status:'PASS',cases:[{name:'Copied and independently restored files match exact bytes and SHA256 manifest',status:'PASS'},{name:'Invalid destination blocked before copying',status:'PASS'},{name:'Configured byte quota stops backup before copying',status:'PASS'}]},null,2));console.log('PASS public file bytes, restore, path and quota guards');}
+main().catch(e=>{console.error(e);process.exitCode=1;});

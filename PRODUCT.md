@@ -16,7 +16,7 @@ Website bán thực phẩm đóng gói và CRM quản trị mua đứt, ký gử
 
 ## Capabilities and Constraints
 
-Giữ Next.js hiện có, URL sản phẩm và năm locale; CMS độc lập. Backend CRM dùng PostgreSQL, quyền server và dữ liệu riêng. Chỉ triển khai local/staging trong yêu cầu hiện tại. Không chuyển dữ liệu hoặc secret HumanBank.
+Giữ Next.js hiện có, URL sản phẩm và năm locale; CMS độc lập. Backend CRM dùng PostgreSQL, quyền server và dữ liệu riêng. Người dùng đã cho phép push và deploy mà không hỏi xác nhận lại. Kiểm thử dùng database LOCAL/STAGING độc lập trước phát hành. Không chuyển dữ liệu hoặc secret HumanBank.
 
 Chưa chốt mốc chuyển sở hữu/ghi phải thu mua đứt, công thức giá đối soát ký gửi, bảng giá đại lý, hạn mức, kỳ hạn, quy đổi đơn vị và dữ liệu đầu kỳ. Không mở ghi sổ khi các quyết định liên quan chưa được xác nhận.
 

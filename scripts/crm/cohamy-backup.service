@@ -1,0 +1,13 @@
+[Unit]
+Description=Cohamy verified PostgreSQL and private-file backup
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=root
+UMask=0077
+ExecStart=/usr/bin/python3 /root/cohamy-shared/run-backup.py
+TimeoutStartSec=1800
+Environment=CRM_BACKUP_RETENTION_DAYS=30
+Environment=CRM_BACKUP_MIN_COPIES=7

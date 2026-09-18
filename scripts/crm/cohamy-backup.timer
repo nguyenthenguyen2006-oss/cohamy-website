@@ -1,0 +1,11 @@
+[Unit]
+Description=Cohamy daily backup and independent restore verification
+
+[Timer]
+OnCalendar=*-*-* 02:30:00 Asia/Ho_Chi_Minh
+Persistent=true
+RandomizedDelaySec=60
+Unit=cohamy-backup.service
+
+[Install]
+WantedBy=timers.target

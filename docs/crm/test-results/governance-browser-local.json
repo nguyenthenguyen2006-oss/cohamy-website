@@ -1,0 +1,65 @@
+{
+  "testedAt": "2026-09-18T19:53:25.257Z",
+  "environment": "LOCAL real Edge/Next, isolated QA database",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F124 reorder/resize/visibility save and actual table widths reload",
+      "status": "PASS"
+    },
+    {
+      "name": "F123 edit default filter applies on an unfiltered list and clear bypasses it",
+      "status": "PASS"
+    },
+    {
+      "name": "F128 source preview, confirmation and saved bulk stage survive reload",
+      "status": "PASS"
+    },
+    {
+      "name": "F135 define required decimal field, save typed value and show after reload",
+      "status": "PASS"
+    },
+    {
+      "name": "F108 notification options preserve column preferences and quiet-hours after reload",
+      "status": "PASS"
+    },
+    {
+      "name": "F136 role change shows actual scope/sessions before applying and revokes old session",
+      "status": "PASS"
+    },
+    {
+      "name": "F138 current device label and revoke all other sessions keep current browser live",
+      "status": "PASS"
+    },
+    {
+      "name": "F139 actor/date filters and redacted before/after audit display",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop/mobile governance controls stay in viewport and show required labels/actions",
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    ".impeccable/review/governance/columns-desktop.png",
+    ".impeccable/review/governance/bulk-preview-desktop.png",
+    ".impeccable/review/governance/custom-value-desktop.png",
+    ".impeccable/review/governance/preferences-desktop.png",
+    ".impeccable/review/governance/role-preview-desktop.png",
+    ".impeccable/review/governance/sessions-desktop.png",
+    ".impeccable/review/governance/audit-desktop.png",
+    ".impeccable/review/governance/columns-390.png",
+    ".impeccable/review/governance/bulk-390.png",
+    ".impeccable/review/governance/preferences-390.png",
+    ".impeccable/review/governance/fields-390.png",
+    ".impeccable/review/governance/audit-390.png",
+    ".impeccable/review/governance/sessions-390.png",
+    ".impeccable/review/governance/columns-320.png",
+    ".impeccable/review/governance/bulk-320.png",
+    ".impeccable/review/governance/preferences-320.png",
+    ".impeccable/review/governance/fields-320.png",
+    ".impeccable/review/governance/audit-320.png",
+    ".impeccable/review/governance/sessions-320.png"
+  ],
+  "pageErrors": []
+}

@@ -1,6 +1,6 @@
 # Cohamy - feature matrix F001-F140
 
-Updated 2026-09-18T19:19:43.460Z. Source HEAD 02746efe0aa502db71e8a18ec43537c09e382c3c. LOCAL evidence only; no release. Exactly 140 target IDs. 14 VERIFIED_LOCAL, 31 IN_PROGRESS, 95 NOT_STARTED; 0 RELEASED. This matrix is a status report, not a claim that 140 features work.
+Updated 2026-09-18T20:12:47.965Z. Source HEAD 856b6a9a0ca17bad863fc6609a36ffe7951ccafb. LOCAL and isolated PostgreSQL STAGING evidence; candidate not released. Exactly 140 target IDs. 19 VERIFIED_LOCAL, 29 IN_PROGRESS, 92 NOT_STARTED; 0 RELEASED. This matrix is a status report, not a claim that 140 features work.
 
 Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFIED_STAGING, RELEASED, BLOCKED.
 
@@ -12,8 +12,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Lưu tên đơn vị, người đại diện, điện thoại, email, địa chỉ, khu vực; validate rõ; gửi lặp không tạo nhiều hồ sơ
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F002 - Trang theo dõi hồ sơ đăng ký
 
@@ -23,19 +23,19 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Người đăng ký chỉ thấy hồ sơ mình và trạng thái chờ duyệt, cần bổ sung, chấp nhận hoặc từ chối cùng bước tiếp theo
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F003 - Hàng đợi xét duyệt cho admin
 
 - Phase / status: P2 / IN_PROGRESS.
-- UI / API / migration: /crm/applications / onboarding/queue / 006.
-- Current behavior and gap: Queue status/search/pagination, reviewer assignment/filter and minimum waiting hours. PostgreSQL competing reviewers NOT_RUN.
+- UI / API / migration: /crm/applications / onboarding/queue,review / 006,009.
+- Current behavior and gap: Queue/reviewer/wait filters verified in LOCAL; PostgreSQL competing approvals grant exactly one membership/organization (governance-postgres-staging.json).
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Lọc đăng ký mới, người phụ trách, thời gian chờ; xử lý đồng thời không duyệt hồ sơ hai lần
-- Evidence: test-results/upgrade-local.json, test-results/partner-library-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/partner-library-local.json, test-results/upgrade-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F004 - Yêu cầu bổ sung thông tin
 
@@ -45,8 +45,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Admin chỉ rõ trường/tài liệu cần bổ sung; người đăng ký sửa và gửi lại, giữ nguyên lịch sử
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F005 - Xác minh email hoặc điện thoại
 
@@ -56,19 +56,19 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Kênh được chọn xác minh trước gửi duyệt; token hết hạn/dùng lại/thử quá số lần đều bị chặn; có test delivery thật khi cấu hình
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F006 - Duyệt kèm phân quyền
 
 - Phase / status: P2 / IN_PROGRESS.
-- UI / API / migration: /crm/applications/:id / onboarding/review / 006.
-- Current behavior and gap: Atomic organization/membership/assignment/audit/notification. Exact approval retry fingerprint. PostgreSQL multi-connection gate NOT_RUN.
+- UI / API / migration: /crm/applications/:id / onboarding/review / 006,009.
+- Current behavior and gap: Atomic role/org/assignment/audit and exact retry in LOCAL; simultaneous PostgreSQL approvals verified on an independent STAGING database.
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Chọn tổ chức, vai trò, người hỗ trợ và scope; cấp quyền nhất quán trong transaction, không cho tự nâng quyền
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/partner-library-local.json, test-results/upgrade-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F007 - Link mời đăng ký riêng
 
@@ -78,8 +78,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: CRM ADMIN; portal DEALER_OWNER may invite only DEALER_STAFF into their own organization.
 - Acceptance: Lưu người giới thiệu, hạn, lượt dùng; thu hồi được; không dùng token hết hạn hoặc dùng lại ngoài giới hạn
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F008 - Gắn đăng ký vào đại lý hiện có
 
@@ -89,8 +89,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Admin xem trùng và chọn đơn vị; người đăng ký không tự gia nhập tổ chức; không nhân bản đơn vị khi retry
-- Evidence: test-results/upgrade-local.json, test-results/partner-library-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-local.json, test-results/partner-library-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F009 - Checklist bắt đầu sử dụng
 
@@ -100,8 +100,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Theo dõi hoàn thiện hồ sơ, đọc đúng phiên bản chính sách, xem danh mục; mục tạo yêu cầu chỉ hoàn tất khi có yêu cầu thật
-- Evidence: test-results/partner-library-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/partner-library-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F010 - Mục Dành cho đối tác trên website
 
@@ -111,8 +111,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Public, without CRM/portal membership.
 - Acceptance: Có đăng nhập, đăng ký, hướng dẫn hợp tác trên desktop/mobile; liên kết đúng locale và route, giữ website hiện có
-- Evidence: test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F011 - Trang chủ riêng cho đại lý
 
@@ -123,7 +123,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Hiện việc, đơn và thông báo thuộc đúng đơn vị/người dùng; không có số liệu mẫu trong runtime thật
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F012 - Đặt nhanh theo SKU
 
@@ -134,7 +134,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Nhập nhiều mã, số lượng và đơn vị trên một màn; báo mã không bán, sai quy cách hoặc vượt điều kiện
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F013 - Đặt lại đơn cũ
 
@@ -145,7 +145,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Sao chép dòng hàng, tính lại giá/khả năng cung ứng và hiển thị thay đổi trước xác nhận
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F014 - Giỏ hàng nháp theo tài khoản
 
@@ -155,8 +155,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P2/P3; D03-D05; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu server và tiếp tục trên thiết bị khác; xử lý phiên bản khi hai thiết bị cùng sửa
-- Evidence: test-results/portal-services-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/portal-services-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F015 - Tạo yêu cầu từ Excel
 
@@ -167,7 +167,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Có mẫu, ánh xạ SKU/đơn vị, lỗi từng dòng và preview; chỉ tạo sau xác nhận, không ghi một phần ngoài ý muốn
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F016 - Nhiều địa chỉ giao hàng
 
@@ -177,8 +177,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P2/P3; D03-D05; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu chi nhánh/người nhận, chọn mặc định; sửa địa chỉ không đổi snapshot đơn cũ
-- Evidence: test-results/portal-services-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/portal-services-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F017 - Nhân viên đại lý
 
@@ -188,8 +188,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Chủ đại lý mời/khóa/cấp quyền trong tổ chức mình; không cấp vượt quyền chủ hoặc vai trò nội bộ
-- Evidence: test-results/upgrade-local.json, test-results/portal-services-local.json, test-results/partner-library-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/portal-services-local.json, test-results/partner-library-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F018 - Duyệt đơn nội bộ đại lý
 
@@ -200,7 +200,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Nhân viên gửi đề nghị, chủ duyệt/từ chối; Cohamy chỉ nhận khi đáp ứng quy tắc phê duyệt
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F019 - Thư viện đối tác
 
@@ -210,19 +210,19 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Hiện catalogue, hình, hướng dẫn và chính sách đúng đối tượng/phiên bản; download kiểm tra quyền
-- Evidence: test-results/partner-library-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/partner-library-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F020 - Phiếu hỗ trợ
 
 - Phase / status: P2 / IN_PROGRESS.
 - UI / API / migration: /portal/support; /crm/support / portal/ticket,reply,ticket-update / 008.
-- Current behavior and gap: Persistent support thread, statuses, scoped assignee selection and internal/private message separation; scoped PDF/photo attachments. PostgreSQL simultaneous retry NOT_RUN.
+- Current behavior and gap: Persistent support thread, statuses, scoped assignee selection and internal/private message separation; scoped PDF/photo attachments. PostgreSQL simultaneous support retry remains NOT_RUN.
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Gửi nội dung/ảnh, phân công, theo dõi tiến độ và trao đổi; tách ghi chú nội bộ khỏi nội dung cho đại lý
-- Evidence: test-results/portal-services-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/portal-services-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F021 - Hồ sơ khách hàng tổng hợp
 
@@ -232,8 +232,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Liên kết liên hệ, yêu cầu, báo giá, đơn, việc và trao đổi; từng phần chỉ xuất hiện khi có quyền và dữ liệu
-- Evidence: test-results/access-local.json, test-results/work-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/access-local.json, test-results/work-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F022 - Nhiều người liên hệ
 
@@ -243,8 +243,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Một đơn vị có chủ, người mua, kế toán, người nhận; chọn liên hệ chính và giữ lịch sử khi ngừng sử dụng
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F023 - Cảnh báo trùng lúc nhập
 
@@ -254,8 +254,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: So sánh điện thoại/email/mã doanh nghiệp đã chuẩn hóa; cảnh báo không tiết lộ hồ sơ ngoài scope
-- Evidence: test-results/access-local.json, test-results/work-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/access-local.json, test-results/work-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F024 - Gộp hồ sơ trùng có preview
 
@@ -266,7 +266,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chọn dữ liệu giữ lại, xem liên kết bị ảnh hưởng; bảo toàn lịch sử, không làm lộ dữ liệu hoặc thay số sổ đã chốt
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F025 - Bảng cơ hội bán hàng
 
@@ -276,8 +276,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chuyển giai đoạn mới tiếp cận, nhu cầu, báo giá, thắng/mất; lưu người sửa và thời điểm
-- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F026 - Lý do chưa mua/mất khách
 
@@ -287,8 +287,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Danh mục lý do có ghi chú; được tổng hợp trong báo cáo và không tự ghi là mất khách từ việc hết hạn
-- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F027 - Phân nhóm khách linh hoạt
 
@@ -298,8 +298,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Quản lý nhiều nhãn/nhóm và lọc theo tổ hợp; có quyền quản lý danh mục nhóm
-- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F028 - Sở thích và cách liên hệ
 
@@ -309,8 +309,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu sản phẩm quan tâm, khung giờ và kênh ưu tiên; hiển thị ngay khi chuẩn bị chăm sóc
-- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F029 - Nhật ký thăm điểm bán
 
@@ -320,8 +320,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gắn người thăm, thời điểm, kết quả, ảnh và đề nghị hỗ trợ vào đúng hồ sơ
-- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/relationships-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F030 - Quản lý hàng mẫu
 
@@ -332,7 +332,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Theo dõi người nhận, SKU, số lượng, gửi/nhận/phản hồi/chuyển đơn; xuất mẫu thực phải đi qua nghiệp vụ kho
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F031 - Bảng giá theo cấp đại lý
 
@@ -343,7 +343,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Đại lý chỉ nhận bảng giá phù hợp; có quy tắc ưu tiên rõ khi nhiều bảng cùng thỏa điều kiện
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F032 - Bảng giá theo thời gian
 
@@ -354,7 +354,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Có ngày hiệu lực/kết thúc và lịch sử; xử lý đúng múi giờ và khoảng trùng hiệu lực
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F033 - Giá theo số lượng
 
@@ -365,7 +365,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tính đúng tại biên ngưỡng và sau quy đổi đơn vị; cách áp theo dòng/SKU/đơn được cấu hình rõ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F034 - Điều kiện đặt tối thiểu
 
@@ -376,7 +376,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Kiểm tra tổng tiền, số thùng hoặc SKU theo chính sách; thông báo phần còn thiếu trước gửi
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F035 - Báo giá PDF Cohamy
 
@@ -387,7 +387,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: PDF tiếng Việt đúng font, logo, dòng hàng, điều kiện giao và hạn; tổng tiền khớp dữ liệu nguồn, kiểm tra bản render
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F036 - Phiên bản báo giá
 
@@ -398,7 +398,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Giữ bản đã gửi, so sánh thay đổi và xác định bản được chấp nhận; sửa không ghi đè lịch sử
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F037 - Đại lý phản hồi báo giá
 
@@ -409,7 +409,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Người có quyền xác nhận/yêu cầu sửa đúng phiên bản; phản hồi vào bản hết hạn được xử lý rõ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F038 - Duyệt chiết khấu vượt quyền
 
@@ -420,7 +420,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Quy tắc ngưỡng áp ở server; có người duyệt/lý do; không tự duyệt ngoại lệ nếu chính sách cấm
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F039 - Combo và hàng tặng
 
@@ -431,7 +431,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tính điều kiện, ưu tiên/cộng dồn theo chính sách; hàng tặng vẫn có số lượng kho và được xử lý khi trả hàng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F040 - Chốt giá khi xác nhận đơn
 
@@ -442,7 +442,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Snapshot đơn giữ giá/đơn vị/chính sách; thay bảng giá không đổi đơn đã xác nhận
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F041 - Yêu cầu thành đơn bán hàng
 
@@ -453,7 +453,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chuyển theo quyền và điều kiện, giữ nguồn; retry không tạo hai đơn hoặc bỏ qua phê duyệt
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F042 - Nhân viên tạo đơn thay khách
 
@@ -464,7 +464,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Ghi người thao tác, khách, nguồn điện thoại/gặp/kênh khác; áp đủ quy tắc giá và quyền
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F043 - Duyệt đơn theo điều kiện
 
@@ -475,7 +475,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tính đúng tuyến duyệt theo giá trị, giá đặc biệt, điều khoản; lưu phiên bản quy tắc áp dụng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F044 - Tách trạng thái đơn/giao/tiền
 
@@ -486,7 +486,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Đơn duyệt không tự thành đã giao/đã thu; từng chiều cập nhật từ chứng từ tương ứng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F045 - Timeline đơn hàng
 
@@ -497,7 +497,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Hiện người, thời gian, sự kiện và bước chờ; không lộ ghi chú nội bộ qua portal
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F046 - Yêu cầu sửa đơn
 
@@ -508,7 +508,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Preview trước/sau và ảnh hưởng; đơn đang giao không được sửa âm thầm làm lệch kho/tiền
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F047 - Hủy theo giai đoạn
 
@@ -519,7 +519,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Kiểm tra trạng thái/quyền, ghi lý do; giải phóng reservation đúng một lần và xử lý phần đã giao riêng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F048 - Giao nhiều đợt
 
@@ -530,7 +530,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tổng các đợt không vượt lượng được phép; theo dõi đã giao, còn lại, lịch tiếp và lịch sử
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F049 - Hàng chờ bổ sung
 
@@ -541,7 +541,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Hiện SKU/ lượng còn thiếu, ngày dự kiến và người xử lý; không cam kết từ tồn đã bị giữ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F050 - Cảnh báo đơn có thể trùng
 
@@ -552,7 +552,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: So khớp khách, dòng hàng, thời điểm; cho kiểm tra thay vì tự xóa đơn hợp lệ; tách khỏi idempotency kỹ thuật
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F051 - Sổ nhập–xuất–tồn
 
@@ -563,7 +563,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Mọi phát sinh có chứng từ/người thực hiện; tồn khớp tổng movement; đảo chứng từ giữ lịch sử
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F052 - Quy đổi đơn vị
 
@@ -574,7 +574,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gói/hộp/hũ/thùng quy đổi chính xác; thay quy cách không làm đổi số lượng chứng từ đã ghi
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F053 - Nhiều kho/vị trí
 
@@ -585,7 +585,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lọc kho/khu/kệ theo quyền; không chuyển hàng đến vị trí không hợp lệ hoặc ngừng dùng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F054 - Lô, NSX và hạn dùng
 
@@ -596,7 +596,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gắn lô khi nhận, truy đến lần giao; kiểm tra ngày và điều kiện hàng được xuất
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F055 - Xuất theo hạn gần nhất
 
@@ -607,7 +607,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gợi ý FEFO từ lô khả dụng, đáp ứng hạn dùng tối thiểu; ngoại lệ cần quyền/lý do
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F056 - Tồn thực/giữ/khả dụng
 
@@ -618,7 +618,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Hai đơn tranh cùng lượng không giữ vượt tồn; giải phóng/tiêu thụ giữ hàng đúng một lần
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F057 - Chuyển kho hai bước
 
@@ -629,7 +629,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu lượng đang chuyển và thực nhận; bảo toàn tổng hàng khi nhận từng phần hoặc báo thiếu
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F058 - Kiểm kê mobile/máy quét
 
@@ -640,7 +640,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu lần đếm, preview chênh lệch, phê duyệt trước movement; xử lý giao dịch phát sinh trong lúc đếm
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F059 - Cảnh báo thiếu/lâu/cận hạn
 
@@ -651,7 +651,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Ngưỡng theo SKU/kho, loại trừ hàng không khả dụng đúng quy tắc; bấm cảnh báo mở đúng danh sách
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F060 - Khóa và thu hồi lô
 
@@ -662,7 +662,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lô khóa không được giữ/xuất mới; truy được bên nhận, đơn, lượng và tiến độ xử lý thu hồi
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F061 - Phiếu soạn trên điện thoại
 
@@ -673,7 +673,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chỉ rõ vị trí/lô/lượng, lưu tiến độ; soạn theo reservation và quyền kho
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F062 - Quét kiểm tra đóng gói
 
@@ -684,7 +684,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chặn/nhắc SKU sai, thiếu, thừa; có nhập mã thay thế khi thiết bị không hỗ trợ camera
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F063 - Quản lý kiện
 
@@ -695,7 +695,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Một lần giao nhiều kiện có mã/nhãn/dòng hàng; tổng lượng đóng gói không vượt phiếu giao
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F064 - Gom chuyến giao
 
@@ -706,7 +706,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chọn đơn phù hợp, người giao, thứ tự điểm; không xếp cùng kiện vào hai chuyến hoạt động
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F065 - Khung giờ nhận
 
@@ -717,7 +717,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu ngày/giờ và yêu cầu khách, xử lý hẹn lại có lịch sử; thống nhất múi giờ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F066 - Theo dõi vận đơn
 
@@ -728,7 +728,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gắn đúng hãng/mã; callback kiểm chứng, chống lặp và sai thứ tự; có trạng thái mất kết nối và cập nhật thủ công có audit
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F067 - Bằng chứng giao nhận
 
@@ -739,7 +739,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu người nhận/thời gian/ảnh/xác nhận theo chính sách; chỉ người có quyền đọc chứng từ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F068 - Giao thất bại
 
@@ -750,7 +750,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Ghi lý do và chọn hẹn lại/hoàn; hàng đang chuyển không tự trở thành hàng có thể bán
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F069 - Yêu cầu đổi trả dòng hàng
 
@@ -761,7 +761,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chọn đơn/dòng/lượng/lý do/ảnh; không trả vượt lượng đủ điều kiện sau các lần trả trước
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F070 - Phân loại hàng trả
 
@@ -772,7 +772,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Ghi thực nhận và kết quả bán lại/cách ly/hỏng; movement liên kết phiếu trả, không tự hoàn tiền
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F071 - Thỏa thuận ký gửi
 
@@ -783,7 +783,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu SKU, thời hạn, địa điểm, điều kiện và kỳ; có phiên bản được hai bên áp dụng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F072 - Hàng gửi theo đại lý
 
@@ -794,7 +794,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tách hàng ký gửi với hàng bán đứt; ghi đúng owner và nơi giữ, không đếm trùng tồn
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F073 - Đại lý xác nhận thực nhận
 
@@ -805,7 +805,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Nhận đủ/thiếu/hỏng từng dòng; có đối chiếu với lượng xuất và lịch sử xử lý
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F074 - Báo bán theo kỳ
 
@@ -816,7 +816,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Nhập tay/file có preview; không báo vượt khả dụng; gửi lại không nhân lượng bán
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F075 - Tồn ký gửi
 
@@ -827,7 +827,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Đối chiếu gửi, bán, trả, điều chỉnh và tồn xác nhận; truy được từng chênh lệch
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F076 - Tính phần hưởng
 
@@ -838,7 +838,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tính theo phiên bản thỏa thuận và cơ sở được chốt; đổi chính sách không sửa kỳ đã chấp nhận
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F077 - Đối soát hai bên
 
@@ -849,7 +849,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Từng bên phản hồi/xác nhận; lưu khoản tranh chấp và người chịu trách nhiệm xử lý
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F078 - Khóa kỳ đối soát
 
@@ -860,7 +860,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Kỳ chấp nhận không bị sửa trực tiếp; điều chỉnh có quyền, chứng từ và liên kết về kỳ gốc
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F079 - Đề nghị bổ sung ký gửi
 
@@ -871,7 +871,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gợi ý từ tồn/tốc độ bán có giải thích; đề nghị chỉ thành giao hàng sau phê duyệt
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F080 - Thu hồi/đổi ký gửi
 
@@ -882,7 +882,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Áp điều kiện chậm bán/cận hạn; đối chiếu lượng lấy về, thực nhận và tồn còn tại đại lý
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F081 - Hạn mức công nợ
 
@@ -893,7 +893,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tính đã dùng/còn lại theo chính sách; hai đơn đồng thời không vượt hạn mức ngoài ngoại lệ được duyệt
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F082 - Kỳ hạn thanh toán
 
@@ -904,7 +904,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Ngày đến hạn được tính từ sự kiện đã chốt; thay chính sách không sửa ngầm chứng từ cũ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F083 - Sổ phải thu
 
@@ -915,7 +915,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Mỗi khoản có đơn/chứng từ nguồn, điều chỉnh và số còn lại; tổng khớp chi tiết
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F084 - Phân bổ thu nhiều–nhiều
 
@@ -926,7 +926,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Một thu cho nhiều đơn/một đơn nhiều thu; không phân bổ vượt tiền hoặc dư nợ, kể cả concurrent
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F085 - Đặt cọc/ứng trước
 
@@ -937,7 +937,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Theo dõi phát sinh, sử dụng, hoàn và dư; tránh ghi nhận hai lần khi cấn vào đơn
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F086 - Tải chứng từ chuyển khoản
 
@@ -948,7 +948,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Đại lý gửi, kế toán kiểm tra/xác nhận/từ chối; ảnh tải lên không tự đánh dấu đã thu
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F087 - Nhập sao kê và gợi ý ghép
 
@@ -959,7 +959,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chống nhập trùng dòng giao dịch; gợi ý có căn cứ và cần kế toán xác nhận; xử lý ghép sai có lịch sử
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F088 - Tuổi nợ
 
@@ -970,7 +970,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Nhóm chưa đến hạn/quá hạn khớp ngày đối chiếu, phân bổ và khoản tranh chấp
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F089 - Nhắc thanh toán
 
@@ -981,7 +981,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lịch, mẫu, người nhận và lịch sử; dừng nhắc khi đã giải quyết; không gửi lặp do retry
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F090 - Đề nghị thu–chi/hoàn tiền
 
@@ -992,7 +992,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tách đề nghị, duyệt và thực hiện; lưu chứng từ, tránh duyệt/thực hiện hai lần và đảo số có lịch sử
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F091 - Hồ sơ nhà cung cấp
 
@@ -1003,7 +1003,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu liên hệ, mặt hàng, điều kiện và tài liệu; không trộn scope/loại tổ chức hiện có
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F092 - Đề nghị mua
 
@@ -1014,7 +1014,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Nhân viên nhập nhu cầu/lượng/hạn cần; theo dõi xét duyệt và chuyển thành mua
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F093 - Yêu cầu báo giá nhà cung cấp
 
@@ -1025,7 +1025,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu nội dung gửi, phản hồi và phiên bản; gửi ngoài chỉ qua kênh được cấu hình/cho phép
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F094 - So sánh báo giá mua
 
@@ -1036,7 +1036,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: So cùng đơn vị/cơ sở giá, thời gian, phí và điều kiện; ghi lý do lựa chọn
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F095 - Đơn mua
 
@@ -1047,7 +1047,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tạo/duyệt/theo dõi, snapshot điều kiện; sửa đơn đã nhận một phần được kiểm soát
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F096 - Theo dõi giao nhiều đợt/trễ
 
@@ -1058,7 +1058,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tổng đã nhận/còn lại khớp đợt nhận; hiện hẹn giao và nguyên nhân trễ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F097 - Đối chiếu thực nhận
 
@@ -1069,7 +1069,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: So đơn mua và hàng nhận, ghi thiếu/thừa/lỗi; chỉ lượng chấp nhận tạo tồn khả dụng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F098 - Trả/khiếu nại nhà cung cấp
 
@@ -1080,7 +1080,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Liên kết phiếu nhận/SKU/lô; có lượng, lý do, chứng từ và tiến độ giải quyết
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F099 - Phải trả và lịch thanh toán
 
@@ -1091,7 +1091,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Khoản phải trả phát sinh theo chính sách; phân bổ, trả hàng, điều chỉnh và số dư khớp
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F100 - Đánh giá nhà cung cấp
 
@@ -1102,7 +1102,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tỷ lệ đúng hẹn/đủ hàng/chất lượng tính từ chứng từ thật; có khoảng thời gian và dữ liệu để kiểm tra
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F101 - Bàn làm việc Hôm nay
 
@@ -1112,19 +1112,19 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gom việc đến hạn/quá hạn/hồ sơ chờ theo vai trò, múi giờ và scope; click mở đúng danh sách
-- Evidence: test-results/access-local.json, test-results/work-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/access-local.json, test-results/work-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F102 - Checklist công việc
 
 - Phase / status: P3 / IN_PROGRESS.
 - UI / API / migration: /crm/tasks/:id / care/checklist / 005.
-- Current behavior and gap: Ordered checklist, persisted checkbox/title edits, version locking; incomplete checklist blocks completion. Drag reorder UI remains.
+- Current behavior and gap: Ordered checklist with accessible move controls, persisted edits/version guard; incomplete checklist blocks completion.
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Thêm/sắp/đánh dấu bước; lưu sau reload và quy tắc hoàn thành công việc rõ
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F103 - Công việc lặp lại
 
@@ -1135,7 +1135,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Sinh theo lịch, múi giờ; restart/retry không tạo trùng; có tạm dừng/chỉnh lịch
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F104 - Công việc phụ thuộc
 
@@ -1145,8 +1145,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P1; scoped organizations and work; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chặn vòng phụ thuộc; hoàn thành bước trước mới mở bước sau theo quy tắc
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F105 - Nhắc tên/người theo dõi
 
@@ -1157,7 +1157,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chỉ chọn người hợp lệ; nhắc tên không tự cấp quyền đọc hồ sơ; notification theo scope
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F106 - Bàn giao phụ trách
 
@@ -1168,29 +1168,29 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Preview việc/hồ sơ chuyển, ghi bàn giao; thu hồi quyền cũ và cấp scope mới nhất quán
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F107 - Trung tâm thông báo
 
 - Phase / status: P2 / IN_PROGRESS.
-- UI / API / migration: /crm/notifications; /portal/notifications / workspace/notifications,notification-read / 005.
-- Current behavior and gap: Transactional in-app events; scoped list, links and read status. Read/unread filter remains.
+- UI / API / migration: /crm/notifications; /portal/notifications / workspace/notifications,notification-read / 005,011.
+- Current behavior and gap: Scoped in-app events; ALL/READ/UNREAD server filtering and UI, read action rechecks source scope.
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Có đã đọc/chưa đọc, lọc và link đúng đối tượng; người mất quyền không còn đọc nội dung nhạy cảm
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F108 - Tùy chọn thông báo
 
 - Phase / status: P2 / IN_PROGRESS.
-- UI / API / migration: /crm/workspace; /portal/workspace / workspace/preferences / 005.
-- Current behavior and gap: Task notification opt-out is applied in transaction. Quiet-hour scheduling and channel/type preferences remain.
+- UI / API / migration: /crm/workspace; /portal/workspace / workspace/preferences / 005,011.
+- Current behavior and gap: Type/IN_APP preferences and Vietnam quiet hours including overnight delay, mandatory security exception. Additional EMAIL channel/outbox remains.
 - Dependencies / decisions: P1 minimum; D01-D03; D13 for library policies; no external live verification assumed.
 - Permission: Applicant-own profile until approval; reviewer ADMIN; active portal organization after approval.
 - Acceptance: Lưu loại/kênh/giờ yên lặng; hệ thống áp dụng đúng và hiển thị ngoại lệ bắt buộc nếu có
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F109 - Nhắc/chuyển cấp chậm xử lý
 
@@ -1201,7 +1201,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Cấu hình hạn theo loại việc; không tạo nhiều escalation trùng và ghi rõ người nhận
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F110 - Quy tắc tự tạo việc
 
@@ -1212,7 +1212,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Sự kiện duyệt hồ sơ tạo đúng một việc theo mẫu; có bật/tắt, log và kiểm thử retry
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F111 - Dashboard theo vai trò
 
@@ -1222,8 +1222,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: Corresponding verified source domains; D12; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Quản lý/sales/kho/kế toán có chỉ số và việc phù hợp; số liệu truy về nguồn và đúng scope
-- Evidence: test-results/access-local.json, test-results/work-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/access-local.json, test-results/work-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F112 - Nguồn khách và chuyển đổi
 
@@ -1233,8 +1233,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: Corresponding verified source domains; D12; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Định nghĩa mẫu số/mốc chuyển rõ; ghi nhận nguồn thiếu; không tính trùng khách đã gộp
-- Evidence: test-results/access-local.json, test-results/work-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/access-local.json, test-results/work-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F113 - Phân tích giai đoạn bán
 
@@ -1245,7 +1245,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Xem số lượng, thời gian ở giai đoạn và lý do thắng/mất trong khoảng chọn
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F114 - Đại lý mới/giảm hoạt động
 
@@ -1256,7 +1256,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Ngưỡng hoạt động có cấu hình; phân biệt không đặt hàng với thiếu dữ liệu; mở danh sách chăm sóc
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F115 - Bán hàng theo SKU/đại lý/vùng/sales
 
@@ -1267,7 +1267,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Theo quy tắc ghi nhận đã chốt; xử lý trả/hủy và drill-down tới chứng từ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F116 - Biên lợi nhuận
 
@@ -1278,7 +1278,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Có nguồn giá vốn/chi phí và công thức; thiếu dữ liệu hiển thị chưa đủ, không coi thiếu là 0
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F117 - Tốc độ xử lý đơn
 
@@ -1289,7 +1289,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tách chờ duyệt/hàng/soạn/giao; tính từ mốc sự kiện, giải thích thời gian đang chờ
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F118 - Tồn lâu/cận hạn/vòng quay
 
@@ -1300,7 +1300,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Khớp sổ kho và ngày báo cáo, tách hàng giữ/cách ly/ký gửi theo định nghĩa
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F119 - Đổi trả/giao thất bại/chất lượng
 
@@ -1311,7 +1311,7 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lọc SKU/lô/nguyên nhân; tỷ lệ có mẫu số rõ và truy tới các lần giao/trả
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F120 - Tổng hợp định kỳ
 
@@ -1322,18 +1322,18 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu bộ lọc, lịch và người nhận; kiểm tra quyền ở lúc chạy/gửi; job retry không gửi trùng
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F121 - Tìm kiếm toàn hệ thống
 
 - Phase / status: P1 / IN_PROGRESS.
 - UI / API / migration: /crm/search; /portal/search / workspace/search / 005.
-- Current behavior and gap: Scoped partners/SKU/website requests/tasks, result pagination. Commercial order search awaits P4; task query currently scans scoped maximum 200.
+- Current behavior and gap: Scoped partners/SKU/website requests/tasks, result pagination. Commercial order search awaits P4; task search pagination still needs direct SQL filtering.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Tìm khách/đại lý/SKU/đơn/việc theo quyền; hỗ trợ từ khóa thực tế, phân trang và không lộ số lượng ngoài scope
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F122 - Tạo nhanh mọi màn hình
 
@@ -1343,30 +1343,30 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Thêm khách/ghi chú/việc với ngữ cảnh phù hợp; đóng form quay đúng màn và vị trí trước
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F123 - Lưu bộ lọc cá nhân/chung
 
-- Phase / status: P1 / IN_PROGRESS.
-- UI / API / migration: partner lists; /crm/workspace / workspace/filter,filters / 005.
-- Current behavior and gap: Named private/shared filters with role validation; server always reapplies scope. Edit/default UI remains.
+- Phase / status: P1 / VERIFIED_LOCAL.
+- UI / API / migration: partner lists; /crm/workspace / workspace/filter,filters / 005,011.
+- Current behavior and gap: Owned edit/default UI, default applies to unfiltered list and clear bypasses; shared role checks and current data scope. PostgreSQL concurrent defaults leave exactly one per user/resource.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Đặt tên, sửa, chọn mặc định và chia sẻ có quyền; lọc không vượt quyền người mở
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F124 - Tùy chỉnh cột
 
-- Phase / status: P1 / IN_PROGRESS.
-- UI / API / migration: partner lists / workspace/preferences / 005.
-- Current behavior and gap: Column visibility persisted per user and applied. Ordering and width customization remain.
+- Phase / status: P1 / VERIFIED_LOCAL.
+- UI / API / migration: partner lists / workspace/preferences / 005,011.
+- Current behavior and gap: Column visibility/order/80–600px width saved per user/version and applied to table with local horizontal scrolling; mobile UI verified.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chọn/thứ tự/độ rộng và lưu preference; cột nhạy cảm vẫn kiểm tra quyền server
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F125 - Ghim/vừa mở
 
@@ -1376,8 +1376,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu theo người dùng, bỏ ghim được; mục mất quyền không còn hiển thị nội dung
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F126 - Xem chi tiết bên cạnh
 
@@ -1387,8 +1387,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Mở/đóng bằng chuột/bàn phím, giữ lọc/scroll; mobile có cách xem phù hợp và link chi tiết trực tiếp
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; LOCAL acceptance only; staging/release pending.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F127 - Tự lưu/khôi phục nháp
 
@@ -1398,19 +1398,19 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Hiện trạng thái lưu, khôi phục sau reload; xử lý xung đột và không lưu mật khẩu/OTP vào draft
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F128 - Thao tác hàng loạt có preview
 
-- Phase / status: P1 / NOT_STARTED.
-- UI / API / migration: Not implemented / none / none.
-- Current behavior and gap: Not implemented. Build UI, server permissions, durable state, failure/retry handling and per-ID verification.
+- Phase / status: P1 / VERIFIED_LOCAL.
+- UI / API / migration: partner lists / governance/bulk-preview,bulk-confirm / 011.
+- Current behavior and gap: Per-record source ACL/version preview, expiry, atomic errors, exact confirmation retry, sorted locks; PostgreSQL overlapping batches produce one complete winner without partial writes.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Hiện danh sách tác động; kiểm tra từng bản ghi/quyền/phiên bản; lỗi từng mục rõ, có thể retry an toàn
-- Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F129 - Một chạm trên mobile
 
@@ -1420,8 +1420,8 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Gọi/sao chép/bản đồ/chụp ảnh hoạt động với thông tin đúng; có fallback khi thiết bị không hỗ trợ
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F130 - Cài màn hình chính và nháp offline
 
@@ -1432,18 +1432,18 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Cài được trên nền tảng hỗ trợ; cache không lộ CRM; offline chỉ lưu nháp phù hợp, đồng bộ kiểm tra lại quyền/giá/phiên bản
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F131 - Import Excel có ánh xạ/preview
 
 - Phase / status: P1 / IN_PROGRESS.
 - UI / API / migration: /crm/data; partner lists / jobs/preview,confirm,detail / 007.
-- Current behavior and gap: XLSX mapping, row preview/errors, bounded ZIP, confirm-only write, durable job and unique row origins; actual Node restart verified on QA with fixture-expired lease. Supervised PostgreSQL worker restart NOT_RUN.
+- Current behavior and gap: XLSX mapping, row preview/errors, bounded ZIP, confirm-only write, durable job and unique row origins; actual PM2 kill/automatic restart, unmodified two-minute lease expiry and second restart verified under isolated PostgreSQL STAGING without duplicate imports. Other import resources remain.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Kiểm tra loại file/kích thước/cột/trùng/lỗi; xác nhận mới ghi; job có tiến độ và báo cáo tác động
-- Evidence: test-results/data-jobs-local.json, test-results/worker-restart-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/data-jobs-local.json, test-results/worker-restart-local.json, test-results/upgrade-browser-local.json, test-results/worker-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F132 - Export danh sách đang lọc
 
@@ -1453,52 +1453,52 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Chọn cột, giữ bộ lọc và quyền; xử lý nội dung công thức nguy hiểm trong file, kết quả chỉ người có quyền tải
-- Evidence: test-results/data-jobs-local.json, test-results/worker-restart-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/data-jobs-local.json, test-results/worker-restart-local.json, test-results/upgrade-browser-local.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F133 - Tệp theo hồ sơ
 
-- Phase / status: P1 / IN_PROGRESS.
-- UI / API / migration: partner/intake/support detail / documents; documents/:version / 005,008.
-- Current behavior and gap: Private DB-backed files, PDF/PNG/JPEG magic/size validation, checksums and scoped download. Metadata search UI remains.
+- Phase / status: P1 / VERIFIED_LOCAL.
+- UI / API / migration: partner/intake/support/library detail / documents; workspace/documents / 005,008,011.
+- Current behavior and gap: Private files with magic/size/checksum, scoped download, title/filename/MIME/checksum metadata search and UI.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Hợp đồng/ảnh/biên bản/chứng từ có metadata tìm kiếm; giới hạn loại/kích thước, private download kiểm tra quyền
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F134 - Phiên bản và hiệu lực tài liệu
 
 - Phase / status: P1 / IN_PROGRESS.
-- UI / API / migration: document panel / workspace/document-read / 005.
-- Current behavior and gap: Immutable versions and version-bound acknowledgements; effective/expiry schema. Effective-date/version-choice UI remains.
+- UI / API / migration: document panel; library / workspace/document-read; documents / 005,011.
+- Current behavior and gap: Immutable numbered files, version-specific read receipts and effective/expiry upload/display fields. Generic panel current-version indicator remains; library current-version acknowledgements verified separately.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lưu bản cũ, bản hiện hành, ngày hiệu lực/hết hạn; xác nhận đọc gắn đúng version
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F135 - Trường tùy chỉnh
 
-- Phase / status: P1 / NOT_STARTED.
-- UI / API / migration: Not implemented / none / none.
-- Current behavior and gap: Not implemented. Build UI, server permissions, durable state, failure/retry handling and per-ID verification.
+- Phase / status: P1 / IN_PROGRESS.
+- UI / API / migration: /crm/fields; partner detail / governance/field-definition,custom-value / 011.
+- Current behavior and gap: TEXT/decimal-string/DATE/BOOLEAN/ENUM, required value validation, per-role/current-parent ACL, immutable schema/value history retained after type change. Required commercial profile completeness remains for P4.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Có kiểu dữ liệu, validate, bắt buộc và quyền; đổi schema trường không làm mất giá trị cũ
-- Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F136 - Bảng quyền dễ hiểu
 
 - Phase / status: P1 / IN_PROGRESS.
-- UI / API / migration: /crm/accounts/:id / work/account / 001,003.
-- Current behavior and gap: Existing server role/organization checks, revoke and role change. Human-readable permission matrix/affected-user preview remain.
+- UI / API / migration: /crm/profile; /crm/accounts/:id / governance/permissions,role-preview; work/account / 001,003,011.
+- Current behavior and gap: Human-readable current permissions/scope and affected-account/session preview; required expected membership version, old assignments/sessions revoked, org/self/role ceilings. Resource-specific approve/export explanation expands with commercial modules.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Giải thích xem/tạo/sửa/duyệt/xuất và scope; preview người bị ảnh hưởng khi đổi, chống tự nâng quyền
-- Evidence: test-results/access-local.json, test-results/work-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F137 - MFA và quên mật khẩu
 
@@ -1509,38 +1509,38 @@ Status vocabulary: NOT_STARTED, IN_PROGRESS, IMPLEMENTED, VERIFIED_LOCAL, VERIFI
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Đăng ký/xác nhận yếu tố thứ hai, recovery code một lần, reset token an toàn; luồng khôi phục không bỏ qua MFA tùy tiện
 - Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F138 - Thiết bị và phiên
 
-- Phase / status: P1 / IN_PROGRESS.
-- UI / API / migration: /crm/profile; /portal/profile / workspace/sessions,session-revoke / 005.
-- Current behavior and gap: Own session list, individual revocation, immediate invalidation. Device metadata and revoke-all-others action remain.
+- Phase / status: P1 / VERIFIED_LOCAL.
+- UI / API / migration: /crm/profile; /portal/profile / workspace/sessions; governance/session-revoke-others / 005,011.
+- Current behavior and gap: Parsed device labels, own current-session marker, revoke one/all others, immediate browser invalidation; current session kept.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Liệt kê phiên với thông tin phù hợp, kết thúc từng phiên/tất cả phiên khác; phiên bị thu hồi mất quyền ngay theo thiết kế
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; LOCAL acceptance plus explicitly listed STAGING cases only; release pending.
 
 ## F139 - Audit có tìm kiếm
 
 - Phase / status: P1 / IN_PROGRESS.
-- UI / API / migration: /crm/audit / workspace/audit / 001,005.
-- Current behavior and gap: Admin-only actor/action/entity search, pagination, append-only. Date filters and field-level before/after view remain.
+- UI / API / migration: /crm/audit / workspace/audit / 001,005,011.
+- Current behavior and gap: Actor/entity/date filters, nested secret redaction at write/read, append-only; Vietnamese before/after/reason for new structured payloads. Remaining mutation domains need structured payloads when implemented.
 - Dependencies / decisions: P0; permissions and organization scope; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lọc người/đối tượng/thời gian; xem trường trước–sau/lý do; append-only và che bí mật/giới hạn quyền
-- Evidence: test-results/upgrade-local.json, test-results/upgrade-browser-local.json; LOCAL 2026-09-18T19:19:43.460Z.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/governance-local.json, test-results/governance-browser-local.json, test-results/governance-postgres-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 
 ## F140 - Backup và kiểm tra restore
 
-- Phase / status: P10 / NOT_STARTED.
-- UI / API / migration: Not implemented / none / none.
-- Current behavior and gap: Not implemented. Independent DB/file restore, retention/RPO/RTO/location and release authorization required.
+- Phase / status: P10 / IN_PROGRESS.
+- UI / API / migration: operator CLI / systemd timer / backup-restore.ts; run-backup.py / all.
+- Current behavior and gap: Consistent exported-snapshot dump, SHA256 of every row including bytea, independent restore of 49 tables and restored A/B/file-byte checks; guarded retention and daily timer source. Timer installation/production backup proof pending deploy.
 - Dependencies / decisions: All applicable phases; D13; no external live verification assumed.
 - Permission: Server role and current organization/assignment scope; jobs and downloads revalidate.
 - Acceptance: Lịch tự động, retention, cảnh báo lỗi, kiểm tra checksum; restore DB và file vào nơi độc lập, xác nhận liên kết dữ liệu và ghi bằng chứng
-- Evidence: NOT_RUN; no acceptance evidence.
-- Release / open work: uncommitted source based on 02746efe0aa502db71e8a18ec43537c09e382c3c; criteria above still require remaining behavior and full verification.
+- Evidence: test-results/backup-guards-local.json, test-results/public-files-backup-local.json, test-results/backup-restore-staging.json, test-results/restored-access-staging.json; environment and test time are recorded per report.
+- Release / open work: uncommitted source based on 856b6a9a0ca17bad863fc6609a36ffe7951ccafb; criteria above still require remaining behavior and full verification.
 

@@ -9,6 +9,6 @@ export interface OrderRecord {
  subtotal:string; status:OrderState; paid:boolean; payment_requested:string; created_at:string; updated_at:string;
  assigned_to:string|null; assignee_name:string|null; organization_id:string|null; organization_name:string|null; version:number; resolution_note:string;
 }
-export interface StaffOption {id:string;name:string;role:string;organization_id:string}
+export interface StaffOption {id:string;userId:string;name:string;role:string;organization_id:string}
 export interface TaskRecord {id:string;entity_type:EntityType;entity_id:string;entity_label:string;title:string;assignee_id:string;assignee_name:string;due_at:string;done_at:string|null;version:number}
 export interface ActivityRecord {id:string;body:string;actor_name:string;created_at:string}

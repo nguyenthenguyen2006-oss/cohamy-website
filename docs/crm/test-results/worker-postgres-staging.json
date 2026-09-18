@@ -1,0 +1,25 @@
+{
+  "testedAt": "2026-09-18T20:10:07.838Z",
+  "environment": "STAGING independent PostgreSQL, temporary PM2 QA worker, fictitious import",
+  "status": "PASS",
+  "elapsedMs": 133745,
+  "leaseAdvancedByFixture": false,
+  "cases": [
+    {
+      "name": "Actual managed worker commits claim; blocked business transaction has zero partial writes",
+      "status": "PASS"
+    },
+    {
+      "name": "PM2 automatically restarts killed worker before its unmodified lease expires",
+      "status": "PASS"
+    },
+    {
+      "name": "Real lease expiry is recovered once under PostgreSQL, with two rows and no clock/lease manipulation",
+      "status": "PASS"
+    },
+    {
+      "name": "Second supervised restart preserves success and exact imported row counts",
+      "status": "PASS"
+    }
+  ]
+}

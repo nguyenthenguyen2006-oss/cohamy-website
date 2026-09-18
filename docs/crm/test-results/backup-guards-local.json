@@ -1,0 +1,19 @@
+{
+  "testedAt": "2026-09-18T19:58:21.954Z",
+  "environment": "LOCAL",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Manifest hashes complete tables and validates private file bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Corrupt file checksum fails verification and fixture transaction rolls back",
+      "status": "PASS"
+    },
+    {
+      "name": "Retention preserves minimum verified copies and recent backups; invalid policy rejected",
+      "status": "PASS"
+    }
+  ]
+}

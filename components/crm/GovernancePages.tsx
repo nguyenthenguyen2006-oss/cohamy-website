@@ -1,0 +1,14 @@
+import {fieldDefinitions,customValues,permissionExplanation} from '@/lib/crm/governance';
+import {assertPermission} from '@/lib/crm/permissions';
+import type {Principal} from '@/lib/crm/types';
+import {FieldDefinitionForm,CustomValueForm} from './GovernanceForms';
+export async function CustomFieldsPage({user}:{user:Principal}){
+ assertPermission(user,'accounts.manage');const definitions=await fieldDefinitions(user);
+ return <><header className="portal-page-header"><div><h1>Trường tùy chỉnh</h1><p>Định nghĩa có phiên bản; thay kiểu hoặc lựa chọn giữ nguyên giá trị của phiên bản cũ.</p></div></header><section className="work-section"><h2>Định nghĩa đang có</h2>{definitions.length?definitions.map(d=><details className="work-disclosure" key={d.id}><summary>{d.label} · bản {d.version}{d.active?'':' · Ngừng dùng'}</summary><FieldDefinitionForm key={d.version} definition={d}/></details>):<p>Chưa có trường tùy chỉnh.</p>}</section><section className="work-section"><h2>Thêm trường</h2><FieldDefinitionForm/></section></>;
+}
+export async function CustomFieldsPanel({user,id}:{user:Principal;id:string}){
+ const [definitions,values]=await Promise.all([fieldDefinitions(user),customValues(user,id)]),active=definitions.filter(d=>d.active),older=values.filter(v=>v.definition_version!==v.current_definition_version);
+ const display=(value:unknown)=>value===null?'Chưa ghi nhận':typeof value==='boolean'?(value?'Có':'Không'):String(value);
+ return <section className="work-section"><h2>Thông tin tùy chỉnh</h2>{active.length?active.map(d=>{const value=values.find(v=>v.field_id===d.id&&v.definition_version===d.version);return <details className="work-disclosure" key={d.id}><summary>{d.label} · {value?display(value.value):d.required?'Cần bổ sung':'Chưa ghi nhận'}</summary>{d.write_roles.includes(user.role)?<CustomValueForm key={d.version+'-'+(value?.version??0)} organizationId={id} definition={d} value={value?.value??null} version={value?.version??0}/>:<p>{display(value?.value??null)}</p>}</details>;}):<p>Không có trường tùy chỉnh trong quyền truy cập.</p>}{older.length>0&&<details className="work-disclosure"><summary>Giá trị theo định nghĩa cũ</summary><dl className="crm-readonly">{older.map(v=><div key={v.field_id+'-'+v.definition_version}><dt>{v.label} · bản {v.definition_version}</dt><dd>{display(v.value)}</dd></div>)}</dl></details>}</section>;
+}
+export function PermissionPanel({user}:{user:Principal}){const p=permissionExplanation(user);return <section className="work-section"><h2>Quyền đang áp dụng</h2><p>{p.scope}. Mọi thao tác vẫn được kiểm tra trên server.</p><ul>{p.permissions.map(v=><li key={v.key}>{v.label}</li>)}</ul></section>;}

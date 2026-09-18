@@ -89,7 +89,7 @@ export async function updateOrganization(user: Principal, id: string, input: unk
     const result = await tx.query<{ id: string }>(`UPDATE cohamy_crm.organizations SET code=$1,name=$2,phone=$3,email=$4,address=$5,active=$6,version=version+1 WHERE id=$7 AND version=$8 RETURNING id`, [data.code, data.name, data.phone, data.email, data.address, data.active, id, data.version]);
     if (!result.rows.length) throw new CrmError("VERSION_CONFLICT", 409);
     await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id]);
-    await audit(tx, user.id, "partner.updated", id, { version: data.version + 1, active: data.active });
+    await audit(tx, user.id, "partner.updated", id, {before:{code:original.code,name:original.name,phone:original.phone,email:original.email,address:original.address,active:original.active,source:original.source,segment:original.segment,contactName:original.contact_name,stage:original.stage,version:original.version},after:{...data,version:data.version+1},reason:"Profile edited by authorized user"});
     return { id, version: data.version + 1 };
   });
 }
@@ -125,7 +125,7 @@ export async function createWarehouse(user: Principal, input: unknown) {
 export async function listAccounts(user: Principal) {
   assertPermission(user, "accounts.manage");
   const db = await database();
-  return (await db.query<{ id: string; display_name: string; email: string; role: string; organization_name: string; active: boolean }>(`SELECT m.id,u.display_name,u.email,m.role,o.name AS organization_name,(u.active AND m.active AND o.active) AS active FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id ORDER BY u.email,m.id`)).rows;
+  return (await db.query<{ id: string; display_name: string; email: string; role: string; organization_name: string; organization_kind:string; user_id:string;version:number; active: boolean }>(`SELECT m.id,m.user_id,m.version,u.display_name,u.email,m.role,o.name AS organization_name,o.kind AS organization_kind,(u.active AND m.active AND o.active) AS active FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id ORDER BY u.email,m.id`)).rows;
 }
 export async function createAccount(user: Principal, input: unknown) {
   assertPermission(user, "accounts.manage");

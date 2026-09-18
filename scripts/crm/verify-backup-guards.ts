@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {randomUUID} from 'node:crypto';
+import {expiredVerifiedBackups} from './backup-retention';
+process.env.CRM_DATABASE_MODE='pglite';process.env.CRM_ENVIRONMENT='LOCAL';process.env.CRM_LOCAL_DATA_DIR='.local/crm-qa-backup-'+randomUUID();
+async function main(){const {createQaFixture,qaPassword}=await import('./qa-fixture'),{database}=await import('../../lib/crm/db'),{login}=await import('../../lib/crm/auth'),w=await import('../../lib/crm/workspace'),{databaseManifest}=await import('./database-manifest'),ids=await createQaFixture(),db=await database(),admin=(await login('admin@crm-qa.invalid',qaPassword)).user,cases=[];
+ try{
+  const f=await w.uploadDocument(admin,{entityType:'partner',entityId:ids.dealerA,title:'LOCAL QA integrity',filename:'qa.pdf',mime:'application/pdf',content:Buffer.from('%PDF-1.7\nLOCAL QA bytes')});const manifest=await databaseManifest(db);assert.equal(manifest.fileIntegrityErrors,'0');assert.ok(manifest.tables.find(t=>t.name==='document_versions')?.sha256);cases.push({name:'Manifest hashes complete tables and validates private file bytes',status:'PASS'});
+  await assert.rejects(db.transaction(async tx=>{await tx.query('INSERT INTO cohamy_crm.document_versions(id,document_id,number,filename,mime,size,checksum,content,created_by) VALUES ($1,$2,2,$3,$4,5,$5,$6,$7)',[randomUUID(),f.id,'bad.pdf','application/pdf','wrong-checksum',Buffer.from('%PDF-'),admin.id]);await databaseManifest(tx);}),/DATABASE_SOURCE_OR_FILE_INTEGRITY_FAILED/);assert.equal((await w.documents(admin,'partner',ids.dealerA)).length,1);cases.push({name:'Corrupt file checksum fails verification and fixture transaction rolls back',status:'PASS'});
+  const now=Date.parse('2026-09-19T00:00:00Z'),records=Array.from({length:10},(_,n)=>({id:String(n),completedAt:new Date(now-(n+40)*86400000).toISOString()}));assert.deepEqual(expiredVerifiedBackups(records,30,7,now),['7','8','9']);assert.deepEqual(expiredVerifiedBackups(records.slice(0,3),30,7,now),[]);assert.deepEqual(expiredVerifiedBackups([{id:'recent',completedAt:new Date(now-86400000).toISOString()},...records],30,7,now),['6','7','8','9']);assert.throws(()=>expiredVerifiedBackups(records,0,7,now),/BACKUP_RETENTION_INVALID/);cases.push({name:'Retention preserves minimum verified copies and recent backups; invalid policy rejected',status:'PASS'});
+ }finally{await fs.mkdir('docs/crm/test-results',{recursive:true});await fs.writeFile('docs/crm/test-results/backup-guards-local.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'LOCAL',status:cases.length===3?'PASS':'FAIL',cases},null,2));await db.close();}
+}
+main().catch(e=>{console.error(e);process.exitCode=1;});

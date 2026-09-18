@@ -1,0 +1,27 @@
+{
+  "testedAt": "2026-09-18T19:49:19.932Z",
+  "environment": "STAGING independent PostgreSQL QA database, fictitious recipients; verification delivery MOCK",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Concurrent defaults serialize on user; exactly one remains",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent custom value creation yields one winner and one version conflict",
+      "status": "PASS"
+    },
+    {
+      "name": "Overlapping bulk batches lock in stable order; one atomic winner without partial writes",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent onboarding approval grants one membership and one organization",
+      "status": "PASS"
+    },
+    {
+      "name": "New append-only schema and file bytes satisfy integrity checks before restore",
+      "status": "PASS"
+    }
+  ]
+}

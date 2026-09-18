@@ -7,7 +7,7 @@ export async function GET(request: Request, context: Context) {
     const user = await apiUser(); const { resource } = await context.params;
     const query = new URL(request.url).searchParams;
     switch (resource) {
-      case "partners": return json(await listOrganizations(user, { kind: query.get("kind") || undefined, q: query.get("q") || "", page: Number(query.get("page")) || 1 }));
+      case "partners": return json(await listOrganizations(user, { kind: query.get("kind") || undefined, q: query.get("q") || "", page: Number(query.get("page")) || 1,tags:query.get("tags")||undefined }));
       case "catalog": return json({ items: await listCatalog(user, query.get("q") || "") });
       case "warehouses": return json({ items: await listWarehouses(user) });
       case "accounts": return json({ items: await listAccounts(user) });

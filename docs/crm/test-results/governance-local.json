@@ -1,0 +1,54 @@
+{
+  "environment": "LOCAL",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F124 column order/width persist per user and reject stale or unsafe widths",
+      "status": "PASS"
+    },
+    {
+      "name": "F123 edit/default/share obey ownership and exactly one personal default",
+      "status": "PASS"
+    },
+    {
+      "name": "F128 preview does not write; one stale member blocks the entire batch",
+      "status": "PASS"
+    },
+    {
+      "name": "F128 atomic confirmation is retry safe and current scope/expiry are enforced",
+      "status": "PASS"
+    },
+    {
+      "name": "F135 type/required/role validation and optimistic value conflicts",
+      "status": "PASS"
+    },
+    {
+      "name": "F135 schema changes retain old typed values and immutable history",
+      "status": "PASS"
+    },
+    {
+      "name": "F108 Vietnam quiet hours cover overnight/boundaries and mandatory security overrides opt-out",
+      "status": "PASS"
+    },
+    {
+      "name": "F107 read/unread filtering and current scope recheck",
+      "status": "PASS"
+    },
+    {
+      "name": "F133/F134 metadata search/effect/expiry and version-specific reads",
+      "status": "PASS"
+    },
+    {
+      "name": "F138 devices identify current session and revoking others keeps this session only",
+      "status": "PASS"
+    },
+    {
+      "name": "F136 role preview includes affected sessions; stale/missing preview and escalation blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "F139 structured immutable audit supports actor/date filters and redacts nested secrets",
+      "status": "PASS"
+    }
+  ]
+}

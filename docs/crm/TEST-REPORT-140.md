@@ -1,28 +1,33 @@
 # Cohamy - test report
 
-Updated 2026-09-18T19:19:43.460Z.
+Updated 2026-09-18T20:12:47.965Z.
 
 | Group | Result | Environment | Evidence | Time |
 |---|---|---|---|---|
 | Access/intake baseline | 21/21 PASS | LOCAL | test-results/access-local.json | 2026-09-18T18:59:45.481Z |
-| Work baseline | 21/21 PASS | LOCAL | test-results/work-local.json | 2026-09-18T18:59:48.324Z |
-| Registration/workspace/care | 18/18 PASS | LOCAL | test-results/upgrade-local.json | 2026-09-18T19:11:02.983Z |
+| Work baseline | 21/21 PASS | LOCAL | test-results/work-local.json | 2026-09-18T19:40:51.062Z |
+| Registration/workspace/care | 18/18 PASS | LOCAL | test-results/upgrade-local.json | 2026-09-18T19:40:45.098Z |
 | Portal services | 5/5 PASS | LOCAL | test-results/portal-services-local.json | 2026-09-18T18:59:47.125Z |
 | Partner library/checklist/staff | 6/6 PASS | LOCAL | test-results/partner-library-local.json | 2026-09-18T19:15:05.560Z |
 | Opportunities/tags/preferences/visits | 6/6 PASS | LOCAL | test-results/relationships-local.json | 2026-09-18T18:56:26.174Z |
-| Actual worker interruption/restart | 3/3 PASS | LOCAL | test-results/worker-restart-local.json | 2026-09-18T18:57:56.023Z |
+| Actual local worker interruption/restart | 3/3 PASS | LOCAL | test-results/worker-restart-local.json | 2026-09-18T18:57:56.023Z |
+| Actual PM2/PostgreSQL interruption and unmodified lease recovery | 4/4 PASS | STAGING | test-results/worker-postgres-staging.json | 2026-09-18T20:10:07.838Z |
 | XLSX jobs | 8/8 PASS | LOCAL | test-results/data-jobs-local.json | 2026-09-18T18:56:28.034Z |
 | Real UI / mocked Brevo | 15/15 PASS | LOCAL | test-results/upgrade-browser-local.json | 2026-09-18T19:16:15.916Z |
+| Governance negative/version tests | 12/12 PASS | LOCAL | test-results/governance-local.json | none |
+| Governance real Edge UI | 9/9 PASS | LOCAL | test-results/governance-browser-local.json | 2026-09-18T19:53:25.257Z |
+| Governance PostgreSQL contention | 5/5 PASS | STAGING | test-results/governance-postgres-staging.json | 2026-09-18T19:49:19.932Z |
+| Backup corruption/retention guards | 3/3 PASS | LOCAL | test-results/backup-guards-local.json | 2026-09-18T19:58:21.954Z |
+| Public-file backup guards | 3/3 PASS | LOCAL | test-results/public-files-backup-local.json | 2026-09-18T20:00:27.296Z |
+| Restored private files and A/B access | 4/4 PASS | STAGING | test-results/restored-access-staging.json | 2026-09-18T19:57:01.224Z |
 
 - E01: backend mocked mailbox verification / supplementation / approval tested. UI report is separate. True Brevo delivery BLOCKED by configuration/test-recipient gate.
-- E02: same-decision retry tested; PostgreSQL competing admin connections NOT_RUN.
+- E02: same-decision retry and simultaneous PostgreSQL approvals PASS on isolated STAGING.
 - E03/E15: scoped search/bookmarks/files/notifications/export download and revoked assignment tests; commercial reports/stock domains not implemented.
 - E04: invitation ceiling only; staff commercial order/owner approval NOT_STARTED.
 - E05-E13/E16: commercial price/stock/delivery/money/consignment/procurement/report ledgers NOT_STARTED.
-- E14: atomic import failure, unique origins, duplicate confirmation and expired job-lease recovery tested. Actual Node claim/interruption/restart passed under isolated QA with fixture-expired lease; supervised PostgreSQL worker restart NOT_RUN.
-- E17: independent PostgreSQL database/files restore NOT_RUN.
+- E14: atomic import failure, unique origins, duplicate confirmation and expired job-lease recovery tested. Actual Node claim/interruption/restart passed under isolated QA with fixture-expired lease; supervised PostgreSQL kill/automatic restart, real two-minute lease expiry and second restart PASS in worker-postgres-staging.json, without clock/lease fixture manipulation.
+- E17: independent PostgreSQL restore of all 49 tables plus bytea/source links PASS; restored A/B access and exact bytes PASS (backup-restore-staging.json; restored-access-staging.json).
 - E18: candidate deploy/cutover/rollback NOT_RUN.
 
-PGlite sequential/local retry is not PostgreSQL concurrency proof. No performance dataset or p50/p95 thresholds agreed, no load claim. Dependency audit originally 36; scoped ExcelJS uuid 11.1.1 override returns install audit to 34 existing advisories (29 moderate, 5 high); full remediation is not claimed. Build/typecheck/lint logs and packaging results are recorded in PROGRESS-140 after final runs.
-
-Final LOCAL verification: 103/103 functional cases PASS; 2/2 packaging checks PASS (67 traces, migrations 001–010, no QA leaks). Final build/typecheck/lint PASS. UI15 cases,19 screenshots, errors[]. See PROGRESS-140 and UI-FINISH-REVIEW-140 for precise process and review scope. Live Brevo, PostgreSQL concurrency, independent restore and deployment remain NOT_RUN.
+PGlite sequential/local retry is not PostgreSQL concurrency proof. governance-postgres-staging.json separately proves four multi-connection contention scenarios. No performance dataset or p50/p95 thresholds agreed, no load claim. Dependency audit originally 36; scoped ExcelJS uuid 11.1.1 override returns install audit to 34 existing advisories (29 moderate, 5 high); full remediation is not claimed. Build/typecheck/lint logs and packaging results are recorded in PROGRESS-140 after final runs.

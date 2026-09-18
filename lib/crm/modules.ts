@@ -3,6 +3,7 @@ import type { Principal } from "./types";
 export type ModuleIcon = "customer" | "dealer" | "goods" | "order" | "warehouse" | "consignment" | "debt" | "cash" | "report" | "account";
 export interface CrmModule { id: string; label: string; shortLabel: string; icon: ModuleIcon; tone: string; permission: string; status: "CONNECTED" | "PENDING"; bottom?: number }
 const internal: CrmModule[] = [
+  {id:'fields',label:'Trường hồ sơ tùy chỉnh',shortLabel:'Trường dữ liệu',icon:'account',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   {id:'care',label:'Danh mục chăm sóc',shortLabel:'Chăm sóc',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
   {id:'visits',label:'Lần thăm điểm bán',shortLabel:'Lần thăm',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
   {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'report',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},

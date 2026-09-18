@@ -5,12 +5,36 @@ umask 077
 export PATH="/root/.nvm/versions/node/v20.19.6/bin:$PATH"
 SHA="${1:?Pass the exact 40-character commit SHA}"
 [[ "$SHA" =~ ^[a-f0-9]{40}$ ]] || exit 2
-PREVIOUS=/root/cohamy
+CUTOVER=0
 SHARED=/root/cohamy-shared
+PREVIOUS=/root/cohamy
+if [[ -f "$SHARED/current-release" ]]; then
+  PREVIOUS="$(<"$SHARED/current-release")"
+  [[ "$PREVIOUS" =~ ^/root/cohamy-releases/[a-f0-9]{40}$ ]] || exit 2
+fi
 RELEASE="/root/cohamy-releases/$SHA"
 BACKUP="/root/cohamy-backups/$(date -u +%Y%m%dT%H%M%SZ)-${SHA:0:12}"
 test -d "$PREVIOUS/.git"
 test ! -e "$RELEASE"
+finish() {
+  result=$?
+  if [[ -n "${CANDIDATE_PID:-}" ]]; then kill "$CANDIDATE_PID" 2>/dev/null || true; fi
+  if [[ "$result" != 0 && "$CUTOVER" = 1 ]]; then
+    # Source rollback preserves the additive database and all business history.
+    pm2 delete cohamy >/dev/null 2>&1 || true
+    pm2 delete cohamy-crm-worker >/dev/null 2>&1 || true
+    COHAMY_NODE_BINARY="$SHARED/node22/bin/node" pm2 start "$PREVIOUS/ecosystem.config.js" --only cohamy --env production --update-env
+    if [[ -f "$PREVIOUS/scripts/crm/backup-restore.ts" ]]; then
+      COHAMY_NODE_BINARY="$SHARED/node22/bin/node" pm2 start "$PREVIOUS/ecosystem.config.js" --only cohamy-crm-worker --env production --update-env
+    else systemctl stop cohamy-backup.timer 2>/dev/null || true; fi
+    pm2 save
+    git -C "$PREVIOUS" rev-parse HEAD > "$SHARED/current-sha"
+    printf '%s\n' "$PREVIOUS" > "$SHARED/current-release"
+    printf 'SOURCE_ROLLBACK=%s\n' "$PREVIOUS"
+  fi
+  exit "$result"
+}
+trap finish EXIT
 mkdir -p "$SHARED" /root/cohamy-releases "$BACKUP"
 chmod 700 "$SHARED" /root/cohamy-releases /root/cohamy-backups "$BACKUP"
 # Install a checksum-verified Node 22 runtime without changing other applications.
@@ -31,7 +55,7 @@ node --version
 cp "$PREVIOUS/.env.production" "$BACKUP/previous.env.production"
 git -C "$PREVIOUS" diff --binary > "$BACKUP/previous-working-tree.patch"
 git -C "$PREVIOUS" rev-parse HEAD > "$BACKUP/previous-sha.txt"
-pm2 jlist > "$BACKUP/pm2-private.json"
+pm2 jlist | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>require("fs").writeFileSync(process.argv[1],JSON.stringify(JSON.parse(s).filter(a=>a.name==="cohamy")),{mode:0o600}));' "$BACKUP/pm2-private.json"
 tar --exclude=node_modules --exclude=.next --exclude=.git -czf "$BACKUP/previous-source.tar.gz" -C "$PREVIOUS" .
 sha256sum "$BACKUP/previous-source.tar.gz" > "$BACKUP/SHA256SUMS"
 git clone --quiet https://github.com/nguyenthenguyen2006-oss/cohamy-website.git "$RELEASE"
@@ -64,6 +88,9 @@ source "$SHARED/postgres.env"
 set +a
 export CRM_DATABASE_MODE=postgres CRM_DATABASE_URL="postgresql://cohamy_owner:$POSTGRES_PASSWORD@127.0.0.1:55432/cohamy_crm"
 export CRM_ENVIRONMENT=PRODUCTION CRM_PUBLIC_ORIGIN=https://cohamy.vn NODE_ENV=production
+# Preserve a verified pre-migration database including every row and bytea.
+# pg_dump and the row manifests share the same exported PostgreSQL snapshot.
+CRM_BACKUP_ROOT="$BACKUP/pre-migration" CRM_BACKUP_PUBLIC_UPLOAD_DIR="$SHARED/uploads/blog" node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/backup-restore.ts > "$BACKUP/pre-migration-restore.json"
 npm run crm:init -- --catalog
 if [[ "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d cohamy_crm -Atc 'SELECT count(*) FROM cohamy_crm.users')" = 0 ]]; then
   export CRM_BOOTSTRAP_EMAIL=cohamyvietnam@gmail.com CRM_BOOTSTRAP_NAME='Quản trị Cohamy'
@@ -82,48 +109,46 @@ GRANT USAGE ON SCHEMA cohamy_crm TO cohamy_runtime;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA cohamy_crm TO cohamy_runtime;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA cohamy_crm TO cohamy_runtime;
 REVOKE ALL ON cohamy_crm.migrations FROM cohamy_runtime;
-REVOKE UPDATE, DELETE ON cohamy_crm.audit_events,cohamy_crm.activities FROM cohamy_runtime;
+REVOKE UPDATE, DELETE ON cohamy_crm.audit_events,cohamy_crm.activities,cohamy_crm.document_versions,cohamy_crm.application_history,cohamy_crm.support_messages,cohamy_crm.opportunity_history,cohamy_crm.partner_visits,cohamy_crm.custom_field_versions,cohamy_crm.custom_value_history FROM cohamy_runtime;
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 SQL
 export CRM_DATABASE_URL="postgresql://cohamy_runtime:$RUNTIME_PASSWORD@127.0.0.1:55432/cohamy_crm"
-export BLOG_SOURCE=legacy CRM_WEBSITE_ORDER_INTAKE=true
+export COHAMY_PREVIOUS_ENV="$BACKUP/previous.env.production"
+export BLOG_SOURCE="$(node -e 'const fs=require("fs"),c=require("dotenv").parse(fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV));const s=c.BLOG_SOURCE||"legacy";if(!["legacy","wordpress","sheets"].includes(s))process.exit(2);process.stdout.write(s);')" CRM_WEBSITE_ORDER_INTAKE=true
+export CRM_REGISTRATION_MODE=OPEN
 export UPLOAD_DIR="$SHARED/uploads/blog" NEXT_PUBLIC_UPLOAD_BASE_URL=https://cohamy.vn/uploads/blog
 mkdir -p "$UPLOAD_DIR"
-export COHAMY_PREVIOUS_ENV="$BACKUP/previous.env.production"
-node -e 'const fs=require("fs");const keys=["CRM_DATABASE_MODE","CRM_DATABASE_URL","CRM_ENVIRONMENT","CRM_PUBLIC_ORIGIN","CRM_WEBSITE_ORDER_INTAKE","BLOG_SOURCE","UPLOAD_DIR","NEXT_PUBLIC_UPLOAD_BASE_URL"];const old=fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8").split(/\r?\n/).filter(l=>!keys.some(k=>l.startsWith(k+"="))&&!l.startsWith("CRM_BOOTSTRAP_")&&!l.startsWith("CRM_LOCAL_DATA_DIR=")).join("\n");fs.writeFileSync(".env.production",old+"\n"+keys.map(k=>k+"="+process.env[k]).join("\n")+"\n",{mode:0o600});'
+node -e 'const fs=require("fs");const keys=["CRM_DATABASE_MODE","CRM_DATABASE_URL","CRM_ENVIRONMENT","CRM_PUBLIC_ORIGIN","CRM_WEBSITE_ORDER_INTAKE","CRM_REGISTRATION_MODE","BLOG_SOURCE","UPLOAD_DIR","NEXT_PUBLIC_UPLOAD_BASE_URL"];const old=fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8").split(/\r?\n/).filter(l=>!keys.some(k=>l.startsWith(k+"="))&&!l.startsWith("CRM_BOOTSTRAP_")&&!l.startsWith("CRM_LOCAL_DATA_DIR=")).join("\n");fs.writeFileSync(".env.production",old+"\n"+keys.map(k=>k+"="+process.env[k]).join("\n")+"\n",{mode:0o600});'
 npm run build
 npm run test:crm:build
 
-# Backup and independently restore the new database before opening traffic.
-docker exec cohamy-crm-postgres pg_dump -U cohamy_owner -d cohamy_crm -Fc > "$BACKUP/crm-before-cutover.dump"
-sha256sum "$BACKUP/crm-before-cutover.dump" >> "$BACKUP/SHA256SUMS"
-RESTORE_DB="restore_${SHA:0:12}"
-docker exec cohamy-crm-postgres createdb -U cohamy_owner "$RESTORE_DB"
-docker exec -i cohamy-crm-postgres pg_restore -U cohamy_owner -d "$RESTORE_DB" --exit-on-error < "$BACKUP/crm-before-cutover.dump"
-test "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d "$RESTORE_DB" -Atc 'SELECT count(*) FROM cohamy_crm.migrations')" = 4
-test "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d "$RESTORE_DB" -Atc 'SELECT count(*) FROM cohamy_crm.products')" = 10
-test "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d "$RESTORE_DB" -Atc 'SELECT count(*) FROM cohamy_crm.users')" = 1
+# Verify the migrated database dynamically, without assumptions about real counts.
+CRM_DATABASE_URL="postgresql://cohamy_owner:$POSTGRES_PASSWORD@127.0.0.1:55432/cohamy_crm" CRM_BACKUP_ROOT="$BACKUP/before-cutover" CRM_BACKUP_PUBLIC_UPLOAD_DIR="$UPLOAD_DIR" node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/backup-restore.ts > "$BACKUP/before-cutover-restore.json"
 (cd "$BACKUP" && sha256sum -c SHA256SUMS)
 
 # Next normalizes rewrite hosts to localhost; use the same loopback hostname
 # to avoid self-proxying localized rewrites on the production server.
 node node_modules/next/dist/bin/next start --hostname localhost --port 4312 > "$BACKUP/candidate.log" 2>&1 &
 CANDIDATE_PID=$!
-trap 'kill "$CANDIDATE_PID" 2>/dev/null || true' EXIT
 for attempt in {1..30}; do if curl -fsS http://localhost:4312/api/health > "$BACKUP/candidate-health.json"; then break; fi; sleep 2; done
 curl -fsS http://localhost:4312/api/health > "$BACKUP/candidate-health.json"
 curl -fsS http://localhost:4312/crm/login > /dev/null
 test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:4312/api/crm/work/orders)" = 401
 node scripts/crm/verify-production-smoke.mjs http://localhost:4312 "$SHARED/initial-admin.json" "$BACKUP/candidate-smoke.json"
 kill "$CANDIDATE_PID" 2>/dev/null || true
-trap - EXIT
+CANDIDATE_PID=
 unset CRM_DATABASE_URL CRM_DATABASE_MODE CRM_ENVIRONMENT CRM_PUBLIC_ORIGIN CRM_WEBSITE_ORDER_INTAKE BLOG_SOURCE UPLOAD_DIR NEXT_PUBLIC_UPLOAD_BASE_URL POSTGRES_PASSWORD POSTGRES_USER POSTGRES_DB
 # Reload retains the old npm script/cwd when switching between release directories.
 # Replace only Cohamy's process registration; source/data and other apps are untouched.
+CUTOVER=1
 if pm2 describe cohamy >/dev/null 2>&1; then pm2 delete cohamy; fi
+if pm2 describe cohamy-crm-worker >/dev/null 2>&1; then pm2 delete cohamy-crm-worker; fi
 pm2 start "$RELEASE/ecosystem.config.js" --only cohamy --env production --update-env
+pm2 start "$RELEASE/ecosystem.config.js" --only cohamy-crm-worker --env production --update-env
 pm2 save
 curl --retry 10 --retry-delay 2 --retry-connrefused -fsS https://cohamy.vn/api/health > "$BACKUP/public-health.json"
 printf '%s\n' "$SHA" > "$SHARED/current-sha"
 printf '%s\n' "$RELEASE" > "$SHARED/current-release"
+bash scripts/crm/install-backup-timer.sh
+CUTOVER=0
 printf 'DEPLOYED_SHA=%s\nRELEASE=%s\nBACKUP=%s\n' "$SHA" "$RELEASE" "$BACKUP"

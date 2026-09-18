@@ -150,7 +150,7 @@ components:
 
 Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.
 
-This is a scan of the implemented workspace and its local CRM/portal extension. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
+This is a scan of the implemented workspace and its CRM/portal extensions, including governance. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
 
 **Key Characteristics:**
 
@@ -161,6 +161,8 @@ This is a scan of the implemented workspace and its local CRM/portal extension. 
 - Explicit pending, empty, error and success feedback.
 - Native dialogs and disclosures keep quick actions close to their record.
 - Dated document-version receipts distinguish acknowledged and current versions.
+- Explicit impact previews precede bulk updates and role changes.
+- Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.
 
 ## Colors
 
@@ -206,6 +208,10 @@ Mobile forms use one column. Sections reduce from the frontmatter section paddin
 
 The opportunity board contains five columns, each at least (230px), with (20px) gaps and horizontal scrolling confined to its named, keyboard-focusable region. Column headings, thin top rules and record separators establish the stages; there is no drag-and-drop contract. Checklist rows place the checkbox label, step text and removal action in three desktop columns; mobile moves the label above the text/action pair. Draft-cart rows place SKU, quantity, unit and removal in four desktop columns; mobile uses two columns with the SKU across both.
 
+Partner column preferences place visibility, a labeled numeric width and explicit up/down actions in three desktop columns with (16px) gaps and thin row dividers. At the mobile breakpoint, visibility and width share two columns; the wrapping movement actions span the full next row. Column width accepts (80–600px); the implemented defaults are (240px) for the record name and (150px) for other selected fields. The fixed-layout table follows the saved visible order and adds a (120px) quick-view column. Its width is the selected-column sum plus that action column, subject to the existing table minimum; horizontal overflow stays inside the named, keyboard-focusable list region. These widths do not expand the workspace viewport.
+
+Governance previews reuse ordinary forms, headings and record lists rather than a new overlay system. Custom-field definitions, older values and technical audit metadata use native disclosures. Notification hour controls follow the shared two-column form grid, then stack on mobile. Device/session rows wrap their actions on mobile. Technical audit payloads preserve line breaks, inherit the working text font and wrap long content; file checksums also break long strings inside their disclosure.
+
 The quick-create dialog uses the frontmatter width and padding with viewport margins (16px per side), a maximum height of (100dvh minus 32px), and centered placement. The quick-detail dialog occupies the right edge, uses the frontmatter width and padding, fills the viewport height and scrolls internally. On mobile the quick-create trigger hides its text and becomes (38px) wide, retaining the accessible name “Tạo nhanh”. These dialog behaviors are separate from the collapsing navigation.
 
 The login uses equal story/form columns on desktop. Its form box has a maximum width of (460px), desktop padding (60px 36px), and logo width (180px). Mobile hides the story and uses padding (55px 25px); it does not shrink the inputs.
@@ -238,6 +244,8 @@ Labels are explicit, arranged above their controls with the label gap. Inputs, s
 
 Login fields have minimum height (48px), left inset (42px), right inset (45px), and an icon/visibility control in the field wrapper. Checkboxes are (18px) with orange accent. Form grids use two equal columns and the field-grid gap before collapsing on mobile.
 
+The custom-field key has associated guidance through `aria-describedby`: (2–40) characters, starting with a lowercase Latin letter, followed only by lowercase Latin letters, digits or underscores. The visible example is `muc_tieu_thang`. Native invalid-input feedback repeats that format in Vietnamese, and editing clears the custom validity message. Existing keys are read-only. Keep this help beside the field; it also tells the operator not to use keys for passwords, OTPs or tokens. Required custom values retain their written marker and type-appropriate control; a checkbox's false value is a valid boolean, not an absent required value.
+
 ### Cards / Containers
 
 Work sections and record forms are white, rule-bounded containers with the section corner and padding. Table sections remove side/bottom padding around the table while retaining inset headings. Filter bars use the medium corner, (18px) padding and a wrapping flex layout; mobile padding is (14px). These are task groups, not ornamental dashboard tiles.
@@ -258,7 +266,35 @@ Tables use subdued headers, thin row rules and a light row hover. Numeric column
 
 Native disclosures reveal task creation, assignments, audit history and mobile contact facts. Their summary uses record-link blue and visible keyboard focus; opening adds spacing below the summary. Within an order or customer record, an empty task section points directly to “Tạo việc và đặt hạn” underneath it. The global task-list empty state separately links to the order list. Timeline entries use thin rules, author/time metadata and wrapping notes.
 
-Column preferences are native checkboxes grouped under a legend in a wrapping, bordered fieldset. Filter-saving remains inside its disclosure and separates the name, shared-use checkbox, save action and receipt. Task checklists retain written step labels and explicit add/remove/save actions. The prerequisite section links to real prerequisite tasks and writes “Đã xong” or “Chưa xong”; checklist/dependency failures explain why completion was rejected rather than implying success.
+Partner column preferences now combine native visibility checkboxes with labeled widths and up/down buttons inside a disclosure. Movement controls name their column and disable the impossible first/last movement; saving is disabled when no column is visible. The saved receipt names visibility, order and width, and further changes clear it. Other checkbox groups retain their legend and native semantics. Task checklists retain written step labels and explicit add/remove/save actions. The prerequisite section links to real prerequisite tasks and writes “Đã xong” or “Chưa xong”; checklist/dependency failures explain why completion was rejected rather than implying success.
+
+### Saved filters and explicit clearing
+
+Filter-saving remains inside its disclosure and separates the name, shared-use checkbox, save action and receipt. “Không gian cá nhân” lists saved filters, labels shared/default state in writing and lets the owner edit the name, keyword, default and shared-use choices. Editing retains the saved filter's other values. A personal default applies only when opening the matching customer/dealer list without an explicit keyword or tags. “Bỏ bộ lọc” supplies an explicit bypass, so clearing does not immediately reapply that default. Keep default selection and current query state distinct; this is a list preference rather than a permission change.
+
+### Bulk and role impact previews
+
+Bulk actions select records on the current list page, choose a care stage or activate/deactivate action and require a reason. The first action is secondary and reads “Xem tác động trước khi áp dụng”; the preview lists each record with written before/after values. A separate primary confirmation applies that preview. Editing any form input invalidates the preview. The UI explains its (10-minute) lifetime and the all-or-nothing contract: changed permissions or versions block the whole batch. Errors identify affected records; success reports the applied count. Preserve this distinction between preview and committed change, without presenting a preview as a saved update.
+
+Changing an account role first displays the actual account, old/new roles, affected session count, new scope and written permissions. It also explains that earlier customer/warehouse assignments are cleared and need reassignment. “Áp dụng quyền đã xem” applies the membership version from that preview; changing the role selection clears the preview. The role choices remain within the account's internal/dealer role family. The profile's “Quyền đang áp dụng” panel states the effective scope and that server checks still govern actions. These impact summaries belong beside the action, before its primary confirmation.
+
+### Typed custom fields and retained values
+
+“Trường tùy chỉnh” shows each definition's version and inactive state in its disclosure. Definition forms offer text, exact number, date, boolean and enumerated choices, with one option per line for enumerations; they also expose required, active, read-role and write-role settings. The write-role legend explains that both read permission and record access are needed. A successful edit reports a new definition version while retaining old values.
+
+Within a record, accessible active fields show their display label and current value, “Cần bổ sung” or “Chưa ghi nhận”. Editable fields use the appropriate select, date input, checkbox or text input with decimal input mode. Read-only roles see the value without a save action. “Giá trị theo định nghĩa cũ” keeps earlier values together with their definition version; do not silently reinterpret them as values of the new type or current definition.
+
+### Notification preferences and session control
+
+Notification preferences use a labeled checkbox group for work, onboarding, support and system messages, plus the implemented in-app channel. Quiet-start/end selects offer hourly choices or “Không đặt giờ”. Help states Vietnam time, retention until the quiet period ends and immediate mandatory security messages. Saving these settings retains other workspace preferences, including selected columns and widths. Do not imply that an email or push channel is available from this form.
+
+Session rows show a device label, sign-in/expiry times and an explicit “Phiên hiện tại” marker. Only other sessions offer an individual end action. “Kết thúc mọi phiên khác” appears when other sessions exist, and its receipt confirms that the current session remains active. Role changes separately disclose revocation in their impact preview. Keep the device description and current-session marker visible; the UI does not claim a location or full device-management system.
+
+### Operator-readable audit history
+
+The audit search exposes action/object keyword, actor and from/to dates. Timeline rows retain actor, timestamp and action/object identity. “Nội dung thay đổi và lý do” leads with Vietnamese attribute names and written “Trước” / “Sau” values, translates known status/role values and displays a recorded reason. Events without a comparison explicitly say that before/after details are absent. Unmapped keys retain their identifier under “Thuộc tính”; do not invent a meaning for them.
+
+The separate nested “Dữ liệu kỹ thuật của sự kiện” disclosure contains the supplied redacted metadata as formatted text. This renderer does not itself redact the payload. Keep that technical disclosure secondary to the comparison and allow long content to wrap, including at (320px). Do not make operators read raw JSON as the only account of a change.
 
 ### Native quick actions and note drafts
 
@@ -276,7 +312,9 @@ Library lists and detail headings distinguish draft, published and withdrawn con
 
 Staff rows distinguish the owner from staff and active from locked state in writing; lock/reopen actions reuse the shared action-state control. The portal cart is explicitly a saved per-account draft with SKU, quantity and base unit, not a price quotation or stock posting. Address/profile editing and support use labeled forms in the same working-surface language; support can expose an explicitly labeled internal-note checkbox when allowed. These UI groups do not establish a completed checkout, revenue or financial workflow.
 
-The earlier scoped finish review ended with disposition ship after four UI fixes: the mobile profile accessible name, early mobile customer context, contextual task creation and removed login eyebrow. The extension's first review requested two action-state fixes; the final verdict scored both resolved and returned disposition ship. That verdict scores those two findings only. Neither review certifies the whole CRM/portal inventory, backend correctness, production deployment or unopened stock/financial workflows. The sidecar is a preview of visual primitives; its fragment links, inline-open dialog samples and sample text do not perform application actions.
+The earlier scoped finish review ended with disposition ship after four UI fixes: the mobile profile accessible name, early mobile customer context, contextual task creation and removed login eyebrow. The extension's review scored its two action-state findings resolved and returned disposition ship. The final governance review also returned disposition ship after resolving two findings: readable Vietnamese audit comparisons with secondary technical metadata, and associated custom-key format/example/invalid-input guidance. Those verdicts score their recorded findings; they do not certify the whole CRM/portal inventory.
+
+Governance browser evidence in `docs/crm/test-results/governance-browser-local.json` reports (9/9) PASS in real Edge/Next with an isolated local QA database, no page errors and (19) screenshot paths spanning desktop (1366px), mobile (390px) and narrow mobile (320px). It covers persistence and the recorded governance workflows. This is local UI evidence, not a statement about production deployment, live provider readiness, complete backend correctness or unopened stock/financial workflows. The earlier local/staging-only scope in `PRODUCT.md` is superseded by the user's explicit push/deploy authorization; authorization is distinct from successful deployment evidence. No commercial policy is inferred here. The sidecar is a preview of visual primitives; its fragment links, inline-open dialog samples and sample text do not perform application actions.
 
 ## Do's and Don'ts
 
@@ -290,6 +328,12 @@ The earlier scoped finish review ended with disposition ship after four UI fixes
 - Do distinguish request status and request value from stock, payment and debt.
 - Do retain native dialog/disclosure semantics and written pending, error and saved receipts on implemented action forms.
 - Do show dated acknowledgement on its own document version and check required reading against the current version.
+- Do retain explicit column order/width controls and confine table scrolling to the list region.
+- Do keep saved defaults, editable filters and an explicit clear/bypass action distinct.
+- Do show actual bulk/role impacts before a separate confirmation, and invalidate stale previews.
+- Do associate custom-key guidance with its control and retain typed values under their definition version.
+- Do keep quiet-hour rules, mandatory security notices and the current-session marker readable.
+- Do lead audit detail with Vietnamese before/after values and keep redacted technical metadata secondary.
 
 ### Don't:
 
@@ -299,3 +343,6 @@ The earlier scoped finish review ended with disposition ship after four UI fixes
 - Don't turn preview-only tonal ramps into application tokens.
 - Don't describe the finish review as backend correctness or production approval.
 - Don't turn a saved draft, won opportunity or acknowledged older file into a completed transaction or current-version receipt.
+- Don't reinterpret older custom-field values under a new definition or imply that preview means committed change.
+- Don't substitute raw JSON for readable audit detail or treat the display component as the redaction boundary.
+- Don't describe local Edge PASS or deploy permission as production/provider readiness.

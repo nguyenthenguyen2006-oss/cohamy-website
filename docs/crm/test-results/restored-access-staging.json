@@ -1,0 +1,23 @@
+{
+  "testedAt": "2026-09-18T19:57:01.224Z",
+  "environment": "STAGING independent QA restore",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Restored private file contains exact source bytes under dealer A scope",
+      "status": "PASS"
+    },
+    {
+      "name": "Restored file download denies dealer B",
+      "status": "PASS"
+    },
+    {
+      "name": "Restored organization links retain A/B boundaries",
+      "status": "PASS"
+    },
+    {
+      "name": "Restored immutable definitions retain history protection",
+      "status": "PASS"
+    }
+  ]
+}

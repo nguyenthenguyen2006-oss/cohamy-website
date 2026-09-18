@@ -2,7 +2,7 @@
 .cohamy-crm .upgrade-public > a:first-child { display: inline-block; margin-bottom: 32px; }
 .cohamy-crm .upgrade-public p { overflow-wrap: anywhere; }
 .cohamy-crm .upgrade-actions { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-top: 20px; }
-.cohamy-crm .upgrade-checklist { display: grid; grid-template-columns: 100px minmax(0,1fr) auto; gap: 12px; align-items: center; margin: 12px 0; }
+.cohamy-crm .upgrade-checklist { display: grid; grid-template-columns: 100px minmax(0,1fr) auto auto auto; gap: 12px; align-items: center; margin: 12px 0; }
 .cohamy-crm .upgrade-checklist label { display: flex; align-items: center; gap: 8px; }
 .cohamy-crm .upgrade-checklist input[type=checkbox] { width: 18px; min-height: 18px; }
 .cohamy-crm .work-task-list strong { overflow-wrap: anywhere; }
@@ -12,6 +12,7 @@
 .cohamy-crm .upgrade-columns { display:flex; flex-wrap:wrap; gap:12px 24px; margin:20px 0; border:1px solid var(--work-rule); padding:16px; }
 .cohamy-crm .upgrade-columns label { display:flex; align-items:center; gap:8px; }
 .cohamy-crm .upgrade-columns input { width:18px; min-height:18px; }
+.cohamy-crm .upgrade-column-row { display:grid; grid-template-columns:minmax(100px,1fr) minmax(100px,1fr) auto; gap:16px; align-items:center; border-bottom:1px solid var(--work-rule); padding:16px 0; }
 .cohamy-crm .upgrade-inline { display:flex; align-items:center; gap:10px; margin:16px 0; }
 .cohamy-crm .upgrade-inline input { width:18px; min-height:18px; }
 .cohamy-crm .upgrade-detail-dialog { position:fixed; inset:0 0 0 auto; margin:0; width:min(520px,100vw); height:100dvh; max-height:100dvh; border:1px solid var(--work-rule); padding:28px; background:white; overflow-y:auto; }
@@ -29,10 +30,15 @@
 .cohamy-crm .upgrade-opportunity-board li { border-bottom:1px solid var(--work-rule); padding-bottom:20px; margin-bottom:20px; overflow-wrap:anywhere; }
 @media(max-width:760px) {
   .cohamy-crm .upgrade-public { padding: 28px 16px; }
-  .cohamy-crm .upgrade-checklist { grid-template-columns: minmax(0,1fr) auto; }
+  .cohamy-crm .upgrade-checklist { grid-template-columns: repeat(3,minmax(0,1fr)); }
   .cohamy-crm .upgrade-checklist label { grid-column: 1/-1; }
+  .cohamy-crm .upgrade-checklist > input { grid-column: 1/-1; }
   .cohamy-crm .upgrade-cart-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr); border-bottom:1px solid var(--work-rule); padding-bottom:20px; }
   .cohamy-crm .upgrade-cart-row label:first-child { grid-column:1/-1; }
+  .cohamy-crm .upgrade-column-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .cohamy-crm .upgrade-column-row .upgrade-actions { grid-column:1/-1; margin-top:0; }
   .cohamy-crm .upgrade-quick-trigger { width:38px; min-width:38px; padding:8px; }
   .cohamy-crm .upgrade-quick-trigger span { display:none; }
 }
+.cohamy-crm .upgrade-audit-payload {white-space:pre-wrap;overflow-wrap:anywhere;max-width:100%;font:inherit;line-height:1.6;padding:16px;}
+.cohamy-crm .upgrade-file-checksum {overflow-wrap:anywhere;word-break:break-all;}

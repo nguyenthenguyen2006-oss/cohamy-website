@@ -46,7 +46,14 @@
     "test:crm:upgrade-browser": "node scripts/crm/verify-upgrade-browser.mjs",
     "test:crm:library": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-partner-library.ts",
     "test:crm:care": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-relationships.ts",
-    "test:crm:worker-restart": "node scripts/crm/verify-worker-restart.mjs"
+    "test:crm:worker-restart": "node scripts/crm/verify-worker-restart.mjs",
+    "test:crm:governance": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-governance.ts",
+    "test:crm:governance-browser": "node scripts/crm/verify-governance-browser.mjs",
+    "test:crm:governance-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-governance-postgres.ts",
+    "test:crm:backup": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-backup-guards.ts",
+    "test:crm:public-backup": "node --import tsx scripts/crm/verify-public-backup.ts",
+    "crm:backup": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/backup-restore.ts",
+    "test:crm:worker-postgres": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-worker-postgres.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

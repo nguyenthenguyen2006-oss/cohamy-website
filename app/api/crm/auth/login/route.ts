@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     sameOrigin(request);
     const parsed = z.object({ email: z.email().toLowerCase(), password: z.string().min(1).max(72) }).strict().safeParse(await readJson(request));
     if (!parsed.success) throw new CrmError("INVALID_FIELDS", 400);
-    const result = await login(parsed.data.email, parsed.data.password);
+    const result = await login(parsed.data.email, parsed.data.password,{userAgent:request.headers.get('user-agent')??undefined});
     (await cookies()).set(SESSION_COOKIE, result.token, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "strict", path: "/", maxAge: SESSION_SECONDS });
     return json({ user: result.user, redirectTo: `/${result.user.area}` });
   } catch (error) { return apiError(error); }
