@@ -21,7 +21,7 @@ module.exports = {
       name: "cohamy-crm-worker",
       script: "scripts/crm/worker.ts",
       interpreter: process.env.COHAMY_NODE_BINARY || process.execPath,
-      node_args: ["--require", "./scripts/register-server-only.cjs", "--require", "dotenv/config", "--import", "tsx"],
+      node_args: ["--env-file=.env.production", "--require", "./scripts/register-server-only.cjs", "--import", "tsx"],
       cwd: __dirname,
       exec_mode: "fork",
       instances: 1,
@@ -30,7 +30,6 @@ module.exports = {
       max_memory_restart: "512M",
       env_production: {
         NODE_ENV: "production",
-        DOTENV_CONFIG_PATH: `${__dirname}/.env.production`,
       },
     },
   ],

@@ -114,7 +114,8 @@ REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 SQL
 export CRM_DATABASE_URL="postgresql://cohamy_runtime:$RUNTIME_PASSWORD@127.0.0.1:55432/cohamy_crm"
 export COHAMY_PREVIOUS_ENV="$BACKUP/previous.env.production"
-export BLOG_SOURCE="$(node -e 'const fs=require("fs"),c=require("dotenv").parse(fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV));const s=c.BLOG_SOURCE||"legacy";if(!["legacy","wordpress","sheets"].includes(s))process.exit(2);process.stdout.write(s);')" CRM_WEBSITE_ORDER_INTAKE=true
+BLOG_SOURCE="$(node -e 'const fs=require("fs"),c=require("node:util").parseEnv(fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8"));const s=c.BLOG_SOURCE||"legacy";if(!["legacy","wordpress","sheets"].includes(s))process.exit(2);process.stdout.write(s);')"
+export BLOG_SOURCE CRM_WEBSITE_ORDER_INTAKE=true
 export CRM_REGISTRATION_MODE=OPEN
 export UPLOAD_DIR="$SHARED/uploads/blog" NEXT_PUBLIC_UPLOAD_BASE_URL=https://cohamy.vn/uploads/blog
 mkdir -p "$UPLOAD_DIR"
@@ -145,6 +146,9 @@ if pm2 describe cohamy >/dev/null 2>&1; then pm2 delete cohamy; fi
 if pm2 describe cohamy-crm-worker >/dev/null 2>&1; then pm2 delete cohamy-crm-worker; fi
 pm2 start "$RELEASE/ecosystem.config.js" --only cohamy --env production --update-env
 pm2 start "$RELEASE/ecosystem.config.js" --only cohamy-crm-worker --env production --update-env
+# A registration response alone is not proof that the worker loaded its runtime.
+sleep 10
+pm2 jlist | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>{const apps=JSON.parse(s).filter(a=>["cohamy","cohamy-crm-worker"].includes(a.name));if(apps.length!==2||apps.some(a=>a.pm2_env.status!=="online"||a.pm2_env.pm_cwd!==process.argv[1]||a.pm2_env.restart_time!==0))process.exit(2);require("fs").writeFileSync(process.argv[2],JSON.stringify(apps.map(a=>({name:a.name,pid:a.pid,status:a.pm2_env.status,cwd:a.pm2_env.pm_cwd,restarts:a.pm2_env.restart_time}))),{mode:0o600});});' "$RELEASE" "$BACKUP/runtime-health.json"
 pm2 save
 curl --retry 10 --retry-delay 2 --retry-connrefused -fsS https://cohamy.vn/api/health > "$BACKUP/public-health.json"
 printf '%s\n' "$SHA" > "$SHARED/current-sha"
