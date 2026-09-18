@@ -1,0 +1,81 @@
+{
+  "testedAt": "2026-09-18T19:11:02.983Z",
+  "environment": "LOCAL isolated PGlite, fictitious data",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F001 registration is durable and retry does not create accounts or memberships",
+      "status": "PASS"
+    },
+    {
+      "name": "F002 applicant identity cannot read other application from its session",
+      "status": "PASS"
+    },
+    {
+      "name": "F005 production adapter fails clearly when channel is disabled",
+      "status": "PASS"
+    },
+    {
+      "name": "F005 unverified applicants cannot submit; code is hashed and single-use",
+      "status": "PASS"
+    },
+    {
+      "name": "F005 expired code, fifth wrong attempt and failed delivery cannot verify",
+      "status": "PASS"
+    },
+    {
+      "name": "F004 admin requests fields, applicant edits and resubmits with history",
+      "status": "PASS"
+    },
+    {
+      "name": "F006/F008 approval rolls back invalid assignment and grants exactly one scoped membership on retry",
+      "status": "PASS"
+    },
+    {
+      "name": "F007 invitations enforce use limit, expiry, revocation and dealer role ceiling",
+      "status": "PASS"
+    },
+    {
+      "name": "F121/F125 search and bookmarks hide out-of-scope records after revocation",
+      "status": "PASS"
+    },
+    {
+      "name": "F127 drafts persist with optimistic locking, reject secrets and recheck entity scope",
+      "status": "PASS"
+    },
+    {
+      "name": "F123/F124 preferences and filters remain user scoped",
+      "status": "PASS"
+    },
+    {
+      "name": "F133/F134 private documents preserve immutable versions and deny cross-dealer download",
+      "status": "PASS"
+    },
+    {
+      "name": "F022 multiple contacts preserve inactive history and one primary contact",
+      "status": "PASS"
+    },
+    {
+      "name": "F102/F104 checklist and dependencies prevent premature completion and cycles",
+      "status": "PASS"
+    },
+    {
+      "name": "F107/F108 notifications are transactional, unique and respect preferences and revoked scope",
+      "status": "PASS"
+    },
+    {
+      "name": "F138 individual session revocation immediately invalidates authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "F139 audit search does not expose credentials and denies dealers",
+      "status": "PASS"
+    },
+    {
+      "name": "F007 expired invitation prevents registration and subsequent approval without granting membership",
+      "status": "PASS"
+    }
+  ],
+  "brevoDelivery": "MOCK_ONLY",
+  "postgresConcurrency": "NOT_RUN"
+}

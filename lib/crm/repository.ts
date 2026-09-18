@@ -30,7 +30,7 @@ export function partnerScope(user: Principal): { sql: string; params: unknown[] 
   if (user.role === "SALES") return { sql: "EXISTS (SELECT 1 FROM cohamy_crm.partner_assignments a WHERE a.organization_id=o.id AND a.membership_id=$1)", params: [user.membershipId] };
   return { sql: "false", params: [] };
 }
-export async function listOrganizations(user: Principal, options: { kind?: string; q?: string; page?: number } = {}) {
+export async function listOrganizations(user: Principal, options: { kind?: string; q?: string; page?: number; tags?:string } = {}) {
   assertPermission(user, "partners.read");
   const db = await database();
   const scope = partnerScope(user);
@@ -38,6 +38,7 @@ export async function listOrganizations(user: Principal, options: { kind?: strin
   let where = `(${scope.sql})`;
   if (options.kind) { params.push(options.kind); where += ` AND o.kind=$${params.length}`; }
   if (options.q) { params.push(`%${options.q.slice(0, 120)}%`); where += ` AND (o.name ILIKE $${params.length} OR o.code ILIKE $${params.length} OR o.phone ILIKE $${params.length} OR o.email ILIKE $${params.length})`; }
+  if(options.tags){const ids=options.tags.split(',');parse(z.array(z.uuid()).max(30),ids);for(const id of new Set(ids)){params.push(id);where+=` AND EXISTS(SELECT 1 FROM cohamy_crm.partner_tags t WHERE t.organization_id=o.id AND t.tag_id=$${params.length})`;}}
   const count = await db.query<{ total: string }>(`SELECT count(*)::text AS total FROM cohamy_crm.organizations o WHERE ${where}`, params);
   const page = Math.min(100000, Math.max(1, Math.floor(options.page ?? 1) || 1));
   params.push((page - 1) * 20);

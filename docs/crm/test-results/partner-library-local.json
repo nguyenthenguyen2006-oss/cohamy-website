@@ -1,0 +1,32 @@
+{
+  "testedAt": "2026-09-18T19:15:05.560Z",
+  "environment": "LOCAL isolated fictitious PGlite; policy bytes synthetic",
+  "cases": [
+    {
+      "name": "F019 unpublished policy has no portal access and publication requires a real stored file",
+      "status": "PASS"
+    },
+    {
+      "name": "F019 organization, audience, effective date and withdrawal protect downloads",
+      "status": "PASS"
+    },
+    {
+      "name": "F009 policy reads are bound to the current file version and draft carts never complete requests",
+      "status": "PASS"
+    },
+    {
+      "name": "Document acknowledgements display only own reads and require every current version",
+      "status": "PASS"
+    },
+    {
+      "name": "F017 owner can lock only own staff, stale writes conflict and sessions are revoked",
+      "status": "PASS"
+    },
+    {
+      "name": "F003/F008 reviewer filtering, waiting time and normalized duplicate preview are administrator-only",
+      "status": "PASS"
+    }
+  ],
+  "commercialRequest": "NOT_IMPLEMENTED",
+  "postgres": "NOT_RUN"
+}

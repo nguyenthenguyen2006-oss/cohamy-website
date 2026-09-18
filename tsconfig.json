@@ -38,7 +38,9 @@
     ".local/next-headless/types/**/*.ts",
     ".local/next-headless/dev/types/**/*.ts",
     ".local/next-crm-work/types/**/*.ts",
-    ".local/next-crm-work/dev/types/**/*.ts"
+    ".local/next-crm-work/dev/types/**/*.ts",
+    ".local/next-crm-upgrade/types/**/*.ts",
+    ".local/next-crm-upgrade/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

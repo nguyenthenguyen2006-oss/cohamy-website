@@ -1,0 +1,91 @@
+{
+  "testedAt": "2026-09-18T19:16:15.916Z",
+  "environment": "LOCAL real Edge/Next UI, isolated QA database, Brevo network intercepted to fictitious mailbox",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F001/F002 real open registration saves own profile and has no CRM access",
+      "status": "PASS"
+    },
+    {
+      "name": "F005 real UI verifies email through MOCKED Brevo adapter and submits review",
+      "status": "PASS"
+    },
+    {
+      "name": "F003/F004 review queue, supplementation and applicant resubmission use durable UI",
+      "status": "PASS"
+    },
+    {
+      "name": "F006 approval activates one dealer membership; approved user logs in to portal",
+      "status": "PASS"
+    },
+    {
+      "name": "F014/F016 portal cart and addresses persist after reload and on a second session",
+      "status": "PASS"
+    },
+    {
+      "name": "F020 support messages and private file upload persist and internal notes stay hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "F131/F132 Excel preview, confirmation, worker output and actual download work in UI",
+      "status": "PASS"
+    },
+    {
+      "name": "F022/F125/F126/F127 record contacts, pinned panel and autosaved note survive reload",
+      "status": "PASS"
+    },
+    {
+      "name": "F019 real UI publishes scoped library file and F009 acknowledges current version",
+      "status": "PASS"
+    },
+    {
+      "name": "Saved-filter UI prevents duplicate submissions and shows pending/saved results",
+      "status": "PASS"
+    },
+    {
+      "name": "F025/F027/F028/F029 actual care UI saves opportunity, preferences, tags and visit",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop/mobile 390/320 new workflows keep labels, actions and viewport bounds",
+      "status": "PASS"
+    },
+    {
+      "name": "F010 five-locale partner routes preserve public design and point to private registration",
+      "status": "PASS"
+    },
+    {
+      "name": "F017 owner actually locks own staff in UI and cannot restore a revoked session",
+      "status": "PASS"
+    },
+    {
+      "name": "F138 actual session revocation blocks the old browser session",
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    ".impeccable/review/upgrade/application-desktop.png",
+    ".impeccable/review/upgrade/data-job-desktop.png",
+    ".impeccable/review/upgrade/dealer-detail-desktop.png",
+    ".impeccable/review/upgrade/library-desktop.png",
+    ".impeccable/review/upgrade/saved-filter-pending-desktop.png",
+    ".impeccable/review/upgrade/saved-filter-desktop.png",
+    ".impeccable/review/upgrade/visit-desktop.png",
+    ".impeccable/review/upgrade/cart-390.png",
+    ".impeccable/review/upgrade/support-390.png",
+    ".impeccable/review/upgrade/register-390.png",
+    ".impeccable/review/upgrade/queue-390.png",
+    ".impeccable/review/upgrade/library-390.png",
+    ".impeccable/review/upgrade/care-390.png",
+    ".impeccable/review/upgrade/cart-320.png",
+    ".impeccable/review/upgrade/support-320.png",
+    ".impeccable/review/upgrade/register-320.png",
+    ".impeccable/review/upgrade/queue-320.png",
+    ".impeccable/review/upgrade/library-320.png",
+    ".impeccable/review/upgrade/care-320.png"
+  ],
+  "pageErrors": [],
+  "brevo": "MOCK_ONLY",
+  "postgres": "NOT_RUN"
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-17T22:28:35.727Z",
+  "generatedAt": "2026-09-18T19:20:19.873Z",
   "title": "Design System: Cohamy CRM workspace",
   "extensions": {
     "colorMeta": {
@@ -395,6 +395,20 @@
           "oklch(87% 0.0892 161.42)",
           "oklch(95% 0.0892 161.42)"
         ]
+      },
+      "modal-backdrop": {
+        "role": "neutral",
+        "displayName": "Modal Backdrop (ramp: preview only)",
+        "tonalRamp": [
+          "oklch(15% 0.0515 253.90 / .4)",
+          "oklch(27% 0.0515 253.90 / .4)",
+          "oklch(39% 0.0515 253.90 / .4)",
+          "oklch(51% 0.0515 253.90 / .4)",
+          "oklch(63% 0.0515 253.90 / .4)",
+          "oklch(75% 0.0515 253.90 / .4)",
+          "oklch(87% 0.0515 253.90 / .4)",
+          "oklch(95% 0.0515 253.90 / .4)"
+        ]
       }
     },
     "typographyMeta": {
@@ -506,17 +520,43 @@
       "description": "Native expandable control used for contextual task creation; preview contains representative help text only.",
       "html": "<details class=\"ds-disclosure\"><summary class=\"ds-disclosure-summary\">Tạo việc và đặt hạn</summary><p class=\"ds-disclosure-help\">Người được giao cần có quyền xem hồ sơ này. Thời gian theo thiết bị của bạn.</p></details>",
       "css": ".ds-disclosure{margin-top:16px;font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-disclosure-summary{cursor:pointer;color:#225b86;padding:10px 0;font-size:13px;font-weight:500}.ds-disclosure-summary:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-disclosure[open]>.ds-disclosure-summary{margin-bottom:12px}.ds-disclosure-help{margin:0;font-size:12px;color:#586577;line-height:1.7}"
+    },
+    {
+      "name": "Column checkboxes",
+      "kind": "custom",
+      "refersTo": "checkbox-columns",
+      "description": "Native checkbox fieldset used for column preferences; preview changes are local only.",
+      "html": "<fieldset class=\"ds-columns\"><legend>Các cột hồ sơ</legend><label class=\"ds-column-label\"><input class=\"ds-column-checkbox\" type=\"checkbox\" checked />Hồ sơ</label><label class=\"ds-column-label\"><input class=\"ds-column-checkbox\" type=\"checkbox\" checked />Điện thoại</label><label class=\"ds-column-label\"><input class=\"ds-column-checkbox\" type=\"checkbox\" />Email</label></fieldset>",
+      "css": ".ds-columns{display:flex;flex-wrap:wrap;gap:12px 24px;margin:20px 0;border:1px solid #dbe2e8;padding:16px;background:#fff;color:#182538;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:12px;font-weight:500;line-height:1.6}.ds-column-label{display:flex;align-items:center;gap:8px}.ds-column-checkbox{width:18px;height:18px;min-height:18px;accent-color:#b9420c}.ds-column-checkbox:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}"
+    },
+    {
+      "name": "Quick-create dialog",
+      "kind": "custom",
+      "refersTo": "quick-create-dialog",
+      "description": "Inline-open native dialog style preview with a representative navy-alpha surround; application modal opening and saving require its React control.",
+      "html": "<div class=\"ds-quick-preview\"><dialog open class=\"ds-quick-dialog\" aria-labelledby=\"ds-quick-title\"><button class=\"ds-quick-close\" type=\"button\">Đóng</button><h2 class=\"ds-quick-title\" id=\"ds-quick-title\">Tạo nhanh</h2><label class=\"ds-quick-label\" for=\"ds-quick-action\">Thao tác<select class=\"ds-quick-select\" id=\"ds-quick-action\"><option>Thêm khách / đại lý</option><option>Ghi chú trên hồ sơ đang xem</option></select></label><p class=\"ds-quick-help\">Bạn vẫn ở màn làm việc hiện tại.</p></dialog></div>",
+      "css": ".ds-quick-preview{background:rgb(23 43 67 / .4);padding:16px}.ds-quick-dialog{position:relative;width:min(650px,calc(100vw - 32px));max-height:calc(100dvh - 32px);margin:auto;border:1px solid #dbe2e8;border-radius:8px;padding:24px;background:#fff;color:#182538;font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-quick-dialog::backdrop{background:rgb(23 43 67 / .4)}.ds-quick-title{margin:20px 0;font-size:17px;font-weight:600;line-height:1.45}.ds-quick-close{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #bac7d1;border-radius:6px;background:#fff;color:#182538;min-height:42px;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:13px;font-weight:600;line-height:1.4;cursor:pointer;transition:background-color 160ms ease,color 160ms ease}.ds-quick-close:hover{background:#eef2f5}.ds-quick-close:focus-visible,.ds-quick-select:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-quick-close:disabled{opacity:.6;cursor:not-allowed}.ds-quick-label{display:grid;gap:7px;font-size:12px;font-weight:500}.ds-quick-select{width:100%;min-width:0;min-height:42px;border:1px solid #aebbc7;background:#fff;color:#182538;padding:9px 11px;border-radius:5px;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:14px;font-weight:400;line-height:1.5}.ds-quick-help{font-size:12px;color:#586577;line-height:1.7;margin:16px 0 0}@media(prefers-reduced-motion:reduce){.ds-quick-close{transition:none}}"
+    },
+    {
+      "name": "Quick-detail dialog",
+      "kind": "custom",
+      "refersTo": "detail-dialog",
+      "description": "Inline-open right-edge detail style preview with native close form; the application uses the browser top layer.",
+      "html": "<div class=\"ds-detail-preview\"><dialog open class=\"ds-detail-dialog\" aria-labelledby=\"ds-detail-title\"><form method=\"dialog\"><button class=\"ds-detail-close\">Đóng chi tiết</button></form><h2 class=\"ds-detail-title\" id=\"ds-detail-title\">Chi tiết hồ sơ</h2><dl class=\"ds-detail-facts\"><dt class=\"ds-detail-label\">Điện thoại</dt><dd class=\"ds-detail-value\">Chưa ghi nhận</dd><dt class=\"ds-detail-label\">Email</dt><dd class=\"ds-detail-value\">Chưa ghi nhận</dd><dt class=\"ds-detail-label\">Địa chỉ</dt><dd class=\"ds-detail-value\">Chưa ghi nhận</dd></dl></dialog></div>",
+      "css": ".ds-detail-preview{display:flex;justify-content:flex-end;background:rgb(23 43 67 / .4)}.ds-detail-dialog{position:relative;margin:0;width:min(520px,100vw);height:100dvh;max-height:100dvh;border:1px solid #dbe2e8;padding:28px;background:#fff;color:#182538;overflow-y:auto;font-family:'Be Vietnam Pro',system-ui,sans-serif;line-height:1.6}.ds-detail-dialog::backdrop{background:rgb(23 43 67 / .4)}.ds-detail-title{margin:28px 0 12px;font-size:17px;font-weight:600;line-height:1.45}.ds-detail-close{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px solid #bac7d1;border-radius:6px;background:#fff;color:#182538;min-height:42px;font-family:'Be Vietnam Pro',system-ui,sans-serif;font-size:13px;font-weight:600;line-height:1.4;cursor:pointer;transition:background-color 160ms ease,color 160ms ease}.ds-detail-close:hover{background:#eef2f5}.ds-detail-close:focus-visible{outline:3px solid #bf4b14;outline-offset:3px}.ds-detail-close:disabled{opacity:.6;cursor:not-allowed}.ds-detail-facts{display:grid;gap:5px;margin:0;background:#fff;padding:24px;border:1px solid #dbe2e8;border-radius:10px;margin-bottom:24px;overflow-wrap:anywhere}.ds-detail-label{font-size:11px;color:#586577;margin-top:14px}.ds-detail-label:first-child{margin-top:0}.ds-detail-value{margin:0;font-size:13px}@media(prefers-reduced-motion:reduce){.ds-detail-close{transition:none}}"
     }
   ],
   "narrative": {
     "northStar": "The Cohamy work desk",
-    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented replacement workspace. `app/(operations)/layout.tsx` loads `components/crm/work.css`; that stylesheet and the current shell, pages and forms are the visual authority. The former HumanBank launcher, floating dock and glass login are superseded. The surface contract records the task strategy; this document records the reusable visual system.",
+    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented workspace and its local CRM/portal extension. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.",
     "keyCharacteristics": [
       "Persistent navy navigation beside white operational surfaces.",
       "Be Vietnam Pro with compact labels and clear page headings.",
       "Orange primary actions, text-labeled statuses and visible keyboard focus.",
       "Mobile request lists and early customer-context disclosures.",
-      "Explicit pending, empty, error and success feedback."
+      "Explicit pending, empty, error and success feedback.",
+      "Native dialogs and disclosures keep quick actions close to their record.",
+      "Dated document-version receipts distinguish acknowledged and current versions."
     ],
     "rules": [
       {
@@ -541,14 +581,17 @@
       "Do retain visible labels, keyboard focus and accessible names when visible account text is hidden.",
       "Do keep order/customer follow-up creation within the current record.",
       "Do keep tables in their own overflow region and use the implemented mobile request lists.",
-      "Do distinguish request status and request value from stock, payment and debt."
+      "Do distinguish request status and request value from stock, payment and debt.",
+      "Do retain native dialog/disclosure semantics and written pending, error and saved receipts on implemented action forms.",
+      "Do show dated acknowledgement on its own document version and check required reading against the current version."
     ],
     "donts": [
       "Don't copy the superseded launcher, floating dock or glass login into this workspace.",
       "Don't export CRM tokens into the public website or CMS.",
       "Don't encode status through color alone.",
       "Don't turn preview-only tonal ramps into application tokens.",
-      "Don't describe the finish review as backend correctness or production approval."
+      "Don't describe the finish review as backend correctness or production approval.",
+      "Don't turn a saved draft, won opportunity or acknowledged older file into a completed transaction or current-version receipt."
     ]
   }
 }

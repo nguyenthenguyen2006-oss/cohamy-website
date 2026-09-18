@@ -1,0 +1,20 @@
+{
+  "testedAt": "2026-09-18T18:57:56.023Z",
+  "environment": "LOCAL actual Node child termination/restart, isolated PGlite, fictitious import; lease expiry advanced by guarded fixture",
+  "cases": [
+    {
+      "name": "Actual worker process interrupted after committed claim; zero partial business writes",
+      "status": "PASS"
+    },
+    {
+      "name": "Restarted actual worker processes expired lease and imports each row once",
+      "status": "PASS"
+    },
+    {
+      "name": "Second worker restart preserves two rows and claim count",
+      "status": "PASS"
+    }
+  ],
+  "postgres": "NOT_RUN",
+  "supervisedProductionRestart": "NOT_RUN"
+}

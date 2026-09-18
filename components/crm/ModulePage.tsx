@@ -1,3 +1,13 @@
+import {RelationshipPanel,VisitPage,CareDictionaryPage,VisitsIndexPage} from './RelationshipPages';
+import {SupportPage,AddressesPage,CartPage} from './PortalServicePages';
+import {LibraryPage,DealerMembersPage} from './PartnerLibraryPages';
+import {markCatalogSeen} from '@/lib/crm/partner-library';
+import {PartnerTable,ColumnPicker,SaveFilterForm,RecordActions} from './WorkspaceControls';
+import {careDictionary} from '@/lib/crm/relationships';
+import {preferences} from '@/lib/crm/workspace';
+import {ExportForm} from './DataJobForms';
+import {DataJobsPage} from './DataJobPages';
+import {ApplicationsPage,InvitationsPage,SearchPage,WorkspacePage,NotificationsPage,SessionsPanel,AuditPage,DocumentsPanel,ContactsPanel,TaskDetail} from './UpgradePages';
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { pageUser } from "@/lib/crm/http";
@@ -15,13 +25,28 @@ export function Profile({user}:{user:Principal}) {return <><Header title="Hồ s
 export async function CrmModulePage({area,segments,query}:{area:Area;segments:string[];query:Record<string,string|string[]|undefined>}) {
   const user=await pageUser(area);const [slug,id]=segments;
   if(segments.length>2)notFound();
-  if(slug==="profile"&&!id)return <><Profile user={user}/><section className="work-section"><h2>Bảo mật tài khoản</h2><PasswordForm/></section></>;
+  if(slug==="profile"&&!id)return <><Profile user={user}/><SessionsPanel user={user}/><section className="work-section"><h2>Bảo mật tài khoản</h2><PasswordForm/></section></>;
   if(slug==='partners'&&id){const partner=await getOrganization(user,id);redirect(`/${area}/${partner.kind==='DEALER'?'dealers':'customers'}/${id}`);}
   const selectedModule=visibleModules(user).find(item=>item.id===slug);
   if(!selectedModule)return <><Header title="Không có quyền truy cập" description="Tài khoản của bạn không được cấp quyền mở phân hệ này."/><Link className="button button--secondary" href={`/${area}`}>Về trang chủ</Link></>;
   const q=typeof query.q==="string"?query.q:"";const page=typeof query.page==="string"?Math.min(100000,Math.max(1,Math.floor(Number(query.page)||1))):1;
-  const root=`/${area}/${slug}`;
+  const root=`/${area}/${slug}`,tags=Array.isArray(query.tags)?query.tags.join(','):typeof query.tags==='string'?query.tags:'';
   const workQuery=Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string'));
+  if(slug==='visits')return id?<VisitPage user={user} id={id}/>:<VisitsIndexPage user={user} query={workQuery}/>;
+  if(slug==='care'&&!id)return <CareDictionaryPage user={user}/>;
+  if(slug==='library')return <LibraryPage user={user} id={id} query={workQuery}/>;
+  if(slug==='members'&&area==='portal'&&!id)return <DealerMembersPage user={user}/>;
+  if(slug==='support')return <SupportPage user={user} id={id} query={workQuery}/>;
+  if(slug==='addresses'&&area==='portal'&&!id)return <AddressesPage user={user}/>;
+  if(slug==='cart'&&area==='portal'&&!id)return <CartPage user={user}/>;
+  if(slug==='data'&&area==='crm')return <DataJobsPage user={user} id={id}/>;
+  if(slug==='applications'&&area==='crm')return <ApplicationsPage user={user} id={id} query={workQuery}/>;
+  if(slug==='invitations'&&!id)return <InvitationsPage user={user}/>;
+  if(slug==='search'&&!id)return <SearchPage user={user} query={workQuery}/>;
+  if(slug==='workspace'&&!id)return <WorkspacePage user={user}/>;
+  if(slug==='notifications'&&!id)return <NotificationsPage user={user}/>;
+  if(slug==='audit'&&area==='crm'&&!id)return <AuditPage user={user} query={workQuery}/>;
+  if(slug==='tasks'&&area==='crm'&&id)return <TaskDetail user={user} id={id}/>;
   if(slug==='orders'&&area==='crm')return <OrdersPage user={user} id={id} query={workQuery}/>;
   if(slug==='tasks'&&area==='crm'&&!id)return <TasksPage user={user} query={workQuery}/>;
   if(slug==='goods'&&id)return <CatalogDetail user={user} id={id}/>;
@@ -32,17 +57,18 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
     if(id) {
       const record=await getOrganization(user,id).catch(error=>{if(error instanceof CrmError&&error.status===404)notFound();throw error;});
       if(record.kind!==kind)notFound();
-      return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={`Mã ${record.code} · phiên bản ${record.version}`}/>{can(user,"partners.write")?<RecordForm resource="partners" record={record}/>:<dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||"Chưa ghi nhận"}</dd><dt>Email</dt><dd>{record.email||"Chưa ghi nhận"}</dd><dt>Địa chỉ</dt><dd>{record.address||"Chưa ghi nhận"}</dd></dl>}<PartnerDuplicates user={user} id={id}/><EntityWork user={user} type="partner" id={id}/></>;
+      return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={`Mã ${record.code} · phiên bản ${record.version}`}/>{can(user,"partners.write")?<RecordForm resource="partners" record={record}/>:<dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||"Chưa ghi nhận"}</dd><dt>Email</dt><dd>{record.email||"Chưa ghi nhận"}</dd><dt>Địa chỉ</dt><dd>{record.address||"Chưa ghi nhận"}</dd></dl>}<RecordActions type="partner" id={id} phone={record.phone} address={record.address}/><ContactsPanel user={user} id={id}/><RelationshipPanel user={user} id={id}/><DocumentsPanel user={user} type="partner" id={id}/><PartnerDuplicates user={user} id={id}/><EntityWork user={user} type="partner" id={id}/></>;
     }
-    const collection=await listOrganizations(user,{kind,q,page});
-    const href=(next:number)=>`${root}?${new URLSearchParams({q,page:String(next)})}`;
+    const collection=await listOrganizations(user,{kind,q,page,tags});const pref=await preferences(user),tagChoices=(await careDictionary(user,'tags')).filter(t=>t.active);
+    const href=(next:number)=>`${root}?${new URLSearchParams({q,tags,page:String(next)})}`;
     return <><Header title={`Quản lý ${kind==="CUSTOMER"?"khách hàng":"đại lý"}`} description={`Tổng số: ${collection.total} hồ sơ trong phạm vi quyền.`}/>
-      <form className="table-toolbar" method="get"><div className="field"><label htmlFor="partner-search">Tên, mã, điện thoại hoặc email</label><input id="partner-search" name="q" defaultValue={q} maxLength={120}/></div><button className="button button--primary">Tìm kiếm</button>{can(user,"partners.write")&&<Link className="button button--secondary" href={`${root}/new`}>Thêm mới</Link>}</form>
-      {!collection.items.length?<Empty>Không có hồ sơ phù hợp. Hệ thống không tạo dữ liệu kinh doanh mẫu.</Empty>:<div className="crm-table-wrap" role="region" aria-label="Danh sách hồ sơ" tabIndex={0}><table className="data-table"><caption className="sr-only">Danh sách hồ sơ</caption><thead><tr><th scope="col">Hồ sơ</th><th scope="col">Điện thoại</th><th scope="col">Email</th><th scope="col">Trạng thái</th><th scope="col">Tạo lúc</th></tr></thead><tbody>{collection.items.map(item=><tr key={item.id}><td><Link className="table-primary" href={`${root}/${item.id}`}><strong>{item.name}</strong><span>{item.code}</span></Link></td><td>{item.phone||"Chưa ghi nhận"}</td><td>{item.email||"Chưa ghi nhận"}</td><td>{item.active?"Hoạt động":"Đã khóa"}</td><td>{new Date(item.created_at).toLocaleDateString("vi-VN")}</td></tr>)}</tbody></table></div>}
+      <form className="table-toolbar" method="get"><div className="field"><label htmlFor="partner-search">Tên, mã, điện thoại hoặc email</label><input id="partner-search" name="q" defaultValue={q} maxLength={120}/></div><details className="work-disclosure"><summary>Lọc theo tổ hợp nhãn</summary><fieldset className="upgrade-columns"><legend>Hồ sơ phải có đủ các nhãn đã chọn</legend>{tagChoices.map(t=><label key={t.id}><input type="checkbox" name="tags" value={t.id} defaultChecked={tags.split(',').includes(t.id)}/>{t.name}</label>)}</fieldset></details><button className="button button--primary">Tìm kiếm</button>{can(user,"partners.write")&&<Link className="button button--secondary" href={`${root}/new`}>Thêm mới</Link>}</form>
+      <ColumnPicker key={String(pref.version)} pref={pref}/><SaveFilterForm kind={kind} q={q} tags={tags}/><details className="work-disclosure"><summary>Xuất danh sách đang lọc</summary><ExportForm q={q} kind={kind} tags={tags}/></details>{!collection.items.length?<Empty>Không có hồ sơ phù hợp. Hệ thống không tạo dữ liệu kinh doanh mẫu.</Empty>:<PartnerTable items={collection.items} root={root} columns={pref.columns as string[]}/>}
       <footer className="table-footer"><span>Trang {collection.page} · {collection.total} hồ sơ</span><nav aria-label="Phân trang">{page>1&&<Link className="button button--secondary" href={href(page-1)}>Trang trước</Link>}{page*20<collection.total&&<Link className="button button--secondary" href={href(page+1)}>Trang sau</Link>}</nav></footer></>;
   }
   if(slug==="goods"&&!id) {
     const products=await listCatalog(user,q);
+    if(area==='portal')await markCatalogSeen(user);
     return <><Header title={area==="crm"?"Danh mục hàng hóa":"Danh mục đặt hàng"} description="Ánh xạ danh mục website. SKU tạm WEB-*; chưa có quy đổi đơn vị, lô hoặc giá đại lý đã duyệt."/><form className="table-toolbar" method="get"><div className="field"><label htmlFor="catalog-search">Tên hoặc SKU</label><input id="catalog-search" name="q" defaultValue={q}/></div><button className="button button--primary">Tìm kiếm</button></form>{area==="portal"&&<Empty>Chưa mở đặt hàng đại lý: cần bảng giá, kỳ hạn và hạn mức đã duyệt.</Empty>}{products.length?<div className="crm-table-wrap" role="region" aria-label="Danh mục website" tabIndex={0}><table className="data-table"><caption className="sr-only">Danh mục website</caption><thead><tr><th scope="col">SKU ánh xạ</th><th scope="col">Tên</th><th scope="col">Quy cách website</th>{area==="crm"&&<th scope="col">Giá niêm yết website</th>}<th scope="col">Ánh xạ</th></tr></thead><tbody>{products.map(item=><tr key={item.id}><td><Link href={`${root}/${item.id}`}>{item.sku}</Link></td><td>{item.name}</td><td>{item.weight_label}</td>{area==="crm"&&<td>{BigInt(item.retail_price).toLocaleString("vi-VN")} đ</td>}<td>Danh mục, chưa xác nhận kho</td></tr>)}</tbody></table></div>:<Empty>Chưa có hàng hóa phù hợp. Chạy lệnh nhập danh mục website sau migration.</Empty>}</>;
   }
   if(slug==="inventory") {

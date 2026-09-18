@@ -10,6 +10,8 @@ const permissions: Record<Role, readonly string[]> = {
   DEALER_STAFF: ["catalog.read", "warehouses.read", "orders.read", "consignment.read", "profile.read"],
 };
 export function can(user: Principal, permission: string): boolean {
+  if(permission==="workspace.use")return true;
+  if(permission==="dealer.invite")return user.area==="portal"&&user.role==="DEALER_OWNER";
   return permissions[user.role]?.some(value => value === "*" || value === permission) ?? false;
 }
 export function assertPermission(user: Principal, permission: string) {

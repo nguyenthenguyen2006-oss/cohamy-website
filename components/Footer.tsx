@@ -34,6 +34,9 @@ export function Footer() {
           <Link href="/contact" className="block text-[#FAF6EF]/70 hover:text-[#D9A441]">
             {nav("contact")}
           </Link>
+          <Link href="/partners" className="block text-[#FAF6EF]/70 hover:text-[#D9A441] mt-1">
+            {{vi:'Dành cho đối tác',en:'For partners',zh:'合作伙伴',ko:'파트너 안내',ja:'パートナーの皆様へ'}[locale]}
+          </Link>
         </div>
         <div>
           <div className="font-medium mb-3">{nav("about")}</div>

@@ -10,7 +10,7 @@ async function scan(directory){
    traces++;const trace=JSON.parse(await fs.readFile(file,'utf8'));
    for(const item of trace.files){
     const relative=path.relative(root,path.resolve(path.dirname(file),item)).replaceAll('\\','/');
-    if(relative.startsWith('.local/')||relative.startsWith('docs/crm/test-results/')||relative.startsWith('.impeccable/review/')||relative.startsWith('../EDUHMB/'))leaks.push({trace:path.relative(root,file),file:relative});
+    if(relative.startsWith('.local/')||relative.startsWith('docs/crm/test-results/')||relative.startsWith('.impeccable/review/')||relative.startsWith('../EDUHMB/')||/^scripts\/crm\/(?:qa-mailbox\.mjs|start-upgrade-qa\.mjs|worker-restart-fixture\.ts)$/.test(relative))leaks.push({trace:path.relative(root,file),file:relative});
     if(relative.startsWith('db/crm/'))migrations.add(relative);
    }
   }

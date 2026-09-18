@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-09-17T22:21:58.048Z",
+  "testedAt": "2026-09-18T19:18:11.657Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -11,12 +11,18 @@
       "status": "PASS"
     }
   ],
-  "traceCount": 54,
+  "traceCount": 67,
   "includedMigrations": [
     "db/crm/001-access-catalog.sql",
     "db/crm/002-website-order-intake.sql",
     "db/crm/003-work-management.sql",
-    "db/crm/004-catalog-management.sql"
+    "db/crm/004-catalog-management.sql",
+    "db/crm/005-workspace-foundation.sql",
+    "db/crm/006-partner-onboarding.sql",
+    "db/crm/007-data-jobs.sql",
+    "db/crm/008-portal-services.sql",
+    "db/crm/009-partner-library.sql",
+    "db/crm/010-relationship-care.sql"
   ],
   "leaks": [],
   "deployment": "NOT RUN",

@@ -1,0 +1,28 @@
+{
+  "testedAt": "2026-09-18T18:59:47.125Z",
+  "environment": "LOCAL isolated fictitious PGlite",
+  "cases": [
+    {
+      "name": "F014 carts persist per account, conflict on stale device and cannot inject organization/price",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 address defaults, history and owner/staff boundaries persist",
+      "status": "PASS"
+    },
+    {
+      "name": "F020 support retry creates one ticket, A/B reads are isolated and internal messages remain private",
+      "status": "PASS"
+    },
+    {
+      "name": "F020/F133 ticket attachments and notification content enforce source scope",
+      "status": "PASS"
+    },
+    {
+      "name": "F017 owner invitation cannot grant internal role or another dealer organization",
+      "status": "PASS"
+    }
+  ],
+  "commercialCheckout": "NOT_IMPLEMENTED",
+  "postgres": "NOT_RUN"
+}

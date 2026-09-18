@@ -3,6 +3,17 @@ import type { Principal } from "./types";
 export type ModuleIcon = "customer" | "dealer" | "goods" | "order" | "warehouse" | "consignment" | "debt" | "cash" | "report" | "account";
 export interface CrmModule { id: string; label: string; shortLabel: string; icon: ModuleIcon; tone: string; permission: string; status: "CONNECTED" | "PENDING"; bottom?: number }
 const internal: CrmModule[] = [
+  {id:'care',label:'Danh mục chăm sóc',shortLabel:'Chăm sóc',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
+  {id:'visits',label:'Lần thăm điểm bán',shortLabel:'Lần thăm',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
+  {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'report',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
+  {id:'support',label:'Phiếu hỗ trợ',shortLabel:'Hỗ trợ',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
+  {id:'data',label:'Import và export',shortLabel:'Dữ liệu',icon:'report',tone:'primary',permission:'partners.write',status:'CONNECTED'},
+  {id:'search',label:'Tìm kiếm',shortLabel:'Tìm kiếm',icon:'report',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'notifications',label:'Thông báo',shortLabel:'Thông báo',icon:'report',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'workspace',label:'Không gian cá nhân',shortLabel:'Cá nhân',icon:'account',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'applications',label:'Xét duyệt đối tác',shortLabel:'Xét duyệt',icon:'dealer',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
+  {id:'invitations',label:'Link mời đối tác',shortLabel:'Link mời',icon:'dealer',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
+  {id:'audit',label:'Lịch sử thao tác',shortLabel:'Lịch sử',icon:'report',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   { id: "customers", label: "Khách hàng", shortLabel: "Khách hàng", icon: "customer", tone: "success", permission: "partners.read", status: "CONNECTED", bottom: 1 },
   { id: "dealers", label: "Đại lý", shortLabel: "Đại lý", icon: "dealer", tone: "indigoDark", permission: "partners.read", status: "CONNECTED" },
   { id: "goods", label: "Hàng hóa", shortLabel: "Hàng hóa", icon: "goods", tone: "primary", permission: "catalog.read", status: "CONNECTED", bottom: 2 },
@@ -16,6 +27,16 @@ const internal: CrmModule[] = [
   { id: "accounts", label: "Tài khoản và quyền", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "accounts.manage", status: "CONNECTED" },
 ];
 const dealer: CrmModule[] = [
+  {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'report',tone:'primary',permission:'catalog.read',status:'CONNECTED'},
+  {id:'members',label:'Nhân viên đại lý',shortLabel:'Nhân viên',icon:'account',tone:'primary',permission:'dealer.invite',status:'CONNECTED'},
+  {id:'support',label:'Phiếu hỗ trợ',shortLabel:'Hỗ trợ',icon:'customer',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'addresses',label:'Địa chỉ giao hàng',shortLabel:'Địa chỉ',icon:'warehouse',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'cart',label:'Giỏ hàng nháp',shortLabel:'Giỏ nháp',icon:'goods',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'invitations',label:'Mời nhân viên',shortLabel:'Mời',icon:'dealer',tone:'primary',permission:'dealer.invite',status:'CONNECTED'},
+  {id:'search',label:'Tìm kiếm',shortLabel:'Tìm kiếm',icon:'report',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'notifications',label:'Thông báo',shortLabel:'Thông báo',icon:'report',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+  {id:'workspace',label:'Không gian cá nhân',shortLabel:'Cá nhân',icon:'account',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
+
   { id: "goods", label: "Đặt hàng", shortLabel: "Đặt hàng", icon: "goods", tone: "primary", permission: "catalog.read", status: "PENDING", bottom: 1 },
   { id: "orders", label: "Đơn của tôi", shortLabel: "Đơn", icon: "order", tone: "info", permission: "orders.read", status: "PENDING", bottom: 2 },
   { id: "inventory", label: "Kho của đại lý", shortLabel: "Kho", icon: "warehouse", tone: "indigoDark", permission: "warehouses.read", status: "CONNECTED", bottom: 3 },

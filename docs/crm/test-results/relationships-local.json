@@ -1,0 +1,32 @@
+{
+  "testedAt": "2026-09-18T18:56:26.174Z",
+  "environment": "LOCAL isolated fictitious PGlite",
+  "cases": [
+    {
+      "name": "F025/F026 stage changes keep immutable actor/time/reasons; stale writes and automatic loss are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "F027 multiple tags combine with AND under server scope and active dictionaries have manager-only writes",
+      "status": "PASS"
+    },
+    {
+      "name": "F027/F124/F132 saved combinations and actual XLSX export preserve selected tags",
+      "status": "PASS"
+    },
+    {
+      "name": "F028 contact preferences persist without fake SKU or cross-scope reads",
+      "status": "PASS"
+    },
+    {
+      "name": "F029 visits are append-only, retries preserve one visit and attached photos follow current source access",
+      "status": "PASS"
+    },
+    {
+      "name": "F025–F029 scope revocation hides opportunities, preferences, tag lists, visits and private files",
+      "status": "PASS"
+    }
+  ],
+  "commercialOrders": "NOT_IMPLEMENTED",
+  "postgres": "NOT_RUN"
+}

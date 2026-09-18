@@ -54,6 +54,10 @@ export async function authenticate(token?: string): Promise<Principal | null> {
     WHERE s.token_hash=$1 AND s.expires_at>now() AND s.revoked_at IS NULL AND u.active AND m.active AND o.active`, [digest(token)]);
   return result.rows[0] ? principal(result.rows[0]) : null;
 }
+export async function membershipPrincipal(id: string, sql?: Sql): Promise<Principal | null> {
+  const result=await(sql??await database()).query<IdentityRow>(`${principalSelect} WHERE m.id=$1 AND u.active AND m.active AND o.active`,[id]);
+  return result.rows[0]?principal(result.rows[0]):null;
+}
 export async function logout(token?: string) {
   if (!token) return;
   const db = await database();

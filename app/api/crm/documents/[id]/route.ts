@@ -1,0 +1,3 @@
+import {apiError,apiUser} from '@/lib/crm/http';
+import {downloadDocument} from '@/lib/crm/workspace';
+export async function GET(_request:Request,context:{params:Promise<{id:string}>}){try{const user=await apiUser(),{id}=await context.params,file=await downloadDocument(user,id);return new Response(new Uint8Array(file.content),{headers:{'Content-Type':file.mime,'Content-Disposition':`attachment; filename*=UTF-8''${encodeURIComponent(file.filename)}`,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','X-Robots-Tag':'noindex, nofollow','Content-Security-Policy':"default-src 'none'; sandbox"}});}catch(e){return apiError(e);}}

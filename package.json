@@ -38,7 +38,15 @@
     "test:upgrade:enhancements": "node scripts/verify-upgrade-enhancements.mjs",
     "test:upgrade:rollback": "node scripts/verify-upgrade-rollback.mjs",
     "test:upgrade:selection": "node scripts/verify-upgrade-selection.mjs",
-    "test:headless:schedule": "node --require ./scripts/register-server-only.cjs --import tsx scripts/verify-wordpress-e2e.ts --only-schedule"
+    "test:headless:schedule": "node --require ./scripts/register-server-only.cjs --import tsx scripts/verify-wordpress-e2e.ts --only-schedule",
+    "test:crm:upgrade": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-upgrade.ts",
+    "crm:worker": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/worker.ts",
+    "test:crm:data-jobs": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-data-jobs.ts",
+    "test:crm:portal": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-portal-services.ts",
+    "test:crm:upgrade-browser": "node scripts/crm/verify-upgrade-browser.mjs",
+    "test:crm:library": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-partner-library.ts",
+    "test:crm:care": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-relationships.ts",
+    "test:crm:worker-restart": "node scripts/crm/verify-worker-restart.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -51,6 +59,7 @@
     "@tiptap/starter-kit": "^3.29.1",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
+    "exceljs": "^4.4.0",
     "framer-motion": "^12.40.0",
     "googleapis": "^173.0.0",
     "jose": "^6.2.4",
@@ -88,6 +97,9 @@
   "overrides": {
     "postcss": "$postcss",
     "sharp": "$sharp",
-    "gaxios": "7.3.0"
+    "gaxios": "7.3.0",
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
   }
 }

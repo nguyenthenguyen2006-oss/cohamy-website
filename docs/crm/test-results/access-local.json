@@ -2,7 +2,7 @@
   "environment": "LOCAL",
   "engine": "PGlite (PostgreSQL WASM, single exclusive connection)",
   "fixture": "separate .local/crm-qa-* directory; fictitious .invalid users",
-  "testedAt": "2026-09-17T22:06:17.539Z",
+  "testedAt": "2026-09-18T18:59:45.481Z",
   "cases": [
     {
       "name": "migration retry and catalog import are idempotent",

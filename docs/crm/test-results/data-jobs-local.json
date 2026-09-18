@@ -1,0 +1,40 @@
+{
+  "testedAt": "2026-09-18T18:56:28.034Z",
+  "environment": "LOCAL isolated PGlite and actual XLSX parsing",
+  "cases": [
+    {
+      "name": "F131 Excel mapping and preview persist without writing business data",
+      "status": "PASS"
+    },
+    {
+      "name": "F131 confirmation and worker retry create each row once",
+      "status": "PASS"
+    },
+    {
+      "name": "F131 invalid cells, duplicates and invalid email prevent confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "F131 conflicting code introduced after preview rolls back the whole import",
+      "status": "PASS"
+    },
+    {
+      "name": "F132 filtered export is a usable XLSX with selected columns and safe formula text",
+      "status": "PASS"
+    },
+    {
+      "name": "E03/E15 worker and download enforce live scope and deny dealer jobs",
+      "status": "PASS"
+    },
+    {
+      "name": "E14 durable queued jobs recover an expired lease without duplicate effects",
+      "status": "PASS"
+    },
+    {
+      "name": "F131 file type and row limits are enforced before any write",
+      "status": "PASS"
+    }
+  ],
+  "postgresConcurrency": "NOT_RUN",
+  "workerRestart": "EXPIRED_LEASE_RECOVERY_ONLY"
+}

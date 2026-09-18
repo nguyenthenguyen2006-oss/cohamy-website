@@ -1,0 +1,4 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import {RegistrationForm} from '@/components/crm/UpgradeForms';
+export default async function Page({searchParams}:{searchParams:Promise<{invite?:string}>}){const {invite}=await searchParams;return <main className="upgrade-public"><Link href="/vi"><Image src="/images/logo/cohamy-brand-logo.png" alt="Cohamy" width={180} height={38} style={{height:'auto'}} preload/></Link><header className="portal-page-header"><div><h1>Đăng ký đối tác Cohamy</h1><p>Điền hồ sơ, xác minh email và gửi Cohamy xét duyệt.</p></div></header><section className="work-section"><RegistrationForm invitationToken={invite}/></section><div className="upgrade-actions"><Link href="/portal/application/login">Theo dõi hồ sơ đã đăng ký</Link><Link href="/portal/login">Đăng nhập đại lý đã duyệt</Link></div></main>;}
