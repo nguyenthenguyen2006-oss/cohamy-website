@@ -1,7 +1,7 @@
 {
-  "testedAt": "2026-09-18T21:26:32.203Z",
+  "testedAt": "2026-09-18T22:03:04.406Z",
   "environment": "PRODUCTION actual Edge, read-only except administrator login/logout",
-  "status": "FAIL",
+  "status": "PASS",
   "cases": [
     {
       "name": "Actual Edge production login opens authenticated private shell",
@@ -16,8 +16,12 @@
       "status": "PASS"
     },
     {
-      "name": "Five localized public partner pages preserve registration entry",
-      "status": "FAIL"
+      "name": "Five localized public partner pages preserve registration entry at desktop/390/320",
+      "status": "PASS"
+    },
+    {
+      "name": "Logout revokes private API browser session",
+      "status": "PASS"
     }
   ],
   "pageErrors": [],
@@ -25,6 +29,21 @@
     ".local/production-browser/today-desktop.png",
     ".local/production-browser/automation-desktop.png",
     ".local/production-browser/automation-390.png",
-    ".local/production-browser/automation-320.png"
+    ".local/production-browser/automation-320.png",
+    ".local/production-browser/partners-vi-1366.png",
+    ".local/production-browser/partners-en-1366.png",
+    ".local/production-browser/partners-zh-1366.png",
+    ".local/production-browser/partners-ko-1366.png",
+    ".local/production-browser/partners-ja-1366.png",
+    ".local/production-browser/partners-vi-390.png",
+    ".local/production-browser/partners-en-390.png",
+    ".local/production-browser/partners-zh-390.png",
+    ".local/production-browser/partners-ko-390.png",
+    ".local/production-browser/partners-ja-390.png",
+    ".local/production-browser/partners-vi-320.png",
+    ".local/production-browser/partners-en-320.png",
+    ".local/production-browser/partners-zh-320.png",
+    ".local/production-browser/partners-ko-320.png",
+    ".local/production-browser/partners-ja-320.png"
   ]
 }

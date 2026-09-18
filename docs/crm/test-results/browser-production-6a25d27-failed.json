@@ -1,0 +1,30 @@
+{
+  "testedAt": "2026-09-18T21:26:32.203Z",
+  "environment": "PRODUCTION actual Edge, read-only except administrator login/logout",
+  "status": "FAIL",
+  "cases": [
+    {
+      "name": "Actual Edge production login opens authenticated private shell",
+      "status": "PASS"
+    },
+    {
+      "name": "Deployed care inventory and workspace render without QA records",
+      "status": "PASS"
+    },
+    {
+      "name": "Private care inventory works at 390 and 320 widths",
+      "status": "PASS"
+    },
+    {
+      "name": "Five localized public partner pages preserve registration entry",
+      "status": "FAIL"
+    }
+  ],
+  "pageErrors": [],
+  "screens": [
+    ".local/production-browser/today-desktop.png",
+    ".local/production-browser/automation-desktop.png",
+    ".local/production-browser/automation-390.png",
+    ".local/production-browser/automation-320.png"
+  ]
+}

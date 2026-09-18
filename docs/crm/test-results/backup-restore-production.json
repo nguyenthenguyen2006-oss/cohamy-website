@@ -1,11 +1,11 @@
 {
   "status": "PASS",
-  "completedAt": "2026-09-18T21:16:14.990Z",
+  "completedAt": "2026-09-18T22:01:06.895Z",
   "sourceDatabase": "cohamy_crm",
-  "restoreDatabase": "cohamy_restore_c63c0b6871e24e83821cbd427cbe2206",
+  "restoreDatabase": "cohamy_restore_cb8d5b797583447c96b9b5db4940a03d",
   "restoreRetained": false,
-  "sha256": "072f1d569e340431f8c8054684eae13b4159ef56cb350053879f5450975b4c76",
-  "tableCount": 58,
+  "sha256": "7471a0dbc30af3c8f619dcbc30faae56de897fc2bd150d47f8779461ab2cf003",
+  "tableCount": 60,
   "rows": [
     {
       "table": "activities",
@@ -29,7 +29,7 @@
     },
     {
       "table": "audit_events",
-      "count": "31"
+      "count": "39"
     },
     {
       "table": "bulk_previews",
@@ -121,7 +121,7 @@
     },
     {
       "table": "migrations",
-      "count": "12"
+      "count": "14"
     },
     {
       "table": "notifications",
@@ -164,6 +164,14 @@
       "count": "0"
     },
     {
+      "table": "partner_merge_history",
+      "count": "0"
+    },
+    {
+      "table": "partner_merge_previews",
+      "count": "0"
+    },
+    {
       "table": "partner_tags",
       "count": "0"
     },
@@ -185,7 +193,7 @@
     },
     {
       "table": "sessions",
-      "count": "15"
+      "count": "19"
     },
     {
       "table": "support_messages",
@@ -242,7 +250,7 @@
   ],
   "fileIntegrityErrors": "0",
   "documentSourceErrors": "0",
-  "directory": "/root/cohamy-backups/scheduled/2026-09-18T211613469Z-6839d83f",
+  "directory": "/root/cohamy-backups/scheduled/2026-09-18T220104878Z-ed18bda7",
   "snapshotConsistent": true,
   "publicFiles": {
     "count": 0,

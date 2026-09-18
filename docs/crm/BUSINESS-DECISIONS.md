@@ -1,6 +1,6 @@
 # Cohamy - business decisions
 
-Updated 2026-09-18T21:51:36.478Z.
+Updated 2026-09-18T23:03:11.052Z.
 
 | Decision | State | Source and scope | Remaining input |
 |---|---|---|---|

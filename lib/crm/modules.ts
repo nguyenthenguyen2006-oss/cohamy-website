@@ -3,6 +3,8 @@ import type { Principal } from "./types";
 export type ModuleIcon = "customer" | "dealer" | "goods" | "order" | "warehouse" | "consignment" | "debt" | "cash" | "report" | "account";
 export interface CrmModule { id: string; label: string; shortLabel: string; icon: ModuleIcon; tone: string; permission: string; status: "CONNECTED" | "PENDING"; bottom?: number }
 const internal: CrmModule[] = [
+  {id:'pricing',label:'Bảng giá và cấp đối tác',shortLabel:'Bảng giá',icon:'goods',tone:'primary',permission:'pricing.manage',status:'CONNECTED'},
+  {id:'quotations',label:'Báo giá theo phiên bản',shortLabel:'Báo giá',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   {id:'automation',label:'Lịch và quy tắc công việc',shortLabel:'Lịch công việc',icon:'report',tone:'primary',permission:'partners.write',status:'CONNECTED'},
   {id:'fields',label:'Trường hồ sơ tùy chỉnh',shortLabel:'Trường dữ liệu',icon:'account',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   {id:'care',label:'Danh mục chăm sóc',shortLabel:'Chăm sóc',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
@@ -29,6 +31,7 @@ const internal: CrmModule[] = [
   { id: "accounts", label: "Tài khoản và quyền", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "accounts.manage", status: "CONNECTED" },
 ];
 const dealer: CrmModule[] = [
+  {id:'quotations',label:'Báo giá của tôi',shortLabel:'Báo giá',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'report',tone:'primary',permission:'catalog.read',status:'CONNECTED'},
   {id:'members',label:'Nhân viên đại lý',shortLabel:'Nhân viên',icon:'account',tone:'primary',permission:'dealer.invite',status:'CONNECTED'},
   {id:'support',label:'Phiếu hỗ trợ',shortLabel:'Hỗ trợ',icon:'customer',tone:'primary',permission:'workspace.use',status:'CONNECTED'},

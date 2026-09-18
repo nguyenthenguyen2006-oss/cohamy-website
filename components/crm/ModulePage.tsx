@@ -1,5 +1,6 @@
 import {RelationshipPanel,VisitPage,CareDictionaryPage,VisitsIndexPage} from './RelationshipPages';
 import {AutomationPage} from './CareAutomationPages';
+import {PricePage,QuotationsPage} from './CommercialPages';
 import {SupportPage,AddressesPage,CartPage} from './PortalServicePages';
 import {LibraryPage,DealerMembersPage} from './PartnerLibraryPages';
 import {markCatalogSeen} from '@/lib/crm/partner-library';
@@ -36,6 +37,8 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   const root=`/${area}/${slug}`;let tags=Array.isArray(query.tags)?query.tags.join(','):typeof query.tags==='string'?query.tags:'';
   const workQuery=Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string'));
   if(slug==='visits')return id?<VisitPage user={user} id={id}/>:<VisitsIndexPage user={user} query={workQuery}/>;
+  if(slug==='pricing'&&area==='crm')return <PricePage user={user} id={id} query={workQuery}/>;
+  if(slug==='quotations')return <QuotationsPage user={user} id={id} query={workQuery}/>;
   if(slug==='care'&&!id)return <CareDictionaryPage user={user}/>;
   if(slug==='automation'&&area==='crm'&&!id)return <AutomationPage user={user}/>;
   if(slug==='library')return <LibraryPage user={user} id={id} query={workQuery}/>;

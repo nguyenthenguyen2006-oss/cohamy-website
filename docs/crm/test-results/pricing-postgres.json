@@ -1,0 +1,43 @@
+{
+  "testedAt": "2026-09-18T22:58:18.865Z",
+  "environment": "STAGING isolated PostgreSQL DML-only service role; fictitious published policies only",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F031 no published eligible policy reports unavailable; public retail price never substitutes",
+      "status": "PASS"
+    },
+    {
+      "name": "F031 tier assignment uses active partners/current versions; Sales/dealers cannot publish or change tiers",
+      "status": "PASS"
+    },
+    {
+      "name": "F031 priority then organization/tier/all specificity applies; scoped preview hides full internal policy",
+      "status": "PASS"
+    },
+    {
+      "name": "F032 half-open Vietnam boundaries preserve adjacent windows and reject equal-precedence overlap",
+      "status": "PASS"
+    },
+    {
+      "name": "F032 saved drafts and exact retry cannot alter a published immutable version; reused keys reject other content",
+      "status": "PASS"
+    },
+    {
+      "name": "F032 publish/withdraw retries return original result; withdrawn scope falls back only to another eligible policy",
+      "status": "PASS"
+    },
+    {
+      "name": "F033 exact unit configuration versions are audited; base ratio and fractional gifts cannot bypass validation",
+      "status": "PASS"
+    },
+    {
+      "name": "F136 stale identity after lock/unlock remains blocked while fresh authentication works",
+      "status": "PASS"
+    },
+    {
+      "name": "F032 concurrent equal-precedence publication allows exactly one complete policy/event",
+      "status": "PASS"
+    }
+  ]
+}

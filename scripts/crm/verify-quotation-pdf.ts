@@ -1,0 +1,7 @@
+import fs from 'node:fs/promises';
+import {renderQuotationPdf} from '../../lib/crm/quotation-pdf';
+import {calculatePrice,type PriceProduct} from '../../lib/crm/pricing-model';
+import type {Quotation,QuotationVersion} from '../../lib/crm/quotations';
+async function main(){const source=JSON.parse(await fs.readFile('.local/pdfs/quotation-qa-sent-source.json','utf8')) as {head:Quotation;version:QuotationVersion},s=source.version.snapshot,l=s.calculation.lines[0],p:PriceProduct={id:l.productId,sku:l.sku,name:'QA hư cấu · Hạt điều rang muối và sản phẩm tiếng Việt có mô tả dài để kiểm tra xuống dòng',stockUnit:l.stockUnit,version:l.productVersion,units:[{code:l.unitCode,label:l.unitLabel,numerator:l.unitNumerator,denominator:l.unitDenominator,version:l.unitVersion,isCase:true,allowFractional:false}]};
+ const basket={...s.basket,lines:Array.from({length:36},()=>({...s.basket.lines[0]}))},snapshot={...s,basket,calculation:calculatePrice(s.policy,basket,[p])},version={...source.version,snapshot,number:99},head={...source.head,code:'QA-PDF-NHIEU-TRANG'};await fs.writeFile('.local/pdfs/quotation-qa-multipage.pdf',await renderQuotationPdf(head,version,true));await fs.writeFile('.local/pdfs/quotation-qa-multipage-source.json',JSON.stringify({head,version}));console.log('LOCAL PDF stress fixture saved; inspect every rendered page before acceptance.');}
+main().catch(e=>{console.error(e instanceof Error?e.message:'PDF_QA_FAILED');process.exitCode=1;});

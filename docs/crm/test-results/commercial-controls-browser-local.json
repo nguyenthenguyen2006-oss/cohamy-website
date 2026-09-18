@@ -1,0 +1,70 @@
+{
+  "testedAt": "2026-09-18T22:59:05.987Z",
+  "environment": "LOCAL actual Edge/Next; fictitious tier/unit configurations only",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F031 GUI tier creation/assignment hides concurrency version and persists correct current partner tier",
+      "status": "PASS"
+    },
+    {
+      "name": "F033 GUI confirmed unit edit uses current product/unit versions and keeps exact ratio",
+      "status": "PASS"
+    },
+    {
+      "name": "Tier/unit forms have readable unobstructed 390/320 evidence",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "screens": [
+    {
+      "name": "tier-assignment-desktop",
+      "path": ".impeccable/review/commercial/tier-assignment-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "unit-editor-desktop",
+      "path": ".impeccable/review/commercial/unit-editor-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "unit-editor-390",
+      "path": ".impeccable/review/commercial/unit-editor-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "tier-assignment-390",
+      "path": ".impeccable/review/commercial/tier-assignment-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "unit-editor-320",
+      "path": ".impeccable/review/commercial/unit-editor-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "tier-assignment-320",
+      "path": ".impeccable/review/commercial/tier-assignment-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    }
+  ]
+}

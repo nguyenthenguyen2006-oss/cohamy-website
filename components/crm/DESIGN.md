@@ -150,7 +150,7 @@ components:
 
 Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.
 
-This is a scan of the implemented workspace and its CRM/portal extensions, including governance, care automation and duplicate/merge controls. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
+This is a scan of the implemented workspace and its CRM/portal extensions, including governance, care automation, duplicate/merge controls and versioned pricing/quotations. `app/(operations)/layout.tsx` loads `components/crm/work.css`, `components/crm/upgrade.css` and then `components/crm/commercial.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
 
 **Key Characteristics:**
 
@@ -165,6 +165,8 @@ This is a scan of the implemented workspace and its CRM/portal extensions, inclu
 - Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.
 - Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language.
 - Before-save duplicate warnings, explicit merge results and dated saved-impact disclosures preserve record context.
+- Structured pricing, confirmed unit ratios and tier assignment reuse native labeled forms.
+- Version-specific quotation totals, source prices, expiry, saved PDFs and dealer responses keep commercial context visible.
 
 ## Colors
 
@@ -196,6 +198,8 @@ The display role belongs to the desktop login story. Page headlines are smaller 
 
 Description paragraphs use a maximum line length of (75ch). Monetary columns and totals use tabular numerals and avoid wrapping; long identifiers, notes and names can wrap.
 
+Commercial fieldset legends use (16px), becoming (15px) at (640px). Quotation line-table headings use (12px), and their caption uses (13px); calculated quantities and totals retain tabular numerals. Plain task-list links use (14px) at weight (500), with written state beneath in muted (12px) text.
+
 **The One Family Rule.** Use Be Vietnam Pro throughout the operations boundary, including forms and navigation.
 
 ## Layout
@@ -217,6 +221,10 @@ Governance previews reuse ordinary forms, headings and record lists rather than 
 Care schedules, event rules, escalation settings and handover previews reuse these paper sections, shared field grids and native disclosures. Record-level schedule creation keeps its source implicit; the inventory page links to customer, dealer and request lists to choose the source. Handover inventory groups use ordinary task lists and separate schedule/rule headings with written empty states. The shared mobile rule wraps task-list rows and stacks fields; care automation introduces no separate breakpoint, overlay or card style.
 
 Duplicate warnings sit after the partner field grid and before the save actions. Merge choices use that same grid, then a flat paper preview groups before/after facts, resulting contact/default settings and native inventory disclosures beside the consequences and confirmation. Fact labels use muted (11px) text and values use (13px); long values wrap inside the workspace. Saved merge details reuse the same fact renderer within a native history disclosure. Source archives use ordinary read-only facts and a link to the retained record, with no edit or work-creation controls. These extensions use the existing mobile field stacking and introduce no new visual tokens or breakpoint.
+
+Commercial configuration remains inside ordinary paper sections. Long forms group scope, base-unit rates, thresholds, tax/fees/approval, minimums and gifts with native fieldsets and top rules. Their field container has an (18px) gap; repeated entries have (18px) vertical padding and thin separators. Threshold, SKU-minimum and gift-condition rows use two flexible field columns plus their removal action, with a (14px) gap. At (640px) and below these rows and action groups stack into one column; buttons wrap their text and keep a minimum height of (44px). Controls and rows retain zero minimum width so the long forms fit the workspace.
+
+Quotation line tables retain a (760px) minimum width inside their own keyboard-focusable, labeled horizontal-scroll region; they do not enlarge the page. Captions name the viewed version and base-unit price basis. Summary facts use a one-to-two column proportion and gaps of (10px 24px), then stack at (640px), with extra space before the next label. Lists of pricing books and quotations reuse task-list rows; no separate dashboard tile or table system is introduced.
 
 The quick-create dialog uses the frontmatter width and padding with viewport margins (16px per side), a maximum height of (100dvh minus 32px), and centered placement. The quick-detail dialog occupies the right edge, uses the frontmatter width and padding, fills the viewport height and scrolls internally. On mobile the quick-create trigger hides its text and becomes (38px) wide, retaining the accessible name “Tạo nhanh”. These dialog behaviors are separate from the collapsing navigation.
 
@@ -243,6 +251,8 @@ The navigation rail is rectangular and fills the available viewport height. Stat
 Primary buttons use action orange, white text and the button typography role. Secondary buttons are white with ink text and a button-rule border. Both have a minimum height of (42px), horizontal/vertical padding recorded in frontmatter and a shallow control corner. Secondary hover uses quiet-hover; primary hover and pressed states use their own colors.
 
 All focusable elements inherit the focus outline (3px solid, 3px offset). Disabled buttons use opacity (0.6) and a not-allowed cursor. Shared data forms and action buttons use a synchronous ref guard plus rendered pending/disabled state, change their action text while awaiting a request, announce success with status semantics and errors with alert semantics. Saved-filter submission uses the same guard and clears the saved receipt when its name changes. Column selection separately disables its save action while pending and reports errors. These are implemented client action states, not a claim about backend transaction correctness or every control being protected identically. The login submit has a minimum height of (48px).
+
+Commercial forms additionally make their fields inert and disable the primary action throughout the request and subsequent router transition. “Đang xử lý…” remains visible until that transition completes. Their synchronous guard stops overlapping request submissions. Editing clears error/saved feedback and any calculation preview; errors preserve entered fields for recovery. The alert uses the shared error treatment, with a commercial direct-child override preserving red ink, tinted paper and (12px) padding against the earlier generic form-help rule. “Đã lưu.” uses the shared green status receipt. A saved receipt or calculation preview is distinct from a sent quotation, approval or dealer acceptance.
 
 ### Inputs / Fields
 
@@ -271,6 +281,8 @@ Status badges use (5px 8px) padding, the status corner and compact text. Default
 ### Tables, tasks and disclosures
 
 Tables use subdued headers, thin row rules and a light row hover. Numeric columns align right where the source marks them. Desktop table wrappers are named and keyboard-focusable; mobile order/product lists retain their actual record context. Empty lists explain what can be done next without invented metrics.
+
+Task-list rows remove list bullets and outer padding, place their contents in a wrapping flex row with a (16px) gap and (18px) vertical padding, and separate entries with the rule stroke; the last row has no bottom rule. Their inner record column can shrink, linked names wrap, and muted state text sits (5px) beneath the link. Mobile aligns the row at its start and wraps actions. Pricing-book and quotation indexes use this same row treatment, with written published/withdrawn/unsent/sent/accepted states.
 
 Native disclosures reveal task creation, assignments, audit history and mobile contact facts. Their summary uses record-link blue and visible keyboard focus; opening adds spacing below the summary. Within an order or customer record, an empty task section points directly to “Tạo việc và đặt hạn” underneath it. The global task-list empty state separately links to the order list. Timeline entries use thin rules, author/time metadata and wrapping notes.
 
@@ -352,6 +364,28 @@ Record document rows additionally distinguish “Bản hiện hành”, “Bản
 
 Staff rows distinguish the owner from staff and active from locked state in writing; lock/reopen actions reuse the shared action-state control. The portal cart is explicitly a saved per-account draft with SKU, quantity and base unit, not a price quotation or stock posting. Address/profile editing and support use labeled forms in the same working-surface language; support can expose an explicitly labeled internal-note checkbox when allowed. These UI groups do not establish a completed checkout, revenue or financial workflow.
 
+### Structured pricing, tiers and gift configuration
+
+Admins/managers configure price books with native labeled inputs, selects, checkboxes and fieldsets. Scope can be all partners, a tier or one partner; Vietnam-time start/end fields sit beside priority and quantity basis. Help explains precedence and that the ending time is excluded from the effective interval. Each SKU rate names its base unit beside the VND field and can add numbered quantity thresholds. Tax, fees, discount authority, rounding, tax basis, quote lifetime and approval choices are separate controls. Minimums distinguish discounted goods value, whole converted cases and per-SKU base quantities; help states that tax, fees and gifts do not count toward the goods-value minimum.
+
+Gift programs use native fields for name, priority group, priority, exclusive/stacked behavior, once/per-threshold repetition, gift SKU and gifted base quantity. Every paid-SKU condition has its own SKU and minimum-base-quantity control, with numbered add/remove actions. Help states that all listed conditions must be met and gifts do not trigger other programs. These are structured fields, not a JSON editor; their calculations do not establish gift stock movements or returns.
+
+Book disclosures distinguish “Đang phát hành” from an unpublished “Nháp mới nhất”; an active latest version is not also labeled draft. Editing creates a new draft while retaining the published version. Publication/withdrawal selects identify the actual version, require a reason and include an explicit policy/price/unit-check checkbox. The re-publication choice identifies the currently applied version. Tier creation labels code/name; partner assignment selects the partner and active tier and requires a reason. Its help states that a new tier affects newly calculated quotations while sent conditions remain unchanged.
+
+### Confirmed units and exact quantity fields
+
+The goods record keeps the manager-entered base unit in its commercial-information section. “Quy đổi thương mại đã xác nhận” uses native disclosures that name the unit label, code, exact numerator/denominator ratio and inactive state. The edit form labels unit code, unit name, numerator, denominator and required reason; existing unit codes are read-only. Separate checkboxes identify the case unit used for minimums, fractional quantity permission and active use. Written help gives the equation “1 đơn vị chọn = tử số / mẫu số” of the saved base unit and states that BASE is always (1/1). Do not treat the earlier informational units-per-case field as a substitute for a confirmed commercial ratio.
+
+Quote baskets offer only the selected SKU's configured active units. Base quantities and monetary values remain explicit strings with appropriate numeric/decimal input modes; the server error vocabulary explains plain decimal input, precision, positive quantities, integer-only units and unrepresentable conversions. A missing configuration writes “Chưa có quy đổi được xác nhận” and disallows inferred unit/price substitutes. The display and form do not derive a ratio from the public product name, image or price.
+
+### Versioned quotations and dealer responses
+
+Admins/managers/Sales create quotations within their partner scope. Native fields keep SKU, configured unit, quantity, optional alternative VND price per base unit, requested discount, credit request, delivery contact/address and recipient-facing note visible. Help states that saving recalculates using current prices and ratios, creates a new version and leaves the sent version unchanged. A written minimum shortfall names the missing VND, whole converted cases or SKU base quantity; internal approval reasons name special price, discount, credit or threshold exceptions.
+
+The version selector and section heading identify the viewed, sent, latest and accepted versions. Each snapshot retains line quantities and base conversions, base-unit VND rates, line discounts/tax, totals, expiry in Vietnam time, delivery facts, terms, note and source price-book version. “Tải PDF bản …” names the exact saved version. A native comparison disclosure shows before/after totals, delivery, complete line inventories including gifts, terms and expiry. Dated history records the actor, version, approval/send/response outcome and reason. A new price policy, unit ratio or quotation draft does not rewrite the sent snapshot/PDF or earlier history.
+
+The CRM action form identifies the latest version; approval/rejection choices appear only for admins/managers when an exception requires approval. Dealer portal views expose their organization's sent versions and hide internal exception details. Only the dealer owner receives accept/request-revision actions on the current sent version while it remains unexpired and unaccepted; staff and older versions have no response form. Expired versions write the need for a fresh version, and accepted quotations retain the accepted version without new-edit controls. The action help names the exact version and preserved PDF/conditions. Dealer acceptance is a recorded quotation response, not confirmed order conversion or stock, debt or payment posting.
+
 The earlier scoped finish review ended with disposition ship after four UI fixes: the mobile profile accessible name, early mobile customer context, contextual task creation and removed login eyebrow. The extension's review scored its two action-state findings resolved and returned disposition ship. The final governance review also returned disposition ship after resolving two findings: readable Vietnamese audit comparisons with secondary technical metadata, and associated custom-key format/example/invalid-input guidance. Those verdicts score their recorded findings; they do not certify the whole CRM/portal inventory.
 
 Governance browser evidence in `docs/crm/test-results/governance-browser-local.json` reports (9/9) PASS in real Edge/Next with an isolated local QA database, no page errors and (19) screenshot paths spanning desktop (1366px), mobile (390px) and narrow mobile (320px). It covers persistence and the recorded governance workflows. This is local UI evidence, not a statement about production deployment, live provider readiness, complete backend correctness or unopened stock/financial workflows. The earlier local/staging-only scope in `PRODUCT.md` is superseded by the user's explicit push/deploy authorization; authorization is distinct from successful deployment evidence. No commercial policy is inferred here. The sidecar is a preview of visual primitives; its fragment links, inline-open dialog samples and sample text do not perform application actions.
@@ -359,6 +393,8 @@ Governance browser evidence in `docs/crm/test-results/governance-browser-local.j
 The care review packet at `.impeccable/review/care/packet.md` limits its cohort to Today, recurrence, mentions/followers, Sales handover, configured escalation, event-generated tasks and effective-current document labels. Its finish verdict scored two fixes resolved—inspectable schedule/rule handover inventories and saved-receipt evidence—and returned disposition ship at those fixes only. The packet records fictitious LOCAL QA captures at desktop (1366×900), mobile (390×844) and narrow mobile (320×844), with real Edge/Next behavior (9/9) PASS. These evidence statements do not extend the verdict to every state, the whole F001–F140 inventory, production deployment or live Brevo delivery.
 
 The duplicate/merge packet at `.impeccable/review/merge/packet.md` limits CRM persistence to F023/F024. Its final verdict pass scored all four material fixes resolved and returned disposition ship at that fix list only. `docs/crm/test-results/partner-merge-browser-local.json` records real Edge/Next LOCAL evidence (5/5) PASS with fictitious users, persistence after reload and a deliberate stale-confirmation failure across desktop (1366×900), mobile (390×844) and narrow mobile (320×844). This does not establish whole-surface or F001–F140 acceptance, successful production deployment or provider readiness. The packet's public-header responsive repair preserves the public site's separate identity and lies outside this CRM design boundary; it adds no CRM tokens.
+
+The commercial packet at `.impeccable/review/commercial/packet.md` limits this cohort to pricing, tier assignment, confirmed units, quotation versions, approval, saved PDF downloads and dealer responses. The fresh finish review accepted its viewport evidence and found three material fixes: contradictory active/draft labels, commercial alert/receipt styling under the stylesheet cascade, and pricing/quotation indexes missing the incumbent task-list treatment. All three were resolved in one batch; the same reviewer returned SHIP with remaining issues clear at those three fixes only. `docs/crm/test-results/commercial-browser-local.json` records real Edge/Next LOCAL evidence (7/7) PASS using fictitious data across desktop (1366×900), mobile (390×844) and narrow mobile (320×844). The packet separately records controls (3/3) PASS, six passing review captures and zero unexpected console/page errors. These are scoped local UI findings, not whole-surface or F001–F140 acceptance, deployment success or activation of real commercial policies. Gift stock movements/returns and confirmed order conversion remain later work.
 
 ## Do's and Don'ts
 
@@ -384,6 +420,11 @@ The duplicate/merge packet at `.impeccable/review/merge/packet.md` limits CRM pe
 - Do place scoped duplicate matches and their written reasons before save without exposing hidden records.
 - Do show resulting merge defaults, fallback/none outcomes, named inventory and access/session consequences before separate confirmation.
 - Do retain saved merge choices and impacts under native history disclosure, mark their saved-time context and keep source archives read-only.
+- Do keep commercial configuration in native structured fields, with exact base-unit rates, confirmed ratios and numbered gift conditions.
+- Do distinguish the active published price version from unpublished drafts and name the version affected by an action.
+- Do preserve quotation source versions, sent snapshots/PDFs, expiry and before/after line inventories beside scoped actions.
+- Do retain inert commercial fields and visible request/transition feedback with styled alert and status receipts.
+- Do limit dealer response controls to the owner and the current actionable sent version.
 
 ### Don't:
 
@@ -400,3 +441,6 @@ The duplicate/merge packet at `.impeccable/review/merge/packet.md` limits CRM pe
 - Don't expand a care verdict scoring two fixes into whole-surface or F001–F140 acceptance.
 - Don't treat a duplicate warning as automatic merge/deletion or a merge preview as a committed change.
 - Don't replace saved merge impacts with current data, imply that merge posts stock/debt/payment or expand a four-fix verdict into whole-surface approval.
+- Don't infer commercial ratios or prices from website content or substitute informational case counts for confirmed unit ratios.
+- Don't present a pricing calculation, sent quotation or dealer acceptance as completed orders, stock movements, returns, debt or payment.
+- Don't expand the commercial three-fix SHIP verdict into whole-surface acceptance or activation of live commercial policies.

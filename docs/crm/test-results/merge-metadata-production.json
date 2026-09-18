@@ -1,0 +1,30 @@
+{
+  "testedAt": "2026-09-18T22:04:48.896Z",
+  "sourceSha": "684057fe7624ecd3ae0a390393ad973007cfd9e4",
+  "environment": "PRODUCTION read-only metadata transaction; no merge invocation, fixture or business mutation",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Deployed bounded no-argument lock helper body/owner/search path agree with migration and PUBLIC cannot execute",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual runtime may execute lock helper and write profiles/append merge history, cannot create schema/DB, read migration or mutate merge history",
+      "status": "PASS"
+    },
+    {
+      "name": "All normalized identifiers are actual PostgreSQL stored generated columns",
+      "status": "PASS"
+    }
+  ],
+  "grants": {
+    "execute": true,
+    "schema_create": false,
+    "database_create": false,
+    "migration_read": false,
+    "profile_write": true,
+    "history_insert": true,
+    "history_update": false,
+    "history_delete": false
+  }
+}

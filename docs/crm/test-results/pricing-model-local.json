@@ -1,0 +1,47 @@
+{
+  "testedAt": "2026-09-18T22:55:46.012Z",
+  "environment": "LOCAL pure exact price model; fictitious rates only, no production policy or posting",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F033 threshold boundaries apply after exact CASE conversion and split SKU aggregation",
+      "status": "PASS"
+    },
+    {
+      "name": "F033 LINE/SKU/ORDER are distinct; mixed stock units cannot aggregate ORDER thresholds",
+      "status": "PASS"
+    },
+    {
+      "name": "Exact totals beyond Number safety preserve discounted tax and fees without floating point",
+      "status": "PASS"
+    },
+    {
+      "name": "LINE/ORDER tax rounding differs deliberately while each allocation reconciles exactly",
+      "status": "PASS"
+    },
+    {
+      "name": "F034 minimum checks use paid net merchandise, whole converted cases and paid SKU only",
+      "status": "PASS"
+    },
+    {
+      "name": "F038 server explains price override, discount threshold, credit and inclusive amount approval",
+      "status": "PASS"
+    },
+    {
+      "name": "F039 AND combo conditions require all paid SKUs; free gifts never trigger further gifts",
+      "status": "PASS"
+    },
+    {
+      "name": "F039 exclusive highest priority and stacking groups are deterministic with ONCE/PER_THRESHOLD",
+      "status": "PASS"
+    },
+    {
+      "name": "Unconfigured SKU/unit, fractional whole units and impossible quantity ratios fail explicitly",
+      "status": "PASS"
+    },
+    {
+      "name": "Policy rejects unknown fields, mismatched audiences, overlapping threshold order and gift ambiguity",
+      "status": "PASS"
+    }
+  ]
+}

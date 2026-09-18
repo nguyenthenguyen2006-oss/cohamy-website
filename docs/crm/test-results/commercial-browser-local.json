@@ -1,0 +1,191 @@
+{
+  "testedAt": "2026-09-18T22:58:57.961Z",
+  "environment": "LOCAL actual Edge/Next; fictitious prices/quotes, no real recipient sends or production posting",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F031-F034/F039 GUI structured price configuration publishes an exact scoped policy with threshold and gift",
+      "status": "PASS"
+    },
+    {
+      "name": "F036/F038 GUI Sales quote preserves exact quantities/totals and blocks unapproved send with recovery",
+      "status": "PASS"
+    },
+    {
+      "name": "F038/F035 named other-user GUI approval permits send and persists downloadable PDF",
+      "status": "PASS"
+    },
+    {
+      "name": "F037 portal sees only own sent versions and immutable PDF, with internal approval details hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "F036 editing via GUI creates a new draft, compares complete before/after and leaves sent PDF unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "F037 newer sent version is the only actionable version; dealer GUI response and acceptance persist",
+      "status": "PASS"
+    },
+    {
+      "name": "Pricing and quotation forms/read views fit 390/320 with native keyboard controls and scoped table scrolling",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "expectedConflicts": 1,
+  "screens": [
+    {
+      "name": "pricing-index-desktop",
+      "path": ".impeccable/review/commercial/pricing-index-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-form-desktop",
+      "path": ".impeccable/review/commercial/pricing-form-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-rates-desktop",
+      "path": ".impeccable/review/commercial/pricing-rates-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-gifts-desktop",
+      "path": ".impeccable/review/commercial/pricing-gifts-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-published-desktop",
+      "path": ".impeccable/review/commercial/pricing-published-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "quote-create-desktop",
+      "path": ".impeccable/review/commercial/quote-create-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "quote-pending-desktop",
+      "path": ".impeccable/review/commercial/quote-pending-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "quote-sent-desktop",
+      "path": ".impeccable/review/commercial/quote-sent-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "quote-dealer-desktop",
+      "path": ".impeccable/review/commercial/quote-dealer-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "quote-history-desktop",
+      "path": ".impeccable/review/commercial/quote-history-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "quote-accepted-desktop",
+      "path": ".impeccable/review/commercial/quote-accepted-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-edit-390",
+      "path": ".impeccable/review/commercial/pricing-edit-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "pricing-gifts-390",
+      "path": ".impeccable/review/commercial/pricing-gifts-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "quote-create-390",
+      "path": ".impeccable/review/commercial/quote-create-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "quote-dealer-390",
+      "path": ".impeccable/review/commercial/quote-dealer-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "pricing-edit-320",
+      "path": ".impeccable/review/commercial/pricing-edit-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "pricing-gifts-320",
+      "path": ".impeccable/review/commercial/pricing-gifts-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "quote-create-320",
+      "path": ".impeccable/review/commercial/quote-create-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "quote-dealer-320",
+      "path": ".impeccable/review/commercial/quote-dealer-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    }
+  ]
+}

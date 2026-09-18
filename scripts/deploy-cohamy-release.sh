@@ -110,7 +110,12 @@ GRANT EXECUTE ON FUNCTION cohamy_crm.lock_partner_merge() TO cohamy_runtime;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA cohamy_crm TO cohamy_runtime;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA cohamy_crm TO cohamy_runtime;
 REVOKE ALL ON cohamy_crm.migrations FROM cohamy_runtime;
-REVOKE UPDATE, DELETE ON cohamy_crm.audit_events,cohamy_crm.activities,cohamy_crm.document_versions,cohamy_crm.application_history,cohamy_crm.support_messages,cohamy_crm.opportunity_history,cohamy_crm.partner_visits,cohamy_crm.custom_field_versions,cohamy_crm.custom_value_history,cohamy_crm.care_schedule_runs,cohamy_crm.care_rule_runs,cohamy_crm.care_escalations,cohamy_crm.activity_mentions,cohamy_crm.partner_merge_history FROM cohamy_runtime;
+DO \$\$ DECLARE immutable_table record; BEGIN
+ FOR immutable_table IN SELECT DISTINCT c.relname FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace
+  WHERE n.nspname='cohamy_crm' AND t.tgfoid='cohamy_crm.deny_audit_mutation'::regproc LOOP
+  EXECUTE format('REVOKE UPDATE, DELETE ON TABLE cohamy_crm.%I FROM cohamy_runtime',immutable_table.relname);
+ END LOOP;
+END \$\$;
 REVOKE CREATE ON SCHEMA public FROM PUBLIC;
 SQL
 export CRM_DATABASE_URL="postgresql://cohamy_runtime:$RUNTIME_PASSWORD@127.0.0.1:55432/cohamy_crm"

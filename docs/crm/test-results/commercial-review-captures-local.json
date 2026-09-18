@@ -1,0 +1,88 @@
+{
+  "testedAt": "2026-09-18T22:59:13.275Z",
+  "environment": "LOCAL actual Edge; read-only capture of existing fictitious QA policy and unfinished quotes",
+  "status": "PASS",
+  "errors": [],
+  "screens": [
+    {
+      "name": "pricing-policy-desktop",
+      "path": ".impeccable/review/commercial/pricing-policy-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-gift-conditions-390",
+      "path": ".impeccable/review/commercial/pricing-gift-conditions-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "pricing-gift-conditions-320",
+      "path": ".impeccable/review/commercial/pricing-gift-conditions-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "pricing-rates-desktop",
+      "path": ".impeccable/review/commercial/pricing-rates-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-gifts-desktop",
+      "path": ".impeccable/review/commercial/pricing-gifts-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "pricing-edit-390",
+      "path": ".impeccable/review/commercial/pricing-edit-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "pricing-edit-320",
+      "path": ".impeccable/review/commercial/pricing-edit-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "quote-response-desktop",
+      "path": ".impeccable/review/commercial/quote-response-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "quote-response-390",
+      "path": ".impeccable/review/commercial/quote-response-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "quote-response-320",
+      "path": ".impeccable/review/commercial/quote-response-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    }
+  ]
+}

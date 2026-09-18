@@ -60,7 +60,13 @@
     "test:crm:care-browser": "node scripts/crm/verify-care-browser.mjs",
     "test:crm:partner-merge": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-partner-merge.ts",
     "test:crm:partner-merge-browser": "node scripts/crm/verify-partner-merge-browser.mjs",
-    "test:crm:production-browser": "node scripts/crm/verify-production-browser.mjs"
+    "test:crm:production-browser": "node scripts/crm/verify-production-browser.mjs",
+    "test:crm:decimal": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-decimal.ts",
+    "test:crm:pricing-model": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-pricing-model.ts",
+    "test:crm:pricing": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-pricing.ts",
+    "test:crm:quotations": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotations.ts",
+    "test:crm:commercial-browser": "node scripts/crm/verify-commercial-browser.mjs",
+    "test:crm:commercial-controls-browser": "node scripts/crm/verify-commercial-controls-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -82,6 +88,7 @@
     "next": "16.3.5",
     "next-intl": "^4.13.0",
     "papaparse": "^5.5.4",
+    "pdfkit": "^0.20.2",
     "pg": "^8.23.0",
     "postcss": "8.5.23",
     "react": "19.2.4",
@@ -98,6 +105,7 @@
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^20",
     "@types/papaparse": "^5.5.2",
+    "@types/pdfkit": "^0.17.6",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",

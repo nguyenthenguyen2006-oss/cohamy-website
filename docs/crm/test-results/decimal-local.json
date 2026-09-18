@@ -1,0 +1,31 @@
+{
+  "testedAt": "2026-09-18T23:00:39.717Z",
+  "environment": "LOCAL deterministic pure arithmetic; no database or commercial posting",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Exact money beyond Number safe range and scaled quantities round-trip without scientific notation",
+      "status": "PASS"
+    },
+    {
+      "name": "Configured rounding handles positive/negative ties and even/odd quotient boundaries",
+      "status": "PASS"
+    },
+    {
+      "name": "Unit ratios conserve exact base quantities; unavailable precision fails instead of rounding stock",
+      "status": "PASS"
+    },
+    {
+      "name": "Line totals/discounts use explicit policy rounding and exact large amounts",
+      "status": "PASS"
+    },
+    {
+      "name": "Proportional allocations always preserve the original amount and stable remainder priority",
+      "status": "PASS"
+    },
+    {
+      "name": "Vietnam business date rolls at17:00UTC without server timezone dependence",
+      "status": "PASS"
+    }
+  ]
+}

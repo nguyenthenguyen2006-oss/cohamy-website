@@ -1,0 +1,29 @@
+{
+  "environment": "LOCAL actual PDFKit output, Poppler rendering and pypdf text; fictitious immutable source/stress fixture",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "quotation-qa-sent all pages text, Vietnamese, exact totals, row count and footer integrity",
+      "status": "PASS",
+      "pages": 1
+    },
+    {
+      "name": "quotation-qa-multipage all pages text, Vietnamese, exact totals, row count and footer integrity",
+      "status": "PASS",
+      "pages": 6
+    }
+  ],
+  "testedAt": "2026-09-18T22:40:53.030Z",
+  "visualReview": {
+    "status": "PASS",
+    "pagesInspected": 7,
+    "onePageSource": "final-sent-1.png",
+    "multipageSource": "confirmed-multipage-1..6.png",
+    "unchangedPages": "Rendered pages 1-4 SHA256 identical to inspected prior round; final pages 5-6 inspected after keeping totals together.",
+    "findingsResolved": [
+      "Footer no longer creates blank pages",
+      "All total lines stay together"
+    ],
+    "limitations": "Fictitious source; production PDF not exercised"
+  }
+}

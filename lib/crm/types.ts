@@ -5,6 +5,7 @@ export type OrganizationKind = "COHAMY" | "DEALER" | "CUSTOMER" | "SUPPLIER";
 export interface Principal {
   id: string;
   membershipId: string;
+  membershipVersion: number;
   displayName: string;
   email: string;
   role: Role;

@@ -9,15 +9,15 @@ export const SESSION_COOKIE = "cohamy_crm_session";
 export const SESSION_SECONDS = 8 * 60 * 60;
 export const digest = (text: string) => createHash("sha256").update(text).digest("hex");
 const principalSelect = `SELECT u.id, u.email, u.display_name, m.id AS membership_id,
-  m.role, o.id AS organization_id, o.name AS organization_name, o.kind
+  m.role, m.version AS membership_version, o.id AS organization_id, o.name AS organization_name, o.kind
   FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id
   JOIN cohamy_crm.organizations o ON o.id=m.organization_id`;
-type IdentityRow = { id: string; email: string; display_name: string; membership_id: string; role: Role; organization_id: string; organization_name: string; kind: string };
+type IdentityRow = { id: string; email: string; display_name: string; membership_id: string; membership_version: number; role: Role; organization_id: string; organization_name: string; kind: string };
 function principal(row: IdentityRow): Principal | null {
   const dealer = ["DEALER_OWNER", "DEALER_STAFF"].includes(row.role);
   if ((dealer && row.kind !== "DEALER") || (!dealer && row.kind !== "COHAMY")) return null;
   return { id: row.id, email: row.email, displayName: row.display_name, membershipId: row.membership_id,
-    role: row.role, organizationId: row.organization_id, organizationName: row.organization_name, area: dealer ? "portal" : "crm" };
+    membershipVersion: row.membership_version, role: row.role, organizationId: row.organization_id, organizationName: row.organization_name, area: dealer ? "portal" : "crm" };
 }
 export async function audit(sql: Sql, actorId: string | null, action: string, entityId: string, payload: unknown = {}) {
   await sql.query("INSERT INTO cohamy_crm.audit_events(id,actor_id,action,entity_id,payload) VALUES ($1,$2,$3,$4,$5::jsonb)",
@@ -76,7 +76,8 @@ export async function assertCurrentPrincipal(sql: Sql, user: Principal): Promise
     WHERE m.id=$1 AND u.active AND m.active AND o.active FOR SHARE OF m,u,o`, [user.membershipId]);
   const current = result.rows[0] ? principal(result.rows[0]) : null;
   if (!current || current.id !== user.id || current.role !== user.role ||
-      current.organizationId !== user.organizationId || current.area !== user.area) {
+      current.organizationId !== user.organizationId || current.area !== user.area ||
+      current.membershipVersion !== user.membershipVersion) {
     throw new CrmError('FORBIDDEN', 403);
   }
 }

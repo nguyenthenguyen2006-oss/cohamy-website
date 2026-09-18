@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-18T21:48:55.645Z",
+  "testedAt": "2026-09-18T22:55:51.723Z",
   "environment": "LOCAL isolated PGlite; fictitious businesses and explicitly fake closed balance fixture",
   "status": "PASS",
   "cases": [

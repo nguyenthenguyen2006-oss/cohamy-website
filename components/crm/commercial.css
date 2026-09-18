@@ -1,0 +1,26 @@
+/* Commercial extensions inherit Cohamy's task forms and working-paper surface. */
+.cohamy-crm .commercial-form{min-width:0}
+.cohamy-crm .commercial-fields{display:grid;gap:18px;min-width:0}
+.cohamy-crm .commercial-form fieldset{min-width:0;border:0;border-top:1px solid var(--work-rule);margin:24px 0;padding:18px 0 0}
+.cohamy-crm .commercial-form legend{padding:0 12px 0 0;font-size:16px;font-weight:600;color:var(--work-navy)}
+.cohamy-crm .commercial-row{padding:18px 0;border-bottom:1px solid var(--work-rule);min-width:0}
+.cohamy-crm .commercial-inline{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;align-items:end;gap:14px;margin:14px 0}
+.cohamy-crm .commercial-inline label{display:grid;gap:6px;min-width:0}
+.cohamy-crm .commercial-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.cohamy-crm .commercial-form .button{white-space:normal;overflow-wrap:anywhere;min-height:44px}
+.cohamy-crm .commercial-form select,.cohamy-crm .commercial-form input,.cohamy-crm .commercial-form textarea{max-width:100%;min-width:0;width:100%}
+.cohamy-crm .commercial-form .work-check input{width:18px;flex-shrink:0}
+.cohamy-crm .work-table-wrap{max-width:100%;overflow-x:auto;margin:18px 0;scrollbar-color:#75859a #edf1f5}
+.cohamy-crm .work-table{width:100%;min-width:760px;border-collapse:collapse;text-align:left;font-variant-numeric:tabular-nums}
+.cohamy-crm .work-table caption{text-align:left;padding:0 0 12px;color:var(--work-muted);font-size:13px}
+.cohamy-crm .work-table th,.cohamy-crm .work-table td{padding:12px 14px;vertical-align:top;border-bottom:1px solid var(--work-rule);overflow-wrap:anywhere}
+.cohamy-crm .work-table th{font-size:12px;color:var(--work-muted);font-weight:600;background:#f4f6f8}
+.cohamy-crm .work-table th:first-child{width:34%}
+.cohamy-crm .work-table th:nth-child(2){width:24%}
+.cohamy-crm .work-table th:nth-child(3){width:25%}
+.cohamy-crm .commercial-summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:10px 24px;margin:20px 0;font-variant-numeric:tabular-nums}
+.cohamy-crm .commercial-summary dt,.cohamy-crm .commercial-summary dd{margin:0;overflow-wrap:anywhere}
+@media(max-width:640px){.cohamy-crm .commercial-summary{grid-template-columns:minmax(0,1fr);gap:6px}.cohamy-crm .commercial-summary dt:not(:first-child){margin-top:12px}}
+@media(max-width:640px){.cohamy-crm .commercial-inline{grid-template-columns:minmax(0,1fr)}.cohamy-crm .commercial-actions{display:grid;grid-template-columns:minmax(0,1fr)}.cohamy-crm .commercial-form fieldset{margin:20px 0}.cohamy-crm .commercial-form legend{font-size:15px}}
+.cohamy-crm .commercial-form > p.work-error { color: #a22424; background: #fff0ef; padding: 12px; font-size: 13px; }
+.cohamy-crm .commercial-form .work-success { color: #166344; font-size: 12px; }

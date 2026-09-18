@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-18T21:57:03.780Z",
+  "generatedAt": "2026-09-18T23:03:58.785Z",
   "title": "Design System: Cohamy CRM workspace",
   "extensions": {
     "colorMeta": {
@@ -580,7 +580,7 @@
   ],
   "narrative": {
     "northStar": "The Cohamy work desk",
-    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented workspace and its CRM/portal extensions, including governance, care automation and duplicate/merge controls. `app/(operations)/layout.tsx` loads `components/crm/work.css` followed by `components/crm/upgrade.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.",
+    "overview": "Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.\n\nThis is a scan of the implemented workspace and its CRM/portal extensions, including governance, care automation, duplicate/merge controls and versioned pricing/quotations. `app/(operations)/layout.tsx` loads `components/crm/work.css`, `components/crm/upgrade.css` and then `components/crm/commercial.css`; that cascade and the current shell, pages and forms are the visual authority. The direction is code-led preservation of the incumbent Operate system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.",
     "keyCharacteristics": [
       "Persistent navy navigation beside white operational surfaces.",
       "Be Vietnam Pro with compact labels and clear page headings.",
@@ -592,7 +592,9 @@
       "Explicit impact previews precede bulk updates and role changes.",
       "Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.",
       "Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language.",
-      "Before-save duplicate warnings, explicit merge results and dated saved-impact disclosures preserve record context."
+      "Before-save duplicate warnings, explicit merge results and dated saved-impact disclosures preserve record context.",
+      "Structured pricing, confirmed unit ratios and tier assignment reuse native labeled forms.",
+      "Version-specific quotation totals, source prices, expiry, saved PDFs and dealer responses keep commercial context visible."
     ],
     "rules": [
       {
@@ -631,7 +633,12 @@
       "Do distinguish overdue work, work still due today and effective-current document versions with written labels.",
       "Do place scoped duplicate matches and their written reasons before save without exposing hidden records.",
       "Do show resulting merge defaults, fallback/none outcomes, named inventory and access/session consequences before separate confirmation.",
-      "Do retain saved merge choices and impacts under native history disclosure, mark their saved-time context and keep source archives read-only."
+      "Do retain saved merge choices and impacts under native history disclosure, mark their saved-time context and keep source archives read-only.",
+      "Do keep commercial configuration in native structured fields, with exact base-unit rates, confirmed ratios and numbered gift conditions.",
+      "Do distinguish the active published price version from unpublished drafts and name the version affected by an action.",
+      "Do preserve quotation source versions, sent snapshots/PDFs, expiry and before/after line inventories beside scoped actions.",
+      "Do retain inert commercial fields and visible request/transition feedback with styled alert and status receipts.",
+      "Do limit dealer response controls to the owner and the current actionable sent version."
     ],
     "donts": [
       "Don't copy the superseded launcher, floating dock or glass login into this workspace.",
@@ -646,7 +653,10 @@
       "Don't imply that mentions/followers grant record access or that an automation saved receipt proves notification delivery.",
       "Don't expand a care verdict scoring two fixes into whole-surface or F001–F140 acceptance.",
       "Don't treat a duplicate warning as automatic merge/deletion or a merge preview as a committed change.",
-      "Don't replace saved merge impacts with current data, imply that merge posts stock/debt/payment or expand a four-fix verdict into whole-surface approval."
+      "Don't replace saved merge impacts with current data, imply that merge posts stock/debt/payment or expand a four-fix verdict into whole-surface approval.",
+      "Don't infer commercial ratios or prices from website content or substitute informational case counts for confirmed unit ratios.",
+      "Don't present a pricing calculation, sent quotation or dealer acceptance as completed orders, stock movements, returns, debt or payment.",
+      "Don't expand the commercial three-fix SHIP verdict into whole-surface acceptance or activation of live commercial policies."
     ]
   }
 }

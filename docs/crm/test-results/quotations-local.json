@@ -1,0 +1,47 @@
+{
+  "testedAt": "2026-09-18T22:59:42.758Z",
+  "environment": "LOCAL isolated PGlite; fictitious quotes, no real customer sends",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F036 Sales may create only assigned partner drafts; dealers cannot create or see unsent versions",
+      "status": "PASS"
+    },
+    {
+      "name": "F038 over-ceiling discount/credit/special price require named other-user approval before send",
+      "status": "PASS"
+    },
+    {
+      "name": "F035/F036 sending persists PDF bytes and immutable sent snapshot in the same transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "F036 new draft uses current unit/price but never changes earlier sent PDF or dealer-visible version",
+      "status": "PASS"
+    },
+    {
+      "name": "F037 dealer responds only to currently sent version; superseded and unknown versions cannot be accepted",
+      "status": "PASS"
+    },
+    {
+      "name": "F038 policy forbidding self approval blocks creator even when creator is ADMIN",
+      "status": "PASS"
+    },
+    {
+      "name": "F034 unmet paid minimum is explicit and prevents send without recording a SENT event",
+      "status": "PASS"
+    },
+    {
+      "name": "F037 expired version is handled explicitly and cannot be sent/accepted or silently renewed",
+      "status": "PASS"
+    },
+    {
+      "name": "F036 SQL failure persisting sent PDF rolls back PDF/head/event without partial send",
+      "status": "PASS"
+    },
+    {
+      "name": "F136 dealer staff can read sent versions but cannot accept, and locked stale identity cannot download",
+      "status": "PASS"
+    }
+  ]
+}
