@@ -1,6 +1,6 @@
 # Cohamy - test report
 
-Updated 2026-09-19T00:22:49.489Z.
+Updated 2026-09-19T00:29:08.343Z.
 
 | Group | Result | Environment | Evidence | Time |
 |---|---|---|---|---|
@@ -41,14 +41,14 @@ Updated 2026-09-19T00:22:49.489Z.
 | Commercial XLSX preview/confirm | PASS: 9/9 cases passed | LOCAL | test-results/request-excel-local.json | 2026-09-19T00:11:22.439Z |
 | Commercial XLSX PostgreSQL contention | PASS: 10/10 cases passed | STAGING | test-results/request-excel-postgres.json | 2026-09-19T00:21:44.804Z |
 | Commercial request/order actual Edge GUI | PASS: 8/8 cases passed | LOCAL | test-results/orders-browser-local.json | 2026-09-19T00:11:49.326Z |
-| Actual production commercial schema/runtime privileges | PASS: 4/4 cases passed | PRODUCTION | test-results/commercial-metadata-production.json | 2026-09-18T23:11:10.814Z |
-| Live commercial actual Edge read/form GUI | PASS: 5/5 cases passed | PRODUCTION | test-results/commercial-browser-production.json | 2026-09-18T23:11:24.252Z |
-| Built candidate commercial runtime on isolated PostgreSQL | PASS: 1/1 cases passed | STAGING | test-results/commercial-built-runtime-staging.json | 2026-09-18T23:11:10.631Z |
-| Independent commercial restore with nonempty saved PDFs/orders | PASS: 2/2 cases passed | STAGING | test-results/commercial-restore-staging.json | 2026-09-18T23:13:05.079Z |
-| Live actual Edge mobile/desktop | PASS: 5/5 cases passed | PRODUCTION | test-results/browser-production.json | 2026-09-18T23:10:24.397Z |
+| Actual production commercial schema/runtime privileges | PASS: 4/4 cases passed | PRODUCTION | test-results/commercial-metadata-production.json | 2026-09-19T00:26:44.192Z |
+| Live commercial actual Edge read/form GUI | PASS: 5/5 cases passed | PRODUCTION | test-results/commercial-browser-production.json | 2026-09-19T00:27:15.656Z |
+| Built candidate commercial runtime on isolated PostgreSQL | PASS: 2/2 cases passed | STAGING | test-results/commercial-built-runtime-staging.json | 2026-09-19T00:26:49.268Z |
+| Independent commercial restore with nonempty saved PDFs/orders | PASS: 3/3 cases passed | STAGING | test-results/commercial-restore-staging.json | 2026-09-19T00:26:52.041Z |
+| Live actual Edge mobile/desktop | PASS: 5/5 cases passed | PRODUCTION | test-results/browser-production.json | 2026-09-19T00:27:15.166Z |
 | Managed candidate runtime | PASS: 3/3 cases passed | STAGING | test-results/managed-runtime-staging.json | 2026-09-18T20:31:57.232Z |
-| Live read-only HTTPS smoke | PASS (case evidence): 8/8 cases passed | PRODUCTION | test-results/public-smoke-production.json | 2026-09-18T23:10:17.901Z |
-| Live source/process/migration/timer state | PASS: 6/6 cases passed | PRODUCTION | test-results/release-production.json | 2026-09-18T23:11:11.373Z |
+| Live read-only HTTPS smoke | PASS (case evidence): 8/8 cases passed | PRODUCTION | test-results/public-smoke-production.json | 2026-09-19T00:25:51.005Z |
+| Live source/process/migration/timer state | PASS: 6/6 cases passed | PRODUCTION | test-results/release-production.json | 2026-09-19T00:26:44.044Z |
 
 - E01: backend mocked mailbox verification / supplementation / approval tested. UI report is separate. True Brevo delivery BLOCKED by configuration/test-recipient gate.
 - E02: same-decision retry and simultaneous PostgreSQL approvals PASS on isolated STAGING.
@@ -57,6 +57,6 @@ Updated 2026-09-19T00:22:49.489Z.
 - E05: pricing/quotation and request/order snapshot/conversion PASS; F013 supply check remains partial. E06-E13/E16 stock, delivery, money, consignment, procurement and report ledgers remain NOT_STARTED.
 - E14: atomic import failure, unique origins, duplicate confirmation and expired job-lease recovery tested. Actual Node claim/interruption/restart passed under isolated QA with fixture-expired lease; supervised PostgreSQL kill/automatic restart, real two-minute lease expiry and second restart PASS in worker-postgres-staging.json, without clock/lease fixture manipulation.
 - E17: independent PostgreSQL restore of all 49 tables plus bytea/source links PASS; restored A/B access and exact bytes PASS (backup-restore-staging.json; restored-access-staging.json).
-- E18: actual production cutover PASS at 0bcf4c761b04defbbcb9238aeae093ac372b144b; prior normal-startup RSS guard caused source rollback and preserved additive DB history (RELEASE-HISTORY-140.md).
+- E18: actual production cutover PASS at c75bfcfabc37ac5e08c99ed2cb12ee2287a8fc9c; prior normal-startup RSS guard caused source rollback and preserved additive DB history (RELEASE-HISTORY-140.md).
 
 PGlite sequential/local retry is not PostgreSQL concurrency proof. governance-postgres-staging.json separately proves four multi-connection contention scenarios. No performance dataset or p50/p95 thresholds agreed, no load claim. Dependency audit originally 36; scoped ExcelJS uuid 11.1.1 override returns install audit to 34 existing advisories (29 moderate, 5 high); full remediation is not claimed. Build/typecheck/lint logs and packaging results are recorded in PROGRESS-140 after final runs.

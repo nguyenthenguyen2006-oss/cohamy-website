@@ -1,26 +1,26 @@
 {
-  "testedAt": "2026-09-18T23:11:24.252Z",
-  "environment": "PRODUCTION actual Edge read-only except administrator login/logout; no fixture policies, orders, quotes or sends",
+  "testedAt": "2026-09-19T00:27:15.656Z",
+  "environment": "PRODUCTION actual Edge read-only except administrator login/logout; no fixture policies, orders, quotes, stock/money posting or sends",
   "status": "PASS",
   "cases": [
     {
-      "name": "Production Edge authenticates and reads real commercial indexes without QA policy/quotes",
+      "name": "Production Edge authenticates and reads real commercial indexes without QA policy/quotes/orders",
       "status": "PASS"
     },
     {
-      "name": "Deployed structured policy and quote editors show actual empty configuration without submitting business data",
+      "name": "Deployed structured policy, quote and order editors show actual empty configuration without submitting business data",
       "status": "PASS"
     },
     {
-      "name": "Real commercial reads and forms remain usable at390/320",
+      "name": "Real pricing, quotation and order reads/forms remain usable at390/320",
       "status": "PASS"
     },
     {
-      "name": "Actual pricing/quote APIs are private and malformed foreign identity has no disclosed source",
+      "name": "Actual pricing/quote/order APIs are private and malformed foreign identity has no disclosed source",
       "status": "PASS"
     },
     {
-      "name": "Production logout revokes pricing and quotation reads",
+      "name": "Production logout revokes pricing, quotation and order reads",
       "status": "PASS"
     }
   ],
@@ -28,13 +28,25 @@
   "screens": [
     ".local/production-browser/pricing-live-desktop.png",
     ".local/production-browser/quotations-live-desktop.png",
+    ".local/production-browser/requests-live-desktop.png",
+    ".local/production-browser/sales-live-desktop.png",
     ".local/production-browser/pricing-live-editor.png",
     ".local/production-browser/quotation-live-editor.png",
+    ".local/production-browser/request-live-editor.png",
+    ".local/production-browser/order-policy-live-editor.png",
     ".local/production-browser/pricing-live-390.png",
     ".local/production-browser/quotations-live-390.png",
     ".local/production-browser/quotations-new-live-390.png",
+    ".local/production-browser/requests-live-390.png",
+    ".local/production-browser/requests-new-live-390.png",
+    ".local/production-browser/requests-policy-live-390.png",
+    ".local/production-browser/sales-live-390.png",
     ".local/production-browser/pricing-live-320.png",
     ".local/production-browser/quotations-live-320.png",
-    ".local/production-browser/quotations-new-live-320.png"
+    ".local/production-browser/quotations-new-live-320.png",
+    ".local/production-browser/requests-live-320.png",
+    ".local/production-browser/requests-new-live-320.png",
+    ".local/production-browser/requests-policy-live-320.png",
+    ".local/production-browser/sales-live-320.png"
   ]
 }

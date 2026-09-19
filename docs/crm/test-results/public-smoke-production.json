@@ -1,7 +1,7 @@
 {
-  "environment": "https://cohamy.vn",
+  "environment": "http://localhost:4312",
   "scope": "read-only except administrator login/logout; no order, partner, task or outbound-message writes",
-  "testedAt": "2026-09-18T23:10:17.901Z",
+  "testedAt": "2026-09-19T00:25:51.005Z",
   "cases": [
     {
       "name": "Health and retained configured blog source",

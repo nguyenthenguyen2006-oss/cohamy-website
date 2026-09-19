@@ -1,15 +1,15 @@
 {
-  "testedAt": "2026-09-18T23:11:10.814Z",
-  "sourceSha": "0bcf4c761b04defbbcb9238aeae093ac372b144b",
-  "environment": "PRODUCTION read-only metadata; no fictitious policy, quote, PDF creation, business mutation or customer delivery",
+  "testedAt": "2026-09-19T00:26:44.192Z",
+  "sourceSha": "c75bfcfabc37ac5e08c99ed2cb12ee2287a8fc9c",
+  "environment": "PRODUCTION read-only metadata; no fictitious policy, quote, request, order, PDF creation, stock/money mutation or customer delivery",
   "status": "PASS",
   "cases": [
     {
-      "name": "All11 pricing/quotation tables exist in actual deployed PostgreSQL",
+      "name": "All20 pricing/quotation/request/order tables through migration017 exist in actual deployed PostgreSQL",
       "status": "PASS"
     },
     {
-      "name": "Actual runtime has append permission but no UPDATE/DELETE on every trigger-protected immutable table, including saved quotation PDFs",
+      "name": "Actual runtime has append permission but no UPDATE/DELETE on every trigger-protected immutable commercial table",
       "status": "PASS"
     },
     {
@@ -29,11 +29,14 @@
     "care_escalations",
     "care_rule_runs",
     "care_schedule_runs",
+    "commercial_events",
+    "commercial_request_versions",
     "commercial_unit_versions",
     "custom_field_versions",
     "custom_value_history",
     "document_versions",
     "opportunity_history",
+    "order_policies",
     "partner_merge_history",
     "partner_visits",
     "price_book_versions",
@@ -41,12 +44,16 @@
     "quotation_events",
     "quotation_pdfs",
     "quotation_versions",
+    "sales_order_versions",
     "support_messages"
   ],
   "counts": {
-    "published_policies": "0",
+    "published_price_policies": "0",
     "quote_versions": "0",
-    "saved_pdfs": "0"
+    "saved_pdfs": "0",
+    "enabled_order_policy_pointers": "0",
+    "request_versions": "0",
+    "order_versions": "0"
   },
-  "realCommercialWorkflow": "NOT_EXERCISED: approved business policies not supplied"
+  "realCommercialWorkflow": "NOT_EXERCISED: approved business policies not supplied; order policy pointer confirmed empty"
 }

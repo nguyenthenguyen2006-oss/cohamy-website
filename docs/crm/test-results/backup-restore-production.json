@@ -1,11 +1,11 @@
 {
   "status": "PASS",
-  "completedAt": "2026-09-18T23:09:43.901Z",
+  "completedAt": "2026-09-19T00:26:43.546Z",
   "sourceDatabase": "cohamy_crm",
-  "restoreDatabase": "cohamy_restore_d38656af73804abbb896bc65191955f9",
+  "restoreDatabase": "cohamy_restore_7d6d225c40764748bf893df930310359",
   "restoreRetained": false,
-  "sha256": "e8d83d1faf71ec0114cc09d8ec12bafff714f2719c38cf1769313f1e2fac9e7d",
-  "tableCount": 71,
+  "sha256": "ef480312e55989b189b25e4f3db7915422b3b11e801a386093778c554b8fa625",
+  "tableCount": 80,
   "rows": [
     {
       "table": "activities",
@@ -29,7 +29,7 @@
     },
     {
       "table": "audit_events",
-      "count": "45"
+      "count": "53"
     },
     {
       "table": "bulk_previews",
@@ -69,6 +69,18 @@
     },
     {
       "table": "care_task_rules",
+      "count": "0"
+    },
+    {
+      "table": "commercial_events",
+      "count": "0"
+    },
+    {
+      "table": "commercial_request_versions",
+      "count": "0"
+    },
+    {
+      "table": "commercial_requests",
       "count": "0"
     },
     {
@@ -129,7 +141,7 @@
     },
     {
       "table": "migrations",
-      "count": "16"
+      "count": "17"
     },
     {
       "table": "notifications",
@@ -145,6 +157,18 @@
     },
     {
       "table": "opportunity_history",
+      "count": "0"
+    },
+    {
+      "table": "order_change_previews",
+      "count": "0"
+    },
+    {
+      "table": "order_policies",
+      "count": "0"
+    },
+    {
+      "table": "order_policy_current",
       "count": "0"
     },
     {
@@ -232,12 +256,24 @@
       "count": "0"
     },
     {
+      "table": "request_excel_previews",
+      "count": "0"
+    },
+    {
+      "table": "sales_order_versions",
+      "count": "0"
+    },
+    {
+      "table": "sales_orders",
+      "count": "0"
+    },
+    {
       "table": "saved_filters",
       "count": "0"
     },
     {
       "table": "sessions",
-      "count": "22"
+      "count": "26"
     },
     {
       "table": "support_messages",
@@ -294,7 +330,7 @@
   ],
   "fileIntegrityErrors": "0",
   "documentSourceErrors": "0",
-  "directory": "/root/cohamy-backups/scheduled/2026-09-18T230942016Z-ff80eb3d",
+  "directory": "/root/cohamy-backups/scheduled/2026-09-19T002641404Z-ba15e7ea",
   "snapshotConsistent": true,
   "publicFiles": {
     "count": 0,
