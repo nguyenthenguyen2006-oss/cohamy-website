@@ -1,62 +1,45 @@
-# Cohamy - test report
+# Cohamy — báo cáo kiểm thử F001–F140
 
-Updated 2026-09-19T00:29:08.343Z.
+Cập nhật 2026-09-19T03:45:00.126Z. **PASS 268/268 ca có cấu trúc** trong 32 báo cáo bắt buộc. Ngoài các ca này, `npm run typecheck`, ESLint mục tiêu và `npm run build` đã đạt; build trace chứa đủ migration 001–025 và không đóng gói database/ảnh QA.
 
-| Group | Result | Environment | Evidence | Time |
-|---|---|---|---|---|
-| Access/intake baseline | PASS (case evidence): 21/21 cases passed | LOCAL | test-results/access-local.json | 2026-09-18T18:59:45.481Z |
-| Work baseline | PASS (case evidence): 21/21 cases passed | LOCAL | test-results/work-local.json | 2026-09-18T23:01:33.697Z |
-| Registration/workspace/care | PASS: 18/18 cases passed | LOCAL | test-results/upgrade-local.json | 2026-09-18T21:52:40.886Z |
-| Portal services | PASS (case evidence): 5/5 cases passed | LOCAL | test-results/portal-services-local.json | 2026-09-18T23:01:39.122Z |
-| Partner library/checklist/staff | PASS (case evidence): 6/6 cases passed | LOCAL | test-results/partner-library-local.json | 2026-09-18T19:15:05.560Z |
-| Opportunities/tags/preferences/visits | PASS (case evidence): 6/6 cases passed | LOCAL | test-results/relationships-local.json | 2026-09-18T23:01:44.251Z |
-| Actual local worker interruption/restart | PASS (case evidence): 3/3 cases passed | LOCAL | test-results/worker-restart-local.json | 2026-09-18T18:57:56.023Z |
-| Actual PM2/PostgreSQL interruption and unmodified lease recovery | PASS: 4/4 cases passed | STAGING | test-results/worker-postgres-staging.json | 2026-09-18T20:10:07.838Z |
-| XLSX jobs | PASS (case evidence): 8/8 cases passed | LOCAL | test-results/data-jobs-local.json | 2026-09-18T23:01:49.372Z |
-| Real UI / mocked Brevo | PASS: 15/15 cases passed | LOCAL | test-results/upgrade-browser-local.json | 2026-09-18T19:16:15.916Z |
-| Governance negative/version tests | PASS: 12/12 cases passed | LOCAL | test-results/governance-local.json | none |
-| Governance real Edge UI | PASS: 9/9 cases passed | LOCAL | test-results/governance-browser-local.json | 2026-09-18T19:53:25.257Z |
-| Governance PostgreSQL contention | PASS: 5/5 cases passed | STAGING | test-results/governance-postgres-staging.json | 2026-09-18T19:49:19.932Z |
-| Backup corruption/retention guards | PASS: 3/3 cases passed | LOCAL | test-results/backup-guards-local.json | 2026-09-18T19:58:21.954Z |
-| Public-file backup guards | PASS: 3/3 cases passed | LOCAL | test-results/public-files-backup-local.json | 2026-09-18T20:00:27.296Z |
-| Restored private files and A/B access | PASS: 4/4 cases passed | STAGING | test-results/restored-access-staging.json | 2026-09-18T19:57:01.224Z |
-| Care backend/negative cases | PASS: 14/14 cases passed | LOCAL | test-results/care-automation-local.json | 2026-09-18T21:10:34.492Z |
-| Care real Edge UI | PASS: 9/9 cases passed | LOCAL | test-results/care-browser-local.json | 2026-09-18T21:02:55.036Z |
-| Care PostgreSQL contention | PASS: 7/7 cases passed | STAGING | test-results/care-automation-postgres.json | 2026-09-18T21:11:15.274Z |
-| Actual PM2 care worker kill/recovery | PASS: 4/4 cases passed | STAGING | test-results/care-worker-postgres.json | 2026-09-18T20:51:13.962Z |
-| Identifier/merge backend | PASS: 10/10 cases passed | LOCAL | test-results/partner-merge-local.json | 2026-09-18T23:51:12.390Z |
-| DML-only PostgreSQL merge contention/rollback | PASS: 12/12 cases passed | STAGING | test-results/partner-merge-postgres.json | 2026-09-19T00:21:53.183Z |
-| Identifier/merge real Edge UI | PASS: 5/5 cases passed | LOCAL | test-results/partner-merge-browser-local.json | 2026-09-18T21:50:51.011Z |
-| Exact arithmetic and Vietnam business date | PASS: 6/6 cases passed | LOCAL | test-results/decimal-local.json | 2026-09-18T23:00:39.717Z |
-| Threshold/minimum/tax/gift exact calculation | PASS: 10/10 cases passed | LOCAL | test-results/pricing-model-local.json | 2026-09-18T22:55:46.012Z |
-| Pricing permissions and immutable policies | PASS: 8/8 cases passed | LOCAL | test-results/pricing-local.json | 2026-09-18T22:54:38.424Z |
-| DML-only PostgreSQL pricing contention | PASS: 9/9 cases passed | STAGING | test-results/pricing-postgres.json | 2026-09-19T00:21:23.172Z |
-| Quotation snapshots/approval/expiry/PDF rollback | PASS: 10/10 cases passed | LOCAL | test-results/quotations-local.json | 2026-09-19T00:11:21.555Z |
-| DML-only PostgreSQL quotations and concurrent retries | PASS: 11/11 cases passed | STAGING | test-results/quotations-postgres.json | 2026-09-19T00:21:29.427Z |
-| Rendered Vietnamese PDF source reconciliation | PASS: 2/2 cases passed | LOCAL | test-results/quotation-pdf-local.json | 2026-09-18T22:40:53.030Z |
-| Commercial real Edge GUI | PASS: 7/7 cases passed | LOCAL | test-results/commercial-browser-local.json | 2026-09-18T22:58:57.961Z |
-| Tier/unit real Edge GUI | PASS: 3/3 cases passed | LOCAL | test-results/commercial-controls-browser-local.json | 2026-09-18T22:59:05.987Z |
-| Commercial request/order backend | PASS: 14/14 cases passed | LOCAL | test-results/commercial-orders-local.json | 2026-09-19T00:11:21.909Z |
-| Commercial request/order PostgreSQL contention | PASS: 16/16 cases passed | STAGING | test-results/commercial-orders-postgres.json | 2026-09-19T00:21:38.804Z |
-| Commercial XLSX preview/confirm | PASS: 9/9 cases passed | LOCAL | test-results/request-excel-local.json | 2026-09-19T00:11:22.439Z |
-| Commercial XLSX PostgreSQL contention | PASS: 10/10 cases passed | STAGING | test-results/request-excel-postgres.json | 2026-09-19T00:21:44.804Z |
-| Commercial request/order actual Edge GUI | PASS: 8/8 cases passed | LOCAL | test-results/orders-browser-local.json | 2026-09-19T00:11:49.326Z |
-| Actual production commercial schema/runtime privileges | PASS: 4/4 cases passed | PRODUCTION | test-results/commercial-metadata-production.json | 2026-09-19T00:26:44.192Z |
-| Live commercial actual Edge read/form GUI | PASS: 5/5 cases passed | PRODUCTION | test-results/commercial-browser-production.json | 2026-09-19T00:27:15.656Z |
-| Built candidate commercial runtime on isolated PostgreSQL | PASS: 2/2 cases passed | STAGING | test-results/commercial-built-runtime-staging.json | 2026-09-19T00:26:49.268Z |
-| Independent commercial restore with nonempty saved PDFs/orders | PASS: 3/3 cases passed | STAGING | test-results/commercial-restore-staging.json | 2026-09-19T00:26:52.041Z |
-| Live actual Edge mobile/desktop | PASS: 5/5 cases passed | PRODUCTION | test-results/browser-production.json | 2026-09-19T00:27:15.166Z |
-| Managed candidate runtime | PASS: 3/3 cases passed | STAGING | test-results/managed-runtime-staging.json | 2026-09-18T20:31:57.232Z |
-| Live read-only HTTPS smoke | PASS (case evidence): 8/8 cases passed | PRODUCTION | test-results/public-smoke-production.json | 2026-09-19T00:25:51.005Z |
-| Live source/process/migration/timer state | PASS: 6/6 cases passed | PRODUCTION | test-results/release-production.json | 2026-09-19T00:26:44.044Z |
+| Báo cáo | Ca PASS | Môi trường | Thời điểm |
+|---|---:|---|---|
+| [access-local.json](./test-results/access-local.json) | 21 | LOCAL | 2026-09-19T03:22:28.835Z |
+| [work-local.json](./test-results/work-local.json) | 21 | LOCAL PGlite isolated fixtures | 2026-09-19T03:19:49.516Z |
+| [upgrade-local.json](./test-results/upgrade-local.json) | 18 | LOCAL isolated PGlite, fictitious data | 2026-09-19T03:19:53.346Z |
+| [data-jobs-local.json](./test-results/data-jobs-local.json) | 8 | LOCAL isolated PGlite and actual XLSX parsing | 2026-09-19T03:20:52.270Z |
+| [portal-services-local.json](./test-results/portal-services-local.json) | 5 | LOCAL isolated fictitious PGlite | 2026-09-19T03:44:44.284Z |
+| [partner-library-local.json](./test-results/partner-library-local.json) | 6 | LOCAL isolated fictitious PGlite; policy bytes synthetic | 2026-09-19T03:44:45.191Z |
+| [relationships-local.json](./test-results/relationships-local.json) | 6 | LOCAL isolated fictitious PGlite | 2026-09-19T03:44:41.633Z |
+| [care-automation-local.json](./test-results/care-automation-local.json) | 14 | LOCAL isolated PGlite; fictitious users, no live delivery or business postings | 2026-09-18T21:10:34.492Z |
+| [partner-merge-local.json](./test-results/partner-merge-local.json) | 10 | LOCAL isolated PGlite; fictitious businesses and explicitly fake closed balance fixture | 2026-09-19T03:21:12.649Z |
+| [governance-local.json](./test-results/governance-local.json) | 12 | LOCAL | Không ghi trong report cũ |
+| [decimal-local.json](./test-results/decimal-local.json) | 6 | LOCAL deterministic pure arithmetic; no database or commercial posting | 2026-09-19T03:21:09.978Z |
+| [pricing-model-local.json](./test-results/pricing-model-local.json) | 10 | LOCAL pure exact price model; fictitious rates only, no production policy or posting | 2026-09-19T03:21:12.934Z |
+| [pricing-local.json](./test-results/pricing-local.json) | 8 | LOCAL isolated PGlite; fictitious published policies only | 2026-09-19T03:21:37.964Z |
+| [quotations-local.json](./test-results/quotations-local.json) | 10 | LOCAL isolated PGlite; fictitious quotes, no real customer sends | 2026-09-19T03:21:33.814Z |
+| [quotation-pdf-local.json](./test-results/quotation-pdf-local.json) | 2 | LOCAL actual PDFKit output, Poppler rendering and pypdf text; fictitious immutable source/stress fixture | 2026-09-18T22:40:53.030Z |
+| [request-excel-local.json](./test-results/request-excel-local.json) | 9 | LOCAL isolated fictitious PGlite | 2026-09-19T03:21:37.923Z |
+| [commercial-orders-local.json](./test-results/commercial-orders-local.json) | 15 | LOCAL isolated fictitious PGlite; no real order/stock/money/provider mutation | 2026-09-19T03:21:41.037Z |
+| [inventory-local.json](./test-results/inventory-local.json) | 8 | LOCAL isolated fictitious PGlite; no real stock/order/provider mutation | 2026-09-19T03:22:06.001Z |
+| [fulfillment-local.json](./test-results/fulfillment-local.json) | 8 | LOCAL isolated fictitious PGlite; no real delivery/stock/money/provider mutation | 2026-09-19T03:22:03.139Z |
+| [finance-local.json](./test-results/finance-local.json) | 9 | LOCAL isolated fictitious PGlite; no real money/order/provider mutation | 2026-09-19T03:22:03.669Z |
+| [procurement-local.json](./test-results/procurement-local.json) | 8 | LOCAL isolated fictitious PGlite; no real supplier/stock/money/provider mutation | 2026-09-19T03:22:00.222Z |
+| [consignment-local.json](./test-results/consignment-local.json) | 8 | LOCAL isolated fictitious PGlite; no real stock/money/provider mutation | 2026-09-19T03:22:04.557Z |
+| [security-local.json](./test-results/security-local.json) | 5 | LOCAL isolated fictitious PGlite; Brevo disabled and no real account/email mutation | 2026-09-19T03:22:31.948Z |
+| [reports-local.json](./test-results/reports-local.json) | 8 | LOCAL isolated fictitious PGlite; no real customer/order/stock/money/provider mutation | 2026-09-19T03:22:26.697Z |
+| [pwa-local.json](./test-results/pwa-local.json) | 4 | LOCAL static and isolated service-worker harness | 2026-09-19T03:31:30.087Z |
+| [samples-local.json](./test-results/samples-local.json) | 8 | LOCAL isolated fictitious PGlite; no real stock/order/provider mutation | 2026-09-19T03:40:53.389Z |
+| [samples-browser-local.json](./test-results/samples-browser-local.json) | 4 | LOCAL actual Edge/Next with isolated fictitious PGlite; no real stock, recipient or provider send | 2026-09-19T03:30:00.634Z |
+| [browser-140-local.json](./test-results/browser-140-local.json) | 5 | LOCAL actual Edge/Next, isolated fictitious PGlite; every authorized module root at desktop/mobile | 2026-09-19T03:37:28.146Z |
+| [backup-guards-local.json](./test-results/backup-guards-local.json) | 3 | LOCAL | 2026-09-19T03:31:35.623Z |
+| [public-files-backup-local.json](./test-results/public-files-backup-local.json) | 3 | LOCAL isolated public-file fixture | 2026-09-19T03:31:32.080Z |
+| [build-traces-local.json](./test-results/build-traces-local.json) | 3 | LOCAL | 2026-09-19T03:42:49.409Z |
+| [worker-restart-local.json](./test-results/worker-restart-local.json) | 3 | LOCAL actual Node child termination/restart, isolated PGlite, fictitious import; lease expiry advanced by guarded fixture | 2026-09-19T03:31:45.691Z |
 
-- E01: backend mocked mailbox verification / supplementation / approval tested. UI report is separate. True Brevo delivery BLOCKED by configuration/test-recipient gate.
-- E02: same-decision retry and simultaneous PostgreSQL approvals PASS on isolated STAGING.
-- E03/E15: scoped search/bookmarks/files/notifications/export download and revoked assignment tests; commercial reports/stock domains not implemented.
-- E04: dealer staff proposal, exact owner approval, edit invalidation and explicit Cohamy submission PASS in backend and actual Edge.
-- E05: pricing/quotation and request/order snapshot/conversion PASS; F013 supply check remains partial. E06-E13/E16 stock, delivery, money, consignment, procurement and report ledgers remain NOT_STARTED.
-- E14: atomic import failure, unique origins, duplicate confirmation and expired job-lease recovery tested. Actual Node claim/interruption/restart passed under isolated QA with fixture-expired lease; supervised PostgreSQL kill/automatic restart, real two-minute lease expiry and second restart PASS in worker-postgres-staging.json, without clock/lease fixture manipulation.
-- E17: independent PostgreSQL restore of all 49 tables plus bytea/source links PASS; restored A/B access and exact bytes PASS (backup-restore-staging.json; restored-access-staging.json).
-- E18: actual production cutover PASS at c75bfcfabc37ac5e08c99ed2cb12ee2287a8fc9c; prior normal-startup RSS guard caused source rollback and preserved additive DB history (RELEASE-HISTORY-140.md).
+## Phạm vi bằng chứng
 
-PGlite sequential/local retry is not PostgreSQL concurrency proof. governance-postgres-staging.json separately proves four multi-connection contention scenarios. No performance dataset or p50/p95 thresholds agreed, no load claim. Dependency audit originally 36; scoped ExcelJS uuid 11.1.1 override returns install audit to 34 existing advisories (29 moderate, 5 high); full remediation is not claimed. Build/typecheck/lint logs and packaging results are recorded in PROGRESS-140 after final runs.
+- LOCAL/PGlite xác nhận transaction, scope, idempotency, version conflict, ledger và trạng thái lỗi bằng dữ liệu hư cấu.
+- Edge/Next thực xác nhận các luồng UI đại diện ở desktop 1366 px và mobile 390/320 px; F030 có bộ ảnh riêng trong `.impeccable/review/samples`.
+- Các bộ PostgreSQL biệt lập trước đó xác nhận tranh chấp ở pricing, order, governance, inventory/care và worker. Phát hành production phải tiếp tục chạy migration, readiness, SHA, smoke read-only và backup checksum.
+- Không có email/SMS, callback carrier, giao dịch tiền, tồn hoặc đơn thật nào được tạo trong QA. Việc chưa có secret production là trạng thái cấu hình ngoài code, không được thay bằng dữ liệu giả.

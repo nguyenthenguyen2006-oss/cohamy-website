@@ -1,11 +1,26 @@
-# Cohamy - operations runbook
+# Cohamy — runbook phát hành F001–F140
 
-Read prior RUNBOOK.md with this current-batch addendum; historical deploy statements do not describe this candidate.
+## Cấu hình
 
-Environment: CRM_REGISTRATION_MODE=OPEN (user confirmed; INVITE supported), CRM_EMAIL_ENABLED=false, CRM_BREVO_API_KEY and CRM_BREVO_SENDER_EMAIL from a secret manager. Use a verified sender and a designated test recipient before enabling true delivery. Never commit keys or codes. Registration remains persisted on provider errors; resend is limited.
+Production dùng PostgreSQL và migration 001–025. Đăng ký mở: `CRM_REGISTRATION_MODE=OPEN`. Brevo mặc định tắt; nạp `CRM_BREVO_API_KEY`, sender đã xác minh và đặt `CRM_EMAIL_ENABLED=true` chỉ sau test delivery được ủy quyền. Không commit secret. Worker `npm run crm:worker` phải được PM2/scheduler giám sát.
 
-Database initialization: npm run crm:init; migrations001-017. Runtime has DML only and immutable histories have UPDATE/DELETE revoked. Migration014 grants only EXECUTE on the no-argument SECURITY DEFINER lock helper; PUBLIC has no EXECUTE and caller SQL is never accepted. This avoids granting history mutation merely for merge locks. PostgreSQL LOCK requires mutation/MAINTAIN privileges even for SHARE ([official PostgreSQL17 LOCK](https://www.postgresql.org/docs/17/sql-lock.html)). Worker: npm run crm:worker, supervised in the same app runtime with PostgreSQL configuration, or -- --once for an authorized scheduler. after() provides a fast kick only. Inspect failed data_jobs via the authorized job UI; rows are imported atomically. Running leases expire after 2 minutes, max five claims. A failed business conflict requires a new corrected preview. Large imports/exports are deliberately capped.
+## Gate trước phát hành
 
-LOCAL tests: npm run test:crm; npm run test:crm:work; npm run test:crm:upgrade; npm run test:crm:data-jobs; npm run test:crm:portal; npm run test:crm:library; npm run test:crm:care; npm run test:crm:worker-restart; run verify-pricing.ts, verify-quotations.ts, verify-commercial-orders.ts and verify-request-excel.ts with the server-only/tsx preload; run the actual Edge commercial harness; npm run typecheck; npm run lint; npm run build; npm run test:crm:build. Browser harness upgrade uses port 4320, separate .local/crm-qa-upgrade-ui-* DB and isolated Next build directory. QA mailbox preload accepts fictitious @crm-qa.invalid only and refuses production. Never load it for staging/production.
+1. `npm run typecheck`, ESLint và `npm run build`.
+2. Chạy các lệnh trong [TEST-REPORT-140.md](./TEST-REPORT-140.md); mọi report bắt buộc phải PASS.
+3. Kiểm tra `git diff --check`, không đưa `.local`, ảnh QA, credential hoặc `scripts/crm/verify-pm2-registration.mjs` vào commit.
+4. Tạo một commit release, push đúng SHA.
 
-Do not open a CLI worker/init against a PGlite directory owned by Next. Production requires PostgreSQL, supervised restart recovery, DB grants, real provider monitoring, periodic DB backups including bytea documents, checksum and independent restore. Actual PM2 restart/lease recovery and isolated PostgreSQL contention PASS; production daily backup timer is active with a verified scheduled restore; business RPO/RTO and alert recipient policy remain open.
+## Triển khai
+
+1. Backup DB/files, lưu checksum và kiểm tra khả năng đọc.
+2. Checkout/clone đúng SHA từ remote trên máy chủ; cài dependency khóa; build.
+3. Chạy `npm run crm:init` với tài khoản migration rồi trả runtime về DML role.
+4. Reload ứng dụng và worker bằng PM2, chờ ready. Không chạy hai worker/poller trùng.
+5. So sánh source SHA, deployed SHA/build image, migration 025, PM2 status, `/api/health`, HTTPS và cache/noindex của route private.
+6. Smoke đăng nhập/logout, render `/crm`, `/crm/samples`, các phân hệ chính và năm locale công khai. Không tạo giao dịch kinh doanh thật.
+7. Chạy backup sau deploy, xác minh checksum; restore định kỳ vào nơi độc lập theo retention/RPO/RTO đã được Cohamy duyệt.
+
+## Rollback
+
+Giữ bản release trước và backup trước migration. Nếu readiness hoặc smoke thất bại, phục hồi artifact/SHA trước; chỉ restore DB khi migration không thể tiến tới an toàn và phải dùng đúng backup đã xác minh. Không xóa dữ liệu hoặc giả lập số dư để làm xanh health check.

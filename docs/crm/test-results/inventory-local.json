@@ -1,0 +1,44 @@
+{
+  "testedAt": "2026-09-19T03:22:06.001Z",
+  "environment": "LOCAL isolated fictitious PGlite; no real stock/order/provider mutation",
+  "status": "PASS",
+  "references": {
+    "receiptId": "8e075259-058c-41b6-aede-81146dc9fe3e",
+    "transferId": "07db0873-87a1-4e79-ad73-dd2b7e5d8ee1",
+    "countId": "7638fd10-3252-46c7-bae5-a24cef721eee"
+  },
+  "cases": [
+    {
+      "name": "F051/F053 migration starts with no inferred balance and location creation is idempotent",
+      "status": "PASS"
+    },
+    {
+      "name": "F051/F052/F054 receipt posts immutable base-unit snapshot and exact lot dates",
+      "status": "PASS"
+    },
+    {
+      "name": "F051 reversal keeps original movement and cannot reverse twice",
+      "status": "PASS"
+    },
+    {
+      "name": "F056 FEFO reservation blocks over-reserve and amendment until exact release",
+      "status": "PASS"
+    },
+    {
+      "name": "F057 two-step transfer preserves shipped quantity across partial receipt and declared shortage",
+      "status": "PASS"
+    },
+    {
+      "name": "F058 count preview carries concurrent movements forward before approved adjustment",
+      "status": "PASS"
+    },
+    {
+      "name": "F059/F060 alert excludes recalled availability and trace preserves document/order links",
+      "status": "PASS"
+    },
+    {
+      "name": "F047 cancellation keeps consumed quantity separate and retry releases reservation once",
+      "status": "PASS"
+    }
+  ]
+}

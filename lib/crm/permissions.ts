@@ -2,10 +2,10 @@ import type { Area, Principal, Role } from "./types";
 
 const permissions: Record<Role, readonly string[]> = {
   ADMIN: ["*"],
-  MANAGER: ["partners.read", "partners.write", "catalog.read", "warehouses.read", "warehouses.write", "orders.read", "consignment.read", "finance.read", "reports.read"],
-  SALES: ["partners.read", "partners.write", "catalog.read", "orders.read"],
-  WAREHOUSE: ["catalog.read", "warehouses.read", "orders.read"],
-  ACCOUNTANT: ["partners.read", "orders.read", "consignment.read", "finance.read", "reports.read"],
+  MANAGER: ["partners.read", "partners.write", "catalog.read", "warehouses.read", "warehouses.write", "orders.read", "samples.read", "consignment.read", "finance.read", "procurement.read", "reports.read"],
+  SALES: ["partners.read", "partners.write", "catalog.read", "orders.read", "samples.read", "procurement.read", "reports.read"],
+  WAREHOUSE: ["catalog.read", "warehouses.read", "orders.read", "samples.read", "consignment.read", "procurement.read", "reports.read"],
+  ACCOUNTANT: ["partners.read", "orders.read", "consignment.read", "finance.read", "procurement.read", "reports.read"],
   DEALER_OWNER: ["partners.read", "catalog.read", "warehouses.read", "orders.read", "consignment.read", "finance.read", "profile.read"],
   DEALER_STAFF: ["catalog.read", "warehouses.read", "orders.read", "consignment.read", "profile.read"],
 };

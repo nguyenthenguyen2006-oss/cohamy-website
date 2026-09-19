@@ -1,0 +1,44 @@
+{
+  "testedAt": "2026-09-19T03:40:53.389Z",
+  "environment": "LOCAL isolated fictitious PGlite; no real stock/order/provider mutation",
+  "status": "PASS",
+  "references": {
+    "sampleId": "63a42efa-a780-4daf-8a7c-5d3de298a41b",
+    "orderId": "f0ba1c11-067d-4410-b888-ffa99c54f012",
+    "warehouseId": "d8d2c780-a2e3-4db9-9f22-952b992dff74"
+  },
+  "cases": [
+    {
+      "name": "F030 setup exposes only Cohamy sample warehouses and denies unrelated roles",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 request tracks recipient, SKU, quantity and retries idempotently inside sales scope",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 issue posts one atomic inventory document and allocates FEFO without touching reserved stock",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 warehouse and sales views stay inside assignment boundaries",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 receive and feedback are versioned, replay-safe timeline events",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 conversion requires an accessible sales order for the same recipient organization",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 allocations and progress events are append-only",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 reversing a sample issue restores stock and closes the sample with an immutable event",
+      "status": "PASS"
+    }
+  ]
+}

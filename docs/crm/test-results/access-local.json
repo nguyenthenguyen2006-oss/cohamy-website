@@ -2,7 +2,7 @@
   "environment": "LOCAL",
   "engine": "PGlite (PostgreSQL WASM, single exclusive connection)",
   "fixture": "separate .local/crm-qa-* directory; fictitious .invalid users",
-  "testedAt": "2026-09-18T18:59:45.481Z",
+  "testedAt": "2026-09-19T03:22:28.835Z",
   "cases": [
     {
       "name": "migration retry and catalog import are idempotent",
@@ -45,7 +45,7 @@
       "status": "PASS"
     },
     {
-      "name": "account lock revokes existing access immediately",
+      "name": "account lock revokes existing access immediately and unlock requires a fresh session",
       "status": "PASS"
     },
     {

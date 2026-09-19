@@ -1,0 +1,90 @@
+{
+  "testedAt": "2026-09-19T03:37:28.146Z",
+  "environment": "LOCAL actual Edge/Next, isolated fictitious PGlite; every authorized module root at desktop/mobile",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F001–F140 all authorized internal module roots render without 5xx or viewport overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "F001–F140 internal dashboard, ledger and sample surfaces capture at release viewports",
+      "status": "PASS"
+    },
+    {
+      "name": "F009–F020 all authorized dealer module roots render without 5xx or viewport overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "Dealer portal has no internal modules and remains usable at 320 px",
+      "status": "PASS"
+    },
+    {
+      "name": "F130 offline shell bypasses locale rewriting and private routes keep no-store",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "screens": [
+    ".impeccable/review/release-140/crm-dashboard-desktop.png",
+    ".impeccable/review/release-140/inventory-mobile.png",
+    ".impeccable/review/release-140/samples-mobile.png",
+    ".impeccable/review/release-140/reports-desktop.png",
+    ".impeccable/review/release-140/dealer-dashboard-320.png"
+  ],
+  "coverage": {
+    "internal": [
+      "requests",
+      "sales",
+      "pricing",
+      "quotations",
+      "automation",
+      "fields",
+      "care",
+      "visits",
+      "library",
+      "support",
+      "data",
+      "search",
+      "notifications",
+      "workspace",
+      "applications",
+      "invitations",
+      "audit",
+      "customers",
+      "dealers",
+      "goods",
+      "orders",
+      "tasks",
+      "inventory",
+      "samples",
+      "procurement",
+      "consignment",
+      "debts",
+      "cash",
+      "reports",
+      "accounts"
+    ],
+    "portal": [
+      "requests",
+      "quotations",
+      "library",
+      "members",
+      "support",
+      "addresses",
+      "cart",
+      "invitations",
+      "search",
+      "notifications",
+      "workspace",
+      "goods",
+      "orders",
+      "inventory",
+      "consignment",
+      "settlements",
+      "debts",
+      "payments",
+      "profile"
+    ]
+  }
+}

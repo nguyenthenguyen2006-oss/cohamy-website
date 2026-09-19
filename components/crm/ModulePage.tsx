@@ -2,6 +2,12 @@ import {RelationshipPanel,VisitPage,CareDictionaryPage,VisitsIndexPage} from './
 import {AutomationPage} from './CareAutomationPages';
 import {PricePage,QuotationsPage} from './CommercialPages';
 import {RequestsPage,SalesOrdersPage} from './OrderPages';
+import {InventoryPage} from './InventoryPages';
+import {FinancePage} from './FinancePages';
+import {ProcurementPage} from './ProcurementPages';
+import {ConsignmentPage} from './ConsignmentPages';
+import {OperationalReportsPage} from './ReportPages';
+import {SamplePage} from './SamplePages';
 import {SupportPage,AddressesPage,CartPage} from './PortalServicePages';
 import {LibraryPage,DealerMembersPage} from './PartnerLibraryPages';
 import {markCatalogSeen} from '@/lib/crm/partner-library';
@@ -18,11 +24,13 @@ import { notFound, redirect } from "next/navigation";
 import { pageUser } from "@/lib/crm/http";
 import { can, CrmError } from "@/lib/crm/permissions";
 import { visibleModules } from "@/lib/crm/modules";
-import { getOrganization, listAccounts, listCatalog, listOrganizationOptions, listOrganizations, listWarehouses } from "@/lib/crm/repository";
+import { getOrganization, listAccounts, listCatalog, listOrganizationOptions, listOrganizations } from "@/lib/crm/repository";
 import { roleLabels, type Area, type Principal } from "@/lib/crm/types";
 import { AccountToggle, RecordForm } from "./RecordForm";
-import { EntityWork, OrdersPage, TasksPage, WarehouseAssignment, PartnerDuplicates, PartnerMergePanel, CatalogDetail, ReportsPage } from './WorkPages';
+import { EntityWork, OrdersPage, TasksPage, PartnerDuplicates, PartnerMergePanel, CatalogDetail } from './WorkPages';
 import { AccountTools, PasswordForm } from './WorkForms';
+import {MfaControls} from './SecurityForms';
+import {mfaStatus} from '@/lib/crm/account-security';
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
 function Header({title,description}:{title:string;description:string}) {return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
@@ -30,7 +38,7 @@ export function Profile({user}:{user:Principal}) {return <><Header title="Hồ s
 export async function CrmModulePage({area,segments,query}:{area:Area;segments:string[];query:Record<string,string|string[]|undefined>}) {
   const user=await pageUser(area);const [slug,id]=segments;
   if(segments.length>2)notFound();
-  if(slug==="profile"&&!id)return <><Profile user={user}/><PermissionPanel user={user}/><SessionsPanel user={user}/><section className="work-section"><h2>Bảo mật tài khoản</h2><PasswordForm/></section></>;
+  if(slug==="profile"&&!id){const security=await mfaStatus(user);return <><Profile user={user}/><PermissionPanel user={user}/><SessionsPanel user={user}/><MfaControls enabled={security.enabled} recoveryCodesRemaining={security.recoveryCodesRemaining}/><section className="work-section"><h2>Bảo mật tài khoản</h2><PasswordForm/></section></>;}
   if(slug==='partners'&&id){const partner=await getOrganization(user,id);redirect(`/${area}/${partner.kind==='DEALER'?'dealers':'customers'}/${id}`);}
   const selectedModule=visibleModules(user).find(item=>item.id===slug);
   if(!selectedModule)return <><Header title="Không có quyền truy cập" description="Tài khoản của bạn không được cấp quyền mở phân hệ này."/><Link className="button button--secondary" href={`/${area}`}>Về trang chủ</Link></>;
@@ -50,6 +58,10 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(slug==='support')return <SupportPage user={user} id={id} query={workQuery}/>;
   if(slug==='addresses'&&area==='portal'&&!id)return <AddressesPage user={user}/>;
   if(slug==='cart'&&area==='portal'&&!id)return <CartPage user={user}/>;
+  if(['debts','cash','payments','settlements'].includes(slug)&&!id)return <FinancePage user={user} mode={slug}/>;
+  if(slug==='procurement'&&area==='crm'&&!id)return <ProcurementPage user={user}/>;
+  if(slug==='samples'&&area==='crm')return <SamplePage user={user} id={id}/>;
+  if(slug==='consignment'&&!id)return <ConsignmentPage user={user}/>;
   if(slug==='data'&&area==='crm')return <DataJobsPage user={user} id={id}/>;
   if(slug==='applications'&&area==='crm')return <ApplicationsPage user={user} id={id} query={workQuery}/>;
   if(slug==='invitations'&&!id)return <InvitationsPage user={user}/>;
@@ -62,7 +74,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(slug==='orders'&&area==='crm')return <OrdersPage user={user} id={id} query={workQuery}/>;
   if(slug==='tasks'&&area==='crm'&&!id)return <TasksPage user={user} query={workQuery}/>;
   if(slug==='goods'&&id)return <CatalogDetail user={user} id={id}/>;
-  if(slug==='reports'&&area==='crm'&&!id)return <ReportsPage user={user}/>;
+  if(slug==='reports'&&area==='crm'&&!id)return <OperationalReportsPage user={user} query={workQuery}/>;
   if(area==="crm"&&["customers","dealers"].includes(slug)) {
     const kind=slug==="customers"?"CUSTOMER":"DEALER";
     if(!id&&query.q===undefined&&query.tags===undefined&&query.filter!=='none'){
@@ -90,8 +102,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   }
   if(slug==="inventory") {
     if(id==="new"&&can(user,"warehouses.write")) {const orgs=await listOrganizationOptions(user);return <><Header title="Thêm kho" description="Kho thuộc tổ chức. Tạo kho không tăng tồn; chỉ chứng từ thực nhận được xác nhận mới tăng tồn."/><RecordForm resource="warehouses" organizations={orgs}/></>;}
-    if(id)notFound();const warehouses=await listWarehouses(user);
-    return <><Header title={selectedModule.label} description="Danh mục kho theo phạm vi quyền. Sổ biến động, lô, hạn dùng và tồn đầu kỳ chưa triển khai."/>{can(user,"warehouses.write")&&<Link className="button button--primary" href={`${root}/new`}>Thêm kho</Link>}{warehouses.length?<div className="crm-table-wrap" role="region" aria-label="Kho được cấp quyền" tabIndex={0}><table className="data-table"><caption className="sr-only">Danh mục kho</caption><thead><tr><th scope="col">Mã</th><th scope="col">Kho</th><th scope="col">Tổ chức sở hữu</th><th scope="col">Trạng thái</th></tr></thead><tbody>{warehouses.map(item=><tr key={item.id}><td>{item.code}</td><td>{item.name}</td><td>{item.organization_name}</td><td>{item.active?"Hoạt động":"Đã khóa"}<WarehouseAssignment user={user} id={item.id}/></td></tr>)}</tbody></table></div>:<Empty>Chưa có kho trong phạm vi quyền. Không suy diễn tồn từ lượng đã giao.</Empty>}</>;
+    return <InventoryPage user={user} id={id}/>;
   }
   if(slug==="accounts"&&area==="crm") {
     if(id==="new") {const orgs=await listOrganizationOptions(user);return <><Header title="Cấp tài khoản" description="Tài khoản Cohamy độc lập CMS. Vai trò nội bộ chỉ thuộc Cohamy; chủ/nhân viên đại lý thuộc đại lý."/><RecordForm resource="accounts" organizations={orgs}/></>;}

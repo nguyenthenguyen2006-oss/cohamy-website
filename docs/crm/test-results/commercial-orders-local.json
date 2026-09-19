@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-19T00:11:21.909Z",
+  "testedAt": "2026-09-19T03:21:41.037Z",
   "environment": "LOCAL isolated fictitious PGlite; no real order/stock/money/provider mutation",
   "status": "PASS",
   "cases": [
@@ -49,6 +49,10 @@
     },
     {
       "name": "F011/F018 in-app notifications have source/version keys, private recipients and current entity scope; foreign dealer sees none",
+      "status": "PASS"
+    },
+    {
+      "name": "F121 global search and bookmarks include scoped commercial requests and sales orders",
       "status": "PASS"
     },
     {

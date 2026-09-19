@@ -1,0 +1,48 @@
+{
+  "testedAt": "2026-09-19T03:22:04.557Z",
+  "environment": "LOCAL isolated fictitious PGlite; no real stock/money/provider mutation",
+  "status": "PASS",
+  "references": {
+    "agreementId": "d8b2c842-ed7c-4272-925e-c490362c4e85",
+    "shipment": "71df8dcd-6d50-48c0-9b31-068873eeccaa",
+    "batch": "0ed3cece-38fa-4cc7-8fc5-695cc7506a7e",
+    "report": "a2ab6287-03a0-440a-9b9e-97dd7a8c4975",
+    "settlement": "1f20a0ae-b247-4e14-b8ed-b866e4c1d025",
+    "replenishment": "69a95a0a-d0cc-45c8-91cd-ef62b4201b60",
+    "returnId": "d03f5f38-5709-465d-adc6-f0ba464afdb1"
+  },
+  "cases": [
+    {
+      "name": "F071 agreement snapshots SKU/location/term/share and requires both parties",
+      "status": "PASS"
+    },
+    {
+      "name": "F072 shipment removes sellable stock and preserves Cohamy ownership at dealer custody",
+      "status": "PASS"
+    },
+    {
+      "name": "F073 dealer receipt records received/damaged/short without duplicating stock",
+      "status": "PASS"
+    },
+    {
+      "name": "F074/F075 manual and Excel preview reports are idempotent and reconcile ledger",
+      "status": "PASS"
+    },
+    {
+      "name": "F076/F077 settlement uses agreement version and captures bilateral acceptance",
+      "status": "PASS"
+    },
+    {
+      "name": "F078 locked settlement stays immutable and adjustments link to original",
+      "status": "PASS"
+    },
+    {
+      "name": "F079 replenishment explains calculation and needs independent approval before shipment",
+      "status": "PASS"
+    },
+    {
+      "name": "F080 return reconciles shipped/received and restores only physical receipt",
+      "status": "PASS"
+    }
+  ]
+}

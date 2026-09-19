@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-18T18:57:56.023Z",
+  "testedAt": "2026-09-19T03:31:45.691Z",
   "environment": "LOCAL actual Node child termination/restart, isolated PGlite, fictitious import; lease expiry advanced by guarded fixture",
   "cases": [
     {

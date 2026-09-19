@@ -6,6 +6,7 @@ import * as orders from '@/lib/crm/sales-orders';
 import * as policy from '@/lib/crm/order-policy';
 import * as previews from '@/lib/crm/order-previews';
 import * as excel from '@/lib/crm/request-excel';
+import * as changes from '@/lib/crm/order-changes';
 type Context={params:Promise<{action:string}>};
 export async function GET(request:Request,context:Context){try{
  const user=await apiUser(),{action}=await context.params,p=new URL(request.url).searchParams,id=p.get('id')??'';
@@ -32,5 +33,8 @@ export async function POST(request:Request,context:Context){try{
  if(action==='save-policy')return json(await policy.saveOrderPolicy(user,input));
  if(action==='duplicates')return json(await previews.duplicateSalesCandidates(user,input));
  if(action==='excel-confirm')return json(await excel.confirmExcelRequest(user,input));
+ if(action==='change-preview')return json(await changes.previewOrderChange(user,input));
+ if(action==='change-confirm')return json(await changes.confirmOrderChange(user,input));
+ if(action==='cancel-order')return json(await changes.cancelOrder(user,input));
  throw new CrmError('NOT_FOUND',404);
 }catch(e){return apiError(e);}}

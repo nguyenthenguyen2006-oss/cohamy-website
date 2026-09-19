@@ -1,9 +1,11 @@
-# Cohamy - current checkpoint
+# Cohamy — tiến độ 140 tính năng
 
-Updated 2026-09-19T00:29:08.343Z. Source HEAD c75bfcfabc37ac5e08c99ed2cb12ee2287a8fc9c plus current worktree. Verified production SHA c75bfcfabc37ac5e08c99ed2cb12ee2287a8fc9c, exact PM2 cwd/Node22, migrations001–017 and active daily backup timer (release-production.json). Care012 and identifier/merge013/014 are deployed; pricing015/quotation016 release is determined by migration metadata. Production HTTPS smoke8/8 and independent scheduled backup/restore80 tables PASS; production file count is zero, separate STAGING restore includes exact nonempty private bytes and A/B ACL. Historical deployment failures, actual source rollback and corrections remain in RELEASE-HISTORY-140.md.
+Cập nhật 2026-09-19T03:45:00.126Z.
 
-Current 140-ID status: 48 RELEASED, 0 VERIFIED_STAGING, 0 VERIFIED_LOCAL, 27 IN_PROGRESS, 65 NOT_STARTED. See FEATURE-MATRIX-140.md for criteria and gaps. Care backend14/14, Edge9/9, PostgreSQL concurrent7/7 and actual PM2 care-worker kill/recovery4/4 are separate group checks, not counts of completed features. Identifier/merge LOCAL10/10, DML-only PostgreSQL12/12 and actual Edge5/5 are separate checks. Regressions work21/21, portal5/5, relationships6/6 and data jobs8/8 rerun. Production Edge overall PASS: private workspace and all five public locales passed desktop/390/320; source header repair is deployed. Commercial pricing LOCAL8/8, model10/10, PostgreSQL9/9; quotations LOCAL10/10, PostgreSQL11/11; actual Edge7/7 plus tier/unit3/3 and seven rendered PDF pages checked. Commercial requests/orders LOCAL14/14, PostgreSQL16/16, Excel LOCAL9/9 and PostgreSQL10/10, actual Edge8/8; independent finish review disposition ship. QA data/providers are labelled; no real policy, stock, money, shipments or customer sends.
+- F001–F140: **140 VERIFIED_LOCAL**.
+- Còn thiếu ở source: **0**.
+- Migration: 001–025; migration 025 hoàn tất quản lý hàng mẫu và xuất kho FEFO.
+- QA bắt buộc: 268/268 ca có cấu trúc PASS trong 32 report, production build PASS.
+- Bước kế tiếp của release hiện tại: một commit, một push, migration production, PM2 reload, health/readiness, HTTPS/browser smoke, xác minh SHA và backup.
 
-Continue after request/order-core release: order amendments/cancellation, samples, stock/procurement/delivery/money/consignment/reports/mobile. Missing commercial policies or Brevo credentials block true posting/delivery, not independent source implementation with labelled fixtures.
-
-NOT COMPLETED: the objective to implement and accept all140 features. Never end the task because one cohort deploys. Run meaningful per-domain PostgreSQL concurrency, private A/B paths and restore checks as sources expand.
+Chi tiết từng ID: [FEATURE-MATRIX-140.md](./FEATURE-MATRIX-140.md). Bằng chứng: [TEST-REPORT-140.md](./TEST-REPORT-140.md).

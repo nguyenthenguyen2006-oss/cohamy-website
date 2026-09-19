@@ -36,7 +36,7 @@ function deviceLabel(agent='') {
 }
 // Constant cost comparison for unknown emails. Never creates an account or fallback session.
 const dummyHash = bcrypt.hashSync("not-a-usable-credential", 12);
-export async function login(email: string, password: string, metadata:{userAgent?:string}={}): Promise<{ token: string; user: Principal }> {
+export async function login(email: string, password: string, metadata:{userAgent?:string;secondFactor?:string}={}): Promise<{ token: string; user: Principal }> {
   const db = await database();
   const key = digest(email);
   const attempt = await db.query<{ attempts: number }>(`INSERT INTO cohamy_crm.login_attempts(key_hash,attempts) VALUES ($1,1)
@@ -52,6 +52,13 @@ export async function login(email: string, password: string, metadata:{userAgent
     const identities = await tx.query<IdentityRow>(`${principalSelect} WHERE u.id=$1 AND u.active AND m.active AND o.active ORDER BY m.id FOR SHARE OF u,m,o`, [candidate.id]);
     const user = identities.rows.map(principal).find((value): value is Principal => value !== null);
     if (!user) throw new CrmError("INVALID_CREDENTIALS", 401);
+    const mfa=(await tx.query<{id:string}>("SELECT id FROM cohamy_crm.mfa_factors WHERE user_id=$1 AND status='ACTIVE' FOR SHARE",[user.id])).rows[0];
+    if(mfa){
+      if(!metadata.secondFactor)throw new CrmError('MFA_REQUIRED',428);
+      const {verifySecondFactor}=await import('./account-security');
+      await verifySecondFactor(tx,user.id,metadata.secondFactor);
+    }
+    await tx.query('DELETE FROM cohamy_crm.login_attempts WHERE key_hash=$1',[key]);
     const token = randomBytes(32).toString("base64url");
     await tx.query("INSERT INTO cohamy_crm.sessions(token_hash,membership_id,expires_at,device_label) VALUES ($1,$2,$3,$4)", [digest(token), user.membershipId, new Date(Date.now() + SESSION_SECONDS * 1000),deviceLabel(metadata.userAgent?.slice(0,300))]);
     await audit(tx, user.id, "auth.login", user.membershipId);

@@ -67,5 +67,5 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher:
-    "/((?!crm(?:/|$)|portal(?:/|$)|admin(?:/|$)|api(?:/|$)|preview(?:/|$)|uploads(?:/|$)|_next(?:/|$)|_vercel(?:/|$)|.*\\..*).*)",
+    "/((?!crm(?:/|$)|portal(?:/|$)|admin(?:/|$)|api(?:/|$)|preview(?:/|$)|offline(?:/|$)|uploads(?:/|$)|_next(?:/|$)|_vercel(?:/|$)|.*\\..*).*)",
 };

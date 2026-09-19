@@ -1,0 +1,23 @@
+{
+  "testedAt": "2026-09-19T03:31:30.087Z",
+  "environment": "LOCAL static and isolated service-worker harness",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F130 manifest is installable with square regular and maskable icons",
+      "status": "PASS"
+    },
+    {
+      "name": "F130 service worker never intercepts CRM, portal, API, admin or preview requests",
+      "status": "PASS"
+    },
+    {
+      "name": "F130 service worker and private routes publish defensive cache headers",
+      "status": "PASS"
+    },
+    {
+      "name": "F127/F130 offline drafts are account-scoped, bounded and reject secret-shaped keys",
+      "status": "PASS"
+    }
+  ]
+}

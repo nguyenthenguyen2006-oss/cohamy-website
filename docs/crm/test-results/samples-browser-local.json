@@ -1,0 +1,31 @@
+{
+  "testedAt": "2026-09-19T03:30:00.634Z",
+  "environment": "LOCAL actual Edge/Next with isolated fictitious PGlite; no real stock, recipient or provider send",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F030 module is reachable and responsive on desktop and mobile",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 real UI creates one recipient and SKU request then reloads persisted detail",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 real UI posts FEFO stock issue and persists inventory document",
+      "status": "PASS"
+    },
+    {
+      "name": "F030 real UI records receipt and feedback with no page errors",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "screens": [
+    ".impeccable/review/samples/samples-empty-desktop.png",
+    ".impeccable/review/samples/samples-empty-mobile.png",
+    ".impeccable/review/samples/sample-request-desktop.png",
+    ".impeccable/review/samples/sample-issued-desktop.png",
+    ".impeccable/review/samples/sample-feedback-mobile.png"
+  ]
+}

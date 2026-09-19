@@ -44,3 +44,4 @@
 .cohamy-crm .upgrade-file-checksum {overflow-wrap:anywhere;word-break:break-all;}
 
 .cohamy-crm .crm-status-note { overflow-wrap: anywhere; }
+.pwa-offline-banner{position:sticky;top:0;z-index:80;margin:0;padding:.75rem 1rem;background:#fff1cc;color:#4b2a00;border-bottom:1px solid #d8a53f;text-align:center;font-weight:600}

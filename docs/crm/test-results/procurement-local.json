@@ -1,0 +1,48 @@
+{
+  "testedAt": "2026-09-19T03:22:00.222Z",
+  "environment": "LOCAL isolated fictitious PGlite; no real supplier/stock/money/provider mutation",
+  "status": "PASS",
+  "references": {
+    "supplierA": "6e0d9925-0299-4ee6-b067-1d629116dd82",
+    "requestId": "d6789e21-6043-45e3-b830-dbfbbf3e99ea",
+    "rfqId": "a940ee24-2e40-4a6b-9e30-c4b3b24f8eaf",
+    "orderId": "aa3a87f3-c435-4b01-acf1-25c2df91ceff",
+    "firstReceipt": "80835630-4448-46d5-9a0c-e9b3eeee6ff5",
+    "payable": "fc989a55-551a-4280-9af3-40299120f1e0",
+    "payment": "22ee152a-4175-43f5-b556-648c6b771bdc"
+  },
+  "cases": [
+    {
+      "name": "F091 supplier profile stays separate and payable posting is explicit",
+      "status": "PASS"
+    },
+    {
+      "name": "F092 purchase need uses non-self approval and immutable lines",
+      "status": "PASS"
+    },
+    {
+      "name": "F093/F094 RFQ keeps sent content/version and comparison normalizes VND/base quantity",
+      "status": "PASS"
+    },
+    {
+      "name": "F095 PO snapshots selected terms and requires an independent approver",
+      "status": "PASS"
+    },
+    {
+      "name": "F095/F096/F097 partial receipt permits controlled amendment and only accepted stock",
+      "status": "PASS"
+    },
+    {
+      "name": "F098 supplier claim cannot exceed rejected quantity and retains resolution history",
+      "status": "PASS"
+    },
+    {
+      "name": "F099 payable uses receipt and snapshotted terms; payment allocation and reversal balance",
+      "status": "PASS"
+    },
+    {
+      "name": "F100 supplier performance derives on-time/fill/quality from source documents",
+      "status": "PASS"
+    }
+  ]
+}

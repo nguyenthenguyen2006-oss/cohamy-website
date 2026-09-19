@@ -1,0 +1,46 @@
+{
+  "testedAt": "2026-09-19T03:22:03.139Z",
+  "environment": "LOCAL isolated fictitious PGlite; no real delivery/stock/money/provider mutation",
+  "status": "PASS",
+  "references": {
+    "orderId": "df0fcb5f-7275-4dfc-963a-f354f9b31f6c",
+    "firstDelivery": "aaa245fe-5b93-4fa4-81be-ce8f19ca1448",
+    "firstParcel": "e136140e-f470-4187-9fbd-6d1c50269510",
+    "firstTrip": "dced4131-aa75-4a1c-9e5d-c483fcd2b21a",
+    "returnId": "b71389b7-1705-451e-ac2c-e7e692da62ea"
+  },
+  "cases": [
+    {
+      "name": "F048/F049 setup preserves explicit shortage instead of promising another reservation",
+      "status": "PASS"
+    },
+    {
+      "name": "F048/F065 multiple deliveries cannot exceed reservation and retain Vietnam delivery window",
+      "status": "PASS"
+    },
+    {
+      "name": "F061/F062 picking blocks wrong scan and excess but accepts audited manual fallback",
+      "status": "PASS"
+    },
+    {
+      "name": "F063/F064 parcel quantities and one-active-trip invariant are enforced",
+      "status": "PASS"
+    },
+    {
+      "name": "F048/F056 dispatch consumes only parcel reservation and first POD makes order partial",
+      "status": "PASS"
+    },
+    {
+      "name": "F066/F067 carrier manual audit and scoped POD remain linked to exact parcel",
+      "status": "PASS"
+    },
+    {
+      "name": "F068 failed second delivery stays outside available stock and records return path",
+      "status": "PASS"
+    },
+    {
+      "name": "F069/F070 return eligibility and quarantine movement do not create refund or sellable stock",
+      "status": "PASS"
+    }
+  ]
+}

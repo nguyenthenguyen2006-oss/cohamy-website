@@ -1,0 +1,4 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import {ForgotPasswordForm} from '@/components/crm/SecurityForms';
+export default function ForgotPasswordPage(){return <div className="crm-login-page"><main className="crm-login"><aside className="work-login-story"><h2>Khôi phục an toàn.<br/>Không mất dấu phiên.</h2><p>Liên kết chỉ dùng một lần và hết hạn sau 30 phút. MFA vẫn được kiểm tra nếu tài khoản đã bật.</p></aside><section className="crm-login__box" aria-labelledby="forgot-title"><Link href="/vi"><Image alt="Cohamy" className="crm-login__logo" src="/images/logo/cohamy-brand-logo.png" width={204} height={42}/></Link><h1 id="forgot-title">Quên mật khẩu</h1><p className="crm-login__lead">Nhập email đăng nhập để nhận liên kết qua Brevo.</p><ForgotPasswordForm/><Link href="/crm/login">Quay lại đăng nhập</Link></section></main></div>;}

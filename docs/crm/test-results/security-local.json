@@ -1,0 +1,27 @@
+{
+  "testedAt": "2026-09-19T03:22:31.948Z",
+  "environment": "LOCAL isolated fictitious PGlite; Brevo disabled and no real account/email mutation",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F137 enrollment requires password and a current TOTP",
+      "status": "PASS"
+    },
+    {
+      "name": "F137 login requires TOTP and accepts the current code",
+      "status": "PASS"
+    },
+    {
+      "name": "F137 recovery code is single use",
+      "status": "PASS"
+    },
+    {
+      "name": "F137 password reset is generic, expiring, one-use and still requires MFA",
+      "status": "PASS"
+    },
+    {
+      "name": "F137 disabling MFA verifies both password and factor and revokes sessions",
+      "status": "PASS"
+    }
+  ]
+}

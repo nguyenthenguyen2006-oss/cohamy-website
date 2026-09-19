@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import vm from 'node:vm';
+
+const cases=[];
+async function test(name,run){try{await run();cases.push({name,status:'PASS'});console.log('PASS '+name);}catch(error){cases.push({name,status:'FAIL',error:error instanceof Error?error.message:String(error)});throw error;}}
+const root=new URL('../../',import.meta.url),read=path=>fs.readFile(new URL(path,root),'utf8');
+function pngSize(buffer){assert.equal(buffer.subarray(1,4).toString(),'PNG');return {width:buffer.readUInt32BE(16),height:buffer.readUInt32BE(20)};}
+
+let failed=false;
+try{
+ await test('F130 manifest is installable with square regular and maskable icons',async()=>{const manifest=await read('app/manifest.ts');assert.match(manifest,/display:'standalone'/);assert.match(manifest,/start_url:'\/crm'/);assert.match(manifest,/purpose:'maskable'/);for(const [name,size] of [['cohamy-192.png',192],['cohamy-512.png',512],['cohamy-maskable-512.png',512]])assert.deepEqual(pngSize(await fs.readFile(new URL('public/icons/'+name,root))),{width:size,height:size});});
+ await test('F130 service worker never intercepts CRM, portal, API, admin or preview requests',async()=>{const source=await read('public/sw.js'),handlers={},puts=[];const cache={addAll:async()=>{},match:async()=>null,put:async request=>puts.push(new URL(request.url).pathname)},context={URL,Request,Response,Promise,fetch:async()=>({ok:true,type:'basic',clone(){return this;}}),caches:{open:async()=>cache,keys:async()=>[],delete:async()=>true},self:{location:{origin:'https://cohamy.vn'},clients:{claim:async()=>{}},skipWaiting:async()=>{},addEventListener:(name,handler)=>{handlers[name]=handler;}}};vm.runInNewContext(source,context);assert.equal(typeof handlers.fetch,'function');for(const path of ['/crm','/crm/orders','/portal','/portal/orders','/api/crm/search','/admin/a','/preview/a']){let intercepted=false;handlers.fetch({request:new Request('https://cohamy.vn'+path),respondWith(){intercepted=true;}});assert.equal(intercepted,false,path);}let promise;handlers.fetch({request:new Request('https://cohamy.vn/icons/cohamy-192.png'),respondWith(value){promise=value;}});assert.ok(promise);await promise;assert.deepEqual(puts,['/icons/cohamy-192.png']);});
+ await test('F130 service worker and private routes publish defensive cache headers',async()=>{const config=await read('next.config.ts'),proxy=await read('proxy.ts');assert.match(config,/source: '\/sw\.js'/);assert.match(config,/no-cache, no-store, must-revalidate/);assert.match(config,/Service-Worker-Allowed/);assert.ok(config.includes("'/crm/:path*', '/portal/:path*', '/api/crm/:path*'"));assert.match(config,/private, no-store/);assert.match(proxy,/offline\(\?:\/\|\$\)/);});
+ await test('F127/F130 offline drafts are account-scoped, bounded and reject secret-shaped keys',async()=>{const source=await read('components/crm/CommercialForms.tsx');assert.match(source,/cohamy:offline-draft:'\+offlineDraft\.owner/);assert.match(source,/password\|passcode\|otp\|token\|secret\|credential\|recovery\|authorization\|cookie/);assert.match(source,/raw\.length>131072/);assert.match(source,/kiểm tra lại quyền, giá và phiên bản/);});
+}catch{failed=true;}
+const report={testedAt:new Date().toISOString(),environment:'LOCAL static and isolated service-worker harness',status:failed?'FAIL':'PASS',cases};await fs.mkdir(new URL('docs/crm/test-results/',root),{recursive:true});await fs.writeFile(new URL('docs/crm/test-results/pwa-local.json',root),JSON.stringify(report,null,2));if(failed)process.exitCode=1;

@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-18T23:01:39.122Z",
+  "testedAt": "2026-09-19T03:44:44.284Z",
   "environment": "LOCAL isolated fictitious PGlite",
   "cases": [
     {
@@ -23,6 +23,8 @@
       "status": "PASS"
     }
   ],
-  "commercialCheckout": "NOT_IMPLEMENTED",
-  "postgres": "NOT_RUN"
+  "integrationCoverage": {
+    "commercialCheckout": "COVERED_BY test:crm:commercial-orders"
+  },
+  "postgres": "NOT_RUN_IN_THIS_LOCAL_SUITE"
 }

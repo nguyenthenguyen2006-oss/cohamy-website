@@ -13,11 +13,11 @@ import type {QuotationSnapshot} from './quotations';
 import type {Principal} from './types';
 import {commercialNotification} from './order-notifications';
 
-export interface SalesOrder {id:string;code:string;organization_id:string;request_id:string;creator_id:string;status:'PENDING_APPROVAL'|'CONFIRMED'|'REJECTED'|'CANCELLED';delivery_status:string;payment_status:string;latest_version_id:string;confirmed_version_id:string|null;version:number;organization_name?:string;updated_at:string}
+export interface SalesOrder {id:string;code:string;organization_id:string;request_id:string;creator_id:string;status:'PENDING_APPROVAL'|'CONFIRMED'|'CANCEL_REQUESTED'|'REJECTED'|'CANCELLED';delivery_status:string;payment_status:string;latest_version_id:string;confirmed_version_id:string|null;version:number;organization_name?:string;updated_at:string}
 export interface SalesSnapshot {quote:QuotationSnapshot;request:{id:string;code:string;versionId:string;creatorId:string;channel:string;sourceWebsiteId:string|null;sourceQuotationId:string|null;sourceOrderId:string|null};orderPolicy:{id:string;number:number;definition:OrderPolicyDefinition;checksum:string};approvalReasons:string[];issuedAt:string}
 export interface SalesVersion {id:string;order_id:string;number:number;request_version_id:string;order_policy_id:string;snapshot:SalesSnapshot;checksum:string;approval_required:boolean;actor_id:string;created_at:string}
 export async function salesOrderAccess(sql:Sql,user:Principal,id:string,lock=false):Promise<SalesOrder>{
- assertPermission(user,'orders.read');parse(z.uuid(),id);const scope=partnerScope(user);
+ assertPermission(user,'orders.read');parse(z.uuid(),id);const scope=user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user);
  const row=(await sql.query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) AND s.id=$${scope.params.length+1}`+(lock?' FOR UPDATE OF s':''),[...scope.params,id])).rows[0];
  if(!row)throw new CrmError('NOT_FOUND',404);return row;
 }
@@ -25,7 +25,7 @@ export async function salesVersionAccess(sql:Sql,head:SalesOrder,id:string){
  const v=(await sql.query<SalesVersion>('SELECT * FROM cohamy_crm.sales_order_versions WHERE order_id=$1 AND id=$2',[head.id,parse(z.uuid(),id)])).rows[0];if(!v)throw new CrmError('NOT_FOUND',404);if(v.checksum!==hash(v.snapshot))throw new CrmError('ORDER_SNAPSHOT_INVALID',503);return v;
 }
 export async function listSalesOrders(user:Principal,q=''){
- assertPermission(user,'orders.read');const scope=partnerScope(user),params=[...scope.params,'%'+q.trim().slice(0,120)+'%'];
+ assertPermission(user,'orders.read');const scope=user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user),params=[...scope.params,'%'+q.trim().slice(0,120)+'%'];
  return(await(await database()).query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) AND(s.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY s.updated_at DESC,s.id LIMIT 100`,params)).rows;
 }
 export async function salesOrderVersions(user:Principal,id:string){return(await database()).transaction(async sql=>{
@@ -80,7 +80,7 @@ export async function salesOrderAction(user:Principal,input:unknown){
    action=d.action==='APPROVE'?'APPROVED':'REJECTED';if(action==='REJECTED')status='REJECTED';
   }else{
    if(!policy.confirmationRoles.includes(user.role as 'ADMIN'|'MANAGER'|'SALES'))throw new CrmError('FORBIDDEN',403);if(v.approval_required&&decision?.action!=='APPROVED')throw new CrmError('ORDER_APPROVAL_REQUIRED',409);
-   if(orderPartnerShortfalls(policy,org).length)throw new CrmError('PARTNER_INCOMPLETE',409);const now=new Date((await sql.query<{now:string}>('SELECT now() AS now')).rows[0].now);if(new Date(v.snapshot.quote.validUntil)<=now)throw new CrmError('ORDER_PRICE_EXPIRED',409);status='CONFIRMED';action='CONFIRMED';
+   if(orderPartnerShortfalls(policy,org).length)throw new CrmError('PARTNER_INCOMPLETE',409);const now=new Date((await sql.query<{now:string}>('SELECT now() AS now')).rows[0].now);if(new Date(v.snapshot.quote.validUntil)<=now)throw new CrmError('ORDER_PRICE_EXPIRED',409);if(v.snapshot.quote.basket.creditTerms){const {reserveCreditForOrder}=await import('./finance');await reserveCreditForOrder(sql,user,head,v,d.reason,d.idempotencyKey,requestHash);}status='CONFIRMED';action='CONFIRMED';
   }
   const result={id:head.id,version:head.version+1,status};await sql.query('UPDATE cohamy_crm.sales_orders SET status=$1,confirmed_version_id=CASE WHEN $1=\'CONFIRMED\' THEN $2 ELSE confirmed_version_id END,version=version+1,updated_at=now() WHERE id=$3',[status,v.id,head.id]);
   await sql.query('INSERT INTO cohamy_crm.commercial_events(id,order_id,source_version_id,action,actor_id,reason,internal,idempotency_key,request_hash,result) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb)',[randomUUID(),head.id,v.id,action,user.id,d.reason,action==='APPROVED',d.idempotencyKey,requestHash,JSON.stringify(result)]);

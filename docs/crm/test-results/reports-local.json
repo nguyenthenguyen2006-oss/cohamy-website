@@ -1,0 +1,45 @@
+{
+  "testedAt": "2026-09-19T03:22:26.697Z",
+  "environment": "LOCAL isolated fictitious PGlite; no real customer/order/stock/money/provider mutation",
+  "status": "PASS",
+  "references": {
+    "order": "1829b25a-3382-4fa1-b990-f35c95ed7345",
+    "delivery": "eed8295b-7422-4c92-ad0d-a91e9921bb8a",
+    "returnRequest": "ffbcbbef-9c8e-4968-9577-cd565d37531a",
+    "receipt": "903e8091-e589-49be-a0e1-bc8f8417b7f8"
+  },
+  "cases": [
+    {
+      "name": "F112 source conversion uses non-merged organizations and confirmed orders",
+      "status": "PASS"
+    },
+    {
+      "name": "F113 opportunity stage duration and lost reason are traceable",
+      "status": "PASS"
+    },
+    {
+      "name": "F114 new and no-order dealers are distinct",
+      "status": "PASS"
+    },
+    {
+      "name": "F115/F116 delivered sales subtract returns and use receipt cost",
+      "status": "PASS"
+    },
+    {
+      "name": "F117 order speed keeps separate approval stock packing and delivery clocks",
+      "status": "PASS"
+    },
+    {
+      "name": "F118 inventory report separates on-hand held available quarantine and consignment",
+      "status": "PASS"
+    },
+    {
+      "name": "F119 quality uses delivered denominator and physically received returns",
+      "status": "PASS"
+    },
+    {
+      "name": "F111/F120 role queues and scheduled report are scoped and exactly once",
+      "status": "PASS"
+    }
+  ]
+}

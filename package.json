@@ -66,7 +66,21 @@
     "test:crm:pricing": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-pricing.ts",
     "test:crm:quotations": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotations.ts",
     "test:crm:commercial-browser": "node scripts/crm/verify-commercial-browser.mjs",
-    "test:crm:commercial-controls-browser": "node scripts/crm/verify-commercial-controls-browser.mjs"
+    "test:crm:commercial-controls-browser": "node scripts/crm/verify-commercial-controls-browser.mjs",
+    "test:crm:inventory": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-inventory.ts",
+    "test:crm:fulfillment": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-fulfillment.ts",
+    "test:crm:finance": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-finance.ts",
+    "test:crm:procurement": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-procurement.ts",
+    "test:crm:consignment": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-consignment.ts",
+    "test:crm:security": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-security.ts",
+    "test:crm:reports": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-reports.ts",
+    "test:crm:pwa": "node scripts/crm/verify-pwa.mjs",
+    "test:crm:samples": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-samples.ts",
+    "test:crm:commercial-orders": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-commercial-orders.ts",
+    "test:crm:request-excel": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-request-excel.ts",
+    "test:crm:quotation-pdf": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotation-pdf.ts",
+    "test:crm:samples-browser": "node scripts/crm/verify-sample-browser.mjs",
+    "test:crm:browser-140": "node scripts/crm/verify-140-browser-smoke.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
