@@ -1,6 +1,6 @@
 # Cohamy - test report
 
-Updated 2026-09-19T00:17:02.343Z.
+Updated 2026-09-19T00:22:49.489Z.
 
 | Group | Result | Environment | Evidence | Time |
 |---|---|---|---|---|
@@ -25,21 +25,21 @@ Updated 2026-09-19T00:17:02.343Z.
 | Care PostgreSQL contention | PASS: 7/7 cases passed | STAGING | test-results/care-automation-postgres.json | 2026-09-18T21:11:15.274Z |
 | Actual PM2 care worker kill/recovery | PASS: 4/4 cases passed | STAGING | test-results/care-worker-postgres.json | 2026-09-18T20:51:13.962Z |
 | Identifier/merge backend | PASS: 10/10 cases passed | LOCAL | test-results/partner-merge-local.json | 2026-09-18T23:51:12.390Z |
-| DML-only PostgreSQL merge contention/rollback | PASS: 12/12 cases passed | STAGING | test-results/partner-merge-postgres.json | 2026-09-18T23:52:30.675Z |
+| DML-only PostgreSQL merge contention/rollback | PASS: 12/12 cases passed | STAGING | test-results/partner-merge-postgres.json | 2026-09-19T00:21:53.183Z |
 | Identifier/merge real Edge UI | PASS: 5/5 cases passed | LOCAL | test-results/partner-merge-browser-local.json | 2026-09-18T21:50:51.011Z |
 | Exact arithmetic and Vietnam business date | PASS: 6/6 cases passed | LOCAL | test-results/decimal-local.json | 2026-09-18T23:00:39.717Z |
 | Threshold/minimum/tax/gift exact calculation | PASS: 10/10 cases passed | LOCAL | test-results/pricing-model-local.json | 2026-09-18T22:55:46.012Z |
 | Pricing permissions and immutable policies | PASS: 8/8 cases passed | LOCAL | test-results/pricing-local.json | 2026-09-18T22:54:38.424Z |
-| DML-only PostgreSQL pricing contention | PASS: 9/9 cases passed | STAGING | test-results/pricing-postgres.json | 2026-09-18T22:58:18.865Z |
+| DML-only PostgreSQL pricing contention | PASS: 9/9 cases passed | STAGING | test-results/pricing-postgres.json | 2026-09-19T00:21:23.172Z |
 | Quotation snapshots/approval/expiry/PDF rollback | PASS: 10/10 cases passed | LOCAL | test-results/quotations-local.json | 2026-09-19T00:11:21.555Z |
-| DML-only PostgreSQL quotations and concurrent retries | PASS: 11/11 cases passed | STAGING | test-results/quotations-postgres.json | 2026-09-18T22:58:25.365Z |
+| DML-only PostgreSQL quotations and concurrent retries | PASS: 11/11 cases passed | STAGING | test-results/quotations-postgres.json | 2026-09-19T00:21:29.427Z |
 | Rendered Vietnamese PDF source reconciliation | PASS: 2/2 cases passed | LOCAL | test-results/quotation-pdf-local.json | 2026-09-18T22:40:53.030Z |
 | Commercial real Edge GUI | PASS: 7/7 cases passed | LOCAL | test-results/commercial-browser-local.json | 2026-09-18T22:58:57.961Z |
 | Tier/unit real Edge GUI | PASS: 3/3 cases passed | LOCAL | test-results/commercial-controls-browser-local.json | 2026-09-18T22:59:05.987Z |
 | Commercial request/order backend | PASS: 14/14 cases passed | LOCAL | test-results/commercial-orders-local.json | 2026-09-19T00:11:21.909Z |
-| Commercial request/order PostgreSQL contention | PASS: 16/16 cases passed | STAGING | test-results/commercial-orders-postgres.json | 2026-09-18T23:52:16.015Z |
+| Commercial request/order PostgreSQL contention | PASS: 16/16 cases passed | STAGING | test-results/commercial-orders-postgres.json | 2026-09-19T00:21:38.804Z |
 | Commercial XLSX preview/confirm | PASS: 9/9 cases passed | LOCAL | test-results/request-excel-local.json | 2026-09-19T00:11:22.439Z |
-| Commercial XLSX PostgreSQL contention | PASS: 10/10 cases passed | STAGING | test-results/request-excel-postgres.json | 2026-09-18T23:52:22.218Z |
+| Commercial XLSX PostgreSQL contention | PASS: 10/10 cases passed | STAGING | test-results/request-excel-postgres.json | 2026-09-19T00:21:44.804Z |
 | Commercial request/order actual Edge GUI | PASS: 8/8 cases passed | LOCAL | test-results/orders-browser-local.json | 2026-09-19T00:11:49.326Z |
 | Actual production commercial schema/runtime privileges | PASS: 4/4 cases passed | PRODUCTION | test-results/commercial-metadata-production.json | 2026-09-18T23:11:10.814Z |
 | Live commercial actual Edge read/form GUI | PASS: 5/5 cases passed | PRODUCTION | test-results/commercial-browser-production.json | 2026-09-18T23:11:24.252Z |
