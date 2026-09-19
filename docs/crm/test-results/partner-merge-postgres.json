@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-18T22:58:33.885Z",
+  "testedAt": "2026-09-18T23:52:30.675Z",
   "environment": "STAGING isolated PostgreSQL; service writes via DML-only role with immutable/migration revokes; fictitious businesses and SELECT-only closed balance fixture",
   "status": "PASS",
   "cases": [

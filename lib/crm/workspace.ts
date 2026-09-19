@@ -10,6 +10,8 @@ import type {Principal} from './types';
 
 export const parse=<T>(schema:z.ZodType<T>,input:unknown):T=>{const result=schema.safeParse(input);if(!result.success)throw new CrmError('INVALID_FIELDS',400);return result.data;};
 export async function entityAccess(user:Principal,type:string,id:string,sql?:Sql){
+  if(type==='commercial-request')return (await import('./order-requests')).commercialRequestAccess(sql??await database(),user,id);
+  if(type==='sales-order')return (await import('./sales-orders')).salesOrderAccess(sql??await database(),user,id);
   if(type==='visit')return (await import('./relationships')).getVisit(user,id,sql);
   if(type==='library')return (await import('./partner-library')).getLibraryItem(user,id,sql);
   if(type==='ticket')return (await import('./portal-services')).getTicket(user,id,sql);

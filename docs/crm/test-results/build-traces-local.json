@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-09-18T23:03:10.995Z",
+  "testedAt": "2026-09-19T00:18:07.583Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -15,7 +15,7 @@
       "status": "PASS"
     }
   ],
-  "traceCount": 73,
+  "traceCount": 74,
   "includedMigrations": [
     "db/crm/001-access-catalog.sql",
     "db/crm/002-website-order-intake.sql",
@@ -32,7 +32,8 @@
     "db/crm/013-partner-identifiers.sql",
     "db/crm/014-partner-merge.sql",
     "db/crm/015-commercial-pricing.sql",
-    "db/crm/016-quotation-versions.sql"
+    "db/crm/016-quotation-versions.sql",
+    "db/crm/017-commercial-orders.sql"
   ],
   "includedPdfAssets": [
     "assets/crm/fonts/BeVietnamPro-Regular.ttf",

@@ -1,11 +1,11 @@
 {
   "status": "PASS",
-  "completedAt": "2026-09-18T22:01:06.895Z",
+  "completedAt": "2026-09-18T23:09:43.901Z",
   "sourceDatabase": "cohamy_crm",
-  "restoreDatabase": "cohamy_restore_cb8d5b797583447c96b9b5db4940a03d",
+  "restoreDatabase": "cohamy_restore_d38656af73804abbb896bc65191955f9",
   "restoreRetained": false,
-  "sha256": "7471a0dbc30af3c8f619dcbc30faae56de897fc2bd150d47f8779461ab2cf003",
-  "tableCount": 60,
+  "sha256": "e8d83d1faf71ec0114cc09d8ec12bafff714f2719c38cf1769313f1e2fac9e7d",
+  "tableCount": 71,
   "rows": [
     {
       "table": "activities",
@@ -29,7 +29,7 @@
     },
     {
       "table": "audit_events",
-      "count": "39"
+      "count": "45"
     },
     {
       "table": "bulk_previews",
@@ -69,6 +69,14 @@
     },
     {
       "table": "care_task_rules",
+      "count": "0"
+    },
+    {
+      "table": "commercial_unit_versions",
+      "count": "0"
+    },
+    {
+      "table": "commercial_units",
       "count": "0"
     },
     {
@@ -121,7 +129,7 @@
     },
     {
       "table": "migrations",
-      "count": "14"
+      "count": "16"
     },
     {
       "table": "notifications",
@@ -137,6 +145,10 @@
     },
     {
       "table": "opportunity_history",
+      "count": "0"
+    },
+    {
+      "table": "organization_pricing",
       "count": "0"
     },
     {
@@ -180,6 +192,22 @@
       "count": "0"
     },
     {
+      "table": "price_book_versions",
+      "count": "0"
+    },
+    {
+      "table": "price_books",
+      "count": "0"
+    },
+    {
+      "table": "price_events",
+      "count": "0"
+    },
+    {
+      "table": "price_tiers",
+      "count": "0"
+    },
+    {
       "table": "private_documents",
       "count": "0"
     },
@@ -188,12 +216,28 @@
       "count": "10"
     },
     {
+      "table": "quotation_events",
+      "count": "0"
+    },
+    {
+      "table": "quotation_pdfs",
+      "count": "0"
+    },
+    {
+      "table": "quotation_versions",
+      "count": "0"
+    },
+    {
+      "table": "quotations",
+      "count": "0"
+    },
+    {
       "table": "saved_filters",
       "count": "0"
     },
     {
       "table": "sessions",
-      "count": "19"
+      "count": "22"
     },
     {
       "table": "support_messages",
@@ -250,7 +294,7 @@
   ],
   "fileIntegrityErrors": "0",
   "documentSourceErrors": "0",
-  "directory": "/root/cohamy-backups/scheduled/2026-09-18T220104878Z-ed18bda7",
+  "directory": "/root/cohamy-backups/scheduled/2026-09-18T230942016Z-ff80eb3d",
   "snapshotConsistent": true,
   "publicFiles": {
     "count": 0,

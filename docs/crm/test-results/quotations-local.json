@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-18T22:59:42.758Z",
+  "testedAt": "2026-09-19T00:11:21.555Z",
   "environment": "LOCAL isolated PGlite; fictitious quotes, no real customer sends",
   "status": "PASS",
   "cases": [

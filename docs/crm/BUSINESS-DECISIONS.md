@@ -1,6 +1,6 @@
 # Cohamy - business decisions
 
-Updated 2026-09-18T23:03:11.052Z.
+Updated 2026-09-19T00:17:02.343Z.
 
 | Decision | State | Source and scope | Remaining input |
 |---|---|---|---|
@@ -8,7 +8,7 @@ Updated 2026-09-18T23:03:11.052Z.
 | D02 | CONFIRMED_PARTIAL | User: brevo. Email adapter uses Brevo transactional API. | CRM_BREVO_API_KEY, verified CRM_BREVO_SENDER_EMAIL, explicitly designated test recipient and real delivery verification; CRM_EMAIL_ENABLED remains false in example |
 | D03 | EXISTING_MODEL | Inherit DEALER_OWNER/DEALER_STAFF and current Cohamy-only internal roles; invitation server bounds organization/role. | Branch model / approved scope details |
 | D04 | OPEN | No real wholesale price, fee, tax, discount/minimum/bonus policy supplied. | Approved versioned commercial policy |
-| D05 | OPEN | Website READY remains intake only, unpaid, no warehouse/receivable/revenue posting. | Approval/reservation/ownership/receivable/revenue events |
+| D05 | OPEN_WITH_DISABLED_MECHANISM | Versioned order routing and exact approval events exist, but production has no enabled real policy. Confirmed orders keep delivery/payment unposted; website READY remains intake only. | Cohamy-approved confirmation, reservation, ownership, receivable and revenue rules before live commercial activation |
 | D06 | OPEN | Catalog SKU/unit metadata is not real stock or conversion ledger. QA SKU/unit fixture only. | Base units, ratios, commercial SKUs, warehouses, lots, opening balances and costing |
 | D07 | OPEN | No lot/quarantine/FEFO/inventory policy assumed. | Minimum remaining shelf life and exceptions |
 | D08 | OPEN | Support/file tools do not dispatch shipments or refunds. | Carrier, fees, proof of receipt, return/refund policy |

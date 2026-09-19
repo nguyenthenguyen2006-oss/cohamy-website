@@ -1,0 +1,19 @@
+{
+  "testedAt": "2026-09-18T23:11:10.631Z",
+  "sourceSha": "0bcf4c761b04defbbcb9238aeae093ac372b144b",
+  "environment": "STAGING actual candidate production build/internal HTTP; isolated fictitious PostgreSQL DML-only role. Production database untouched.",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Actual built Next route renders unsent Vietnamese PDF using deployed PDFKit/fonts/logo on isolated fictitious PostgreSQL with DML-only role",
+      "status": "PASS"
+    }
+  ],
+  "pdfInspection": {
+    "status": "PASS",
+    "pages": 1,
+    "textSourceTotalsFooterAndVietnameseGlyphs": "PASS",
+    "visualReview": "Inspected actual Poppler full-page rendering runtime-review-1.png; no clipping or lost glyphs",
+    "productionDatabase": "NOT_EXERCISED"
+  }
+}

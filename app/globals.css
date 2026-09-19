@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* Limit Tailwind watch roots to actual UI source. Automatic repository-wide
+   scanning made transient QA JSON file locks fatal to Turbopack on Windows. */
+@import "tailwindcss" source(none);
+@source "./";
+@source "../components";
 
 /* Supported Gutenberg blocks use the existing article typography and colors. */
 .prose-cohamy { min-width: 0; overflow-wrap: anywhere; }

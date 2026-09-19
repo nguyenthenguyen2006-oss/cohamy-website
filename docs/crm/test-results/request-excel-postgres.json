@@ -1,0 +1,47 @@
+{
+  "testedAt": "2026-09-18T23:52:22.218Z",
+  "environment": "STAGING isolated fictitious PostgreSQL DML-only role",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F016 real XLSX template opens; actual expanded ZIP bytes are bounded; forged size/encryption/macro/corruption rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 invalid/formula/unknown SKU rows retain Excel row errors and cannot create a partial draft",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 mapping changes real columns; preview alone creates no request; explicit confirmation atomically creates all rows as unsent draft",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 same input/file retry returns exact preview; altered file/key conflicts; another organization cannot see or confirm preview",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 expired preview is blocked and no draft/result is written",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 current unit version change blocks previously valid preview even when ratio has same numeric value",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 SQL failure during immutable draft insertion rolls back request and preview result together",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 latest published price change requires a new preview instead of silently accepting new totals",
+      "status": "PASS"
+    },
+    {
+      "name": "F016 competing distinct previews for same actor do not deadlock; five same-preview retries create one draft",
+      "status": "PASS"
+    },
+    {
+      "name": "F136 membership lock/unlock invalidates preview identity; fresh login cannot reuse previous membership version",
+      "status": "PASS"
+    }
+  ]
+}

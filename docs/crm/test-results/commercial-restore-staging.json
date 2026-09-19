@@ -1,0 +1,20 @@
+{
+  "testedAt": "2026-09-18T23:13:05.079Z",
+  "sourceSha": "0bcf4c761b04defbbcb9238aeae093ac372b144b",
+  "environment": "STAGING isolated fictitious commercial PostgreSQL; independent retained restore. Production database untouched.",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Independent PostgreSQL export-snapshot dump restored all71 QA tables with every-row bytea hash matching",
+      "status": "PASS"
+    },
+    {
+      "name": "Nonempty saved Vietnamese PDF bytes/checksums, exact quote snapshots, source version IDs and original actors preserved in independent restore",
+      "status": "PASS"
+    }
+  ],
+  "pdfCount": 2,
+  "tableCount": 71,
+  "sha256": "59ef846a70fc9fd52d4c0ef48b639d60ced36a7dc92e10bb9272255b1338a62a",
+  "restoreDatabase": "cohamy_restore_4c2f174951674fd2b73f2768f9f4eb2c"
+}

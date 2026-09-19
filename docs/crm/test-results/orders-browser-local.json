@@ -1,0 +1,170 @@
+{
+  "testedAt": "2026-09-19T00:11:49.326Z",
+  "environment": "LOCAL actual Edge/Next with isolated fictitious PGlite, no real orders, stock, ledger or provider sends",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F012/F018 actual staff quick SKU draft/proposal stays private to dealer and awaits owner version approval",
+      "status": "PASS"
+    },
+    {
+      "name": "F011 dealer home presents actual scoped work/orders/notifications and another dealer cannot see proposal",
+      "status": "PASS"
+    },
+    {
+      "name": "F018 GUI owner approves exact version; only explicit staff submit creates commercial order",
+      "status": "PASS"
+    },
+    {
+      "name": "F040/F041/F044/F045 GUI Sales confirms exact frozen order; separate delivery/payment and immutable source visible to own dealer",
+      "status": "PASS"
+    },
+    {
+      "name": "F042/F043 GUI Sales creates phone-sourced request for a selected customer; exception follows other-manager approval before confirmation, with dealer internal reason hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "F013/F050 GUI duplicate warning retains candidates; reorder shows actual historical/current prices before creating new draft",
+      "status": "PASS"
+    },
+    {
+      "name": "F015 actual GUI XLSX upload previews row errors and valid mapped lines; explicit confirm creates unsent draft",
+      "status": "PASS"
+    },
+    {
+      "name": "Order/request/Excel/policy native views fit 390/320 and actual saved content has scoped table scrolling",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "screens": [
+    {
+      "name": "request-create-desktop",
+      "path": ".impeccable/review/orders/request-create-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "dealer-home-desktop",
+      "path": ".impeccable/review/orders/dealer-home-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "owner-approval-desktop",
+      "path": ".impeccable/review/orders/owner-approval-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "order-confirmed-desktop",
+      "path": ".impeccable/review/orders/order-confirmed-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "order-approval-desktop",
+      "path": ".impeccable/review/orders/order-approval-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "duplicate-warning-desktop",
+      "path": ".impeccable/review/orders/duplicate-warning-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "excel-errors-desktop",
+      "path": ".impeccable/review/orders/excel-errors-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "order-policy-desktop",
+      "path": ".impeccable/review/orders/order-policy-desktop.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "request-create-390",
+      "path": ".impeccable/review/orders/request-create-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "order-confirmed-390",
+      "path": ".impeccable/review/orders/order-confirmed-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "excel-upload-390",
+      "path": ".impeccable/review/orders/excel-upload-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "order-policy-390",
+      "path": ".impeccable/review/orders/order-policy-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "request-create-320",
+      "path": ".impeccable/review/orders/request-create-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "order-confirmed-320",
+      "path": ".impeccable/review/orders/order-confirmed-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "excel-upload-320",
+      "path": ".impeccable/review/orders/excel-upload-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    },
+    {
+      "name": "order-policy-320",
+      "path": ".impeccable/review/orders/order-policy-320.png",
+      "viewport": {
+        "width": 320,
+        "height": 844
+      }
+    }
+  ]
+}

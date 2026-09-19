@@ -1,16 +1,16 @@
 {
-  "testedAt": "2026-09-18T22:02:52.654Z",
+  "testedAt": "2026-09-18T23:11:11.373Z",
   "environment": "PRODUCTION read-only release/process/migration/timer verification; no business writes or messages",
   "status": "PASS",
-  "sourceSha": "684057fe7624ecd3ae0a390393ad973007cfd9e4",
-  "release": "/root/cohamy-releases/684057fe7624ecd3ae0a390393ad973007cfd9e4",
+  "sourceSha": "0bcf4c761b04defbbcb9238aeae093ac372b144b",
+  "release": "/root/cohamy-releases/0bcf4c761b04defbbcb9238aeae093ac372b144b",
   "nodeVersion": "v22.23.2",
   "processes": [
     {
       "name": "cohamy",
-      "pid": 2047887,
+      "pid": 2146152,
       "status": "online",
-      "cwd": "/root/cohamy-releases/684057fe7624ecd3ae0a390393ad973007cfd9e4",
+      "cwd": "/root/cohamy-releases/0bcf4c761b04defbbcb9238aeae093ac372b144b",
       "restarts": 0,
       "nodeBinary": "/root/cohamy-shared/node22/bin/node",
       "nodeArgs": [
@@ -20,9 +20,9 @@
     },
     {
       "name": "cohamy-crm-worker",
-      "pid": 2047893,
+      "pid": 2146156,
       "status": "online",
-      "cwd": "/root/cohamy-releases/684057fe7624ecd3ae0a390393ad973007cfd9e4",
+      "cwd": "/root/cohamy-releases/0bcf4c761b04defbbcb9238aeae093ac372b144b",
       "restarts": 0,
       "nodeBinary": "/root/cohamy-shared/node22/bin/node",
       "nodeArgs": [
@@ -105,16 +105,26 @@
       "name": "014-partner-merge.sql",
       "checksum": "39e36e9ba1400f5bc404ed80ebf732fa3d666c0d7b5d6c3532ce019f418d6254",
       "applied_at": "2026-09-18T21:59:06.975Z"
+    },
+    {
+      "name": "015-commercial-pricing.sql",
+      "checksum": "aaf21b85c327af33b075075fdbd6d76505f13c893b111991fa443c4c9c6fa72d",
+      "applied_at": "2026-09-18T23:07:48.610Z"
+    },
+    {
+      "name": "016-quotation-versions.sql",
+      "checksum": "a5af287a48b74d619964412a359c813a58406742948b7ebaed1ef675d04e17ed",
+      "applied_at": "2026-09-18T23:07:48.682Z"
     }
   ],
   "timer": {
     "status": "active",
-    "nextRun": "Sat 2026-09-19 19:30:29 UTC"
+    "nextRun": "Sat 2026-09-19 19:30:53 UTC"
   },
   "backup": {
     "status": "PASS",
-    "at": "2026-09-18T22:01:06.924930+00:00",
-    "release": "/root/cohamy-releases/684057fe7624ecd3ae0a390393ad973007cfd9e4"
+    "at": "2026-09-18T23:09:43.920701+00:00",
+    "release": "/root/cohamy-releases/0bcf4c761b04defbbcb9238aeae093ac372b144b"
   },
   "publicHealth": {
     "ok": true,
@@ -123,7 +133,7 @@
     "blogReady": true,
     "sheetsConfigured": false,
     "uploadDirectoryWritable": true,
-    "timestamp": "2026-09-18T22:02:52.641Z"
+    "timestamp": "2026-09-18T23:11:11.362Z"
   },
   "cases": [
     {

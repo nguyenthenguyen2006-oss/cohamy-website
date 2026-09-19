@@ -1,0 +1,71 @@
+{
+  "testedAt": "2026-09-18T23:52:16.015Z",
+  "environment": "STAGING isolated fictitious PostgreSQL, DML-only service role; no real order/stock/money/provider mutation",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "F041 no approved active order policy blocks proposal/submission; only manager configures immutable versioned policy",
+      "status": "PASS"
+    },
+    {
+      "name": "F012/F018 staff SKU proposal stays private until owner approval and explicit submission; no order from proposal",
+      "status": "PASS"
+    },
+    {
+      "name": "F018 owner approves exact request version; edits invalidate approval and force fresh proposal",
+      "status": "PASS"
+    },
+    {
+      "name": "F040/F044 confirmation freezes price/unit/policy/address source while delivery/payment remain independent and unposted",
+      "status": "PASS"
+    },
+    {
+      "name": "F043/F045 exact exception routes require another named approver; Sales/dealer cannot bypass and internal approval reason stays private",
+      "status": "PASS"
+    },
+    {
+      "name": "F040 changed published price blocks stale request conversion, but confirmed order retains exact historical snapshot",
+      "status": "PASS"
+    },
+    {
+      "name": "F013 re-save shows changed exact price before proposal and creates a new immutable request version",
+      "status": "PASS"
+    },
+    {
+      "name": "F041 accepted current quotation converts with exact approved source, changing latest policy never rewrites it",
+      "status": "PASS"
+    },
+    {
+      "name": "F041 injected SQL failure creating sale preserves READY source and rolls back order/version/event atomically",
+      "status": "PASS"
+    },
+    {
+      "name": "F040 expired request and pending order cannot silently renew or confirm their old held price",
+      "status": "PASS"
+    },
+    {
+      "name": "F043 current partner required fields and disabled policy block whole operation without source submission",
+      "status": "PASS"
+    },
+    {
+      "name": "F011/F018 in-app notifications have source/version keys, private recipients and current entity scope; foreign dealer sees none",
+      "status": "PASS"
+    },
+    {
+      "name": "F018 PostgreSQL owner decision competing with staff edit cannot deadlock through notification recipient foreign keys",
+      "status": "PASS"
+    },
+    {
+      "name": "F136 stale staff identity remains denied after lock/unlock; fresh membership version restores legitimate scoped draft",
+      "status": "PASS"
+    },
+    {
+      "name": "F041 five simultaneous same-key PostgreSQL submissions produce one sale/version and exact durable response",
+      "status": "PASS"
+    },
+    {
+      "name": "F024 commercial merge moves only current request/order scope, preserves confirmed source/actors/prices and invalidates both prior dealer identities",
+      "status": "PASS"
+    }
+  ]
+}

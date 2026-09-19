@@ -1,0 +1,52 @@
+{
+  "testedAt": "2026-09-18T23:11:10.814Z",
+  "sourceSha": "0bcf4c761b04defbbcb9238aeae093ac372b144b",
+  "environment": "PRODUCTION read-only metadata; no fictitious policy, quote, PDF creation, business mutation or customer delivery",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "All11 pricing/quotation tables exist in actual deployed PostgreSQL",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual runtime has append permission but no UPDATE/DELETE on every trigger-protected immutable table, including saved quotation PDFs",
+      "status": "PASS"
+    },
+    {
+      "name": "Runtime can change current commercial heads while owner-only migration registry and schema stay protected",
+      "status": "PASS"
+    },
+    {
+      "name": "Deployed full Vietnamese fonts and Cohamy logo exist for PDF rendering",
+      "status": "PASS"
+    }
+  ],
+  "immutableTables": [
+    "activities",
+    "activity_mentions",
+    "application_history",
+    "audit_events",
+    "care_escalations",
+    "care_rule_runs",
+    "care_schedule_runs",
+    "commercial_unit_versions",
+    "custom_field_versions",
+    "custom_value_history",
+    "document_versions",
+    "opportunity_history",
+    "partner_merge_history",
+    "partner_visits",
+    "price_book_versions",
+    "price_events",
+    "quotation_events",
+    "quotation_pdfs",
+    "quotation_versions",
+    "support_messages"
+  ],
+  "counts": {
+    "published_policies": "0",
+    "quote_versions": "0",
+    "saved_pdfs": "0"
+  },
+  "realCommercialWorkflow": "NOT_EXERCISED: approved business policies not supplied"
+}

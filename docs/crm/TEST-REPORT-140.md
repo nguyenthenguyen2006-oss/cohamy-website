@@ -1,6 +1,6 @@
 # Cohamy - test report
 
-Updated 2026-09-18T23:03:11.052Z.
+Updated 2026-09-19T00:17:02.343Z.
 
 | Group | Result | Environment | Evidence | Time |
 |---|---|---|---|---|
@@ -24,30 +24,39 @@ Updated 2026-09-18T23:03:11.052Z.
 | Care real Edge UI | PASS: 9/9 cases passed | LOCAL | test-results/care-browser-local.json | 2026-09-18T21:02:55.036Z |
 | Care PostgreSQL contention | PASS: 7/7 cases passed | STAGING | test-results/care-automation-postgres.json | 2026-09-18T21:11:15.274Z |
 | Actual PM2 care worker kill/recovery | PASS: 4/4 cases passed | STAGING | test-results/care-worker-postgres.json | 2026-09-18T20:51:13.962Z |
-| Identifier/merge backend | PASS: 10/10 cases passed | LOCAL | test-results/partner-merge-local.json | 2026-09-18T22:55:51.723Z |
-| DML-only PostgreSQL merge contention/rollback | PASS: 12/12 cases passed | STAGING | test-results/partner-merge-postgres.json | 2026-09-18T22:58:33.885Z |
+| Identifier/merge backend | PASS: 10/10 cases passed | LOCAL | test-results/partner-merge-local.json | 2026-09-18T23:51:12.390Z |
+| DML-only PostgreSQL merge contention/rollback | PASS: 12/12 cases passed | STAGING | test-results/partner-merge-postgres.json | 2026-09-18T23:52:30.675Z |
 | Identifier/merge real Edge UI | PASS: 5/5 cases passed | LOCAL | test-results/partner-merge-browser-local.json | 2026-09-18T21:50:51.011Z |
 | Exact arithmetic and Vietnam business date | PASS: 6/6 cases passed | LOCAL | test-results/decimal-local.json | 2026-09-18T23:00:39.717Z |
 | Threshold/minimum/tax/gift exact calculation | PASS: 10/10 cases passed | LOCAL | test-results/pricing-model-local.json | 2026-09-18T22:55:46.012Z |
 | Pricing permissions and immutable policies | PASS: 8/8 cases passed | LOCAL | test-results/pricing-local.json | 2026-09-18T22:54:38.424Z |
 | DML-only PostgreSQL pricing contention | PASS: 9/9 cases passed | STAGING | test-results/pricing-postgres.json | 2026-09-18T22:58:18.865Z |
-| Quotation snapshots/approval/expiry/PDF rollback | PASS: 10/10 cases passed | LOCAL | test-results/quotations-local.json | 2026-09-18T22:59:42.758Z |
+| Quotation snapshots/approval/expiry/PDF rollback | PASS: 10/10 cases passed | LOCAL | test-results/quotations-local.json | 2026-09-19T00:11:21.555Z |
 | DML-only PostgreSQL quotations and concurrent retries | PASS: 11/11 cases passed | STAGING | test-results/quotations-postgres.json | 2026-09-18T22:58:25.365Z |
 | Rendered Vietnamese PDF source reconciliation | PASS: 2/2 cases passed | LOCAL | test-results/quotation-pdf-local.json | 2026-09-18T22:40:53.030Z |
 | Commercial real Edge GUI | PASS: 7/7 cases passed | LOCAL | test-results/commercial-browser-local.json | 2026-09-18T22:58:57.961Z |
 | Tier/unit real Edge GUI | PASS: 3/3 cases passed | LOCAL | test-results/commercial-controls-browser-local.json | 2026-09-18T22:59:05.987Z |
-| Live actual Edge mobile/desktop | PASS: 5/5 cases passed | PRODUCTION | test-results/browser-production.json | 2026-09-18T22:03:04.406Z |
+| Commercial request/order backend | PASS: 14/14 cases passed | LOCAL | test-results/commercial-orders-local.json | 2026-09-19T00:11:21.909Z |
+| Commercial request/order PostgreSQL contention | PASS: 16/16 cases passed | STAGING | test-results/commercial-orders-postgres.json | 2026-09-18T23:52:16.015Z |
+| Commercial XLSX preview/confirm | PASS: 9/9 cases passed | LOCAL | test-results/request-excel-local.json | 2026-09-19T00:11:22.439Z |
+| Commercial XLSX PostgreSQL contention | PASS: 10/10 cases passed | STAGING | test-results/request-excel-postgres.json | 2026-09-18T23:52:22.218Z |
+| Commercial request/order actual Edge GUI | PASS: 8/8 cases passed | LOCAL | test-results/orders-browser-local.json | 2026-09-19T00:11:49.326Z |
+| Actual production commercial schema/runtime privileges | PASS: 4/4 cases passed | PRODUCTION | test-results/commercial-metadata-production.json | 2026-09-18T23:11:10.814Z |
+| Live commercial actual Edge read/form GUI | PASS: 5/5 cases passed | PRODUCTION | test-results/commercial-browser-production.json | 2026-09-18T23:11:24.252Z |
+| Built candidate commercial runtime on isolated PostgreSQL | PASS: 1/1 cases passed | STAGING | test-results/commercial-built-runtime-staging.json | 2026-09-18T23:11:10.631Z |
+| Independent commercial restore with nonempty saved PDFs/orders | PASS: 2/2 cases passed | STAGING | test-results/commercial-restore-staging.json | 2026-09-18T23:13:05.079Z |
+| Live actual Edge mobile/desktop | PASS: 5/5 cases passed | PRODUCTION | test-results/browser-production.json | 2026-09-18T23:10:24.397Z |
 | Managed candidate runtime | PASS: 3/3 cases passed | STAGING | test-results/managed-runtime-staging.json | 2026-09-18T20:31:57.232Z |
-| Live read-only HTTPS smoke | PASS (case evidence): 8/8 cases passed | PRODUCTION | test-results/public-smoke-production.json | 2026-09-18T22:02:58.417Z |
-| Live source/process/migration/timer state | PASS: 6/6 cases passed | PRODUCTION | test-results/release-production.json | 2026-09-18T22:02:52.654Z |
+| Live read-only HTTPS smoke | PASS (case evidence): 8/8 cases passed | PRODUCTION | test-results/public-smoke-production.json | 2026-09-18T23:10:17.901Z |
+| Live source/process/migration/timer state | PASS: 6/6 cases passed | PRODUCTION | test-results/release-production.json | 2026-09-18T23:11:11.373Z |
 
 - E01: backend mocked mailbox verification / supplementation / approval tested. UI report is separate. True Brevo delivery BLOCKED by configuration/test-recipient gate.
 - E02: same-decision retry and simultaneous PostgreSQL approvals PASS on isolated STAGING.
 - E03/E15: scoped search/bookmarks/files/notifications/export download and revoked assignment tests; commercial reports/stock domains not implemented.
-- E04: invitation ceiling only; staff commercial order/owner approval NOT_STARTED.
-- E05-E13/E16: commercial price/stock/delivery/money/consignment/procurement/report ledgers NOT_STARTED.
+- E04: dealer staff proposal, exact owner approval, edit invalidation and explicit Cohamy submission PASS in backend and actual Edge.
+- E05: pricing/quotation and request/order snapshot/conversion PASS; F013 supply check remains partial. E06-E13/E16 stock, delivery, money, consignment, procurement and report ledgers remain NOT_STARTED.
 - E14: atomic import failure, unique origins, duplicate confirmation and expired job-lease recovery tested. Actual Node claim/interruption/restart passed under isolated QA with fixture-expired lease; supervised PostgreSQL kill/automatic restart, real two-minute lease expiry and second restart PASS in worker-postgres-staging.json, without clock/lease fixture manipulation.
 - E17: independent PostgreSQL restore of all 49 tables plus bytea/source links PASS; restored A/B access and exact bytes PASS (backup-restore-staging.json; restored-access-staging.json).
-- E18: actual production cutover PASS at 684057fe7624ecd3ae0a390393ad973007cfd9e4; prior normal-startup RSS guard caused source rollback and preserved additive DB history (RELEASE-HISTORY-140.md).
+- E18: actual production cutover PASS at 0bcf4c761b04defbbcb9238aeae093ac372b144b; prior normal-startup RSS guard caused source rollback and preserved additive DB history (RELEASE-HISTORY-140.md).
 
 PGlite sequential/local retry is not PostgreSQL concurrency proof. governance-postgres-staging.json separately proves four multi-connection contention scenarios. No performance dataset or p50/p95 thresholds agreed, no load claim. Dependency audit originally 36; scoped ExcelJS uuid 11.1.1 override returns install audit to 34 existing advisories (29 moderate, 5 high); full remediation is not claimed. Build/typecheck/lint logs and packaging results are recorded in PROGRESS-140 after final runs.
