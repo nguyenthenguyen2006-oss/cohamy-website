@@ -4,7 +4,9 @@ Blog chọn nguồn bằng `BLOG_SOURCE`: `sheets` (mặc định, rollback), `l
 (static trong repo) hoặc `wordpress`. Không trộn nguồn và không dual-write.
 Khi chọn WordPress, API quản trị bài cũ trả 410 và `/admin` chuyển tới
 WordPress `/wp-admin`. Nguồn sản phẩm và Google Sheets của form liên hệ giữ
-nguyên. `cms.cohamy.vn` là địa chỉ dự kiến, chưa xác minh DNS/HTTPS/server.
+nguyên. Production dùng `https://cohamy.vn/wp-admin/` theo yêu cầu mới;
+WordPress nằm sau reverse proxy cùng domain, chỉ bind loopback `8181`.
+Xem [runbook cùng domain](headless/SAME-DOMAIN-DEPLOY.md).
 
 ## Local Windows đã chuẩn bị
 
@@ -85,7 +87,7 @@ Cài trực tiếp PHP/WordPress thì kích hoạt plugin bridge trong repo, th�
 `wp-config.php` sau khi xác minh hạ tầng và được chấp thuận chuyển nguồn:
 
 ```php
-define('WP_HOME', 'https://cms.cohamy.vn');
+define('WP_HOME', 'https://cohamy.vn');
 define('WP_SITEURL', WP_HOME);
 define('COHAMY_PUBLIC_URL', 'https://cohamy.vn');
 define('COHAMY_PREVIEW_URL', 'https://cohamy.vn');
@@ -105,11 +107,11 @@ uploads; không chặn toàn bộ media, REST, admin-ajax hoặc cron.
 ```dotenv
 NEXT_PUBLIC_SITE_URL=https://cohamy.vn
 BLOG_SOURCE=wordpress
-WORDPRESS_URL=https://cms.cohamy.vn
+WORDPRESS_URL=http://127.0.0.1:8181
 WORDPRESS_TIMEOUT_MS=8000
 WORDPRESS_WEBHOOK_SECRET=<cùng secret với WordPress>
 WORDPRESS_REPLAY_DIR=/var/lib/cohamy/webhook-replay
-WORDPRESS_ALLOW_LOCAL_HTTP=false
+WORDPRESS_ALLOW_LOCAL_HTTP=true # Chỉ cho loopback; HTTPS vẫn là URL public.
 ```
 
 Credential migration chỉ ở tiến trình migration; frontend không cần chúng.

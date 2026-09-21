@@ -6,8 +6,24 @@ import { tmpdir } from "node:os";
 import { legacyBlogRows } from "@/lib/blog-legacy";
 import { adaptWordPressSnapshot } from "@/lib/wordpress-blog";
 import { reserveWebhook, verifyWebhook } from "@/lib/wordpress-webhook";
+import { wordpressUrl } from "@/lib/blog-source";
 
 async function main() {
+  const previousUrl = process.env.WORDPRESS_URL;
+  const previousAllowHttp = process.env.WORDPRESS_ALLOW_LOCAL_HTTP;
+  const previousNodeEnv = process.env.NODE_ENV;
+  try {
+    Object.assign(process.env, { NODE_ENV: "production" });
+    process.env.WORDPRESS_ALLOW_LOCAL_HTTP = "true";
+    process.env.WORDPRESS_URL = "http://127.0.0.1:8181";
+    assert.equal(wordpressUrl(), "http://127.0.0.1:8181");
+    process.env.WORDPRESS_URL = "http://example.com";
+    assert.throws(() => wordpressUrl(), /WORDPRESS_HTTPS_REQUIRED/);
+  } finally {
+    if (previousUrl === undefined) delete process.env.WORDPRESS_URL; else process.env.WORDPRESS_URL = previousUrl;
+    if (previousAllowHttp === undefined) delete process.env.WORDPRESS_ALLOW_LOCAL_HTTP; else process.env.WORDPRESS_ALLOW_LOCAL_HTTP = previousAllowHttp;
+    if (previousNodeEnv === undefined) Reflect.deleteProperty(process.env, "NODE_ENV"); else Object.assign(process.env, { NODE_ENV: previousNodeEnv });
+  }
   const post = legacyBlogRows()[0];
   const snapshot = { revision: randomUUID(), posts: [post], redirects: [] };
   assert.equal(adaptWordPressSnapshot(snapshot).posts.length, 1);

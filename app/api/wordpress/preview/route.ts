@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     await getWordPressPreview(token); // The CMS verifies expiry AND the user's current capabilities.
     // request.url may use Next's internal localhost behind a proxy. Keep the browser on its incoming origin.
     const response = new NextResponse(null, { status: 303, headers: { Location: "/preview/blog" } });
-    const secure = url.protocol === "https:" || (process.env.NODE_ENV === "production" && process.env.WORDPRESS_ALLOW_LOCAL_HTTP !== "true");
+    const secure = url.protocol === "https:" || request.headers.get("x-forwarded-proto") === "https";
     response.cookies.set("cohamy_wp_preview", token, { httpOnly: true, secure, sameSite: "lax", path: "/preview", maxAge: 300 });
     response.headers.set("Cache-Control", "private, no-store");
     response.headers.set("Referrer-Policy", "no-referrer");

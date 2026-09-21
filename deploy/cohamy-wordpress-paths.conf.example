@@ -1,0 +1,49 @@
+# Include inside the existing HTTPS cohamy.vn server block, before nginx -t/reload.
+# WordPress listens only on 127.0.0.1:8181. The rest of cohamy.vn stays on Next.js.
+# FASTPANEL: /etc/nginx/fastpanel2-sites/cohamy_vn_usr/cohamy.vn.includes
+
+location = /wp-admin { return 301 /wp-admin/; }
+location = /wp-json { return 301 /wp-json/; }
+location = /xmlrpc.php { return 404; }
+location = /wp-cron.php { return 404; } # The isolated WP-CLI cron container runs jobs.
+
+location ^~ /wp-content/ {
+    if ($uri ~* ^/wp-content/uploads/.*\.(?:php|phtml|phar)$) { return 403; }
+    proxy_pass http://127.0.0.1:8181;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Authorization $http_authorization;
+}
+location ^~ /wp-includes/ {
+    proxy_pass http://127.0.0.1:8181;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+location ^~ /wp-admin/ {
+    proxy_pass http://127.0.0.1:8181;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Authorization $http_authorization;
+    proxy_read_timeout 120s;
+    client_max_body_size 24m;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+}
+location = /wp-login.php {
+    proxy_pass http://127.0.0.1:8181;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+}
+location ^~ /wp-json/ {
+    proxy_pass http://127.0.0.1:8181;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto https;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Authorization $http_authorization;
+    client_max_body_size 24m;
+    add_header X-Robots-Tag "noindex, nofollow" always;
+}

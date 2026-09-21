@@ -14,7 +14,8 @@ export function wordpressUrl(): string {
   const configured = process.env.WORDPRESS_URL?.trim();
   if (!configured) throw new Error("WORDPRESS_NOT_CONFIGURED");
   const url = new URL(configured);
-  if (url.protocol !== "https:" && !(process.env.NODE_ENV !== "production" || process.env.WORDPRESS_ALLOW_LOCAL_HTTP === "true") && url.protocol === "http:") {
+  const localHttp = url.protocol === "http:" && ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname) && process.env.WORDPRESS_ALLOW_LOCAL_HTTP === "true";
+  if (url.protocol === "http:" && process.env.NODE_ENV === "production" && !localHttp) {
     throw new Error("WORDPRESS_HTTPS_REQUIRED");
   }
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password || url.search || url.hash) {
