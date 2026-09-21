@@ -55,25 +55,29 @@ không chứng minh full restore WordPress/media trên VPS.
 ## VPS/staging với MariaDB
 
 Local SQLite là WordPress thật, nhưng không thay kiểm thử MariaDB staging.
-Docker không có trên máy này nên `wordpress/compose.yaml` chưa được chạy.
+Compose MariaDB/WordPress đã chạy trên VPS Cohamy ngày 21/09/2026; xem
+runbook cùng domain để biết kết quả production hiện tại.
 Bảng link native Rank Math đã được khởi tạo và kiểm thử đọc/ghi link thực tế
 trên SQLite local, gồm link vào và orphan. MariaDB staging vẫn chưa chạy;
 không sửa core hoặc vendor để né khác biệt SQL. Yêu cầu MariaDB 10.6+ hoặc
 MySQL 8+ cho JSON và window functions của checkpoint/export/rollback.
 
 Compose tách MariaDB, WordPress, WP-CLI và cron. Database không mở cổng host;
-CMS bind loopback 8081. Pin image bằng phiên bản/digest đã kiểm thử trước
-production; các tag mặc định trong mẫu còn là tag động.
+CMS bind loopback 8081 theo mặc định, production dùng 8181 vì 8081 thuộc
+HumanBank. Pin image bằng phiên bản/digest đã kiểm thử trước production;
+các tag mặc định trong mẫu còn là tag động.
 
 ```bash
 cp wordpress/.env.example wordpress/.env
 # Điền password DB, HMAC secret >= 32 ký tự, URL staging đã xác minh.
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml up -d db wordpress
 # Hoàn tất cài WordPress và tạo admin riêng trong CMS staging.
-docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli plugin install seo-by-rank-math --version=1.0.278 --activate
-docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli plugin activate cohamy-headless-bridge
-docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli option update timezone_string Asia/Ho_Chi_Minh
-docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli option update permalink_structure '/%postname%/'
+docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli wp plugin install seo-by-rank-math --version=1.0.278 --activate
+docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli wp plugin activate cohamy-headless-bridge
+# Rank Math Free không yêu cầu tài khoản; bỏ qua wizard để biến template SEO khởi tạo trong REST.
+docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli wp option update rank_math_registration_skip 1
+docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli wp option update timezone_string Asia/Ho_Chi_Minh
+docker compose --env-file wordpress/.env -f wordpress/compose.yaml --profile tools run --rm cli wp option update permalink_structure '/%postname%/'
 docker compose --env-file wordpress/.env -f wordpress/compose.yaml up -d cron
 ```
 

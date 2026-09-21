@@ -9,7 +9,11 @@ function is_public(int $id): bool {
     if(!$post || !in_array($post->post_type,['post','page'],true) || $post->post_status!=='publish' || $post->post_password!=='' || strtotime($post->post_date_gmt.' UTC')>time())return false;
     $identity=$wpdb->get_var($wpdb->prepare("SELECT post_id FROM {$wpdb->prefix}cohamy_identity WHERE post_id=%d",$id));if($wpdb->last_error)throw new \RuntimeException('Database định danh tạm thời không đọc được.');return (bool)$identity;
 }
-function rank_math_ready(): bool { return class_exists('RankMath\\Helper'); }
+function rank_math_ready(): bool {
+    // Activation alone is insufficient: a fresh Rank Math install can leave the
+    // variable manager unset until its registration wizard is completed/skipped.
+    return class_exists('RankMath\\Helper') && function_exists('rank_math') && isset(rank_math()->variables);
+}
 function seo_value(\WP_Post $post, string $field): string {
     if (!rank_math_ready()) throw new \RuntimeException('Rank Math chưa được kích hoạt.');
     // Rank Math normally initializes variables on `wp`/admin_enqueue_scripts, neither fires for public REST.
