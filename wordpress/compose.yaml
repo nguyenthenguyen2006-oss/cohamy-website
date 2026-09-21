@@ -12,9 +12,9 @@ x-wordpress-env: &wordpress-env
   COHAMY_ENVIRONMENT: ${COHAMY_ENVIRONMENT:-local}
   WORDPRESS_CONFIG_EXTRA: |
     // The Apache port is bound to host loopback; TLS terminates at that reverse proxy.
-    if (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') {
-      $_SERVER['HTTPS'] = 'on';
-      $_SERVER['SERVER_PORT'] = '443';
+    if (($$_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') {
+      $$_SERVER['HTTPS'] = 'on';
+      $$_SERVER['SERVER_PORT'] = '443';
     }
     define('WP_HOME', getenv('COHAMY_CMS_URL'));
     define('WP_SITEURL', getenv('COHAMY_CMS_URL'));
