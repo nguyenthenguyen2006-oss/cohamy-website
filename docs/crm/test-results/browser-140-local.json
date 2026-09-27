@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-19T03:37:28.146Z",
+  "testedAt": "2026-09-27T10:22:26.174Z",
   "environment": "LOCAL actual Edge/Next, isolated fictitious PGlite; every authorized module root at desktop/mobile",
   "status": "PASS",
   "cases": [

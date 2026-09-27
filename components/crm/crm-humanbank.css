@@ -1,0 +1,1441 @@
+/* ==========================================================================
+   COHAMY CRM - HUMANBANK DESIGN SYSTEM (DARK SHELL & LAUNCHER)
+   Strictly scoped under .cohamy-crm to protect public website and portal.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Root Variables & Base Reset for CRM
+   -------------------------------------------------------------------------- */
+.cohamy-crm {
+  --hb-bg: #070b14;
+  --hb-bg-alt: #0b111e;
+  --hb-surface: #101726;
+  --hb-surface-hover: #162035;
+  --hb-surface-subtle: #1a253c;
+  --hb-border: rgba(255, 255, 255, 0.08);
+  --hb-border-strong: rgba(255, 255, 255, 0.16);
+  --hb-text: #ffffff;
+  --hb-text-muted: #94a3b8;
+  --hb-text-dim: #64748b;
+  --hb-orange: #f97316;
+  --hb-orange-hover: #ea580c;
+  --hb-orange-glow: rgba(249, 115, 22, 0.4);
+  --hb-dock-bg: rgba(10, 14, 23, 0.96);
+  --hb-header-bg: rgba(8, 12, 20, 0.97);
+}
+
+/* --------------------------------------------------------------------------
+   PHASE 1: LOGIN PAGE
+   -------------------------------------------------------------------------- */
+.cohamy-crm .crm-login-page {
+  position: relative;
+  min-height: 100dvh;
+  width: 100%;
+  background: radial-gradient(circle at center, #0d1527 0%, #070b14 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 20px 16px;
+}
+
+.cohamy-crm .crm-login-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  margin: auto;
+}
+
+.cohamy-crm .crm-login-card {
+  background: rgba(14, 21, 37, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--hb-border);
+  border-radius: 24px;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  padding: 38px 34px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cohamy-crm .crm-login-brand {
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.cohamy-crm .crm-login-brand__logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+}
+
+.cohamy-crm .crm-login-title {
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 0 0 24px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.cohamy-crm .crm-login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cohamy-crm .crm-login-field {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.cohamy-crm .crm-login-field label {
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .crm-login-input-wrap,
+.cohamy-crm .crm-password-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.cohamy-crm .crm-field-icon {
+  position: absolute;
+  left: 14px;
+  color: #f97316;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.cohamy-crm .crm-login-input-wrap input,
+.cohamy-crm .crm-password-wrap input {
+  width: 100%;
+  height: 48px;
+  background: rgba(22, 32, 54, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 0 44px 0 44px;
+  color: #ffffff;
+  font-size: 14px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  outline: none;
+}
+
+.cohamy-crm .crm-login-input-wrap input::placeholder,
+.cohamy-crm .crm-password-wrap input::placeholder {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.cohamy-crm .crm-login-input-wrap input:focus,
+.cohamy-crm .crm-password-wrap input:focus {
+  border-color: #f97316;
+  background: rgba(26, 38, 64, 0.85);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.25);
+}
+
+.cohamy-crm .crm-password-toggle {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: 0;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 8px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  transition: color 0.15s ease;
+}
+
+.cohamy-crm .crm-password-toggle:hover {
+  color: #ffffff;
+}
+
+.cohamy-crm .crm-login-error {
+  background: rgba(220, 38, 38, 0.16);
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  color: #fca5a5;
+  font-size: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.cohamy-crm .crm-login-btn {
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: #ffffff;
+  border: 0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 8px 24px -4px rgba(249, 115, 22, 0.5);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  margin-top: 6px;
+}
+
+.cohamy-crm .crm-login-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px -4px rgba(249, 115, 22, 0.65);
+}
+
+.cohamy-crm .crm-login-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.cohamy-crm .crm-login-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.cohamy-crm .crm-login-links {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+}
+
+.cohamy-crm .crm-login-links__row {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.cohamy-crm .crm-link-forgot {
+  color: #ea580c;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.cohamy-crm .crm-link-forgot:hover {
+  text-decoration: underline;
+}
+
+.cohamy-crm .crm-login-register {
+  color: #94a3b8;
+}
+
+.cohamy-crm .crm-link-accent {
+  color: #f97316;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.cohamy-crm .crm-link-accent:hover {
+  text-decoration: underline;
+}
+
+.cohamy-crm .crm-login-sublinks {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cohamy-crm .crm-link-subtle {
+  color: #64748b;
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.cohamy-crm .crm-link-subtle:hover {
+  color: #94a3b8;
+}
+
+.cohamy-crm .crm-link-sep {
+  color: #475569;
+  font-size: 12px;
+}
+
+.cohamy-crm .crm-login-footer {
+  margin-top: 24px;
+  color: #475569;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------------------------------
+   PHASE 2: TOPBAR & HEADER
+   -------------------------------------------------------------------------- */
+.cohamy-crm .crm-humanbank-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--hb-bg);
+  color: var(--hb-text);
+  font-family: "Be Vietnam Pro", system-ui, sans-serif;
+  color-scheme: dark;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 60;
+  background: var(--hb-header-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--hb-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(16px, 3vw, 36px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-masthead-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-brand-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-brand-logo {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-system-title {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cohamy-crm .crm-mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu {
+  position: relative;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 4px 8px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu summary:hover,
+.cohamy-crm .crm-humanbank-shell .portal-user-menu[open] summary {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-avatar {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 2px solid #f97316;
+  background: #1e293b;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-summary {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  gap: 1px;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-summary strong {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-summary span {
+  color: #94a3b8;
+  font-size: 11px;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu__content {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 240px;
+  background: #101726;
+  border: 1px solid var(--hb-border);
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 80;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu__content a,
+.cohamy-crm .crm-humanbank-shell .portal-user-menu__content button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #e2e8f0;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu__content a:hover,
+.cohamy-crm .crm-humanbank-shell .portal-user-menu__content button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu__content .crm-logout-action {
+  color: #f87171;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 4px;
+  padding-top: 10px;
+}
+
+.cohamy-crm .crm-humanbank-shell .portal-user-menu__content .crm-logout-action:hover {
+  background: rgba(239, 68, 68, 0.12);
+  color: #fca5a5;
+}
+
+/* --------------------------------------------------------------------------
+   PHASE 3: DASHBOARD LAUNCHER & HUB TILES
+   -------------------------------------------------------------------------- */
+.cohamy-crm .portal-content--dashboard {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent;
+}
+
+.cohamy-crm .crm-dashboard {
+  position: relative;
+  min-height: calc(100dvh - 64px);
+  width: 100%;
+  overflow-x: hidden;
+  background: radial-gradient(circle at center top, #0f182c 0%, #070b14 100%);
+  padding-top: 64px;
+}
+
+.cohamy-crm .crm-dashboard .particle-network {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cohamy-crm .crm-dashboard__content {
+  position: relative;
+  z-index: 1;
+  width: min(100% - 48px, 1200px);
+  margin: 0 auto;
+  padding: 40px 0px 138px;
+}
+
+.cohamy-crm .crm-dashboard__hero {
+  text-align: center;
+  margin-bottom: 38px;
+}
+
+.cohamy-crm .crm-dashboard__hero h1 {
+  color: #ffffff;
+  font-size: 44.8px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0 0 5px;
+  line-height: 1.2;
+}
+
+@media (max-width: 540px) {
+  .cohamy-crm .crm-dashboard__hero h1 {
+    font-size: 23.2px;
+  }
+}
+
+.cohamy-crm .crm-dashboard__hero p {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: clamp(13px, 1.4vw, 16px);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.cohamy-crm .crm-launcher-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.cohamy-crm .crm-module-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 180px);
+  gap: 25px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.cohamy-crm .crm-module-tile {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  border-radius: var(--hb-control-radius, 4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+  text-align: center;
+  padding: 18px 12px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 14px 30px -6px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.cohamy-crm .crm-module-tile:hover {
+  transform: translateY(-4px);
+  filter: brightness(1.15);
+  box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.25);
+}
+
+.cohamy-crm .crm-module-tile:focus-visible {
+  outline: 3px solid #f97316;
+  outline-offset: 3px;
+}
+
+.cohamy-crm .crm-tile-icon {
+  margin-bottom: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.cohamy-crm .crm-tile-label {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.25;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.cohamy-crm .crm-tile-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 11px;
+  font-weight: 800;
+  border-radius: 9999px;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   OPERATIONS DESK SECTION (BELOW LAUNCHER)
+   -------------------------------------------------------------------------- */
+.cohamy-crm .crm-dashboard__operations {
+  max-width: 1000px;
+  margin: 20px auto 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cohamy-crm .crm-operations-header {
+  margin-bottom: 24px;
+}
+
+.cohamy-crm .crm-operations-title {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.cohamy-crm .crm-operations-desc {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.cohamy-crm .crm-dark-panel {
+  background: rgba(16, 24, 40, 0.88) !important;
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--hb-border) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin-bottom: 22px !important;
+  color: #e2e8f0;
+}
+
+.cohamy-crm .crm-dark-panel h2 {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.cohamy-crm .crm-dark-panel p {
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.cohamy-crm .crm-panel-action {
+  color: #38bdf8 !important;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cohamy-crm .crm-panel-action:hover {
+  text-decoration: underline;
+}
+
+.cohamy-crm .crm-count-danger {
+  background: rgba(239, 68, 68, 0.25) !important;
+  color: #fca5a5 !important;
+}
+
+.cohamy-crm .crm-shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.cohamy-crm .crm-shortcut-item {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px !important;
+  background: rgba(22, 32, 54, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  color: #cbd5e1 !important;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.cohamy-crm .crm-shortcut-item:hover {
+  background: rgba(30, 42, 70, 0.85);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
+}
+
+.cohamy-crm .crm-dark-disclosure {
+  color: #94a3b8 !important;
+}
+
+.cohamy-crm .crm-dark-disclosure summary {
+  color: #cbd5e1 !important;
+  font-weight: 600;
+}
+
+.cohamy-crm .crm-dark-disclosure a {
+  color: #38bdf8 !important;
+}
+
+/* --------------------------------------------------------------------------
+   PHASE 4: BOTTOM FLOATING DOCK
+   -------------------------------------------------------------------------- */
+.cohamy-crm .portal-bottom-navigation {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: min(95%, 600px);
+  background: var(--hb-dock-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--hb-border-strong);
+  border-radius: 9999px;
+  padding: 5px 12px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+.cohamy-crm .portal-bottom-navigation__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+}
+
+.cohamy-crm .portal-bottom-navigation a,
+.cohamy-crm .portal-bottom-navigation button {
+  position: relative;
+  height: 58px;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  border-radius: 9999px;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
+}
+
+.cohamy-crm .portal-bottom-navigation a svg,
+.cohamy-crm .portal-bottom-navigation button svg {
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.cohamy-crm .portal-bottom-navigation small {
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.cohamy-crm .portal-bottom-navigation a:hover,
+.cohamy-crm .portal-bottom-navigation button:hover:not(:disabled) {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.cohamy-crm .portal-bottom-navigation a:hover svg,
+.cohamy-crm .portal-bottom-navigation button:hover svg {
+  transform: translateY(-3px) scale(1.1);
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active small {
+  color: #ffffff;
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active svg {
+  color: #f97316;
+  transform: translateY(-2px);
+}
+
+.cohamy-crm .portal-bottom-navigation .is-active::after {
+  position: absolute;
+  bottom: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #f97316;
+  content: "";
+}
+
+/* --------------------------------------------------------------------------
+   PHASE 5: HUB PAGES & BUSINESS WORKSPACE SHELL
+   -------------------------------------------------------------------------- */
+.cohamy-crm .crm-hub-page {
+  position: relative;
+  min-height: calc(100dvh - 64px);
+  width: 100%;
+  background: radial-gradient(circle at center top, #0f182c 0%, #070b14 100%);
+  padding: 24px 20px 140px;
+}
+
+.cohamy-crm .crm-hub-page .particle-network {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.cohamy-crm .crm-hub-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cohamy-crm .crm-hub-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  font-size: 13px;
+}
+
+.cohamy-crm .crm-hub-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #38bdf8;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.cohamy-crm .crm-hub-back:hover {
+  text-decoration: underline;
+}
+
+.cohamy-crm .crm-hub-breadcrumb-sep {
+  color: #64748b;
+}
+
+.cohamy-crm .crm-hub-current {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.cohamy-crm .crm-hub-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 36px;
+  padding: 24px;
+  background: rgba(16, 24, 40, 0.85);
+  border: 1px solid var(--hb-border);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+}
+
+.cohamy-crm .crm-hub-badge-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.cohamy-crm .crm-hub-title-box h1 {
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0 0 6px;
+}
+
+.cohamy-crm .crm-hub-title-box p {
+  color: #94a3b8;
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.cohamy-crm .crm-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.cohamy-crm .crm-hub-submodule-card {
+  background: rgba(16, 24, 40, 0.9);
+  border: 1px solid var(--hb-border);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-decoration: none;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.cohamy-crm .crm-hub-submodule-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(22, 32, 54, 0.95);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.cohamy-crm .crm-hub-submodule-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.cohamy-crm .crm-hub-submodule-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cohamy-crm .crm-hub-submodule-info h3 {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cohamy-crm .crm-hub-submodule-info p {
+  color: #94a3b8;
+  font-size: 12px;
+  margin: 0;
+}
+
+.cohamy-crm .crm-hub-submodule-action {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #f97316;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cohamy-crm .crm-hub-empty {
+  padding: 40px;
+  background: rgba(16, 24, 40, 0.85);
+  border: 1px solid var(--hb-border);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.cohamy-crm .crm-hub-empty h2 {
+  color: #ffffff;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.cohamy-crm .crm-hub-empty p {
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   BUSINESS WORKSPACE (TABLES, FORMS, DETAIL VIEWS)
+   -------------------------------------------------------------------------- */
+.cohamy-crm .crm-business-workspace {
+  background: var(--hb-bg);
+  min-height: calc(100dvh - 64px);
+  padding-top: 64px;
+  padding-bottom: 120px;
+}
+
+.cohamy-crm .crm-business-content {
+  width: min(calc(100% - 32px), 1260px);
+  margin: 0 auto;
+  padding: 24px 0 60px;
+}
+
+.cohamy-crm .crm-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-bottom: 22px;
+}
+
+.cohamy-crm .crm-breadcrumb a {
+  color: #38bdf8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.cohamy-crm .crm-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Headings & Page Header in dark workspace */
+.cohamy-crm .crm-business-workspace h1,
+.cohamy-crm .crm-business-workspace .portal-page-header h1,
+.cohamy-crm .crm-business-workspace .work-page-heading h1 {
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.cohamy-crm .crm-business-workspace p,
+.cohamy-crm .crm-business-workspace .portal-page-header p,
+.cohamy-crm .crm-business-workspace .work-page-heading p {
+  color: #94a3b8;
+}
+
+/* Panels & Cards in dark workspace */
+.cohamy-crm .crm-business-workspace .work-section,
+.cohamy-crm .crm-business-workspace .crm-record-form,
+.cohamy-crm .crm-business-workspace .crm-readonly {
+  background: var(--hb-surface) !important;
+  border: 1px solid var(--hb-border) !important;
+  border-radius: 16px !important;
+  color: #e2e8f0;
+}
+
+.cohamy-crm .crm-business-workspace .work-section h2,
+.cohamy-crm .crm-business-workspace .crm-record-form h2 {
+  color: #ffffff;
+}
+
+/* Toolbars & Filters in dark workspace */
+.cohamy-crm .crm-business-workspace .table-toolbar,
+.cohamy-crm .crm-business-workspace .work-filter {
+  background: var(--hb-surface) !important;
+  border: 1px solid var(--hb-border) !important;
+  border-radius: 12px !important;
+  color: #e2e8f0;
+}
+
+/* Tables in dark workspace */
+.cohamy-crm .crm-business-workspace .crm-table-wrap {
+  background: var(--hb-surface) !important;
+  border: 1px solid var(--hb-border) !important;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.cohamy-crm .crm-business-workspace .work-orders-desktop,
+.cohamy-crm .crm-business-workspace .work-lines-desktop {
+  display: block !important;
+}
+
+.cohamy-crm .crm-business-workspace .work-orders-mobile,
+.cohamy-crm .crm-business-workspace .work-lines-mobile {
+  display: none !important;
+}
+
+.cohamy-crm .crm-business-workspace .data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.cohamy-crm .crm-business-workspace .data-table th {
+  background: #141c2e !important;
+  color: #cbd5e1 !important;
+  font-size: 12px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--hb-border) !important;
+  border-top: 0 !important;
+  padding: 13px 16px;
+}
+
+.cohamy-crm .crm-business-workspace .data-table td {
+  color: #e2e8f0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  padding: 14px 16px;
+}
+
+.cohamy-crm .crm-business-workspace .data-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+
+.cohamy-crm .crm-business-workspace .data-table a {
+  color: #38bdf8 !important;
+  font-weight: 600;
+}
+
+.cohamy-crm .crm-business-workspace .table-footer {
+  background: var(--hb-surface) !important;
+  border-top: 1px solid var(--hb-border) !important;
+  color: #94a3b8;
+}
+
+/* Form Controls in dark workspace */
+.cohamy-crm .crm-business-workspace input:not([type="checkbox"]),
+.cohamy-crm .crm-business-workspace select,
+.cohamy-crm .crm-business-workspace textarea {
+  background: #0d1424 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+}
+
+.cohamy-crm .crm-business-workspace input:focus,
+.cohamy-crm .crm-business-workspace select:focus,
+.cohamy-crm .crm-business-workspace textarea:focus {
+  border-color: #f97316 !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2) !important;
+}
+
+.cohamy-crm .crm-business-workspace label {
+  color: #cbd5e1 !important;
+}
+
+/* Buttons in dark workspace */
+.cohamy-crm .button--primary {
+  background: #f97316 !important;
+  border-color: #f97316 !important;
+  color: #ffffff !important;
+}
+
+.cohamy-crm .button--primary:hover:not(:disabled) {
+  background: #ea580c !important;
+}
+
+.cohamy-crm .button--secondary {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.cohamy-crm .button--secondary:hover:not(:disabled) {
+  background: #283548 !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Status Badges */
+.cohamy-crm .status-PENDING_REVIEW {
+  background: rgba(245, 158, 11, 0.2) !important;
+  color: #fbbf24 !important;
+}
+
+.cohamy-crm .status-IN_PROGRESS {
+  background: rgba(59, 130, 246, 0.2) !important;
+  color: #60a5fa !important;
+}
+
+.cohamy-crm .status-READY {
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+}
+
+.cohamy-crm .status-REJECTED {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+}
+
+.cohamy-crm .crm-status-note {
+  background: var(--hb-surface) !important;
+  border-color: var(--hb-border) !important;
+  color: #94a3b8 !important;
+}
+
+.cohamy-crm .work-task-list li {
+  border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.cohamy-crm .work-task-list a {
+  color: #38bdf8 !important;
+}
+
+.cohamy-crm .work-timeline li {
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.cohamy-crm .work-timeline strong {
+  color: #ffffff !important;
+}
+
+.cohamy-crm .work-timeline p {
+  color: #cbd5e1 !important;
+}
+
+.cohamy-crm .work-back {
+  color: #38bdf8 !important;
+}
+
+/* Mobile Drawer (Accessible off-canvas navigation) */
+.cohamy-crm .crm-mobile-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 280px;
+  background: #0f172a;
+  border-right: 1px solid var(--hb-border);
+  z-index: 120;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  overflow-y: auto;
+}
+
+.cohamy-crm .crm-mobile-drawer.is-open {
+  transform: translateX(0);
+}
+
+.cohamy-crm .crm-mobile-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.cohamy-crm .crm-mobile-drawer-header button {
+  background: transparent;
+  border: 0;
+  color: #94a3b8;
+  cursor: pointer;
+}
+
+.cohamy-crm .crm-drawer-section-title {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 16px 8px 8px;
+}
+
+.cohamy-crm .crm-mobile-drawer a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background-color 0.15s ease;
+}
+
+.cohamy-crm .crm-mobile-drawer a:hover,
+.cohamy-crm .crm-mobile-drawer a.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.cohamy-crm .crm-drawer-footer {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cohamy-crm .crm-drawer-footer button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  color: #f87171;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.cohamy-crm .crm-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 110;
+  backdrop-filter: blur(4px);
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE ADAPTATIONS
+   1920x1080, 1366x768, 1024px, 390x844, 320px
+   -------------------------------------------------------------------------- */
+@media (max-width: 1099px) {
+  .cohamy-crm .crm-module-grid {
+    grid-template-columns: repeat(4, 164px);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 780px) {
+  .cohamy-crm .crm-mobile-menu-btn {
+    display: grid;
+    place-items: center;
+  }
+  .cohamy-crm .crm-humanbank-shell .portal-user-summary {
+    display: none;
+  }
+  .cohamy-crm .portal-content {
+    width: min(calc(100% - 24px), 1240px);
+    margin: 0 auto;
+    padding-top: 24px;
+  }
+  .cohamy-crm .portal-bottom-navigation {
+    left: 0;
+    transform: none;
+    bottom: 0;
+    width: 100%;
+    border-radius: 24px 24px 0 0;
+    padding: 5px 4px max(5px, env(safe-area-inset-bottom));
+  }
+  .cohamy-crm .portal-bottom-navigation a,
+  .cohamy-crm .portal-bottom-navigation button {
+    height: 58px;
+    padding: 4px;
+  }
+  .cohamy-crm .portal-bottom-navigation small {
+    font-size: 8px;
+  }
+  .cohamy-crm .portal-bottom-navigation a svg,
+  .cohamy-crm .portal-bottom-navigation button svg {
+    width: 20px;
+    height: 20px;
+  }
+  .cohamy-crm .crm-shortcuts-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .cohamy-crm .crm-hub-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px 16px;
+  }
+  .cohamy-crm .crm-hub-title-box h1 {
+    font-size: 22px;
+  }
+  .cohamy-crm .crm-hub-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .cohamy-crm .crm-humanbank-shell .portal-system-title {
+    display: none !important;
+  }
+  .cohamy-crm .crm-humanbank-shell .portal-user-summary {
+    display: none !important;
+  }
+  .cohamy-crm .crm-humanbank-shell .portal-masthead-brand {
+    gap: 8px;
+  }
+  .cohamy-crm .crm-humanbank-shell .portal-brand-logo {
+    height: 24px;
+    width: auto;
+  }
+}
+
+@media (max-width: 540px) {
+  .cohamy-crm .crm-dashboard__content {
+    padding-bottom: 112px;
+  }
+  .cohamy-crm .crm-module-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+  .cohamy-crm .crm-module-tile {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: var(--hb-control-radius, 4px) !important;
+  }
+  .cohamy-crm .crm-tile-icon svg {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 8px;
+  }
+  .cohamy-crm .crm-tile-label {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 10.56px;
+    line-height: 1.15;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .cohamy-crm :is(
+    .button,
+    .icon-button,
+    .portal-user-menu > summary,
+    .portal-user-menu__content > a,
+    .portal-user-menu__content > button,
+    .portal-bottom-navigation__inner > a,
+    .portal-bottom-navigation__inner > button,
+    .crm-module-tile
+  ) {
+    transition-duration: 0s !important;
+    transition-property: none !important;
+    transform: none !important;
+  }
+}

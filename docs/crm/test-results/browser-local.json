@@ -5,7 +5,7 @@
   "pageCacheControl": "no-cache, must-revalidate",
   "cacheLimit": "Next dev overrides page Cache-Control to no-cache, must-revalidate (installed base-server.js). Private API no-store verified; production page header NOT RUN.",
   "reference": "Actual HumanBank shell/dashboard/login components and full current CSS cascade; mocked auth/router, no HumanBank backend or production session",
-  "testedAt": "2026-09-17T19:38:10.529Z",
+  "testedAt": "2026-09-27T10:15:02.231Z",
   "cases": [
     {
       "name": "anonymous CRM page redirects to non-localized login",
@@ -136,7 +136,7 @@
           "width": 180,
           "height": 180,
           "radius": "4px",
-          "background": "none"
+          "background": "linear-gradient(135deg, rgb(59, 130, 246), rgb(29, 78, 216))"
         },
         "grid": {
           "columns": "180px 180px 180px 180px 180px",
@@ -179,7 +179,7 @@
           "width": 165,
           "height": 165,
           "radius": "4px",
-          "background": "none"
+          "background": "linear-gradient(135deg, rgb(59, 130, 246), rgb(29, 78, 216))"
         },
         "grid": {
           "columns": "165px 165px",
@@ -222,7 +222,7 @@
           "width": 130,
           "height": 130,
           "radius": "4px",
-          "background": "none"
+          "background": "linear-gradient(135deg, rgb(59, 130, 246), rgb(29, 78, 216))"
         },
         "grid": {
           "columns": "130px 130px",

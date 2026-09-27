@@ -57,3 +57,132 @@ const dealer: CrmModule[] = [
   { id: "profile", label: "Tài khoản", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "profile.read", status: "CONNECTED" },
 ];
 export const visibleModules = (user: Principal) => (user.area === "crm" ? internal : dealer).filter(module => can(user, module.permission));
+
+export interface CrmHub {
+  id: string;
+  label: string;
+  description: string;
+  icon: ModuleIcon;
+  color: string;
+  gradient: string;
+  moduleIds: string[];
+}
+
+export const crmHubs: readonly CrmHub[] = [
+  {
+    id: "orders",
+    label: "ĐƠN HÀNG",
+    description: "Quản lý yêu cầu mua hàng, đơn bán tiếp nhận, đặt hàng và báo giá",
+    icon: "order",
+    color: "#2563eb",
+    gradient: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
+    moduleIds: ["requests", "sales", "orders", "quotations", "pricing"],
+  },
+  {
+    id: "customers",
+    label: "KHÁCH HÀNG",
+    description: "Thông tin khách hàng, lịch sử chăm sóc và nhật ký thăm điểm bán",
+    icon: "customer",
+    color: "#10b981",
+    gradient: "linear-gradient(135deg, #10b981, #047857)",
+    moduleIds: ["customers", "care", "visits"],
+  },
+  {
+    id: "dealers",
+    label: "ĐỐI TÁC & ĐẠI LÝ",
+    description: "Mạng lưới đại lý phân phối, hồ sơ đăng ký và xét duyệt đối tác",
+    icon: "dealer",
+    color: "#dc2626",
+    gradient: "linear-gradient(135deg, #ef4444, #b91c1c)",
+    moduleIds: ["dealers", "applications", "invitations"],
+  },
+  {
+    id: "goods",
+    label: "SẢN PHẨM & KHO",
+    description: "Danh mục sản phẩm, theo dõi tồn kho và luân chuyển hàng mẫu",
+    icon: "warehouse",
+    color: "#6366f1",
+    gradient: "linear-gradient(135deg, #6366f1, #4338ca)",
+    moduleIds: ["goods", "inventory", "samples"],
+  },
+  {
+    id: "procurement",
+    label: "MUA HÀNG & NCC",
+    description: "Kế hoạch nhập hàng, quản lý nhà cung cấp và chứng từ nhập kho",
+    icon: "goods",
+    color: "#0d9488",
+    gradient: "linear-gradient(135deg, #0d9488, #115e59)",
+    moduleIds: ["procurement"],
+  },
+  {
+    id: "consignment",
+    label: "KÝ GỬI & ĐỐI SOÁT",
+    description: "Theo dõi hàng ký gửi, báo bán từ điểm bán và đối soát định kỳ",
+    icon: "consignment",
+    color: "#8b5cf6",
+    gradient: "linear-gradient(135deg, #8b5cf6, #6d28d9)",
+    moduleIds: ["consignment", "settlements"],
+  },
+  {
+    id: "debts",
+    label: "CÔNG NỢ & THU CHI",
+    description: "Theo dõi công nợ đối tác, dòng tiền thu chi và thanh toán",
+    icon: "debt",
+    color: "#06b6d4",
+    gradient: "linear-gradient(135deg, #06b6d4, #0e7490)",
+    moduleIds: ["debts", "cash", "payments"],
+  },
+  {
+    id: "tasks",
+    label: "CÔNG VIỆC & TỰ ĐỘNG",
+    description: "Việc cần làm, quy tắc tự động hóa và thông báo hệ thống",
+    icon: "report",
+    color: "#f97316",
+    gradient: "linear-gradient(135deg, #f97316, #c2410c)",
+    moduleIds: ["tasks", "automation", "notifications"],
+  },
+  {
+    id: "reports",
+    label: "BÁO CÁO & DỮ LIỆU",
+    description: "Báo cáo vận hành kinh doanh, xuất nhập dữ liệu và tra cứu nhanh",
+    icon: "report",
+    color: "#f59e0b",
+    gradient: "linear-gradient(135deg, #f59e0b, #b45309)",
+    moduleIds: ["reports", "data", "search"],
+  },
+  {
+    id: "library",
+    label: "TÀI LIỆU & HỖ TRỢ",
+    description: "Thư viện tài liệu bán hàng, quy chuẩn và phiếu hỗ trợ kỹ thuật",
+    icon: "report",
+    color: "#ef4444",
+    gradient: "linear-gradient(135deg, #f43f5e, #be123c)",
+    moduleIds: ["library", "support"],
+  },
+  {
+    id: "accounts",
+    label: "QUẢN TRỊ HỆ THỐNG",
+    description: "Phân quyền người dùng, trường tùy chỉnh, nhật ký kiểm toán và bảo mật",
+    icon: "account",
+    color: "#64748b",
+    gradient: "linear-gradient(135deg, #64748b, #334155)",
+    moduleIds: ["accounts", "fields", "audit", "workspace", "profile"],
+  },
+];
+
+export interface VisibleHub {
+  hub: CrmHub;
+  modules: CrmModule[];
+}
+
+export function getVisibleHubs(user: Principal): VisibleHub[] {
+  const allowed = visibleModules(user);
+  const result: VisibleHub[] = [];
+  for (const hub of crmHubs) {
+    const hubModules = allowed.filter(m => hub.moduleIds.includes(m.id));
+    if (hubModules.length > 0) {
+      result.push({ hub, modules: hubModules });
+    }
+  }
+  return result;
+}

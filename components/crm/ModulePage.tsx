@@ -27,10 +27,12 @@ import { visibleModules } from "@/lib/crm/modules";
 import { getOrganization, listAccounts, listCatalog, listOrganizationOptions, listOrganizations } from "@/lib/crm/repository";
 import { roleLabels, type Area, type Principal } from "@/lib/crm/types";
 import { AccountToggle, RecordForm } from "./RecordForm";
-import { EntityWork, OrdersPage, TasksPage, PartnerDuplicates, PartnerMergePanel, CatalogDetail } from './WorkPages';
+import { EntityWork, OrdersPage, TasksPage, PartnerDuplicates, PartnerMergePanel, CatalogDetail, ReportsPage } from './WorkPages';
 import { AccountTools, PasswordForm } from './WorkForms';
 import {MfaControls} from './SecurityForms';
 import {mfaStatus} from '@/lib/crm/account-security';
+
+import { CrmHubPage } from "./CrmHubPage";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
 function Header({title,description}:{title:string;description:string}) {return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
@@ -38,6 +40,8 @@ export function Profile({user}:{user:Principal}) {return <><Header title="Hồ s
 export async function CrmModulePage({area,segments,query}:{area:Area;segments:string[];query:Record<string,string|string[]|undefined>}) {
   const user=await pageUser(area);const [slug,id]=segments;
   if(segments.length>2)notFound();
+  if(slug==="hub"&&id)return <CrmHubPage hubId={id} user={user}/>;
+  if(slug==="hub"&&!id)redirect(`/${area}`);
   if(slug==="profile"&&!id){const security=await mfaStatus(user);return <><Profile user={user}/><PermissionPanel user={user}/><SessionsPanel user={user}/><MfaControls enabled={security.enabled} recoveryCodesRemaining={security.recoveryCodesRemaining}/><section className="work-section"><h2>Bảo mật tài khoản</h2><PasswordForm/></section></>;}
   if(slug==='partners'&&id){const partner=await getOrganization(user,id);redirect(`/${area}/${partner.kind==='DEALER'?'dealers':'customers'}/${id}`);}
   const selectedModule=visibleModules(user).find(item=>item.id===slug);
@@ -74,7 +78,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(slug==='orders'&&area==='crm')return <OrdersPage user={user} id={id} query={workQuery}/>;
   if(slug==='tasks'&&area==='crm'&&!id)return <TasksPage user={user} query={workQuery}/>;
   if(slug==='goods'&&id)return <CatalogDetail user={user} id={id}/>;
-  if(slug==='reports'&&area==='crm'&&!id)return <OperationalReportsPage user={user} query={workQuery}/>;
+  if(slug==='reports'&&area==='crm'&&!id)return <><ReportsPage user={user}/><OperationalReportsPage user={user} query={workQuery}/></>;
   if(area==="crm"&&["customers","dealers"].includes(slug)) {
     const kind=slug==="customers"?"CUSTOMER":"DEALER";
     if(!id&&query.q===undefined&&query.tags===undefined&&query.filter!=='none'){
