@@ -16,6 +16,30 @@ try {
  await test('anonymous CRM page redirects to non-localized login',async()=>{await anon.goto(base+'/crm');assert.equal(new URL(anon.url()).pathname,'/crm/login');await settled(anon,'#login-email');});
  await test('anonymous APIs reject private reads',async()=>{assert.equal((await anonymous.request.get(base+'/api/crm/partners')).status(),401);assert.equal((await anonymous.request.get(base+'/api/crm/accounts')).status(),401);});
  await test('cross-origin and missing-origin writes rejected',async()=>{const body={email:'admin@crm-qa.invalid',password};assert.equal((await anonymous.request.post(base+'/api/crm/auth/login',{data:body,headers:{origin:'https://attacker.invalid'}})).status(),403);assert.equal((await anonymous.request.post(base+'/api/crm/auth/login',{data:body})).status(),403);});
+ for(const vp of [{w:1920,h:1080,name:'1920'},{w:1366,h:768,name:'1366'},{w:390,h:844,name:'390'},{w:320,h:844,name:'320'}]) {
+  await test('login canvas stability and card viewport fit '+vp.name,async()=>{
+   await anon.setViewportSize({width:vp.w,height:vp.h});
+   await anon.goto(base+'/crm/login');
+   await settled(anon,'#login-email');
+   await anon.waitForTimeout(300);
+   const m=await anon.evaluate(()=>{
+    const docW=document.documentElement.scrollWidth,docH=document.documentElement.scrollHeight;
+    const canvas=document.querySelector('.particle-network canvas')||document.querySelector('canvas');
+    const cStyle=canvas?getComputedStyle(canvas):null;
+    const card=document.querySelector('.crm-login-card')||document.querySelector('.crm-login-container');
+    const cardRect=card?card.getBoundingClientRect():null;
+    return {docW,docH,canvasPos:cStyle?.position,cardWidth:cardRect?.width,cardTop:cardRect?.top,cardBottom:cardRect?.bottom};
+   });
+   assert.ok(m.docW<=vp.w+1,`Login horizontal scroll overflow at ${vp.name}: ${m.docW} > ${vp.w}`);
+   assert.ok(m.docH<=Math.max(vp.h*2,1200),`Login height runaway at ${vp.name}: ${m.docH}`);
+   assert.equal(m.canvasPos,'absolute',`Canvas must have computed position absolute at ${vp.name}`);
+   assert.ok(m.cardTop>=0&&m.cardBottom<=Math.max(vp.h,m.docH),`Login card must be in viewport at ${vp.name}`);
+   if(vp.w>=1000)assert.ok(m.cardWidth>=380&&m.cardWidth<=440,`Desktop login card width must be 380-440px at ${vp.name}, got ${m.cardWidth}`);
+   assert.ok(await anon.locator('#login-email').isVisible(),'Email input visible');
+   assert.ok(await anon.locator('#login-password').isVisible(),'Password input visible');
+   assert.ok(await anon.getByRole('button',{name:'Đăng nhập',exact:true}).isVisible(),'Submit button visible');
+  });
+ }
  const admin=await browser.newContext();const page=await admin.newPage();page.on('pageerror',error=>errors.push(String(error)));
  await test('real browser form login and persisted session',async()=>{await page.goto(base+'/crm/login');await page.getByLabel('Email',{exact:true}).fill('admin@crm-qa.invalid');await page.getByLabel('Mật khẩu',{exact:true}).fill(password);await page.getByRole('button',{name:'Đăng nhập',exact:true}).click();await page.waitForURL(base+'/crm');await settled(page,'.crm-module-tile');await page.reload();assert.equal((await admin.request.get(base+'/api/crm/me')).status(),200);const cookies=await admin.cookies();const cookie=cookies.find(cookie=>cookie.name==='cohamy_crm_session');assert.ok(cookie.httpOnly);assert.equal(cookie.sameSite,'Strict');});
  const ref=await browser.newPage();
@@ -27,8 +51,15 @@ try {
    const target=await dimensions(page),source=await dimensions(ref);metrics.push({viewport,source,target});
    assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Dashboard overflows');
    assert.equal(target.tile.width,source.tile.width);assert.equal(target.tile.height,source.tile.height);assert.equal(target.tile.radius,source.tile.radius);assert.equal(target.headingSize,source.headingSize);assert.equal(target.grid.gap,source.grid.gap);assert.equal(target.dock.width,source.dock.width);
+   const logoHeight=await page.locator('.portal-brand-logo').first().evaluate(el=>el.getBoundingClientRect().height);
+   if(viewport.width>=1000){assert.ok(logoHeight>=28&&logoHeight<=32,`Desktop logo height should be ~30px, got ${logoHeight}`);}
+   else{assert.ok(logoHeight>=22&&logoHeight<=26,`Mobile logo height should be ~24px, got ${logoHeight}`);}
    await page.goto(base+'/crm/goods');await settled(page,'.data-table');await screenshot(page,'cohamy-catalog-'+viewport.name);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Catalog overflows');
-   const home=page.getByRole('navigation',{name:'Truy cập nhanh',exact:true}).getByRole('link',{name:'Home',exact:true});assert.ok(await home.evaluate(anchor=>{const rect=anchor.getBoundingClientRect();return anchor.contains(document.elementFromPoint(rect.left+rect.width/2,rect.top+rect.height/2));}),'Home pointer target is obstructed');await home.click();await page.waitForURL(base+'/crm');
+   const home=page.getByRole('navigation',{name:'Truy cập nhanh',exact:true}).getByRole('link',{name:'Home',exact:true});
+   const hc=await home.evaluate(anchor=>{const rect=anchor.getBoundingClientRect();const el=document.elementFromPoint(rect.left+rect.width/2,rect.top+rect.height/2);return {ok:anchor.contains(el),tag:el?.tagName,className:el?.className,outer:el?.outerHTML?.slice(0,120),x:rect.left+rect.width/2,y:rect.top+rect.height/2,rect};});
+   if(!hc.ok)console.error('HOME CHECK FAILED ON '+viewport.name+':',hc);
+   assert.ok(hc.ok,'Home pointer target is obstructed');
+   await home.click();await page.waitForURL(base+'/crm');
    await anon.setViewportSize(viewport);await anon.goto(base+'/crm/login');await ref.goto(reference+'/login');await settled(anon,'#login-email');await settled(ref,'#login-email');await screenshot(anon,'cohamy-login-'+viewport.name);await screenshot(ref,'humanbank-reference-login-'+viewport.name);assert.ok(await anon.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Login overflows');
   });
  }
@@ -40,6 +71,7 @@ try {
  const publicPage=await anonymous.newPage();
  const publicBefore={};
  await test('public website, product URLs and five locales remain available',async()=>{for(const locale of ['vi','en','zh','ko','ja']){const response=await publicPage.goto(base+'/'+locale+'/products');assert.equal(response.status(),200);assert.equal(await publicPage.locator('.portal-shell').count(),0);}for(const route of ['/vi/cart','/vi/contact','/vi/blog','/admin/login']){const response=await publicPage.goto(base+route);assert.ok(response.status()<500,route);}await publicPage.goto(base+'/vi/products');publicBefore.font=await publicPage.locator('body').evaluate(el=>getComputedStyle(el).fontFamily);await publicPage.goto(base+'/crm/login');await publicPage.goto(base+'/vi/products');assert.equal(await publicPage.locator('body').evaluate(el=>getComputedStyle(el).fontFamily),publicBefore.font);});
+ let savedOrderCode='';
  await test('checkout preserves cart on 503, saves once on double-submit and remains unpaid',async()=>{
   const catalog=await (await admin.request.get(base+'/api/crm/catalog')).json();const product=catalog.items.find(item=>item.website_id==='cohamy-almond-chocolate');assert.ok(product);
   await publicPage.goto(base+'/vi/san-pham/cohamy-socola-hanh-nhan');await publicPage.evaluate(()=>localStorage.removeItem('cohamy-cart'));await publicPage.reload();
@@ -48,15 +80,43 @@ try {
   // Deliberately tamper only the displayed browser price; server must reprice.
   await publicPage.evaluate(()=>{const cart=JSON.parse(localStorage.getItem('cohamy-cart'));cart.state.items[0].price=1;localStorage.setItem('cohamy-cart',JSON.stringify(cart));});await publicPage.reload();
   await publicPage.getByRole('link',{name:'Gửi yêu cầu đặt hàng',exact:true}).click();await publicPage.waitForURL(base+'/vi/thanh-toan');
-  await publicPage.goto(base+'/vi/checkout');for(const [name,value] of Object.entries({fullName:'LOCAL QA Buyer',email:'checkout@crm-qa.invalid',phone:'0900000000',address:'LOCAL QA Test Address',city:'LOCAL QA City'}))await publicPage.locator('[name="'+name+'"]').fill(value);
+  await publicPage.goto(base+'/vi/checkout');for(const [name,value] of Object.entries({fullName:'LOCAL QA Buyer',email:'checkout@crm-qa.invalid',phone:'0900000000',address:'Địa chỉ kiểm thử LOCAL',city:'LOCAL QA City'}))await publicPage.locator('[name="'+name+'"]').fill(value);
   await publicPage.route('**/api/orders',route=>route.fulfill({status:503,contentType:'application/json',body:'{"error":"QA_SIMULATED_OUTAGE"}'}));
   await publicPage.locator('button[type="submit"]').click();await publicPage.locator('form').getByRole('alert').waitFor();assert.equal(await publicPage.evaluate(()=>JSON.parse(localStorage.getItem('cohamy-cart')).state.items.length),1);
   await publicPage.unroute('**/api/orders');const savedResponse=publicPage.waitForResponse(response=>response.url()===base+'/api/orders'&&response.status()===201);
-  await publicPage.locator('form').evaluate(form=>{form.requestSubmit();form.requestSubmit();});const saved=await (await savedResponse).json();assert.equal(saved.status,'PENDING_REVIEW');assert.equal(saved.paid,false);assert.equal(saved.subtotal,(BigInt(product.retail_price)*2n).toString());await publicPage.getByText('Mã yêu cầu: '+saved.code).waitFor();
+  await publicPage.locator('form').evaluate(form=>{form.requestSubmit();form.requestSubmit();});const saved=await (await savedResponse).json();savedOrderCode=saved.code;assert.equal(saved.status,'PENDING_REVIEW');assert.equal(saved.paid,false);assert.equal(saved.subtotal,(BigInt(product.retail_price)*2n).toString());await publicPage.getByText('Mã yêu cầu: '+saved.code).waitFor();
   assert.equal(await publicPage.evaluate(()=>JSON.parse(localStorage.getItem('cohamy-cart')).state.items.length),0);await page.goto(base+'/crm/orders');await page.getByText(saved.code,{exact:true}).waitFor();await page.reload();await page.getByText(saved.code,{exact:true}).waitFor();
   await page.setViewportSize({width:1366,height:768});await screenshot(page,'cohamy-orders-intake-desktop');
   await publicPage.setViewportSize({width:1366,height:768});
   await screenshot(publicPage,'cohamy-checkout-receipt-desktop');
+ });
+ await test('order detail includes recurrence panel and document upload disclosure for authorized users',async()=>{
+  await page.goto(base+'/crm/orders');
+  await page.getByText(savedOrderCode,{exact:true}).click();
+  await page.getByRole('heading',{name:savedOrderCode,exact:true}).waitFor();
+  const recurrence=page.getByRole('heading',{name:'Lịch chăm sóc định kỳ',exact:true});
+  await recurrence.waitFor();
+  assert.ok(await recurrence.isVisible(),'Order recurrence panel should be visible');
+  const docUpload=page.locator('summary').filter({hasText:'Thêm tệp hoặc phiên bản tài liệu'});
+  await docUpload.waitFor();
+  assert.ok(await docUpload.isVisible(),'Document upload disclosure should be visible on order');
+ });
+ await test('document upload disclosure appears on partner, order, library and visit for authorized CRM staff',async()=>{
+  await page.goto(base+'/crm/dealers');
+  await page.locator('.data-table tbody a').first().click();
+  await page.waitForURL(/\/crm\/dealers\//);
+  const partnerDoc=page.locator('summary').filter({hasText:'Thêm tệp hoặc phiên bản tài liệu'});
+  await partnerDoc.waitFor();
+  assert.ok(await partnerDoc.isVisible(),'Partner document upload disclosure');
+  await page.goto(base+'/crm/library');
+  await page.getByRole('heading',{name:'Thư viện đối tác',exact:true}).waitFor();
+  assert.ok(await page.locator('summary').filter({hasText:'Thêm'}).count()>0||await page.getByText('Tải tài liệu',{exact:false}).count()>0||await page.getByRole('heading',{name:'Tạo tài liệu nháp'}).count()>0,'Library upload disclosure visible');
+  await page.goto(base+'/crm/visits');
+  await page.getByRole('heading',{name:'Lần thăm điểm bán',exact:true}).waitFor();
+ });
+ await test('dealer portal does not expose unauthorized document uploads on orders',async()=>{
+  await dealerPage.goto(base+'/portal/orders');
+  assert.equal(await dealerPage.locator('summary').filter({hasText:'Thêm tệp hoặc phiên bản tài liệu'}).count(),0);
  });
  await test('private API no-store, CRM noindex and robots exclusion',async()=>{const response=await admin.request.get(base+'/crm');assert.ok(response.headers()['x-robots-tag'].includes('noindex'));pageCacheControl=response.headers()['cache-control'];assert.ok(pageCacheControl.includes('no-cache'));const api=await admin.request.get(base+'/api/crm/me');assert.ok(api.headers()['cache-control'].includes('no-store'));const robots=await (await admin.request.get(base+'/robots.txt')).text();assert.ok(robots.includes('Disallow: /crm')&&robots.includes('Disallow: /portal'));});
  await test('logout revokes database session',async()=>{await page.goto(base+'/crm');await page.getByRole('button',{name:'Thoát',exact:true}).click();await page.waitForURL(base+'/crm/login');assert.equal((await admin.request.get(base+'/api/crm/me')).status(),401);});

@@ -223,7 +223,7 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
               height={30}
               alt="Cohamy"
               className="portal-brand-logo"
-              style={{ height: 'auto' }}
+              style={{ width: 'auto' }}
               priority
             />
             <span className="portal-system-title">CRM Cohamy</span>
