@@ -1,6 +1,6 @@
 {
-  "testedAt": "2026-09-27T10:22:26.174Z",
-  "environment": "LOCAL actual Edge/Next, isolated fictitious PGlite; every authorized module root at desktop/mobile",
+  "testedAt": "2026-09-27T17:38:16.283Z",
+  "environment": "LOCAL actual Edge/Next, self-contained isolated fictitious PGlite; every authorized module root at desktop/mobile",
   "status": "PASS",
   "cases": [
     {

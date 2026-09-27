@@ -19,9 +19,10 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useRef, useEffect, type ReactNode } from 'react';
 import { roleLabels, type Principal } from '@/lib/crm/types';
-import { visibleModules } from '@/lib/crm/modules';
+import { visibleModules, crmHubs } from '@/lib/crm/modules';
 import { can } from '@/lib/crm/permissions';
 import { CrmModuleIcon } from './ModuleIcon';
+import { ParticleNetwork } from './ParticleNetwork';
 
 const DESIGN_CONTRACT =
   'THESIS: HumanBank-inspired dark CRM shell with topbar, launcher tiles, and floating bottom dock. OWN-WORLD: Cohamy navy (#070B14-#0B111E), orange actions (#f97316), Be Vietnam Pro, Phosphor icons. FIRST VIEWPORT: Centered hero, 11 colored module hub tiles in 5 columns, dock in first viewport. FINISH: verified via browser visual QA and automated test suite.';
@@ -41,11 +42,73 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const userMenuRef = useRef<HTMLDetailsElement>(null);
+  const drawerRef = useRef<HTMLElement>(null);
+  const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
+
+  // Focus management: move focus into drawer on open; restore focus to toggle button on close
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      wasOpenRef.current = true;
+      const timer = setTimeout(() => {
+        closeBtnRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    } else if (wasOpenRef.current) {
+      wasOpenRef.current = false;
+      menuBtnRef.current?.focus();
+    }
+  }, [mobileMenuOpen]);
+
+  // Keyboard trap: Escape closes drawer, Tab/Shift+Tab cycles only within drawer
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setMobileMenuOpen(false);
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        if (!drawerRef.current) return;
+        const focusable = Array.from(
+          drawerRef.current.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), a[href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0);
+
+        if (focusable.length === 0) return;
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === first || !drawerRef.current.contains(document.activeElement)) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last || !drawerRef.current.contains(document.activeElement)) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
 
   const modules = visibleModules(user);
   const active = modules.find(
     (m) => pathname === root + '/' + m.id || pathname.startsWith(root + '/' + m.id + '/')
   );
+  const hubMatch = pathname.match(/\/hub\/([^/]+)/);
+  const currentHub = hubMatch ? crmHubs.find((h) => h.id === hubMatch[1]) : null;
 
   async function logout() {
     if (busy) return;
@@ -93,10 +156,10 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
           <Link className="work-brand" href={root}>
             <Image
               src="/images/logo/cohamy-brand-logo.png"
-              width={153}
-              height={32}
+              width={925}
+              height={267}
               alt="Cohamy"
-              style={{ height: 'auto' }}
+              style={{ width: 'auto' }}
               preload
             />
             <span>Cổng đại lý</span>
@@ -199,6 +262,9 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
       className={`portal-shell crm-humanbank-shell ${isDashboard ? 'portal-shell--dashboard' : ''}`}
       data-design-contract={DESIGN_CONTRACT}
     >
+      <div className="crm-shell-background" aria-hidden="true">
+        <ParticleNetwork tone="white" />
+      </div>
       <a className="skip-link" href="#portal-content">
         Đến nội dung chính
       </a>
@@ -207,6 +273,7 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
       <header className="portal-topbar">
         <div className="portal-masthead-brand">
           <button
+            ref={menuBtnRef}
             className="crm-mobile-menu-btn work-menu-toggle"
             type="button"
             aria-expanded={mobileMenuOpen}
@@ -219,8 +286,8 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
           <Link className="portal-brand-link" href={root} aria-label="CRM Cohamy">
             <Image
               src="/images/logo/cohamy-brand-logo.png"
-              width={140}
-              height={30}
+              width={925}
+              height={267}
               alt="Cohamy"
               className="portal-brand-logo"
               style={{ width: 'auto' }}
@@ -278,12 +345,16 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
       {/* Mobile Navigation Drawer for accessibility and responsive testing */}
       <aside
         id="work-navigation"
+        ref={drawerRef}
         className={`work-sidebar crm-mobile-drawer ${mobileMenuOpen ? 'is-open' : ''}`}
         aria-label="Điều hướng di động"
+        aria-hidden={!mobileMenuOpen}
+        inert={!mobileMenuOpen ? true : undefined}
       >
         <div className="crm-mobile-drawer-header">
           <span>Danh mục CRM</span>
           <button
+            ref={closeBtnRef}
             type="button"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="Đóng menu"
@@ -348,9 +419,8 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
               <span>/</span>
               <span>
                 {active?.label ??
-                  (pathname.includes('/hub/')
-                    ? 'Nhóm phân hệ'
-                    : pathname.endsWith('/profile')
+                  currentHub?.label ??
+                  (pathname.endsWith('/profile')
                     ? 'Hồ sơ và bảo mật'
                     : 'Bàn làm việc')}
               </span>

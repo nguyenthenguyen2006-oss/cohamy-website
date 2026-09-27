@@ -15,6 +15,7 @@ const eslintConfig = defineConfig([
     ".local/**",
     ".headless-reports/**",
     "wordpress/rank-math-analysis/assets/**",
+    ".agents/**",
   ]),
 ]);
 

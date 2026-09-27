@@ -20,8 +20,8 @@ export function BrandLogo({ className = "", height = 40 }: BrandLogoProps) {
     <Image
       src={LOGO_PATH}
       alt={logoAsset?.alt[locale] ?? "Cohamy"}
-      width={Math.max(1, Math.round(height * 4))}
-      height={height}
+      width={925}
+      height={267}
       className={`block w-auto max-w-none object-contain ${className}`}
       style={{ height, width: "auto" }}
     />

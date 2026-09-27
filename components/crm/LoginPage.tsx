@@ -15,9 +15,9 @@ export function CrmLoginPage() {
                 alt="Cohamy"
                 className="crm-login-brand__logo"
                 src="/images/logo/cohamy-brand-logo.png"
-                width={180}
-                height={38}
-                style={{ width: 'auto' }}
+                width={925}
+                height={267}
+                style={{ height: '38px', width: 'auto' }}
                 priority
               />
             </Link>

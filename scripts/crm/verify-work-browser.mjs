@@ -1,9 +1,67 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
-import {chromium} from '@playwright/test';
-const base='http://localhost:4310',browser=await chromium.launch({channel:'msedge',headless:true}),cases=[],screens=[],consoleErrors=[];
-const test=async(name,run)=>{await run();cases.push({name,status:'PASS'});console.log('PASS '+name);};
-await fs.mkdir('.impeccable/review/work',{recursive:true});
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { spawn, spawnSync } from 'node:child_process';
+import { chromium } from '@playwright/test';
+
+const base = 'http://localhost:4310';
+let startedServer = null;
+let qaDir = null;
+
+let is4310Up = false;
+try {
+  const r = await fetch(base + '/api/health');
+  is4310Up = r.ok;
+} catch {}
+
+if (!is4310Up) {
+  qaDir = '.local/crm-qa-work-browser-' + randomUUID();
+  await fs.mkdir(qaDir, { recursive: true });
+  spawnSync(
+    process.execPath,
+    ['--require', './scripts/register-server-only.cjs', '--import', 'tsx', 'scripts/crm/seed-work-ui.ts'],
+    {
+      cwd: process.cwd(),
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        CRM_ENVIRONMENT: 'LOCAL',
+        CRM_DATABASE_MODE: 'pglite',
+        CRM_LOCAL_DATA_DIR: qaDir
+      }
+    }
+  );
+  startedServer = spawn(
+    process.execPath,
+    [path.resolve('node_modules/next/dist/bin/next'), 'dev', '--hostname', 'localhost', '--port', '4310'],
+    {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        CRM_QA_BUILD: 'true',
+        CRM_DATABASE_MODE: 'pglite',
+        CRM_ENVIRONMENT: 'LOCAL',
+        CRM_LOCAL_DATA_DIR: qaDir,
+        CRM_PUBLIC_ORIGIN: base,
+        CRM_WEBSITE_ORDER_INTAKE: 'true',
+        BLOG_SOURCE: 'legacy'
+      }
+    }
+  );
+  const deadline = Date.now() + 60000;
+  while (Date.now() < deadline) {
+    try {
+      const res = await fetch(base + '/api/health');
+      if (res.ok) break;
+    } catch {}
+    await new Promise(r => setTimeout(r, 500));
+  }
+}
+
+const browser = await chromium.launch({ channel: 'msedge', headless: true }), cases = [], screens = [], consoleErrors = [];
+const test = async (name, run) => { await run(); cases.push({ name, status: 'PASS' }); console.log('PASS ' + name); };
+await fs.mkdir('.impeccable/review/work', { recursive: true });
 try{
  const context=await browser.newContext({viewport:{width:1366,height:900}}),page=await context.newPage();page.on('pageerror',e=>consoleErrors.push(e.message));page.on('console',m=>{if(m.type()==='error')consoleErrors.push(m.text());});
  const capture=async(name)=>{await page.evaluate(async()=>{await document.fonts.ready;window.scrollTo(0,0);});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'page overflow '+name);const path='.impeccable/review/work/'+name+'.png';await page.screenshot({path,fullPage:true,caret:'initial'});screens.push(path);};
@@ -18,4 +76,13 @@ try{
  await test('sales sees assigned request; dealer cannot read its API or work tasks',async()=>{const sales=await browser.newContext();await sales.request.post(base+'/api/crm/auth/login',{headers:{origin:base},data:{email:'sales@crm-qa.invalid',password:'Local-QA-Only-2026!'}});assert.equal((await sales.request.get(base+'/api/crm/work/order?id='+order.id)).status(),200);const dealer=await browser.newContext();await dealer.request.post(base+'/api/crm/auth/login',{headers:{origin:base},data:{email:'a@crm-qa.invalid',password:'Local-QA-Only-2026!'}});assert.equal((await dealer.request.get(base+'/api/crm/work/order?id='+order.id)).status(),404);assert.equal((await dealer.request.get(base+'/api/crm/work/tasks')).status(),403);const dp=await dealer.newPage();await dp.goto(base+'/portal');await dp.getByRole('heading',{name:'Không gian đại lý'}).waitFor();await sales.close();await dealer.close();});
  await test('CRM stylesheet stays isolated from public products',async()=>{await page.goto(base+'/vi/san-pham');assert.equal(await page.locator('.work-shell').count(),0);await page.getByRole('link',{name:'Cohamy Socola Hạnh Nhân',exact:false}).first().waitFor();});
  assert.deepEqual(consoleErrors,[]);await context.close();
-}finally{await fs.mkdir('docs/crm/test-results',{recursive:true});await fs.writeFile('docs/crm/test-results/work-browser-local.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'LOCAL real persisted QA database, fictitious users, static website source',cases,screens,consoleErrors},null,2));await browser.close();}
+}finally{
+  if (startedServer && startedServer.exitCode === null) {
+    if (process.platform === 'win32') spawnSync('taskkill', ['/pid', String(startedServer.pid), '/f', '/t']);
+    else startedServer.kill('SIGTERM');
+  }
+  if (qaDir) await fs.rm(qaDir, { recursive: true, force: true }).catch(() => {});
+  await fs.mkdir('docs/crm/test-results',{recursive:true});
+  await fs.writeFile('docs/crm/test-results/work-browser-local.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'LOCAL real persisted QA database, fictitious users, static website source',cases,screens,consoleErrors},null,2));
+  await browser.close();
+}

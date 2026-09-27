@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-27T10:21:46.587Z",
+  "testedAt": "2026-09-27T17:21:28.802Z",
   "environment": "LOCAL real persisted QA database, fictitious users, static website source",
   "cases": [
     {

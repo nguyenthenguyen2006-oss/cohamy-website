@@ -5,7 +5,7 @@
   "pageCacheControl": "no-cache, must-revalidate",
   "cacheLimit": "Next dev overrides page Cache-Control to no-cache, must-revalidate (installed base-server.js). Private API no-store verified; production page header NOT RUN.",
   "reference": "Actual HumanBank shell/dashboard/login components and full current CSS cascade; mocked auth/router, no HumanBank backend or production session",
-  "testedAt": "2026-09-27T10:15:02.231Z",
+  "testedAt": "2026-09-27T18:46:33.503Z",
   "cases": [
     {
       "name": "anonymous CRM page redirects to non-localized login",
@@ -20,23 +20,47 @@
       "status": "PASS"
     },
     {
+      "name": "login canvas stability and card viewport fit 1920",
+      "status": "PASS"
+    },
+    {
+      "name": "login canvas stability and card viewport fit 1366",
+      "status": "PASS"
+    },
+    {
+      "name": "login canvas stability and card viewport fit 390",
+      "status": "PASS"
+    },
+    {
+      "name": "login canvas stability and card viewport fit 320",
+      "status": "PASS"
+    },
+    {
       "name": "real browser form login and persisted session",
       "status": "PASS"
     },
     {
-      "name": "visual capture and no page overflow desktop",
+      "name": "visual capture, canvas geometry and no page overflow 1920",
       "status": "PASS"
     },
     {
-      "name": "visual capture and no page overflow mobile",
+      "name": "visual capture, canvas geometry and no page overflow desktop",
       "status": "PASS"
     },
     {
-      "name": "visual capture and no page overflow 320",
+      "name": "visual capture, canvas geometry and no page overflow mobile",
+      "status": "PASS"
+    },
+    {
+      "name": "visual capture, canvas geometry and no page overflow 320",
       "status": "PASS"
     },
     {
       "name": "keyboard focus, menu and reduced motion",
+      "status": "PASS"
+    },
+    {
+      "name": "mobile drawer accessibility: focus management, focus trap, escape, focus return, and closed inertness",
       "status": "PASS"
     },
     {
@@ -60,6 +84,18 @@
       "status": "PASS"
     },
     {
+      "name": "order detail includes recurrence panel and document upload disclosure for authorized users",
+      "status": "PASS"
+    },
+    {
+      "name": "document upload disclosure appears and opens on partner, order, library and visit for authorized CRM staff",
+      "status": "PASS"
+    },
+    {
+      "name": "dealer portal does not expose unauthorized document uploads on orders",
+      "status": "PASS"
+    },
+    {
       "name": "private API no-store, CRM noindex and robots exclusion",
       "status": "PASS"
     },
@@ -69,10 +105,68 @@
     }
   ],
   "captures": [
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-1920-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-1920.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-login-1920-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-desktop.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-desktop-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-desktop.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-desktop-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-desktop.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-desktop-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-desktop.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-desktop-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-desktop.png",
@@ -83,6 +177,32 @@
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-mobile-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-mobile.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-mobile.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-mobile-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-mobile-drawer-open.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-mobile-drawer-open-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-mobile.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-mobile-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-mobile.png",
@@ -93,6 +213,30 @@
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-dashboard-320-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-320.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\humanbank-reference-dashboard-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-orders-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-customers-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-dealers-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-goods-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-procurement-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-consignment-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-debts-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-tasks-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-reports-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-library-320-full.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-320.png",
+    "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-hub-accounts-320-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-320.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-catalog-320-full.png",
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-login-320.png",
@@ -107,6 +251,49 @@
     "C:\\Users\\ACER\\OneDrive\\Desktop\\cohamy-website-main\\docs\\crm\\test-results\\screenshots\\cohamy-checkout-receipt-desktop-full.png"
   ],
   "metrics": [
+    {
+      "viewport": {
+        "width": 1920,
+        "height": 1080,
+        "name": "1920"
+      },
+      "source": {
+        "tile": {
+          "width": 180,
+          "height": 180,
+          "radius": "4px",
+          "background": "none"
+        },
+        "grid": {
+          "columns": "180px 180px 180px 180px 180px",
+          "gap": "25px"
+        },
+        "headingSize": "44.8px",
+        "dock": {
+          "width": 600,
+          "left": 660,
+          "bottom": 15
+        }
+      },
+      "target": {
+        "tile": {
+          "width": 180,
+          "height": 180,
+          "radius": "4px",
+          "background": "linear-gradient(135deg, rgb(59, 130, 246), rgb(29, 78, 216))"
+        },
+        "grid": {
+          "columns": "180px 180px 180px 180px 180px",
+          "gap": "25px"
+        },
+        "headingSize": "44.8px",
+        "dock": {
+          "width": 600,
+          "left": 660,
+          "bottom": 15
+        }
+      }
+    },
     {
       "viewport": {
         "width": 1366,

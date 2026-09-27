@@ -7,7 +7,6 @@ import { reviewQueue } from '@/lib/crm/onboarding';
 import { roleDashboard } from '@/lib/crm/reports';
 import { roleLabels } from '@/lib/crm/types';
 import { CrmModuleIcon } from './ModuleIcon';
-import { ParticleNetwork } from './ParticleNetwork';
 import { OrderTable, TaskList, WorkHeader } from './WorkPages';
 import { OnboardingChecklist } from './PartnerLibraryPages';
 import { DealerCommercePanel } from './DealerCommercePanel';
@@ -117,13 +116,12 @@ export async function CrmDashboard({ user }: { user: Principal }) {
 
   return (
     <div className="crm-dashboard">
-      <ParticleNetwork tone="white" />
       <div className="crm-dashboard__content">
         {/* Main Launcher Hero */}
         <header className="crm-dashboard__hero">
-          <h1>HỆ THỐNG QUẢN TRỊ COHAMY</h1>
-          <p>
-            Chào mừng {user.displayName} ({roleLabels[user.role]}), hãy quản lý hệ thống và điều phối quyền hạn.
+          <h1>Hệ thống quản trị Cohamy</h1>
+          <p className="crm-dashboard__meta">
+            Phiên làm việc: <strong>{user.displayName}</strong> · Phân quyền: <span className="crm-role-badge">{roleLabels[user.role]}</span>
           </p>
         </header>
 
@@ -169,8 +167,8 @@ export async function CrmDashboard({ user }: { user: Principal }) {
             <h2 className="crm-operations-title">Bàn làm việc</h2>
             <p className="crm-operations-desc">
               {internal
-                ? `Chào ${user.displayName}. Tiếp tục các yêu cầu và công việc theo quyền hạn.`
-                : `${user.organizationName} · Danh mục và thông tin trong phạm vi đại lý.`}
+                ? 'Hàng đợi xử lý, yêu cầu kinh doanh và các công việc trọng tâm cần tiếp nhận.'
+                : `${user.organizationName} · Danh mục và thông tin nghiệp vụ trong phạm vi đại lý.`}
             </p>
           </header>
 
@@ -187,7 +185,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
                   <p>Hồ sơ đã gửi; mở từng hồ sơ để đối chiếu và xét duyệt.</p>
                 </div>
                 <Link href="/crm/applications" className="crm-panel-action">
-                  Mở hàng chờ xét duyệt →
+                  Duyệt hồ sơ chờ tiếp nhận →
                 </Link>
               </div>
               <ul className="work-task-list">
@@ -227,7 +225,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
                       Việc quá hạn <span className="work-count crm-count-danger">{overdue.length}</span>
                     </h2>
                     <Link href="/crm/tasks?overdue=true" className="crm-panel-action">
-                      Mở việc quá hạn →
+                      Xử lý việc quá hạn →
                     </Link>
                   </div>
                   <TaskList tasks={overdue} />
@@ -238,7 +236,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
                 <div className="work-section-title">
                   <h2>Còn hạn hôm nay</h2>
                   <Link href="/crm/tasks?today=true" className="crm-panel-action">
-                    Mở việc hôm nay →
+                    Xem việc hôm nay →
                   </Link>
                 </div>
                 <p className="work-help">Từ hiện tại đến hết ngày Việt Nam; việc quá hạn nằm ở mục phía trên.</p>
@@ -256,7 +254,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
                 </div>
                 {can(user, 'reports.read') && (
                   <Link href="/crm/reports" className="crm-panel-action">
-                    Mở báo cáo vận hành →
+                    Xem báo cáo vận hành →
                   </Link>
                 )}
               </div>
