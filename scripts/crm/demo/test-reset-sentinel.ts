@@ -104,6 +104,7 @@ async function testResetSentinel() {
   const sentinelRecCode = 'REC-SENTINEL-999';
   const sentinelTaskId = randomUUID();
   const sentinelTicketId = randomUUID();
+  const sentinelAuditId = randomUUID();
 
   // Demo records to ensure presence before reset
   const demoOrgId = randomUUID();
@@ -188,6 +189,12 @@ async function testResetSentinel() {
        VALUES($1, $2, $3, 'Hỗ trợ nghiệp vụ Sentinel Không-Demo', 'Nội dung phiếu hỗ trợ thực tế', 'OPEN')
        ON CONFLICT DO NOTHING`,
       [sentinelTicketId, sentinelOrgId, sentinelUserId]
+    );
+
+    await sql.query(
+      `INSERT INTO cohamy_crm.audit_events(id, actor_id, action, entity_id, payload)
+       VALUES($1, $2, 'sentinel.note', $3, '{"note":"Discussed a demo plan, but this is a real audit entry"}'::jsonb)`,
+      [sentinelAuditId, sentinelUserId, sentinelOrgId]
     );
 
     // B. Insert Demo test records (Should be purged by reset)
@@ -294,6 +301,11 @@ async function testResetSentinel() {
     [sentinelTicketId]
   )).rows[0];
   assert.ok(checkSentinelTicket, 'Sentinel support ticket MUST survive reset!');
+  const checkSentinelAudit = (await verifyDb.query<{ id: string }>(
+    'SELECT id FROM cohamy_crm.audit_events WHERE id=$1',
+    [sentinelAuditId]
+  )).rows[0];
+  assert.ok(checkSentinelAudit, 'A non-demo audit entry containing the word demo MUST survive reset!');
 
   console.log('  -> PASS: 100% bản ghi Sentinel (Tổ chức, Người dùng, Phân quyền, Sản phẩm, Kho, Bảng giá, Công nợ, Công việc, Phiếu hỗ trợ) CÒN NGUYÊN VẸN!');
 

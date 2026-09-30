@@ -1,6 +1,7 @@
 import 'server-only';
 import assert from 'node:assert/strict';
 import { database } from '@/lib/crm/db';
+import { assertConnectedDemoPostgresDatabase, DEMO_DATABASE_NAME } from '@/lib/crm/demo-database-guard';
 
 process.env.CRM_DATABASE_MODE = process.env.CRM_DATABASE_MODE || 'pglite';
 process.env.CRM_ENVIRONMENT = process.env.CRM_ENVIRONMENT || 'DEMO';
@@ -51,19 +52,9 @@ async function verifyDatabaseConnection() {
       console.log(`- Connection URL: ${dbUrl.replace(/:[^:@]+@/, ':****@')}`);
       
       // Strict safety validation: NEVER allow production database
-      const forbidden = ['cohamy', 'cohamy_crm', 'cohamy_prod', 'cohamy_production'];
       const dbLower = meta.current_database.toLowerCase();
-      if (forbidden.includes(dbLower)) {
-        throw new Error(
-          `FATAL SAFETY VIOLATION: Server is connected to protected production database '${meta.current_database}'!`
-        );
-      }
-
-      if (!dbLower.includes('demo')) {
-        throw new Error(
-          `DEMO ALLOWLIST VIOLATION: Database '${meta.current_database}' does not contain 'demo'. Must use dedicated demo database (e.g. 'cohamy_crm_demo').`
-        );
-      }
+      if (dbLower !== DEMO_DATABASE_NAME) throw new Error('DEMO_DATABASE_CONNECTION_MISMATCH');
+      await assertConnectedDemoPostgresDatabase(sql => db.query<{ name: string }>(sql));
 
       console.log('✅ XÁC NHẬN: Database đích nằm trong allowlist demo và hoàn toàn tách biệt khỏi database production.');
     } else {

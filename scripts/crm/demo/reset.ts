@@ -1,6 +1,7 @@
 import 'server-only';
 import fs from 'node:fs/promises';
 import { database, type Sql } from '@/lib/crm/db';
+import { assertConnectedDemoPostgresDatabase, assertDemoPostgresUrl, DEMO_DATABASE_NAME } from '@/lib/crm/demo-database-guard';
 import { DEMO_CREDENTIALS_FILE } from './constants';
 
 /**
@@ -45,12 +46,14 @@ export function assertDemoDatabaseTarget(options?: {
       );
     }
 
-    // Explicit demo allowlist check: database name must include 'demo'
-    if (!dbName.includes('demo')) {
+    // An arbitrary database name containing "demo" is not sufficient protection.
+    if (dbName !== DEMO_DATABASE_NAME) {
       throw new Error(
-        `DEMO_RESET_DATABASE_NOT_ALLOWED: Database '${dbName}' is not in the demo allowlist. Demo reset requires a dedicated database whose name contains 'demo' (e.g. 'cohamy_crm_demo', 'cohamy_demo').`
+        `DEMO_RESET_DATABASE_NOT_ALLOWED: Database '${dbName}' is not in the demo allowlist. Expected ${DEMO_DATABASE_NAME}.`
       );
     }
+    try { assertDemoPostgresUrl(urlStr); }
+    catch { throw new Error('DEMO_RESET_DATABASE_NOT_ALLOWED: Invalid dedicated PostgreSQL demo URL.'); }
   } else if (mode === 'pglite') {
     const localDir = options?.localDataDir ?? process.env.CRM_LOCAL_DATA_DIR ?? '.local/crm-demo';
     if (!localDir.toLowerCase().includes('demo')) {
@@ -90,6 +93,9 @@ export async function resetDemoData(options?: { preserveCredentialsFile?: boolea
   console.log(`[DEMO RESET] Initializing targeted demo reset on [${mode}] (${targetDesc})...`);
 
   const db = await database();
+  if (mode === 'postgres' || mode === 'pg') {
+    await assertConnectedDemoPostgresDatabase(sql => db.query<{ name: string }>(sql));
+  }
 
   // Execute all deletions strictly inside a single transaction
   await db.transaction(async (sql: Sql) => {
@@ -120,8 +126,7 @@ export async function resetDemoData(options?: { preserveCredentialsFile?: boolea
       `DELETE FROM cohamy_crm.audit_events
        WHERE actor_id IN (SELECT id FROM cohamy_crm.users WHERE email LIKE '%@demo.cohamy.invalid')
           OR entity_id IN (SELECT id::text FROM cohamy_crm.organizations WHERE code LIKE 'DEMO_%' OR name LIKE 'DEMO · %')
-          OR entity_id IN (SELECT id::text FROM cohamy_crm.products WHERE sku LIKE 'DEMO-%')
-          OR payload::text LIKE '%demo%'`
+          OR entity_id IN (SELECT id::text FROM cohamy_crm.products WHERE sku LIKE 'DEMO-%')`
     );
 
     console.log('[DEMO RESET] Purging demo documents, versions, reads...');

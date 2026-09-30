@@ -18,6 +18,7 @@ if (!process.env.CRM_LOCAL_DATA_DIR) {
 }
 
 import { database } from "../../../lib/crm/db";
+import { assertConnectedDemoPostgresDatabase } from "../../../lib/crm/demo-database-guard";
 import { login } from "../../../lib/crm/auth";
 import * as repo from "../../../lib/crm/repository";
 import * as quotes from "../../../lib/crm/quotations";
@@ -57,6 +58,9 @@ async function main() {
 
   const rawPassword = resolveDemoPassword();
   const db = await database();
+  if (['postgres', 'pg'].includes(process.env.CRM_DATABASE_MODE || '')) {
+    await assertConnectedDemoPostgresDatabase(sql => db.query<{ name: string }>(sql));
+  }
   const meta = (await db.query<{ current_database: string; current_user: string }>("SELECT current_database(), current_user")).rows[0];
   console.log(`- Database thực tế: ${meta?.current_database} (User: ${meta?.current_user}, Mode: ${process.env.CRM_DATABASE_MODE})`);
 
