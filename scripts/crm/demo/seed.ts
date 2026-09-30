@@ -1,19 +1,35 @@
 /**
  * Cohamy CRM - Demo Dataset Seeder
- * STRICTLY FOR LOCAL DEMO ENVIRONMENT.
- * Guarded against PRODUCTION execution.
+ * Defaults to the isolated DEMO environment. A one-off production fixture
+ * run requires the exact database target, a fresh backup and an empty CRM
+ * business-data baseline.
  */
 
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
+import path from "node:path";
 import bcrypt from "bcryptjs";
 import { loadEnvConfig } from "@next/env";
-import { assertConnectedDemoPostgresDatabase, assertDemoPostgresUrl } from "../../../lib/crm/demo-database-guard";
+import { assertConnectedDemoPostgresDatabase, assertDemoPostgresUrl, assertProductionFixtureSeedTarget } from "../../../lib/crm/demo-database-guard";
 
 loadEnvConfig(process.cwd());
 
 // 1. Mandatory Environment Guard
-function enforceDemoEnvironment() {
+function enforceDemoEnvironment(): boolean {
+  const productionFixtureSeed = Boolean(process.env.CRM_DEMO_PRODUCTION_SEED_CONFIRM);
+  if (productionFixtureSeed) {
+    if (process.env.CRM_ENVIRONMENT !== "PRODUCTION" || process.env.CRM_DATABASE_MODE !== "postgres") {
+      throw new Error("PRODUCTION_FIXTURE_ENVIRONMENT_REQUIRED");
+    }
+    assertProductionFixtureSeedTarget(process.env.CRM_DATABASE_URL, process.env.CRM_DEMO_PRODUCTION_SEED_CONFIRM);
+    // Only this CLI process suppresses outbound messages. The web/worker runtime
+    // continues to use CRM_ENVIRONMENT=PRODUCTION.
+    process.env.CRM_DEMO_MODE = "true";
+    process.env.CRM_EMAIL_ENABLED = "false";
+    process.env.CRM_SMS_ENABLED = "false";
+    process.env.CRM_WEBSITE_ORDER_INTAKE = "true";
+    return true;
+  }
   if (process.env.CRM_ENVIRONMENT && process.env.CRM_ENVIRONMENT.toUpperCase() !== "DEMO") {
     throw new Error("DEMO_SEED_BLOCKED: CRM_ENVIRONMENT must explicitly be DEMO.");
   }
@@ -31,9 +47,10 @@ function enforceDemoEnvironment() {
   if (!process.env.CRM_LOCAL_DATA_DIR) {
     process.env.CRM_LOCAL_DATA_DIR = ".local/crm-demo";
   }
+  return false;
 }
 
-enforceDemoEnvironment();
+const productionFixtureSeed = enforceDemoEnvironment();
 
 import { database } from "../../../lib/crm/db";
 import { migrate, importWebsiteCatalog } from "../../../lib/crm/bootstrap";
@@ -64,21 +81,50 @@ import {
 
 async function main() {
   const postgres = ['postgres', 'pg'].includes(process.env.CRM_DATABASE_MODE || '');
-  if (postgres) {
+  if (productionFixtureSeed) {
+    const backupPath = process.env.CRM_DEMO_PRODUCTION_BACKUP;
+    if (!backupPath || !path.isAbsolute(backupPath)) throw new Error("PRODUCTION_FIXTURE_BACKUP_REQUIRED");
+    const backupRealPath = await fs.realpath(backupPath);
+    const backupStat = await fs.stat(backupRealPath);
+    if (!backupRealPath.startsWith('/root/cohamy-backups/') || !backupStat.isFile() || backupStat.size < 50_000 ||
+        (backupStat.mode & 0o077) !== 0 || Date.now() - backupStat.mtimeMs > 6 * 60 * 60 * 1000) {
+      throw new Error("PRODUCTION_FIXTURE_BACKUP_INVALID");
+    }
+    const preflightDb = await database();
+    const target = (await preflightDb.query<{ name: string }>('SELECT current_database() AS name')).rows[0]?.name;
+    if (target !== 'cohamy_crm') throw new Error('PRODUCTION_FIXTURE_CONNECTION_MISMATCH');
+    const baseline = (await preflightDb.query<{ demo_users: string; demo_orgs: string; policy: string; inventory: string; applications: string; quotations: string; orders: string }>(
+      `SELECT
+        (SELECT count(*)::text FROM cohamy_crm.users WHERE email LIKE '%@demo.cohamy.invalid') AS demo_users,
+        (SELECT count(*)::text FROM cohamy_crm.organizations WHERE code LIKE 'DEMO_%') AS demo_orgs,
+        (SELECT count(*)::text FROM cohamy_crm.order_policy_current) AS policy,
+        (SELECT count(*)::text FROM cohamy_crm.inventory_balances) AS inventory,
+        (SELECT count(*)::text FROM cohamy_crm.partner_applications) AS applications,
+        (SELECT count(*)::text FROM cohamy_crm.quotations) AS quotations,
+        (SELECT count(*)::text FROM cohamy_crm.sales_orders) AS orders`
+    )).rows[0];
+    if (!baseline || Object.values(baseline).some(value => Number(value) !== 0)) {
+      throw new Error('PRODUCTION_FIXTURE_BASELINE_CHANGED');
+    }
+  } else if (postgres) {
     // This must precede migrate() and every other write.
     const preflightDb = await database();
     await assertConnectedDemoPostgresDatabase(sql => preflightDb.query<{ name: string }>(sql));
   }
   console.log("=================================================");
   console.log(" [COHAMY CRM] BẮT ĐẦU SEED DỮ LIỆU DEMO GIẢ LẬP  ");
-  console.log(" Môi trường: DEMO (Database: " + (postgres ? "PostgreSQL cohamy_crm_demo" : ("PGlite: " + process.env.CRM_LOCAL_DATA_DIR)) + ")");
+  console.log(" Môi trường: " + (productionFixtureSeed ? "PRODUCTION (one-time fixture seed: cohamy_crm)" : "DEMO (Database: " + (postgres ? "PostgreSQL cohamy_crm_demo" : ("PGlite: " + process.env.CRM_LOCAL_DATA_DIR)) + ")"));
   console.log("=================================================");
 
   // Step 1: Run migrations & import website catalog
-  console.log("\n[1/15] Áp dụng migrations và danh mục website...");
-  await migrate();
-  const catalogCount = await importWebsiteCatalog();
-  console.log(`- Đã cập nhật migrations và đồng bộ ${catalogCount} sản phẩm website.`);
+  if (productionFixtureSeed) {
+    console.log("\n[1/15] Dùng schema production đã migration; không nhập lại catalog website.");
+  } else {
+    console.log("\n[1/15] Áp dụng migrations và danh mục website...");
+    await migrate();
+    const catalogCount = await importWebsiteCatalog();
+    console.log(`- Đã cập nhật migrations và đồng bộ ${catalogCount} sản phẩm website.`);
+  }
 
   const db = await database();
 
@@ -170,8 +216,8 @@ async function main() {
     DEMO_CREDENTIALS_FILE,
     JSON.stringify(
       {
-        notice: "COHAMY DEMO CREDENTIALS — MẬT KHẨU TÀI KHOẢN TRẢI NGHIỆM LOCAL",
-        environment: "DEMO",
+        notice: productionFixtureSeed ? "COHAMY DEMO CREDENTIALS — TÀI KHOẢN MẪU TRÊN PRODUCTION" : "COHAMY DEMO CREDENTIALS — MẬT KHẨU TÀI KHOẢN TRẢI NGHIỆM LOCAL",
+        environment: productionFixtureSeed ? "PRODUCTION_FIXTURE" : "DEMO",
         generatedAt: new Date().toISOString(),
         commonPassword: rawPassword,
         accounts: DEMO_ACCOUNTS.map((a) => ({
@@ -188,6 +234,7 @@ async function main() {
     ),
     "utf-8"
   );
+  if (productionFixtureSeed) await fs.chmod(DEMO_CREDENTIALS_FILE, 0o600);
   console.log(`- Đã tạo 8 tài khoản demo và ghi vào ${DEMO_CREDENTIALS_FILE} (gitignored).`);
 
   // Step 3: Login as Admin to get Admin Principal
@@ -324,13 +371,21 @@ async function main() {
 
   // Step 6: Price Book & Order Policy
   console.log("\n[5/15] Thiết lập Bảng giá DEMO và Chính sách phê duyệt đơn hàng...");
+  let demoTierId: string | null = null;
+  if (productionFixtureSeed) {
+    // A live fixture price must never be offered to real partners.
+    const existingTier = (await db.query<{ id: string }>("SELECT id FROM cohamy_crm.price_tiers WHERE code='DEMO_2026'")).rows[0];
+    demoTierId = existingTier?.id ?? (await pricing.savePriceTier(admin, {
+      version: 0, code: 'DEMO_2026', name: 'DEMO · Đại lý trải nghiệm', active: true,
+    })).id;
+  }
   const standardBook = (await db.query<{ id: string; version: number; published_version_id: string }>(
     "SELECT id, version, published_version_id FROM cohamy_crm.price_books WHERE name='DEMO · Bảng giá Toàn Quốc 2026'"
   )).rows[0];
 
   const priceDefinition = {
-    audience: "ALL" as const,
-    tierId: null,
+    audience: productionFixtureSeed ? ("TIER" as const) : ("ALL" as const),
+    tierId: demoTierId,
     organizationId: null,
     priority: 10,
     startsAt: "2026-01-01T00:00:00+07:00",
@@ -394,7 +449,7 @@ async function main() {
         approvalRoles: ["ADMIN", "MANAGER"],
         confirmationRoles: ["ADMIN", "MANAGER", "SALES"],
       },
-      reason: "Kích hoạt chính sách phê duyệt đơn hàng chuẩn DEMO",
+      reason: "DEMO_BATCH_2026 · Kích hoạt chính sách phê duyệt đơn hàng mẫu",
       idempotencyKey: randomUUID(),
     });
     console.log("- Đã kích hoạt Order Policy kiểm soát phê duyệt.");
@@ -666,6 +721,20 @@ async function main() {
       dRow = { id: did };
     }
     dealerOrgMap[d.code] = dRow.id;
+
+    if (productionFixtureSeed && demoTierId) {
+      const tier = await pricing.organizationTier(admin, dRow.id);
+      if (!tier) {
+        await pricing.assignPriceTier(admin, {
+          organizationId: dRow.id,
+          tierId: demoTierId,
+          version: 0,
+          reason: 'DEMO_BATCH_2026 · Áp dụng bảng giá mẫu cho đại lý mẫu',
+        });
+      } else if (tier.tier_id !== demoTierId) {
+        throw new Error('PRODUCTION_FIXTURE_DEALER_TIER_CONFLICT');
+      }
+    }
 
     // Delivery Address
     const addr = (await db.query("SELECT id FROM cohamy_crm.dealer_addresses WHERE organization_id=$1", [dRow.id])).rows[0];

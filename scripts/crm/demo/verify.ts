@@ -1,7 +1,7 @@
 /**
  * Cohamy CRM - Demo Dataset Verification Test
- * Strictly tests local demo environment data completeness, consistency,
- * multi-tenant isolation, and absence of external provider calls.
+ * Verifies demo fixture completeness and isolation. Production fixture
+ * verification is read-only against CRM data and requires an exact DB target.
  */
 
 import assert from "node:assert/strict";
@@ -10,7 +10,15 @@ import { loadEnvConfig } from "@next/env";
 
 loadEnvConfig(process.cwd());
 
-process.env.CRM_ENVIRONMENT = "DEMO";
+const productionFixtureVerify = Boolean(process.env.CRM_DEMO_PRODUCTION_VERIFY_CONFIRM);
+if (productionFixtureVerify) {
+  if (process.env.CRM_ENVIRONMENT !== "PRODUCTION" || process.env.CRM_DATABASE_MODE !== "postgres") {
+    throw new Error("PRODUCTION_FIXTURE_VERIFY_ENVIRONMENT_REQUIRED");
+  }
+  assertProductionFixtureSeedTarget(process.env.CRM_DATABASE_URL, process.env.CRM_DEMO_PRODUCTION_VERIFY_CONFIRM);
+} else {
+  process.env.CRM_ENVIRONMENT = "DEMO";
+}
 process.env.CRM_DEMO_MODE = "true";
 process.env.CRM_DATABASE_MODE = process.env.CRM_DATABASE_MODE || "pglite";
 if (!process.env.CRM_LOCAL_DATA_DIR) {
@@ -18,7 +26,7 @@ if (!process.env.CRM_LOCAL_DATA_DIR) {
 }
 
 import { database } from "../../../lib/crm/db";
-import { assertConnectedDemoPostgresDatabase } from "../../../lib/crm/demo-database-guard";
+import { assertConnectedDemoPostgresDatabase, assertProductionFixtureSeedTarget } from "../../../lib/crm/demo-database-guard";
 import { login } from "../../../lib/crm/auth";
 import * as repo from "../../../lib/crm/repository";
 import * as quotes from "../../../lib/crm/quotations";
@@ -58,10 +66,11 @@ async function main() {
 
   const rawPassword = resolveDemoPassword();
   const db = await database();
-  if (['postgres', 'pg'].includes(process.env.CRM_DATABASE_MODE || '')) {
+  if (!productionFixtureVerify && ['postgres', 'pg'].includes(process.env.CRM_DATABASE_MODE || '')) {
     await assertConnectedDemoPostgresDatabase(sql => db.query<{ name: string }>(sql));
   }
   const meta = (await db.query<{ current_database: string; current_user: string }>("SELECT current_database(), current_user")).rows[0];
+  if (productionFixtureVerify) assert.equal(meta?.current_database, 'cohamy_crm');
   console.log(`- Database thực tế: ${meta?.current_database} (User: ${meta?.current_user}, Mode: ${process.env.CRM_DATABASE_MODE})`);
 
   try {
@@ -262,7 +271,7 @@ async function main() {
     JSON.stringify(
       {
         verifiedAt: new Date().toISOString(),
-        environment: "DEMO (Local PGlite)",
+        environment: productionFixtureVerify ? "PRODUCTION_FIXTURE" : "DEMO",
         totalTests: results.length,
         passed: results.filter((r) => r.status === "PASS").length,
         failed: results.filter((r) => r.status === "FAIL").length,
