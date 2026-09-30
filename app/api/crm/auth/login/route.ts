@@ -10,7 +10,9 @@ export async function POST(request: Request) {
     const parsed = z.object({ email: z.email().toLowerCase(), password: z.string().min(1).max(72),secondFactor:z.string().trim().max(20).optional() }).strict().safeParse(await readJson(request));
     if (!parsed.success) throw new CrmError("INVALID_FIELDS", 400);
     const result = await login(parsed.data.email, parsed.data.password,{userAgent:request.headers.get('user-agent')??undefined,secondFactor:parsed.data.secondFactor});
-    const isSecure = process.env.NODE_ENV === "production" && !request.headers.get("host")?.includes("localhost") && !request.headers.get("host")?.includes("127.0.0.1");
+    // A production session must stay HTTPS-only even when a reverse proxy
+    // forwards the request to Next.js over localhost HTTP.
+    const isSecure = process.env.NODE_ENV === "production" && process.env.CRM_ENVIRONMENT !== "LOCAL";
     (await cookies()).set(SESSION_COOKIE, result.token, { httpOnly: true, secure: isSecure, sameSite: "lax", path: "/", maxAge: SESSION_SECONDS });
     return json({ user: result.user, redirectTo: `/${result.user.area}` });
   } catch (error) { return apiError(error); }
