@@ -307,31 +307,9 @@ Tất cả các lệnh dưới đây được chạy trực tiếp tại termina
 =================================================
 ```
 
-#### Bằng chứng Chạy trên PostgreSQL Dedicated Server (VPS / Dedicated Instance)
-```text
-> $env:CRM_DATABASE_MODE="postgres"
-> $env:CRM_DATABASE_URL="postgresql://cohamy_demo_user:****@127.0.0.1:5432/cohamy_crm_demo"
-> npm run crm:demo-verify-db
+#### PostgreSQL Dedicated Server (VPS / Dedicated Instance)
 
-=================================================
- [COHAMY CRM] XÁC MINH KẾT NỐI DATABASE DEMO    
-=================================================
-- Môi trường (CRM_ENVIRONMENT): DEMO
-- Chế độ Database (CRM_DATABASE_MODE): postgres
-- NODE_ENV: production
-
---- THÔNG TIN KẾT NỐI THỰC TẾ TỪ SERVER ---
-- Database Name : cohamy_crm_demo
-- Database User : cohamy_demo_user
-- Engine Version: PostgreSQL 16.2 on x86_64-pc-linux-gnu
-- Connection URL: postgresql://cohamy_demo_user:****@127.0.0.1:5432/cohamy_crm_demo
-✅ XÁC NHẬN: Database đích nằm trong allowlist demo và hoàn toàn tách biệt khỏi database production.
-- Tổng số bảng schema 'cohamy_crm': 178 bảng
-
-=================================================
- ✅ XÁC MINH HOÀN TẤT: SERVER KẾT NỐI ĐÚNG DATABASE DEMO!
-=================================================
-```
+**Chưa xác minh trên PostgreSQL demo của VPS.** Đoạn kết quả PostgreSQL 16.2 từng có ở đây chỉ là ví dụ, không phải log kiểm thử thực tế. Chỉ đánh dấu PASS sau khi chạy `npm run crm:demo-verify-db`, seed, kiểm thử nghiệp vụ và kiểm tra trình duyệt trên một database demo tách biệt; lưu lại log đã che mật khẩu cùng phiên bản PostgreSQL thực tế. Database `cohamy_crm` production tuyệt đối không được dùng để seed/reset demo.
 
 #### Kiểm chứng Idempotent Double Seed (Không trùng dữ liệu)
 - **Lần seed 1 (`npm run crm:demo-seed`):** Khởi tạo đầy đủ 10 Khách hàng, 10 Đại lý, 10 Báo giá, 10 Hồ sơ đối tác.
