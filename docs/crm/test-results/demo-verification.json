@@ -1,0 +1,69 @@
+{
+  "verifiedAt": "2026-09-30T00:11:00.271Z",
+  "environment": "DEMO (Local PGlite)",
+  "totalTests": 15,
+  "passed": 15,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "1. Xác thực đăng nhập thành công đủ 8 vai trò người dùng demo",
+      "status": "PASS"
+    },
+    {
+      "name": "2. Kiểm tra số lượng và liên kết dữ liệu Khách hàng (>= 10 bản ghi)",
+      "status": "PASS"
+    },
+    {
+      "name": "3. Kiểm tra danh sách Đại lý và Hạn mức công nợ (>= 10 bản ghi)",
+      "status": "PASS"
+    },
+    {
+      "name": "4. Kiểm tra Hồ sơ đăng ký đối tác (>= 10 bản ghi, có trạng thái chờ duyệt)",
+      "status": "PASS"
+    },
+    {
+      "name": "5. Kiểm tra Nhà cung cấp và Hồ sơ điều khoản thanh toán (>= 10 bản ghi)",
+      "status": "PASS"
+    },
+    {
+      "name": "6. Kiểm tra Danh mục 10 SKU, Đơn vị BASE/CASE và Bảng giá đang hiệu lực",
+      "status": "PASS"
+    },
+    {
+      "name": "7. Kiểm tra Báo giá (>= 10 bản ghi) và Bản in PDF lưu trữ nhị phân",
+      "status": "PASS"
+    },
+    {
+      "name": "8. Kiểm tra Sổ cái kho: Tồn kho thực tế và Cảnh báo lô cận hạn",
+      "status": "PASS"
+    },
+    {
+      "name": "9. Kiểm tra Công việc chăm sóc (>= 10 việc: Quá hạn, Sắp tới, Hoàn thành)",
+      "status": "PASS"
+    },
+    {
+      "name": "10. Kiểm tra Cơ hội bán hàng và Lịch sử ghé thăm (>= 10 bản ghi)",
+      "status": "PASS"
+    },
+    {
+      "name": "11. Kiểm tra Đơn hàng thương mại và Đơn đặt hàng Website (>= 10 bản ghi)",
+      "status": "PASS"
+    },
+    {
+      "name": "12. Kiểm tra Sổ cái công nợ: Phân tích tuổi nợ 30, 60, 90 ngày",
+      "status": "PASS"
+    },
+    {
+      "name": "13. Kiểm tra Phiếu hỗ trợ (>= 10) và Thư viện tài liệu đối tác (>= 10)",
+      "status": "PASS"
+    },
+    {
+      "name": "14. Kiểm tra Cách ly dữ liệu đa người dùng: Đại lý A KHÔNG xem được dữ liệu Đại lý B",
+      "status": "PASS"
+    },
+    {
+      "name": "15. Xác nhận Chặn hoàn toàn gửi Email/SMS/Webhook ra bên ngoài trong môi trường DEMO",
+      "status": "PASS"
+    }
+  ]
+}

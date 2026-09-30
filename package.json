@@ -6,6 +6,10 @@
     "typecheck": "next typegen && tsc --noEmit",
     "crm:init": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/init.ts",
     "crm:seed-qa": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/seed-qa.ts",
+    "crm:demo-seed": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/seed.ts",
+    "crm:demo-reset": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/reset.ts",
+    "test:crm:demo": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify.ts",
+    "test:crm:demo-browser": "node scripts/crm/demo/browser-smoke.mjs",
     "test:crm": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-access.ts",
     "test:crm:browser": "node scripts/crm/verify-browser.mjs",
     "test:crm:build": "node scripts/crm/verify-build.mjs",
@@ -80,7 +84,13 @@
     "test:crm:request-excel": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-request-excel.ts",
     "test:crm:quotation-pdf": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotation-pdf.ts",
     "test:crm:samples-browser": "node scripts/crm/verify-sample-browser.mjs",
-    "test:crm:browser-140": "node scripts/crm/verify-140-browser-smoke.mjs"
+    "test:crm:browser-140": "node scripts/crm/verify-140-browser-smoke.mjs",
+    "crm:demo-verify": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify.ts",
+    "crm:demo-browser": "node scripts/crm/demo/browser-smoke.mjs",
+    "crm:demo-network-test": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/test-network-isolation.ts",
+    "crm:demo-sentinel-test": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/test-reset-sentinel.ts",
+    "crm:demo-security-test": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/test-unauthenticated-reset.ts",
+    "crm:demo-verify-db": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify-db.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

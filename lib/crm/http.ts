@@ -9,7 +9,7 @@ const privateHeaders = { "Cache-Control": "private, no-store", "X-Robots-Tag": "
 export function json(value: unknown, status = 200) { return Response.json(value, { status, headers: privateHeaders }); }
 export function sameOrigin(request: Request) {
   const origin = request.headers.get("origin");
-  if (process.env.NODE_ENV === "production" && !process.env.CRM_PUBLIC_ORIGIN?.startsWith("https://")) throw new CrmError("CRM_HTTPS_ORIGIN_REQUIRED", 503);
+  if (process.env.NODE_ENV === "production" && process.env.CRM_ENVIRONMENT !== "LOCAL" && !process.env.CRM_PUBLIC_ORIGIN?.startsWith("https://")) throw new CrmError("CRM_HTTPS_ORIGIN_REQUIRED", 503);
   const expected = process.env.CRM_PUBLIC_ORIGIN || new URL(request.url).origin;
   if (!origin || origin !== expected) throw new CrmError("INVALID_ORIGIN", 403);
   const fetchSite = request.headers.get("sec-fetch-site");

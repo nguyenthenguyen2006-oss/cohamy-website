@@ -25,7 +25,7 @@ export function database(): Promise<Database> {
 async function openDatabase(): Promise<Database> {
   if (process.env.CRM_DATABASE_MODE === "pglite") {
     // This adapter is a labelled, single-process LOCAL harness, not a production database.
-    if (process.env.NODE_ENV === "production" || process.env.CRM_ENVIRONMENT !== "LOCAL") {
+    if ((process.env.NODE_ENV === "production" && process.env.CRM_ENVIRONMENT !== "DEMO") || (process.env.CRM_ENVIRONMENT !== "LOCAL" && process.env.CRM_ENVIRONMENT !== "DEMO")) {
       throw new CrmError("EMBEDDED_DATABASE_LOCAL_ONLY", 503);
     }
     const relative = process.env.CRM_LOCAL_DATA_DIR;
@@ -39,10 +39,24 @@ async function openDatabase(): Promise<Database> {
       query: (text, params) => db.query(text, params),
       exec: async text => { await db.exec(text); },
       transaction: fn => db.transaction(tx => fn({ query: (text, params) => tx.query(text, params), exec: async text => { await tx.exec(text); } })),
-      close: () => db.close(),
+      close: async () => {
+        globalDb.cohamyCrmDatabase = undefined;
+        await db.close();
+      },
     };
   }
   if (!process.env.CRM_DATABASE_URL) throw new CrmError("CRM_DATABASE_NOT_CONFIGURED", 503);
+
+  if (process.env.CRM_ENVIRONMENT === "DEMO") {
+    const url = process.env.CRM_DATABASE_URL;
+    if (/(?:cohamy_crm|cohamy_prod)(?:[/?\s]|$)/i.test(url)) {
+      throw new CrmError("Refusing to run DEMO mode on protected production database ('cohamy_crm' / 'cohamy_prod')", 503);
+    }
+    if (!/(?:demo|test|_crm_demo)/i.test(url)) {
+      throw new CrmError("DEMO mode requires dedicated demo database containing 'demo' in database name", 503);
+    }
+  }
+
   const pool = new Pool({ connectionString: process.env.CRM_DATABASE_URL, max: 8, connectionTimeoutMillis: 5000 });
   return {
     async query<T>(text: string, params?: unknown[]) { return { rows: (await pool.query(text, params)).rows as T[] }; },
@@ -57,6 +71,9 @@ async function openDatabase(): Promise<Database> {
       } catch (error) { await client.query("ROLLBACK"); throw error; }
       finally { client.release(); }
     },
-    close: () => pool.end(),
+    close: async () => {
+      globalDb.cohamyCrmDatabase = undefined;
+      await pool.end();
+    },
   };
 }

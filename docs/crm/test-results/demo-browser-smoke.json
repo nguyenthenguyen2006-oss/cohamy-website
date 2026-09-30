@@ -1,0 +1,50 @@
+{
+  "testedAt": "2026-09-29T21:12:22.913Z",
+  "environment": "DEMO (Local Production Build on port 4330)",
+  "totalCases": 10,
+  "passed": 10,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "B01: Hiển thị banner DEMO nổi bật trên trang đăng nhập CRM",
+      "status": "PASS"
+    },
+    {
+      "name": "B02: Đăng nhập Quản trị viên (Admin) và kiểm tra Dashboard nghiệp vụ",
+      "status": "PASS"
+    },
+    {
+      "name": "B03: [Thao tác DUYỆT - Admin] Xem và DUYỆT hồ sơ đối tác đang chờ duyệt",
+      "status": "PASS"
+    },
+    {
+      "name": "B04: [Thao tác TẠO - Sales] Nhân viên kinh doanh đăng nhập và TẠO khách hàng mới",
+      "status": "PASS"
+    },
+    {
+      "name": "B05: [Thao tác SỬA / GHI CHÚ - Sales] Thêm ghi chú chăm sóc khách hàng",
+      "status": "PASS"
+    },
+    {
+      "name": "B06: Đăng nhập Nhân viên kinh doanh (Sales) & Xem cơ hội, báo giá, viếng thăm",
+      "status": "PASS"
+    },
+    {
+      "name": "B07: Đăng nhập Nhân viên kho (Warehouse) & Xem vị trí tồn kho, soạn hàng",
+      "status": "PASS"
+    },
+    {
+      "name": "B08: Đăng nhập Kế toán (Accountant) & Xem đối soát công nợ, phiếu thu",
+      "status": "PASS"
+    },
+    {
+      "name": "B09: [Thao tác TẠO & SỬA - Portal] Đại lý tạo phiếu hỗ trợ và gửi phản hồi trao đổi",
+      "status": "PASS"
+    },
+    {
+      "name": "B10: [Portal Multi-tenant Isolation] Xác nhận phân tách độc lập giữa Đại lý A và Đại lý B",
+      "status": "PASS"
+    }
+  ],
+  "screenshotsDir": "docs/crm/demo-screenshots"
+}

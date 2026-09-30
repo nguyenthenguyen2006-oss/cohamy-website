@@ -3,6 +3,12 @@ import {z} from 'zod';
 import {CrmError} from './permissions';
 export interface VerificationMailer{send(email:string,code:string):Promise<void>}
 export async function sendTransactionalEmail(email:string,subject:string,textContent:string,idempotencyKey?:string){
+ const isDemo = process.env.CRM_ENVIRONMENT === 'DEMO' || process.env.CRM_DEMO_MODE === 'true';
+ if (isDemo) {
+  // In DEMO mode, block all external email calls and record simulation
+  console.log(`[DEMO SIMULATED EMAIL] To: ${email} | Subject: ${subject}`);
+  return `demo-msg-${idempotencyKey ?? Date.now()}`;
+ }
  const key=process.env.CRM_BREVO_API_KEY,sender=process.env.CRM_BREVO_SENDER_EMAIL;
  if(!key||!sender||!z.email().safeParse(sender).success)throw new CrmError('EMAIL_NOT_CONFIGURED',503);
  if(process.env.CRM_EMAIL_ENABLED!=='true')throw new CrmError('EMAIL_DISABLED',503);

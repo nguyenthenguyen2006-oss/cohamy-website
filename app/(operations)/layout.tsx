@@ -9,5 +9,6 @@ import "@/components/crm/upgrade.css";
 import "@/components/crm/commercial.css";
 import "@/components/crm/crm-humanbank.css";
 import {PwaRegistrar} from "@/components/crm/PwaRegistrar";
+import {DemoBanner} from "@/components/crm/DemoBanner";
 export const metadata: Metadata={title:{default:"CRM Cohamy",template:"%s | CRM Cohamy"},manifest:"/manifest.webmanifest",appleWebApp:{capable:true,title:"Cohamy",statusBarStyle:"black-translucent"},robots:{index:false,follow:false}};
-export default function OperationsLayout({children}:{children:React.ReactNode}) {return <div className="cohamy-crm"><PwaRegistrar/>{children}</div>;}
+export default function OperationsLayout({children}:{children:React.ReactNode}) {return <div className="cohamy-crm"><DemoBanner/><PwaRegistrar/>{children}</div>;}
