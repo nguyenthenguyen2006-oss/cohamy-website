@@ -8,25 +8,25 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import bcrypt from "bcryptjs";
 import { loadEnvConfig } from "@next/env";
+import { assertConnectedDemoPostgresDatabase, assertDemoPostgresUrl } from "../../../lib/crm/demo-database-guard";
 
 loadEnvConfig(process.cwd());
 
 // 1. Mandatory Environment Guard
 function enforceDemoEnvironment() {
-  const env = (process.env.CRM_ENVIRONMENT || "").toUpperCase();
-  const dbUrl = process.env.CRM_DATABASE_URL || "";
-  
-  if (env === "PRODUCTION" || env === "PROD") {
-    throw new Error("DEMO_SEED_BLOCKED: Cannot seed demo data into PRODUCTION environment.");
+  if (process.env.CRM_ENVIRONMENT && process.env.CRM_ENVIRONMENT.toUpperCase() !== "DEMO") {
+    throw new Error("DEMO_SEED_BLOCKED: CRM_ENVIRONMENT must explicitly be DEMO.");
   }
-  if (dbUrl.includes("production") || dbUrl.includes("prod") || dbUrl.includes("cohamy.com")) {
-    throw new Error("DEMO_SEED_BLOCKED: Database URL points to production host.");
+  process.env.CRM_ENVIRONMENT = "DEMO";
+  const mode = process.env.CRM_DATABASE_MODE || "pglite";
+  if (mode === "postgres" || mode === "pg") {
+    assertDemoPostgresUrl(process.env.CRM_DATABASE_URL);
+  } else if (mode !== "pglite" || process.env.CRM_DATABASE_URL) {
+    throw new Error("DEMO_SEED_BLOCKED: Select PGlite without a PostgreSQL URL, or select the dedicated PostgreSQL demo database.");
   }
 
-  // Set local demo environment defaults
-  process.env.CRM_ENVIRONMENT = "DEMO";
   process.env.CRM_DEMO_MODE = "true";
-  process.env.CRM_DATABASE_MODE = process.env.CRM_DATABASE_MODE || "pglite";
+  process.env.CRM_DATABASE_MODE = mode;
   process.env.CRM_WEBSITE_ORDER_INTAKE = "true";
   if (!process.env.CRM_LOCAL_DATA_DIR) {
     process.env.CRM_LOCAL_DATA_DIR = ".local/crm-demo";
@@ -63,9 +63,15 @@ import {
 } from "./constants";
 
 async function main() {
+  const postgres = ['postgres', 'pg'].includes(process.env.CRM_DATABASE_MODE || '');
+  if (postgres) {
+    // This must precede migrate() and every other write.
+    const preflightDb = await database();
+    await assertConnectedDemoPostgresDatabase(sql => preflightDb.query<{ name: string }>(sql));
+  }
   console.log("=================================================");
   console.log(" [COHAMY CRM] BẮT ĐẦU SEED DỮ LIỆU DEMO GIẢ LẬP  ");
-  console.log(" Môi trường: DEMO (Database: " + (process.env.CRM_DATABASE_URL ? "PostgreSQL" : ("PGlite: " + process.env.CRM_LOCAL_DATA_DIR)) + ")");
+  console.log(" Môi trường: DEMO (Database: " + (postgres ? "PostgreSQL cohamy_crm_demo" : ("PGlite: " + process.env.CRM_LOCAL_DATA_DIR)) + ")");
   console.log("=================================================");
 
   // Step 1: Run migrations & import website catalog

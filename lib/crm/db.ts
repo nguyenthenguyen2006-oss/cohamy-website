@@ -3,6 +3,7 @@ import path from "node:path";
 import { Pool } from "pg";
 import { PGlite } from "@electric-sql/pglite";
 import { CrmError } from "./permissions";
+import { assertDemoPostgresUrl } from "./demo-database-guard";
 
 export interface Sql {
   query<T = Record<string, unknown>>(text: string, params?: unknown[]): Promise<{ rows: T[] }>;
@@ -48,13 +49,8 @@ async function openDatabase(): Promise<Database> {
   if (!process.env.CRM_DATABASE_URL) throw new CrmError("CRM_DATABASE_NOT_CONFIGURED", 503);
 
   if (process.env.CRM_ENVIRONMENT === "DEMO") {
-    const url = process.env.CRM_DATABASE_URL;
-    if (/(?:cohamy_crm|cohamy_prod)(?:[/?\s]|$)/i.test(url)) {
-      throw new CrmError("Refusing to run DEMO mode on protected production database ('cohamy_crm' / 'cohamy_prod')", 503);
-    }
-    if (!/(?:demo|test|_crm_demo)/i.test(url)) {
-      throw new CrmError("DEMO mode requires dedicated demo database containing 'demo' in database name", 503);
-    }
+    try { assertDemoPostgresUrl(process.env.CRM_DATABASE_URL); }
+    catch { throw new CrmError("DEMO_DATABASE_TARGET_NOT_ALLOWED", 503); }
   }
 
   const pool = new Pool({ connectionString: process.env.CRM_DATABASE_URL, max: 8, connectionTimeoutMillis: 5000 });
