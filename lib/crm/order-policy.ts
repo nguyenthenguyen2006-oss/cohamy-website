@@ -15,6 +15,7 @@ export const orderPolicySchema=z.object({
   .refine(fields=>new Set(fields).size===fields.length),
  approvalRoles:z.array(z.enum(['ADMIN','MANAGER'])).min(1).max(2).refine(roles=>new Set(roles).size===roles.length),
  confirmationRoles:z.array(z.enum(['ADMIN','MANAGER','SALES'])).min(1).max(3).refine(roles=>new Set(roles).size===roles.length),
+ provisionalReservation:z.object({mode:z.enum(['ON_SUBMIT','AFTER_APPROVAL']),ttlMinutes:z.number().int().min(1).max(10080),allowPartial:z.boolean()}).strict().optional(),
 }).strict();
 export type OrderPolicyDefinition=z.infer<typeof orderPolicySchema>;
 export interface OrderPolicy {id:string;number:number;definition:OrderPolicyDefinition;checksum:string;actor_id:string;reason:string;created_at:string}

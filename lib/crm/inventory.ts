@@ -96,11 +96,14 @@ export async function reverseDocument(user:Principal,input:unknown){
 }
 
 export async function reserveOrder(user:Principal,input:unknown){
- inventoryWriter(user);const d=parse(z.object({orderId:z.uuid(),warehouseId:z.uuid(),minimumShelfLifeDays:z.number().int().min(0).max(3650).default(0),reason,idempotencyKey:key}).strict(),input),h=digest(d);
+ inventoryWriter(user);const d=parse(z.object({orderId:z.uuid(),warehouseId:z.uuid(),minimumShelfLifeDays:z.number().int().min(0).max(3650).default(0),allowPartial:z.boolean().default(false),reason,idempotencyKey:key}).strict(),input),h=digest(d);
  return(await database()).transaction(async sql=>{await assertCurrentPrincipal(sql,user);const prior=await priorAction(sql,user,d.idempotencyKey,h);if(prior)return prior;const order=await salesOrderAccess(sql,user,d.orderId,true);if(order.status!=='CONFIRMED'||!order.confirmed_version_id)throw new CrmError('ORDER_NOT_CONFIRMED',409);if((await sql.query('SELECT id FROM cohamy_crm.inventory_reservations WHERE order_id=$1 AND status IN(\'ACTIVE\',\'PARTIAL\')',[order.id])).rows.length)throw new CrmError('ORDER_ALREADY_RESERVED',409);const version=await salesVersionAccess(sql,order,order.confirmed_version_id),s=warehouseWhere(user),warehouse=(await sql.query<{id:string}>(`SELECT id FROM cohamy_crm.warehouses w WHERE (${s.sql}) AND w.id=$${s.params.length+1} AND w.active FOR UPDATE`,[...s.params,d.warehouseId])).rows[0];if(!warehouse)throw new CrmError('NOT_FOUND',404);
-  const wanted=new Map<string,bigint>();for(const line of version.snapshot.quote.calculation.lines)wanted.set(line.productId,(wanted.get(line.productId)??0n)+fixed(line.baseQuantity));const ids:string[]=[];
-  for(const [productId,needTotal] of [...wanted].sort(([a],[b])=>a.localeCompare(b))){let need=needTotal;const candidates=(await sql.query<(Balance&{expires_on:string|null;lot_status:string;location_active:boolean})>(`SELECT b.*,t.expires_on,t.status AS lot_status,l.active AS location_active FROM cohamy_crm.inventory_balances b JOIN cohamy_crm.inventory_lots t ON t.id=b.lot_id JOIN cohamy_crm.warehouse_locations l ON l.id=b.location_id WHERE b.warehouse_id=$1 AND b.product_id=$2 AND b.on_hand>b.reserved AND t.status='AVAILABLE' AND l.active AND l.kind='PICK' AND(t.expires_on IS NULL OR t.expires_on>=current_date+$3::integer) ORDER BY t.expires_on NULLS LAST,t.code,l.code FOR UPDATE OF b`,[warehouse.id,productId,d.minimumShelfLifeDays])).rows;for(const b of candidates){if(!need)break;const free=fixed(b.on_hand)-fixed(b.reserved),take=free<need?free:need,id=randomUUID();await updateBalance(sql,b,fixed(b.on_hand),fixed(b.reserved)+take);await sql.query('INSERT INTO cohamy_crm.inventory_reservations(id,order_id,order_version_id,warehouse_id,location_id,product_id,lot_id,quantity) VALUES($1,$2,$3,$4,$5,$6,$7,$8)',[id,order.id,version.id,b.warehouse_id,b.location_id,b.product_id,b.lot_id,fixedText(take)]);await sql.query("INSERT INTO cohamy_crm.inventory_reservation_events(id,reservation_id,action,quantity,actor_id,reason,idempotency_key,request_hash,result) VALUES($1,$2,'RESERVED',$3,$4,$5,$6,$7,$8::jsonb)",[randomUUID(),id,fixedText(take),user.id,d.reason,randomUUID(),h,JSON.stringify({orderId:order.id})]);ids.push(id);need-=take;}if(need>0n)throw new CrmError('INVENTORY_INSUFFICIENT',409);}
-  const result={orderId:order.id,reservationIds:ids,count:ids.length};await recordAction(sql,user,'ORDER_RESERVED',order.id,d.idempotencyKey,h,result);await audit(sql,user.id,'inventory.order-reserved',order.id,{after:{warehouseId:warehouse.id,reservations:ids.length,orderVersionId:version.id},reason:d.reason});return result;
+  const wanted=new Map<string,bigint>();for(const line of version.snapshot.quote.calculation.lines)wanted.set(line.productId,(wanted.get(line.productId)??0n)+fixed(line.baseQuantity));const ids:string[]=[];const shortages:Array<{productId:string;needed:string;allocated:string;missing:string;missingQuantity:string}>=[];
+  for(const [productId,needTotal] of [...wanted].sort(([a],[b])=>a.localeCompare(b))){let need=needTotal;const candidates=(await sql.query<(Balance&{expires_on:string|null;lot_status:string;location_active:boolean})>(`SELECT b.*,t.expires_on,t.status AS lot_status,l.active AS location_active FROM cohamy_crm.inventory_balances b JOIN cohamy_crm.inventory_lots t ON t.id=b.lot_id JOIN cohamy_crm.warehouse_locations l ON l.id=b.location_id WHERE b.warehouse_id=$1 AND b.product_id=$2 AND b.on_hand>b.reserved AND t.status='AVAILABLE' AND l.active AND l.kind='PICK' AND(t.expires_on IS NULL OR t.expires_on>=current_date+$3::integer) ORDER BY t.expires_on NULLS LAST,t.code,l.code FOR UPDATE OF b`,[warehouse.id,productId,d.minimumShelfLifeDays])).rows;for(const b of candidates){if(!need)break;const free=fixed(b.on_hand)-fixed(b.reserved),take=free<need?free:need,id=randomUUID();await updateBalance(sql,b,fixed(b.on_hand),fixed(b.reserved)+take);await sql.query('INSERT INTO cohamy_crm.inventory_reservations(id,order_id,order_version_id,warehouse_id,location_id,product_id,lot_id,quantity) VALUES($1,$2,$3,$4,$5,$6,$7,$8)',[id,order.id,version.id,b.warehouse_id,b.location_id,b.product_id,b.lot_id,fixedText(take)]);await sql.query("INSERT INTO cohamy_crm.inventory_reservation_events(id,reservation_id,action,quantity,actor_id,reason,idempotency_key,request_hash,result) VALUES($1,$2,'RESERVED',$3,$4,$5,$6,$7,$8::jsonb)",[randomUUID(),id,fixedText(take),user.id,d.reason,randomUUID(),h,JSON.stringify({orderId:order.id})]);ids.push(id);need-=take;}if(need>0n){if(!d.allowPartial)throw new CrmError('INVENTORY_INSUFFICIENT',409);shortages.push({productId,needed:fixedText(needTotal),allocated:fixedText(needTotal-need),missing:fixedText(need),missingQuantity:fixedText(need).replace(/\.0+$/,'')});}}
+  for(const sht of shortages){await sql.query(`INSERT INTO cohamy_crm.delivery_backorders(id,order_id,product_id,quantity,expected_on,reason) VALUES($1,$2,$3,$4,NULL,$5) ON CONFLICT(order_id,product_id,status) DO UPDATE SET quantity=cohamy_crm.delivery_backorders.quantity+$4,updated_at=now()`,[randomUUID(),order.id,sht.productId,sht.missing,`Shortage: needed ${sht.needed}, allocated ${sht.allocated}, missing ${sht.missing}`]);}
+  if(shortages.length>0){await sql.query('UPDATE cohamy_crm.sales_orders SET fulfillment_shortage=$1::jsonb, updated_at=now() WHERE id=$2',[JSON.stringify(shortages[0]),order.id]);}
+  const resDetails=(await sql.query<{id:string;quantity:string}>('SELECT id,quantity::text FROM cohamy_crm.inventory_reservations WHERE id=ANY($1::uuid[])',[ids])).rows;
+  const result={orderId:order.id,reservationIds:ids,count:ids.length,partial:shortages.length>0,status:shortages.length>0?'PARTIAL':'RESERVED',reservations:resDetails,shortages,shortage:shortages[0]??null};await recordAction(sql,user,'ORDER_RESERVED',order.id,d.idempotencyKey,h,result);await audit(sql,user.id,'inventory.order-reserved',order.id,{after:{warehouseId:warehouse.id,reservations:ids.length,orderVersionId:version.id,partial:shortages.length>0,shortages},reason:d.reason});return result;
  });
 }
 export async function releaseOrderReservations(user:Principal,input:unknown){return reservationTransition(user,input,'RELEASED');}
@@ -158,4 +161,48 @@ export async function saveAlertRule(user:Principal,input:unknown){
 }
 export async function updateRecall(user:Principal,input:unknown){
  inventoryWriter(user,true);const d=parse(z.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['PROGRESS','CLOSE']),note:reason,idempotencyKey:key}).strict(),input),h=digest(d);return(await database()).transaction(async sql=>{await assertCurrentPrincipal(sql,user);const prior=await priorAction(sql,user,d.idempotencyKey,h);if(prior)return prior;const r=(await sql.query<{id:string;lot_id:string;status:string;version:number}>('SELECT * FROM cohamy_crm.lot_recalls WHERE id=$1 FOR UPDATE',[d.id])).rows[0];if(!r)throw new CrmError('NOT_FOUND',404);if(r.version!==d.version||r.status!=='OPEN')throw new CrmError('VERSION_CONFLICT',409);const status=d.action==='CLOSE'?'CLOSED':'OPEN',result={id:r.id,version:r.version+1,status};await sql.query('UPDATE cohamy_crm.lot_recalls SET status=$1,version=version+1,updated_at=now() WHERE id=$2',[status,r.id]);await sql.query('INSERT INTO cohamy_crm.lot_recall_events(id,recall_id,action,note,actor_id,idempotency_key,request_hash,result) VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb)',[randomUUID(),r.id,d.action==='CLOSE'?'CLOSED':'PROGRESS',d.note,user.id,d.idempotencyKey,h,JSON.stringify(result)]);await recordAction(sql,user,'RECALL_'+d.action,r.id,d.idempotencyKey,h,result);await audit(sql,user.id,'inventory.recall-'+d.action.toLowerCase(),r.id,{after:{status},reason:d.note});return result;});
+}
+
+// ============================================================================
+// PROVISIONAL RESERVATION ON FORMAL SUBMIT & BUYER AVAILABLE STOCK
+// ============================================================================
+
+export {provisionalReserveRequest,promoteProvisionalReservations,releaseExpiredReservations,runReservationMaintenance} from './request-reservations';
+
+export async function getBuyerAvailableStock(
+  user: Principal,
+  sku: string
+): Promise<{ sku: string; availableQuantity: string }> {
+  const db = await database();
+  await assertCurrentPrincipal(db,user);
+  let s = warehouseWhere(user, 'w', 1);
+  if(user.area==='portal'){
+    const {getActiveParentOrganization}=await import('./distribution');
+    const parent=await getActiveParentOrganization(db,user.organizationId);
+    const root=(await db.query<{id:string}>("SELECT id FROM cohamy_crm.organizations WHERE kind='COHAMY' AND active LIMIT 1")).rows[0];
+    s={sql:'w.organization_id=ANY($2::uuid[])',params:[[user.organizationId,parent?.id??root?.id].filter(Boolean)]};
+  }
+
+  const res = (await db.query<{ available: string }>(
+    `SELECT COALESCE(SUM(b.on_hand - b.reserved), 0)::text AS available
+     FROM cohamy_crm.inventory_balances b
+     JOIN cohamy_crm.products p ON p.id = b.product_id
+     JOIN cohamy_crm.inventory_lots t ON t.id = b.lot_id
+     JOIN cohamy_crm.warehouse_locations l ON l.id = b.location_id
+     JOIN cohamy_crm.warehouses w ON w.id = b.warehouse_id
+     WHERE p.sku = $1
+       AND t.status = 'AVAILABLE'
+       AND (t.expires_on IS NULL OR t.expires_on > current_date)
+       AND l.active AND l.kind = 'PICK'
+       AND w.active
+       AND (${s.sql})`,
+    [sku, ...s.params]
+  )).rows[0];
+
+  const rawQty = res ? fixed(res.available) : 0n;
+  const avail = rawQty > 0n ? rawQty : 0n;
+  return {
+    sku,
+    availableQuantity: fixedText(avail),
+  };
 }

@@ -7,6 +7,7 @@ import * as policy from '@/lib/crm/order-policy';
 import * as previews from '@/lib/crm/order-previews';
 import * as excel from '@/lib/crm/request-excel';
 import * as changes from '@/lib/crm/order-changes';
+import * as routing from '@/lib/crm/order-routing';
 type Context={params:Promise<{action:string}>};
 export async function GET(request:Request,context:Context){try{
  const user=await apiUser(),{action}=await context.params,p=new URL(request.url).searchParams,id=p.get('id')??'';
@@ -16,6 +17,7 @@ export async function GET(request:Request,context:Context){try{
  if(action==='orders')return json(await orders.listSalesOrders(user,p.get('q')??''));
  if(action==='order')return json(await orders.salesOrderAccess(await database(),user,id));
  if(action==='order-versions')return json(await orders.salesOrderVersions(user,id));
+ if(action==='order-route')return json(await routing.getOrderRouteChain(user,id));
  if(action==='request-events'||action==='order-events')return json(await requests.commercialTimeline(user,action==='request-events'?'request':'order',id));
  if(action==='policy')return json(await policy.readOrderPolicy(user));
  if(action==='reorder')return json(await previews.reorderPreview(user,id));
@@ -29,6 +31,7 @@ export async function POST(request:Request,context:Context){try{
  if(action==='save-request')return json(await requests.saveCommercialRequest(user,input));
  if(action==='request-action')return json(await requests.requestAction(user,input));
  if(action==='submit-request')return json(await orders.submitSalesRequest(user,input));
+ if(action==='escalate-request')return json(await routing.escalateCommercialRequest(user,input));
  if(action==='order-action')return json(await orders.salesOrderAction(user,input));
  if(action==='save-policy')return json(await policy.saveOrderPolicy(user,input));
  if(action==='duplicates')return json(await previews.duplicateSalesCandidates(user,input));

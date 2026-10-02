@@ -15,20 +15,33 @@ export const organizationSchema = z.object({
   address: z.string().trim().max(500).default(""),
   source: z.string().trim().max(120).default(""), segment: z.string().trim().max(120).default(""),
   contactName: z.string().trim().max(120).default(""), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),
+  partnerType: z.enum(['COHAMY','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),
+  pricingTierId: z.uuid().nullable().optional(),
+  creditEnabled: z.boolean().optional(),
 }).strict();
 const updateSchema = organizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() });
 const warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid() }).strict();
 const accountSchema = z.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() }).strict();
-const organizationColumns = "o.id,o.code,o.name,o.kind,o.phone,o.email,o.address,o.active,o.version,o.created_at,o.source,o.segment,o.contact_name,o.stage,o.business_id,o.merged_into_id";
+const organizationColumns = "o.id,o.code,o.name,o.kind,o.phone,o.email,o.address,o.active,o.version,o.created_at,o.source,o.segment,o.contact_name,o.stage,o.business_id,o.merged_into_id,o.partner_type,o.pricing_tier_id,o.credit_enabled";
 const parse = <T>(schema: z.ZodType<T>, input: unknown): T => {
   const result = schema.safeParse(input);
   if (!result.success) throw new CrmError("INVALID_FIELDS", 400);
   return result.data;
 };
-export function partnerScope(user: Principal): { sql: string; params: unknown[] } {
+export function partnerScope(user: Principal, alias = "o"): { sql: string; params: unknown[] } {
   if (allPartners(user)) return { sql: "true", params: [] };
-  if (user.area === "portal") return { sql: "(o.id=$1 OR o.merged_into_id=$1)", params: [user.organizationId] };
-  if (user.role === "SALES") return { sql: "EXISTS (SELECT 1 FROM cohamy_crm.partner_assignments a WHERE a.organization_id=COALESCE(o.merged_into_id,o.id) AND a.membership_id=$1)", params: [user.membershipId] };
+  if (user.area === "portal") {
+    return {
+      sql: `(${alias}.id=$1 OR ${alias}.merged_into_id=$1 OR EXISTS (WITH RECURSIVE branch AS (SELECT child_organization_id FROM cohamy_crm.distribution_relations WHERE parent_organization_id=$1 AND status='ACTIVE' AND (ends_at IS NULL OR ends_at > now()) UNION SELECT dr.child_organization_id FROM cohamy_crm.distribution_relations dr JOIN branch b ON dr.parent_organization_id=b.child_organization_id WHERE dr.status='ACTIVE' AND (dr.ends_at IS NULL OR dr.ends_at > now())) SELECT 1 FROM branch WHERE child_organization_id=${alias}.id))`,
+      params: [user.organizationId]
+    };
+  }
+  if (user.role === "SALES") {
+    return {
+      sql: `(EXISTS (SELECT 1 FROM cohamy_crm.partner_assignments a WHERE a.organization_id=COALESCE(${alias}.merged_into_id,${alias}.id) AND a.membership_id=$1) OR EXISTS (WITH RECURSIVE branch AS (SELECT child_organization_id FROM cohamy_crm.distribution_relations dr JOIN cohamy_crm.partner_assignments a ON a.organization_id=dr.parent_organization_id WHERE a.membership_id=$1 AND dr.status='ACTIVE' UNION SELECT dr2.child_organization_id FROM cohamy_crm.distribution_relations dr2 JOIN branch b ON dr2.parent_organization_id=b.child_organization_id WHERE dr2.status='ACTIVE') SELECT 1 FROM branch WHERE child_organization_id=COALESCE(${alias}.merged_into_id,${alias}.id)))`,
+      params: [user.membershipId]
+    };
+  }
   return { sql: "false", params: [] };
 }
 export async function listOrganizations(user: Principal, options: { kind?: string; q?: string; page?: number; tags?:string } = {}) {
@@ -75,10 +88,12 @@ export async function createOrganization(user: Principal, input: unknown) {
   return db.transaction(async tx => {
     await assertCurrentPrincipal(tx,user);
     const id = randomUUID();
-    await tx.query(`INSERT INTO cohamy_crm.organizations(id,code,name,kind,phone,email,address) VALUES ($1,$2,$3,$4,$5,$6,$7)`, [id, data.code, data.name, data.kind, data.phone, data.email, data.address]);
+    const defaultPartnerType = data.kind === "CUSTOMER" ? "END_CUSTOMER" : "DEALER_L1";
+    const partnerType = data.partnerType ?? defaultPartnerType;
+    await tx.query(`INSERT INTO cohamy_crm.organizations(id,code,name,kind,phone,email,address,partner_type,pricing_tier_id,credit_enabled) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [id, data.code, data.name, data.kind, data.phone, data.email, data.address, partnerType, data.pricingTierId ?? null, data.creditEnabled ?? false]);
     await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4,business_id=$6 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id,data.businessId]);
     if (user.role === "SALES") await tx.query("INSERT INTO cohamy_crm.partner_assignments(membership_id,organization_id) VALUES ($1,$2)", [user.membershipId, id]);
-    await audit(tx, user.id, "partner.created", id, { kind: data.kind });
+    await audit(tx, user.id, "partner.created", id, { kind: data.kind, partnerType });
     return { id };
   });
 }
@@ -94,6 +109,15 @@ export async function updateOrganization(user: Principal, id: string, input: unk
     const result = await tx.query<{ id: string }>(`UPDATE cohamy_crm.organizations SET code=$1,name=$2,phone=$3,email=$4,address=$5,active=$6,version=version+1 WHERE id=$7 AND version=$8 RETURNING id`, [data.code, data.name, data.phone, data.email, data.address, data.active, id, data.version]);
     if (!result.rows.length) throw new CrmError("VERSION_CONFLICT", 409);
     await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4,business_id=$6 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id,data.businessId]);
+    if (data.partnerType !== undefined) {
+      await tx.query('UPDATE cohamy_crm.organizations SET partner_type=$1 WHERE id=$2', [data.partnerType, id]);
+    }
+    if (data.pricingTierId !== undefined) {
+      await tx.query('UPDATE cohamy_crm.organizations SET pricing_tier_id=$1 WHERE id=$2', [data.pricingTierId, id]);
+    }
+    if (data.creditEnabled !== undefined && user.area === 'crm' && ['ADMIN','MANAGER'].includes(user.role)) {
+      await tx.query('UPDATE cohamy_crm.organizations SET credit_enabled=$1 WHERE id=$2', [data.creditEnabled, id]);
+    }
     await audit(tx, user.id, "partner.updated", id, {before:{code:original.code,name:original.name,phone:original.phone,email:original.email,address:original.address,active:original.active,source:original.source,segment:original.segment,contactName:original.contact_name,stage:original.stage,businessId:original.business_id,version:original.version},after:{...data,version:data.version+1},reason:"Profile edited by authorized user"});
     return { id, version: data.version + 1 };
   });

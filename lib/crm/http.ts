@@ -15,7 +15,7 @@ export function sameOrigin(request: Request) {
   const fetchSite = request.headers.get("sec-fetch-site");
   if (fetchSite && !["same-origin", "none"].includes(fetchSite)) throw new CrmError("INVALID_ORIGIN", 403);
 }
-export async function readJson(request: Request) {
+export async function readJson(request: Request, maximumBytes = 32768) {
   if (!request.headers.get("content-type")?.startsWith("application/json")) throw new CrmError("JSON_REQUIRED", 415);
   // Bound bytes while reading, not only a client-controlled Content-Length header.
   const reader = request.body?.getReader();
@@ -25,7 +25,7 @@ export async function readJson(request: Request) {
     while (true) {
       const { value, done } = await reader.read(); if (done) break;
       size += value.byteLength;
-      if (size > 32768) { await reader.cancel(); throw new CrmError("BODY_TOO_LARGE", 413); }
+      if (size > maximumBytes) { await reader.cancel(); throw new CrmError("BODY_TOO_LARGE", 413); }
       chunks.push(value);
     }
     try { return JSON.parse(Buffer.concat(chunks).toString("utf8")) as unknown; }

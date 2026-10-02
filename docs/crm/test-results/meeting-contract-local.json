@@ -1,0 +1,298 @@
+{
+  "testedAt": "2026-10-02T08:56:30.793Z",
+  "environment": "LOCAL isolated fictitious PGlite; in-memory data directory",
+  "totalCases": 72,
+  "passedCases": 72,
+  "failedCases": 0,
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "TC01: 4-tier chain definition (Cohamy -> A1 -> A2 -> S -> End Customer)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC02: Direct short routes (Cohamy -> A1 -> Store Direct)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC03: Independence of partner_type and pricing_tier",
+      "status": "PASS"
+    },
+    {
+      "name": "TC04: Warehouse is not a dealer level; warehouse user cannot manage relations",
+      "status": "PASS"
+    },
+    {
+      "name": "TC05: Multiple user accounts per organization with individual audit trail",
+      "status": "PASS"
+    },
+    {
+      "name": "TC06: Distribution relation records upstream, downstream, status, starts_at, created_by",
+      "status": "PASS"
+    },
+    {
+      "name": "TC07: Prevent self-parenting",
+      "status": "PASS"
+    },
+    {
+      "name": "TC08: Prevent cycles in distribution hierarchy",
+      "status": "PASS"
+    },
+    {
+      "name": "TC09: Prevent attaching branch to its own descendant",
+      "status": "PASS"
+    },
+    {
+      "name": "TC10: Changing distribution relations never rewrites previously confirmed orders",
+      "status": "PASS"
+    },
+    {
+      "name": "TC11: Sibling dealer isolation (Dealer B cannot view Dealer A branch requests)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC12: Descendant visibility (Dealer A1 can see A2 and Store S)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC13: Store S cannot see parent Dealer A1 or sibling store data",
+      "status": "PASS"
+    },
+    {
+      "name": "TC14: Central Admin can see all branches and orders",
+      "status": "PASS"
+    },
+    {
+      "name": "TC15: Warehouse scope isolation",
+      "status": "PASS"
+    },
+    {
+      "name": "TC16: Direct ID access rejection for out-of-scope entity",
+      "status": "PASS"
+    },
+    {
+      "name": "TC17: Global search respects scope",
+      "status": "PASS"
+    },
+    {
+      "name": "TC18: Scoped counts and dashboards do not leak sibling metrics",
+      "status": "PASS"
+    },
+    {
+      "name": "TC19: Commercial timeline for Dealer A is inaccessible by Dealer B",
+      "status": "PASS"
+    },
+    {
+      "name": "TC20: Sales rep reassignment preserves legal seller and buyer",
+      "status": "PASS"
+    },
+    {
+      "name": "TC21: Self-service onboarding creates applicant with PENDING review",
+      "status": "PASS"
+    },
+    {
+      "name": "TC22: Admin approval assigns partnerType, parentOrganizationId, pricingTierId, creditEnabled, creditLimit",
+      "status": "PASS"
+    },
+    {
+      "name": "TC23: Approval atomically creates active distribution relation to parent",
+      "status": "PASS"
+    },
+    {
+      "name": "TC24: Approval creates credit account when creditEnabled is true",
+      "status": "PASS"
+    },
+    {
+      "name": "TC25: Application rejection creates no distribution relation or credit account",
+      "status": "PASS"
+    },
+    {
+      "name": "TC26: Self-onboarding cannot set partner_type directly without admin review",
+      "status": "PASS"
+    },
+    {
+      "name": "TC27: Idempotency of onboarding approval",
+      "status": "PASS"
+    },
+    {
+      "name": "TC28: Onboarding audit log records reviewer admin ID and timestamp",
+      "status": "PASS"
+    },
+    {
+      "name": "TC29: Non-admin users cannot approve onboarding applications",
+      "status": "PASS"
+    },
+    {
+      "name": "TC30: Approved partner can log in and view assigned parent",
+      "status": "PASS"
+    },
+    {
+      "name": "TC31: Layer A (Product promotion) discount applied first (100k -> 90k)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC32: Layer B (FIXED_PERCENT) applies to remaining base: 90k * 70% = 63k, 90k * 60% = 54k",
+      "status": "PASS"
+    },
+    {
+      "name": "TC33: Layer B (QUANTITY_TIER) half-open intervals [min, max)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC34: Aggregation across multiple lines of same SKU before tier matching",
+      "status": "PASS"
+    },
+    {
+      "name": "TC35: Line falling below minimum tier gets 0% Layer B discount",
+      "status": "PASS"
+    },
+    {
+      "name": "TC36: Exact lower boundary [min, ...) receives tier discount",
+      "status": "PASS"
+    },
+    {
+      "name": "TC37: Exact upper boundary transitions to next tier",
+      "status": "PASS"
+    },
+    {
+      "name": "TC38: Sequential calculation is exact without IEEE 754 precision loss",
+      "status": "PASS"
+    },
+    {
+      "name": "TC39: Price snapshot frozen in version; future promo change does not affect snapshot",
+      "status": "PASS"
+    },
+    {
+      "name": "TC40: Stale price detection on re-save recalculates against published price",
+      "status": "PASS"
+    },
+    {
+      "name": "TC41: Store S submits commercial request to Tier 2 Dealer A2",
+      "status": "PASS"
+    },
+    {
+      "name": "TC42: Dealer A2 approves Store S request",
+      "status": "PASS"
+    },
+    {
+      "name": "TC43: Dealer A2 escalates shortage upstream to Tier 1 Dealer A1",
+      "status": "PASS"
+    },
+    {
+      "name": "TC44: Dealer A1 approves Dealer A2 request",
+      "status": "PASS"
+    },
+    {
+      "name": "TC45: Dealer A1 escalates upstream to Cohamy factory",
+      "status": "PASS"
+    },
+    {
+      "name": "TC46: Each tier maintains independent pricing snapshot",
+      "status": "PASS"
+    },
+    {
+      "name": "TC47: Route chain traceability from Store S to Cohamy",
+      "status": "PASS"
+    },
+    {
+      "name": "TC48: Downstream cannot confirm order against upstream without upstream approval",
+      "status": "PASS"
+    },
+    {
+      "name": "TC49: Internal departments of same legal entity do not generate cross-entity POs",
+      "status": "PASS"
+    },
+    {
+      "name": "TC50: Canceling downstream order does not automatically cancel upstream order",
+      "status": "PASS"
+    },
+    {
+      "name": "TC51: Order confirmation creates stock reservation, not physical deduction",
+      "status": "PASS"
+    },
+    {
+      "name": "TC52: Physical deduction occurs only on dispatch / fulfillment shipment confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "TC53: Insufficient stock with allowPartial: false rejects reservation",
+      "status": "PASS"
+    },
+    {
+      "name": "TC54: Insufficient stock with allowPartial: true reserves available amount",
+      "status": "PASS"
+    },
+    {
+      "name": "TC55: Shortage of 24 recorded in backorder with expected_on: NULL (no fake delivery dates)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC56: Fulfillment shortage details recorded on sales order",
+      "status": "PASS"
+    },
+    {
+      "name": "TC57: Subsequent stock intake allows fulfilling remaining backorder",
+      "status": "PASS"
+    },
+    {
+      "name": "TC58: Order cancellation releases reserved stock back to available pool",
+      "status": "PASS"
+    },
+    {
+      "name": "TC59: Warehouse staff assigned to Warehouse A cannot dispatch stock from Warehouse B",
+      "status": "PASS"
+    },
+    {
+      "name": "TC60: Stock balance invariants: on_hand = available + reserved holds consistently",
+      "status": "PASS"
+    },
+    {
+      "name": "TC61: Creditor organization is the seller (creditor_organization_id = seller_organization_id)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC62: Store S receivable is owed to Dealer A2, NOT directly to Cohamy",
+      "status": "PASS"
+    },
+    {
+      "name": "TC63: Dealer A2 receivable is owed to Dealer A1",
+      "status": "PASS"
+    },
+    {
+      "name": "TC64: Dealer A1 receivable is owed to Cohamy",
+      "status": "PASS"
+    },
+    {
+      "name": "TC65: Debt posted only upon delivery confirmation; unconfirmed order cannot post receivable",
+      "status": "PASS"
+    },
+    {
+      "name": "TC66: Credit limit check blocks orders exceeding approved credit limit",
+      "status": "PASS"
+    },
+    {
+      "name": "TC67: Multi-order payment allocation across multiple receivables",
+      "status": "PASS"
+    },
+    {
+      "name": "TC68: Allocation amount cannot exceed payment amount or remaining receivable balance",
+      "status": "PASS"
+    },
+    {
+      "name": "TC69: Fully allocated receivables update status to PAID",
+      "status": "PASS"
+    },
+    {
+      "name": "TC70: Dealer owner can view their own debtors and payment allocations",
+      "status": "PASS"
+    },
+    {
+      "name": "TC71: Article draft in CRM is private (isPublicBlogRow === false, hidden from public)",
+      "status": "PASS"
+    },
+    {
+      "name": "TC72: Publishing article makes it public (isPublicBlogRow === true); unpublishing reverts to draft",
+      "status": "PASS"
+    }
+  ]
+}

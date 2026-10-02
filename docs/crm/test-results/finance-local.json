@@ -1,13 +1,13 @@
 {
-  "testedAt": "2026-09-19T03:22:03.669Z",
+  "testedAt": "2026-10-02T09:13:52.752Z",
   "environment": "LOCAL isolated fictitious PGlite; no real money/order/provider mutation",
   "status": "PASS",
   "references": {
-    "firstOrder": "43fca7b5-ab7b-4b23-8eae-d27b491be73a",
-    "receivable": "e8f9837c-33e8-48c9-bb39-6ca377056f5f",
-    "payment": "13085f41-a1ab-459c-8079-6d1e7f04fb01",
-    "documentVersion": "28dc0208-fdce-4edc-8cc8-21d7694fb471",
-    "cash": "5e91a088-ded1-4524-83dd-7cc9068748f0"
+    "firstOrder": "b9dc3589-d438-444a-abde-cd66a390a412",
+    "receivable": "561f6c3b-3e83-4625-b386-dd73be9586c4",
+    "payment": "197b8a36-a581-4009-b989-6340b79f8599",
+    "documentVersion": "fe5b15e7-504d-4e03-a409-6daaf874b33e",
+    "cash": "c01245d2-af48-468b-977f-8c9cef9b33d1"
   },
   "cases": [
     {
@@ -32,6 +32,10 @@
     },
     {
       "name": "F087 bank import is deduplicated and wrong match has immutable reversal",
+      "status": "PASS"
+    },
+    {
+      "name": "F087 simultaneous bank matches and retries preserve one active immutable match",
       "status": "PASS"
     },
     {

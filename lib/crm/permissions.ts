@@ -11,8 +11,13 @@ const permissions: Record<Role, readonly string[]> = {
 };
 export function can(user: Principal, permission: string): boolean {
   if(permission==="pricing.manage")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
+  if(permission==="articles.read"||permission==="articles.write")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
   if(permission==="workspace.use")return true;
   if(permission==="dealer.invite")return user.area==="portal"&&user.role==="DEALER_OWNER";
+  if(permission==="deals.read")return permissions[user.role]?.some(v => v === "*" || v === "orders.read") ?? false;
+  if(permission==="deals.write")return ["ADMIN","MANAGER","SALES","DEALER_OWNER"].includes(user.role);
+  if(permission==="distribution.network.manage")return user.role==="ADMIN"||(user.area==="portal"&&user.role==="DEALER_OWNER");
+  if(permission==="discount.ceiling.manage")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
   return permissions[user.role]?.some(value => value === "*" || value === permission) ?? false;
 }
 export function assertPermission(user: Principal, permission: string) {

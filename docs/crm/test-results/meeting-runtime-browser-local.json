@@ -1,0 +1,94 @@
+{
+  "testedAt": "2026-10-02T09:00:44.532Z",
+  "environment": "LOCAL real Edge browser and running Next APIs; isolated fictitious PGlite",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "CRM form saves a long article, sanitizes HTML, and publishes to the actual public route",
+      "status": "PASS"
+    },
+    {
+      "name": "Draft edits preserve the public snapshot; stale edits conflict; unpublish removes the public page",
+      "status": "PASS"
+    },
+    {
+      "name": "Portal UI formally submits a draft and displays the seller stock allocation",
+      "status": "PASS"
+    },
+    {
+      "name": "Seller portal exposes upstream action, creates a linked draft, and confirms only its own sale",
+      "status": "PASS"
+    },
+    {
+      "name": "Real desktop and 390px pages render articles, seller requests, order stock and policy without overflow",
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    {
+      "name": "article-1366",
+      "path": ".local/meeting-runtime-browser/article-1366.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "policy-1366",
+      "path": ".local/meeting-runtime-browser/policy-1366.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "upstream-1366",
+      "path": ".local/meeting-runtime-browser/upstream-1366.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "order-1366",
+      "path": ".local/meeting-runtime-browser/order-1366.png",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      }
+    },
+    {
+      "name": "article-390",
+      "path": ".local/meeting-runtime-browser/article-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 900
+      }
+    },
+    {
+      "name": "policy-390",
+      "path": ".local/meeting-runtime-browser/policy-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 900
+      }
+    },
+    {
+      "name": "upstream-390",
+      "path": ".local/meeting-runtime-browser/upstream-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 900
+      }
+    },
+    {
+      "name": "order-390",
+      "path": ".local/meeting-runtime-browser/order-390.png",
+      "viewport": {
+        "width": 390,
+        "height": 900
+      }
+    }
+  ],
+  "pageErrors": []
+}

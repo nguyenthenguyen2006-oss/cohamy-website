@@ -2,7 +2,7 @@ import "server-only";
 
 import { revalidateTag, unstable_cache } from "next/cache";
 import { assertLegacyBlogWrites, blogSource } from "@/lib/blog-source";
-import { legacyBlogRows } from "@/lib/blog-legacy";
+import { legacyRowsWithCrmArticles } from "@/lib/blog-crm-store";
 import { getWordPressSnapshot, getWordPressContent, getWordPressRedirect, listWordPressContent, WORDPRESS_BLOG_TAG } from "@/lib/wordpress-blog";
 import {
   archiveRow,
@@ -112,11 +112,12 @@ export function paginatePublicBlogRows(
 
 async function rows(): Promise<BlogRow[]> {
   if (blogSource() === "wordpress") return (await getWordPressSnapshot()).posts;
-  if (blogSource() === "legacy") return legacyBlogRows();
+  if (blogSource() === "legacy") return legacyRowsWithCrmArticles();
   return getCachedRows(cacheGeneration());
 }
 
 async function publicRows(): Promise<BlogRow[]> {
+  if (blogSource() === "legacy") return legacyRowsWithCrmArticles(true);
   if (blogSource() === "sheets" && !isBlogSheetsConfigured()) throw new Error("BLOG_SHEETS_NOT_CONFIGURED");
   return rows();
 }

@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-09-27T17:18:03.273Z",
+  "testedAt": "2026-10-02T09:17:09.663Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -15,7 +15,7 @@
       "status": "PASS"
     }
   ],
-  "traceCount": 87,
+  "traceCount": 88,
   "includedMigrations": [
     "db/crm/001-access-catalog.sql",
     "db/crm/002-website-order-intake.sql",
@@ -41,7 +41,11 @@
     "db/crm/022-consignment.sql",
     "db/crm/023-operational-completion.sql",
     "db/crm/024-ledger-corrections.sql",
-    "db/crm/025-sample-management.sql"
+    "db/crm/025-sample-management.sql",
+    "db/crm/026-distribution-multitier.sql",
+    "db/crm/027-meeting-53-amendments.sql",
+    "db/crm/028-meeting-runtime.sql",
+    "db/crm/029-bank-match-lock.sql"
   ],
   "includedPdfAssets": [
     "assets/crm/fonts/BeVietnamPro-Regular.ttf",

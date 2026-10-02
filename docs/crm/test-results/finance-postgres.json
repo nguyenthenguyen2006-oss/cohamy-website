@@ -1,0 +1,54 @@
+{
+  "testedAt": "2026-10-02T09:14:49.423Z",
+  "environment": "STAGING isolated fictitious PostgreSQL; no real money/order/provider mutation",
+  "status": "PASS",
+  "references": {
+    "firstOrder": "dac7082e-59e7-476b-ab08-429d18a5c6df",
+    "receivable": "ba47cdfa-bc1d-4d13-943b-20ef2f923e34",
+    "payment": "003418b6-3d41-4505-93f5-12b699aa07f3",
+    "documentVersion": "dbaedc31-6e05-4acb-9daf-886f544626ba",
+    "cash": "3b1ee211-b5b0-4992-8fa7-a62ea5e1405f"
+  },
+  "cases": [
+    {
+      "name": "F081 credit account starts unavailable and configuration is versioned",
+      "status": "PASS"
+    },
+    {
+      "name": "F081 concurrent/serial confirmation cannot exceed exact credit limit",
+      "status": "PASS"
+    },
+    {
+      "name": "F082/F083 posting snapshots terms, adjustments and dispute history",
+      "status": "PASS"
+    },
+    {
+      "name": "F085/F086 uploaded proof remains pending until accountant confirms",
+      "status": "PASS"
+    },
+    {
+      "name": "F084/F085 allocation and deposit refund preserve every remainder",
+      "status": "PASS"
+    },
+    {
+      "name": "F087 bank import is deduplicated and wrong match has immutable reversal",
+      "status": "PASS"
+    },
+    {
+      "name": "F087 simultaneous bank matches and retries preserve one active immutable match",
+      "status": "PASS"
+    },
+    {
+      "name": "F088/F089 aging and reminder retries are dated, scoped and duplicate-safe",
+      "status": "PASS"
+    },
+    {
+      "name": "F090 cash request enforces non-self approval and immutable reversal history",
+      "status": "PASS"
+    },
+    {
+      "name": "Credit hold is released once when a confirmed unposted order is cancelled",
+      "status": "PASS"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
 # Run on the verified Cohamy VPS. Deploys one committed revision; preserves the old app.
 set -euo pipefail
 umask 077
-export PATH="/root/.nvm/versions/node/v20.19.6/bin:$PATH"
+export PATH="/root/cohamy-shared/node22/bin:/root/.nvm/versions/node/v20.19.6/bin:$PATH"
 SHA="${1:?Pass the exact 40-character commit SHA}"
 [[ "$SHA" =~ ^[a-f0-9]{40}$ ]] || exit 2
 CUTOVER=0
@@ -107,6 +107,7 @@ DO \$\$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='cohamy_runtime'
 GRANT CONNECT ON DATABASE cohamy_crm TO cohamy_runtime;
 GRANT USAGE ON SCHEMA cohamy_crm TO cohamy_runtime;
 GRANT EXECUTE ON FUNCTION cohamy_crm.lock_partner_merge() TO cohamy_runtime;
+GRANT EXECUTE ON FUNCTION cohamy_crm.lock_bank_transaction(uuid) TO cohamy_runtime;
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA cohamy_crm TO cohamy_runtime;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA cohamy_crm TO cohamy_runtime;
 REVOKE ALL ON cohamy_crm.migrations FROM cohamy_runtime;

@@ -1,0 +1,187 @@
+{
+  "testedAt": "2026-10-02T08:47:05.758Z",
+  "environment": "LOCAL PGlite; functional contention only, not PostgreSQL concurrency proof",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "ADD01: Có bước quản lý nội bộ nhưng không sinh giao dịch mua bán giả",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD02: Cây quản lý và chuỗi thương mại khác nhau vẫn định tuyến đúng",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD03: Đổi cây quản lý không tự viết lại đơn đã gửi",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD04: Người có quyền tạo được tài khoản con trong phạm vi",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD05: Đại lý không tạo được tài khoản hoặc role toàn hệ thống",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD06: Tuyến ngắn hoạt động mà không cần đại lý cấp 2",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD07: Deal ID duy nhất khi tạo đồng thời",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD08: Deal liên kết được báo giá, đơn, giao và thanh toán",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD09: Chung Deal không làm lộ bill/giá/công nợ trái quyền",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD10: Backfill Deal không tự gộp các giao dịch không đủ bằng chứng",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD11: Bật giới hạn: cấp trên 40%, tuyến dưới 20% hợp lệ",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD12: Bật giới hạn: tuyến dưới 45% bị chặn hoặc chờ ngoại lệ",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD13: Chỉ người có quyền được duyệt ngoại lệ, có audit đầy đủ",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD14: Khác cơ sở giá không so phần trăm máy móc",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD15: Quantity Tier không lấy bậc cao nhất chưa đạt làm giới hạn",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD16: SEQUENTIAL_STACK cho kết quả 54.000 trong ví dụ đã nêu",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD17: EXCLUSIVE ưu tiên account cho kết quả đúng",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD18: EXCLUSIVE ưu tiên promotion cho kết quả đúng",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD19: BEST_BENEFIT khác EXCLUSIVE khi ưu đãi ưu tiên thấp hơn",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD20: Client không tự đổi chế độ kết hợp",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD21: Đổi chính sách không làm đổi snapshot yêu cầu đã gửi",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD22: Sửa giá đã chấp thuận tạo phiên bản và quy trình chấp thuận lại",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD23: Nháp không giữ hàng",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD24: Formal submit atomically reserves without reducing On Hand",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD25: Real order confirmation promotes the same allocation",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD26: Worker releases two expired holds sharing a balance exactly once",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD27: Confirmation after expiry rechecks actual stock",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD28: Same submit key and worker retry never multiply reservations",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD29: Buyer cannot reserve seller allocations a second time",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD30: Formal submit exposes partial held quantity and missing quantity",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD31: Người mua thấy tổng khả dụng đúng phạm vi, không thấy kho bị hạn chế",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD32: Tổng khả dụng loại trừ hàng giữ, cách ly, chuyển kho và nguồn trái quyền",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD33: Upload chứng từ không tự xác nhận thanh toán",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD34: Chứng từ thanh toán bị chặn khi truy cập trái quyền",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD35: Bấm công nợ mở đúng đơn, bill, payment history và Deal nguồn",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD36: Đơn trả một phần và quá hạn hiển thị được cả hai trạng thái",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD37: Sản phẩm hiển thị được các bài public liên quan",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD38: Hồ sơ chăm sóc gợi ý bài đúng sản phẩm trong phạm vi",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD39: Không chia sẻ bài nháp hoặc preview token như link public",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD40: Copy link không bị ghi thành đã gửi/đã đọc",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD41: Thông báo đúng người, đúng đối tượng và mở được màn hình nguồn",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD42: Worker retry không tạo thông báo trùng",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD43: UI/API/export cùng sử dụng phiên bản giá và phạm vi dữ liệu",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD44: API debt summary contract only; browser evidence is in meeting-runtime-browser report",
+      "status": "PASS"
+    },
+    {
+      "name": "ADD45: Two real submissions compete for the last unit; PostgreSQL mode uses separate connections",
+      "status": "PASS"
+    }
+  ]
+}

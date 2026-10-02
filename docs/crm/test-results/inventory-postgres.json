@@ -1,0 +1,48 @@
+{
+  "testedAt": "2026-10-02T09:14:41.760Z",
+  "environment": "STAGING isolated fictitious PostgreSQL; no real stock/order/provider mutation",
+  "status": "PASS",
+  "references": {
+    "receiptId": "a281a25a-9b56-4a21-8f82-9a93109575e3",
+    "transferId": "aa7afe17-058f-4286-a371-8e1c5597ce13",
+    "countId": "1faf5351-ab37-4897-9ace-6c2ae5d31cf1"
+  },
+  "cases": [
+    {
+      "name": "F051/F053 migration starts with no inferred balance and location creation is idempotent",
+      "status": "PASS"
+    },
+    {
+      "name": "F051/F052/F054 receipt posts immutable base-unit snapshot and exact lot dates",
+      "status": "PASS"
+    },
+    {
+      "name": "F051 reversal keeps original movement and cannot reverse twice",
+      "status": "PASS"
+    },
+    {
+      "name": "F056 FEFO reservation blocks over-reserve and amendment until exact release",
+      "status": "PASS"
+    },
+    {
+      "name": "F057 two-step transfer preserves shipped quantity across partial receipt and declared shortage",
+      "status": "PASS"
+    },
+    {
+      "name": "F058 count preview carries concurrent movements forward before approved adjustment",
+      "status": "PASS"
+    },
+    {
+      "name": "F059/F060 alert excludes recalled availability and trace preserves document/order links",
+      "status": "PASS"
+    },
+    {
+      "name": "F047 cancellation keeps consumed quantity separate and retry releases reservation once",
+      "status": "PASS"
+    },
+    {
+      "name": "F056 PostgreSQL competing reservations serialize without negative availability",
+      "status": "PASS"
+    }
+  ]
+}

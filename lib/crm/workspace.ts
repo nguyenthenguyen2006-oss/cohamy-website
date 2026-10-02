@@ -13,7 +13,8 @@ import {sendTransactionalEmail} from './brevo';
 
 export const parse=<T>(schema:z.ZodType<T>,input:unknown):T=>{const result=schema.safeParse(input);if(!result.success)throw new CrmError('INVALID_FIELDS',400);return result.data;};
 export async function entityAccess(user:Principal,type:string,id:string,sql?:Sql){
-  if(type==='commercial-request')return (await import('./order-requests')).commercialRequestAccess(sql??await database(),user,id);
+  if(type==='commercial-request'||type==='request')return (await import('./order-requests')).commercialRequestAccess(sql??await database(),user,id);
+  if(type==='deal')return (await import('./deals')).getDeal(user,id);
   if(type==='sales-order')return (await import('./sales-orders')).salesOrderAccess(sql??await database(),user,id);
   if(type==='delivery')return (await import('./fulfillment')).deliveryAccess(sql??await database(),user,id);
   if(type==='return-request')return (await import('./fulfillment')).returnAccess(sql??await database(),user,id);
@@ -28,6 +29,7 @@ export async function entityAccess(user:Principal,type:string,id:string,sql?:Sql
   if(type==='account'&&id===user.id)return {id,name:user.displayName};
   throw new CrmError('NOT_FOUND',404);
 }
+
 const columns=z.enum(['name','code','phone','email','active','created_at']);
 const prefsSchema=z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd));
 export async function preferences(user:Principal){const r=(await(await database()).query<{value:Record<string,unknown>;version:number}>('SELECT value,version FROM cohamy_crm.workspace_preferences WHERE user_id=$1',[user.id])).rows[0];return parse(prefsSchema,{...(r?.value??{}),version:r?.version??0});}

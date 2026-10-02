@@ -39,6 +39,7 @@ const internal: CrmModule[] = [
   {id:'visits',label:'Lần thăm điểm bán',shortLabel:'Lần thăm',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
   {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'library',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   {id:'support',label:'Phiếu hỗ trợ',shortLabel:'Hỗ trợ',icon:'support',tone:'primary',permission:'partners.read',status:'CONNECTED'},
+  {id:'articles',label:'Bài viết website',shortLabel:'Bài viết',icon:'library',tone:'primary',permission:'articles.read',status:'CONNECTED'},
   {id:'data',label:'Import và export',shortLabel:'Dữ liệu',icon:'data',tone:'primary',permission:'partners.write',status:'CONNECTED'},
   {id:'search',label:'Tìm kiếm',shortLabel:'Tìm kiếm',icon:'search',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
   {id:'notifications',label:'Thông báo',shortLabel:'Thông báo',icon:'notifications',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
@@ -183,7 +184,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "library",
     color: "#ef4444",
     gradient: "linear-gradient(135deg, #f43f5e, #be123c)",
-    moduleIds: ["library", "support"],
+    moduleIds: ["library", "support", "articles"],
   },
   {
     id: "accounts",

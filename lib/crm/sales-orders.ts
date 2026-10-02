@@ -4,7 +4,7 @@ import {z} from 'zod';
 import {database,type Sql} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
 import {assertPermission,CrmError} from './permissions';
-import {partnerScope} from './repository';
+import {partnerScope,getOrganization} from './repository';
 import {pricingOrganization,calculateForOrganization} from './pricing';
 import {commercialRequestAccess,requestVersionAccess,type CommercialRequest} from './order-requests';
 import {currentOrderPolicy,orderPartnerShortfalls,type OrderPolicyDefinition} from './order-policy';
@@ -12,13 +12,21 @@ import {commercialDigest as hash,parseCommercial as parse,vietnamBusinessDate} f
 import type {QuotationSnapshot} from './quotations';
 import type {Principal} from './types';
 import {commercialNotification} from './order-notifications';
+import {defaultProvisionalPolicy,reserveSubmittedRequest,releaseRequestReservations} from './request-reservations';
 
-export interface SalesOrder {id:string;code:string;organization_id:string;request_id:string;creator_id:string;status:'PENDING_APPROVAL'|'CONFIRMED'|'CANCEL_REQUESTED'|'REJECTED'|'CANCELLED';delivery_status:string;payment_status:string;latest_version_id:string;confirmed_version_id:string|null;version:number;organization_name?:string;updated_at:string}
-export interface SalesSnapshot {quote:QuotationSnapshot;request:{id:string;code:string;versionId:string;creatorId:string;channel:string;sourceWebsiteId:string|null;sourceQuotationId:string|null;sourceOrderId:string|null};orderPolicy:{id:string;number:number;definition:OrderPolicyDefinition;checksum:string};approvalReasons:string[];issuedAt:string}
+export interface SalesOrder {
+ id:string;code:string;organization_id:string;request_id:string;creator_id:string;status:'PENDING_APPROVAL'|'CONFIRMED'|'CANCEL_REQUESTED'|'REJECTED'|'CANCELLED';
+ delivery_status:string;payment_status:string;latest_version_id:string;confirmed_version_id:string|null;version:number;organization_name?:string;updated_at:string;
+ seller_organization_id?:string|null;
+ parent_order_id?:string|null;
+ deal_id?:string|null;
+ fulfillment_shortage?:Array<{productId:string;needed:string;allocated:string;missing:string}>|{missingQuantity:string}|null;
+}
+export interface SalesSnapshot {quote:QuotationSnapshot;request:{id:string;code:string;versionId:string;creatorId:string;channel:string;sourceWebsiteId:string|null;sourceQuotationId:string|null;sourceOrderId:string|null};orderPolicy:{id:string;number:number;definition:OrderPolicyDefinition;checksum:string};reservationPolicy?:NonNullable<OrderPolicyDefinition['provisionalReservation']>;approvalReasons:string[];issuedAt:string}
 export interface SalesVersion {id:string;order_id:string;number:number;request_version_id:string;order_policy_id:string;snapshot:SalesSnapshot;checksum:string;approval_required:boolean;actor_id:string;created_at:string}
 export async function salesOrderAccess(sql:Sql,user:Principal,id:string,lock=false):Promise<SalesOrder>{
  assertPermission(user,'orders.read');parse(z.uuid(),id);const scope=user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user);
- const row=(await sql.query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) AND s.id=$${scope.params.length+1}`+(lock?' FOR UPDATE OF s':''),[...scope.params,id])).rows[0];
+ const row=(await sql.query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) ${user.area==='portal'?`AND(s.organization_id=$1 OR s.seller_organization_id=$1)`:''} AND s.id=$${scope.params.length+1}`+(lock?' FOR UPDATE OF s':''),[...scope.params,id])).rows[0];
  if(!row)throw new CrmError('NOT_FOUND',404);return row;
 }
 export async function salesVersionAccess(sql:Sql,head:SalesOrder,id:string){
@@ -26,13 +34,14 @@ export async function salesVersionAccess(sql:Sql,head:SalesOrder,id:string){
 }
 export async function listSalesOrders(user:Principal,q=''){
  assertPermission(user,'orders.read');const scope=user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user),params=[...scope.params,'%'+q.trim().slice(0,120)+'%'];
- return(await(await database()).query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) AND(s.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY s.updated_at DESC,s.id LIMIT 100`,params)).rows;
+ return(await(await database()).query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) ${user.area==='portal'?`AND(s.organization_id=$1 OR s.seller_organization_id=$1)`:''} AND(s.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY s.updated_at DESC,s.id LIMIT 100`,params)).rows;
 }
 export async function salesOrderVersions(user:Principal,id:string){return(await database()).transaction(async sql=>{
  await assertCurrentPrincipal(sql,user);const head=await salesOrderAccess(sql,user,id),versions=(await sql.query<SalesVersion>('SELECT * FROM cohamy_crm.sales_order_versions WHERE order_id=$1 ORDER BY number DESC LIMIT 100',[head.id])).rows;
  return versions.map(v=>{if(v.checksum!==hash(v.snapshot))throw new CrmError('ORDER_SNAPSHOT_INVALID',503);if(user.area!=='portal')return v;return {...v,snapshot:{...v.snapshot,quote:{...v.snapshot.quote,policy:undefined},orderPolicy:{id:v.snapshot.orderPolicy.id,number:v.snapshot.orderPolicy.number,checksum:v.snapshot.orderPolicy.checksum},approvalReasons:undefined}};});
 });}
 function requestMaySubmit(user:Principal,head:CommercialRequest,policy:OrderPolicyDefinition){
+ if(user.area==='portal'&&head.organization_id!==user.organizationId)throw new CrmError('FORBIDDEN',403);
  if(user.area==='crm'&&!['ADMIN','MANAGER','SALES'].includes(user.role))throw new CrmError('FORBIDDEN',403);
  if(user.area==='portal'&&!['DEALER_OWNER','DEALER_STAFF'].includes(user.role))throw new CrmError('FORBIDDEN',403);
  if(head.status!=='READY')throw new CrmError(head.status==='SUBMITTED'?'REQUEST_ALREADY_SUBMITTED':'REQUEST_NOT_READY',409);
@@ -56,33 +65,55 @@ export async function submitSalesRequest(user:Principal,input:unknown){
   }
   const reasons=[...v.snapshot.calculation.approvalReasons];if(policy.definition.alwaysManagerApproval)reasons.push('POLICY');if(policy.definition.managerApprovalAmount!==null&&BigInt(v.snapshot.calculation.total)>=BigInt(policy.definition.managerApprovalAmount))reasons.push('ORDER_AMOUNT');if(policy.definition.creditRequiresApproval&&v.snapshot.basket.creditTerms&&!reasons.includes('CREDIT_TERMS'))reasons.push('CREDIT_TERMS');
   const snapshot:SalesSnapshot={quote:v.snapshot,request:{id:head.id,code:head.code,versionId:v.id,creatorId:head.creator_id,channel:head.channel,sourceWebsiteId:head.source_website_id,sourceQuotationId:head.source_quotation_id,sourceOrderId:head.source_order_id},orderPolicy:{id:policy.id,number:policy.number,definition:policy.definition,checksum:policy.checksum},approvalReasons:reasons,issuedAt:now.toISOString()},id=randomUUID(),versionId=randomUUID();
-  await sql.query('INSERT INTO cohamy_crm.sales_orders(id,code,organization_id,request_id,creator_id,source_website_id,source_quotation_id) VALUES($1,$2,$3,$4,$5,$6,$7)',[id,'DH-'+vietnamBusinessDate(now)+'-'+id.slice(0,8).toUpperCase(),org.id,head.id,user.id,head.source_website_id,head.source_quotation_id]);
+  let sellerOrgId=head.seller_organization_id??null;
+  if(!sellerOrgId){
+   const {getActiveParentOrganization}=await import('./distribution');
+   const p=await getActiveParentOrganization(sql,org.id);
+   if(p)sellerOrgId=p.id;
+   else{
+    const c=(await sql.query<{id:string}>("SELECT id FROM cohamy_crm.organizations WHERE kind='COHAMY' LIMIT 1")).rows[0];
+    sellerOrgId=c?.id??null;
+   }
+  }
+  snapshot.reservationPolicy=policy.definition.provisionalReservation??defaultProvisionalPolicy;
+  await sql.query('INSERT INTO cohamy_crm.sales_orders(id,code,organization_id,request_id,creator_id,source_website_id,source_quotation_id,seller_organization_id,deal_id) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)',[id,'DH-'+vietnamBusinessDate(now)+'-'+id.slice(0,8).toUpperCase(),org.id,head.id,user.id,head.source_website_id,head.source_quotation_id,sellerOrgId,head.deal_id??null]);
   await sql.query('INSERT INTO cohamy_crm.sales_order_versions(id,order_id,number,request_version_id,order_policy_id,snapshot,checksum,approval_required,actor_id) VALUES($1,$2,1,$3,$4,$5::jsonb,$6,$7,$8)',[versionId,id,v.id,policy.id,JSON.stringify(snapshot),hash(snapshot),reasons.length>0,user.id]);await sql.query('UPDATE cohamy_crm.sales_orders SET latest_version_id=$1 WHERE id=$2',[versionId,id]);
-  await sql.query("UPDATE cohamy_crm.commercial_requests SET status='SUBMITTED',version=version+1,updated_at=now() WHERE id=$1",[head.id]);const result={id,version:1,versionId,requestId:head.id,requestVersion:head.version+1};
+  await sql.query("UPDATE cohamy_crm.commercial_requests SET status='SUBMITTED',version=version+1,updated_at=now() WHERE id=$1",[head.id]);
+  const reservation=await reserveSubmittedRequest(sql,user,{requestId:head.id,reason:d.reason});
+  const result={id,version:1,versionId,requestId:head.id,requestVersion:head.version+1,reservation};
   await sql.query("INSERT INTO cohamy_crm.commercial_events(id,request_id,source_version_id,action,actor_id,reason,idempotency_key,request_hash,result) VALUES($1,$2,$3,'SUBMITTED',$4,$5,$6,$7,$8::jsonb)",[randomUUID(),head.id,v.id,user.id,d.reason,d.idempotencyKey,requestHash,JSON.stringify(result)]);
   await sql.query("INSERT INTO cohamy_crm.commercial_events(id,order_id,source_version_id,action,actor_id,reason,idempotency_key,request_hash,result) VALUES($1,$2,$3,'CREATED',$4,$5,$6,$7,$8::jsonb)",[randomUUID(),id,versionId,user.id,d.reason,randomUUID(),hash({sourceRequestId:head.id}),JSON.stringify(result)]);
-  await commercialNotification(sql,{organizationId:org.id,type:'sales-order',id,versionId,action:'CREATED',message:head.code+' đã gửi đến Cohamy và đang chờ xác nhận.',actorId:user.id,audience:'COHAMY'});
+  const seller=(await sql.query<{kind:string}>('SELECT kind FROM cohamy_crm.organizations WHERE id=$1',[sellerOrgId])).rows[0];
+  await commercialNotification(sql,{organizationId:seller?.kind==='COHAMY'?org.id:sellerOrgId!,type:'sales-order',id,versionId,action:'CREATED',message:head.code+' đã gửi đến bên bán và đang chờ xác nhận.',actorId:user.id,audience:seller?.kind==='COHAMY'?'COHAMY':'OWNER'});
   await audit(sql,user.id,'sales-order.created',id,{after:{requestId:head.id,requestVersionId:v.id,versionId,orderPolicyId:policy.id,approvalReasons:reasons},reason:d.reason});return result;
  });
 }
 export async function salesOrderAction(user:Principal,input:unknown){
  const d=parse(z.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),action:z.enum(['APPROVE','REJECT','CONFIRM']),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()}).strict(),input),requestHash=hash(d);
- if(user.area!=='crm')throw new CrmError('FORBIDDEN',403);
+ if(user.area!=='crm'&&user.role!=='DEALER_OWNER')throw new CrmError('FORBIDDEN',403);
  return(await database()).transaction(async sql=>{
   await assertCurrentPrincipal(sql,user);const head=await salesOrderAccess(sql,user,d.id,true),v=await salesVersionAccess(sql,head,d.versionId),prior=(await sql.query<{request_hash:string;result:unknown}>('SELECT request_hash,result FROM cohamy_crm.commercial_events WHERE actor_id=$1 AND idempotency_key=$2',[user.id,d.idempotencyKey])).rows[0];
   if(prior){if(prior.request_hash!==requestHash)throw new CrmError('IDEMPOTENCY_CONFLICT',409);return prior.result;}if(head.version!==d.version||head.latest_version_id!==v.id)throw new CrmError('VERSION_CONFLICT',409);if(head.status!=='PENDING_APPROVAL')throw new CrmError('ORDER_ALREADY_DECIDED',409);
-  const policy=v.snapshot.orderPolicy.definition,current=await currentOrderPolicy(sql);if(!current.definition.enabled)throw new CrmError('ORDER_POLICY_UNAVAILABLE',409);const org=await pricingOrganization(sql,user,head.organization_id);
+  const dealerSeller=user.area==='portal'&&user.role==='DEALER_OWNER'&&head.seller_organization_id===user.organizationId&&head.organization_id!==user.organizationId;
+  if(user.area==='portal'&&!dealerSeller)throw new CrmError('FORBIDDEN',403);
+  const policy=v.snapshot.orderPolicy.definition,current=await currentOrderPolicy(sql);if(!current.definition.enabled)throw new CrmError('ORDER_POLICY_UNAVAILABLE',409);const org=dealerSeller?await getOrganization(user,head.organization_id,sql):await pricingOrganization(sql,user,head.organization_id);
   const decision=(await sql.query<{action:string}>('SELECT action FROM cohamy_crm.commercial_events WHERE order_id=$1 AND source_version_id=$2 AND action IN(\'APPROVED\',\'REJECTED\')',[head.id,v.id])).rows[0];
   let status:SalesOrder['status']='PENDING_APPROVAL',action:string;
   if(d.action==='APPROVE'||d.action==='REJECT'){
-   if(!policy.approvalRoles.includes(user.role as 'ADMIN'|'MANAGER'))throw new CrmError('FORBIDDEN',403);if(!v.approval_required)throw new CrmError('ORDER_APPROVAL_NOT_REQUIRED',409);if(decision)throw new CrmError('ORDER_ALREADY_DECIDED',409);
+   if(!dealerSeller&&!policy.approvalRoles.includes(user.role as 'ADMIN'|'MANAGER'))throw new CrmError('FORBIDDEN',403);if(!v.approval_required)throw new CrmError('ORDER_APPROVAL_NOT_REQUIRED',409);if(decision)throw new CrmError('ORDER_ALREADY_DECIDED',409);
    if((policy.nonSelfApproval||v.snapshot.quote.policy.approval.nonSelfApproval)&&[head.creator_id,v.snapshot.request.creatorId,v.actor_id].includes(user.id))throw new CrmError('SELF_APPROVAL_BLOCKED',403);
    action=d.action==='APPROVE'?'APPROVED':'REJECTED';if(action==='REJECTED')status='REJECTED';
   }else{
-   if(!policy.confirmationRoles.includes(user.role as 'ADMIN'|'MANAGER'|'SALES'))throw new CrmError('FORBIDDEN',403);if(v.approval_required&&decision?.action!=='APPROVED')throw new CrmError('ORDER_APPROVAL_REQUIRED',409);
+   if(!dealerSeller&&!policy.confirmationRoles.includes(user.role as 'ADMIN'|'MANAGER'|'SALES'))throw new CrmError('FORBIDDEN',403);if(v.approval_required&&decision?.action!=='APPROVED')throw new CrmError('ORDER_APPROVAL_REQUIRED',409);
    if(orderPartnerShortfalls(policy,org).length)throw new CrmError('PARTNER_INCOMPLETE',409);const now=new Date((await sql.query<{now:string}>('SELECT now() AS now')).rows[0].now);if(new Date(v.snapshot.quote.validUntil)<=now)throw new CrmError('ORDER_PRICE_EXPIRED',409);if(v.snapshot.quote.basket.creditTerms){const {reserveCreditForOrder}=await import('./finance');await reserveCreditForOrder(sql,user,head,v,d.reason,d.idempotencyKey,requestHash);}status='CONFIRMED';action='CONFIRMED';
+   if(head.request_id){
+     const {promoteProvisionalReservations}=await import('./inventory');
+     await promoteProvisionalReservations(sql,user,head.request_id,head.id,v.id);
+   }
   }
+  if(status==='REJECTED'&&head.request_id)await releaseRequestReservations(sql,head.request_id);
   const result={id:head.id,version:head.version+1,status};await sql.query('UPDATE cohamy_crm.sales_orders SET status=$1,confirmed_version_id=CASE WHEN $1=\'CONFIRMED\' THEN $2 ELSE confirmed_version_id END,version=version+1,updated_at=now() WHERE id=$3',[status,v.id,head.id]);
+
   await sql.query('INSERT INTO cohamy_crm.commercial_events(id,order_id,source_version_id,action,actor_id,reason,internal,idempotency_key,request_hash,result) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb)',[randomUUID(),head.id,v.id,action,user.id,d.reason,action==='APPROVED',d.idempotencyKey,requestHash,JSON.stringify(result)]);
   if(action==='CONFIRMED'||action==='REJECTED')await commercialNotification(sql,{organizationId:head.organization_id,type:'sales-order',id:head.id,versionId:v.id,action,message:head.code+(action==='CONFIRMED'?' đã được Cohamy xác nhận.':' đã bị từ chối; mở đơn để xem lý do.'),actorId:user.id,audience:'PARTNER',creatorId:v.snapshot.request.creatorId});
   await audit(sql,user.id,'sales-order.'+action.toLowerCase(),head.id,{after:{status,versionId:v.id,orderPolicyId:v.order_policy_id},reason:d.reason});return result;

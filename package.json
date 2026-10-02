@@ -81,6 +81,8 @@
     "test:crm:pwa": "node scripts/crm/verify-pwa.mjs",
     "test:crm:samples": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-samples.ts",
     "test:crm:commercial-orders": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-commercial-orders.ts",
+    "test:crm:meeting-contract": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-contract.ts",
+    "test:crm:meeting-53": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-53-amendments.ts",
     "test:crm:request-excel": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-request-excel.ts",
     "test:crm:quotation-pdf": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotation-pdf.ts",
     "test:crm:samples-browser": "node scripts/crm/verify-sample-browser.mjs",
@@ -91,7 +93,8 @@
     "crm:demo-sentinel-test": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/test-reset-sentinel.ts",
     "crm:demo-security-test": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/test-unauthenticated-reset.ts",
     "crm:demo-verify-db": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify-db.ts",
-    "crm:demo-target-test": "node --import tsx scripts/crm/demo/test-database-target.ts"
+    "crm:demo-target-test": "node --import tsx scripts/crm/demo/test-database-target.ts",
+    "test:crm:meeting-runtime-browser": "node scripts/crm/verify-meeting-runtime-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

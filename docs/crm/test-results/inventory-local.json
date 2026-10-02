@@ -1,11 +1,11 @@
 {
-  "testedAt": "2026-09-19T03:22:06.001Z",
+  "testedAt": "2026-10-02T07:09:02.198Z",
   "environment": "LOCAL isolated fictitious PGlite; no real stock/order/provider mutation",
   "status": "PASS",
   "references": {
-    "receiptId": "8e075259-058c-41b6-aede-81146dc9fe3e",
-    "transferId": "07db0873-87a1-4e79-ad73-dd2b7e5d8ee1",
-    "countId": "7638fd10-3252-46c7-bae5-a24cef721eee"
+    "receiptId": "b7cb510f-ae5f-43d8-9028-e461da2de52e",
+    "transferId": "1da44673-c0a6-46cc-a6cd-40e2fff06121",
+    "countId": "cdffaff5-c168-4089-8f58-52f07872cf12"
   },
   "cases": [
     {

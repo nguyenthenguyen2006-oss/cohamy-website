@@ -1,0 +1,13 @@
+{
+  "testedAt": "2026-10-02T09:03:28.260Z",
+  "environment": "LOCAL real Edge browser and running Next APIs; isolated fictitious PGlite",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Published CRM content survives a complete Next/PGlite process restart",
+      "status": "PASS"
+    }
+  ],
+  "screens": [],
+  "pageErrors": []
+}
