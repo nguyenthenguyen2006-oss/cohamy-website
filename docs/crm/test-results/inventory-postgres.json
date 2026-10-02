@@ -1,11 +1,11 @@
 {
-  "testedAt": "2026-10-02T09:14:41.760Z",
+  "testedAt": "2026-10-02T09:24:57.455Z",
   "environment": "STAGING isolated fictitious PostgreSQL; no real stock/order/provider mutation",
   "status": "PASS",
   "references": {
-    "receiptId": "a281a25a-9b56-4a21-8f82-9a93109575e3",
-    "transferId": "aa7afe17-058f-4286-a371-8e1c5597ce13",
-    "countId": "1faf5351-ab37-4897-9ace-6c2ae5d31cf1"
+    "receiptId": "b752a83a-489a-4557-b846-30951635e4d3",
+    "transferId": "77f00889-b314-48b8-9ae7-947fc61507da",
+    "countId": "1d34871b-e7f0-4aad-8359-355e3860cfc8"
   },
   "cases": [
     {

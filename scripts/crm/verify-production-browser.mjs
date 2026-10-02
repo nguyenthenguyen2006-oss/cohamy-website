@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {chromium,expect} from '@playwright/test';
+const output=process.argv[2]??'docs/crm/test-results/browser-production.json';
 const base='https://cohamy.vn',credentials=JSON.parse(await fs.readFile('.local/crm-production-admin.json','utf8')),cases=[],screens=[],pageErrors=[];
 const browser=await chromium.launch({channel:'msedge',headless:true}),context=await browser.newContext({viewport:{width:1366,height:900}}),page=await context.newPage();
 page.on('pageerror',e=>pageErrors.push(e.message));page.on('console',m=>{if(m.type()==='error')pageErrors.push(m.text());});context.setDefaultTimeout(30000);
@@ -18,4 +19,4 @@ try {
  await check('Five localized public partner pages preserve registration entry at desktop/390/320',async()=>{for(const width of [1366,390,320]){await page.setViewportSize({width,height:width===1366?900:844});for(const path of ['/vi/doi-tac','/en/partners','/zh/partners','/ko/partners','/ja/partners']){const r=await page.goto(base+path);assert.equal(r.status(),200,path);await expect(page.locator('a[href="/portal/register"]').first()).toBeVisible();await capture('partners-'+path.split('/')[1]+'-'+width);}}});
  await check('Logout revokes private API browser session',async()=>{const response=await context.request.post(base+'/api/crm/auth/logout',{headers:{origin:base}});assert.ok(response.ok());assert.equal((await context.request.get(base+'/api/crm/automation/schedules')).status(),401);});
  assert.deepEqual(pageErrors,[]);console.log('PASS production Edge '+cases.length+'/'+cases.length);
-}finally{await context.request.post(base+'/api/crm/auth/logout',{headers:{origin:base}}).catch(()=>{});await browser.close();await fs.writeFile('docs/crm/test-results/browser-production.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'PRODUCTION actual Edge, read-only except administrator login/logout',status:cases.length===6&&cases.every(c=>c.status==='PASS')&&pageErrors.length===0?'PASS':'FAIL',cases,pageErrors,screens},null,2));}
+}finally{await context.request.post(base+'/api/crm/auth/logout',{headers:{origin:base}}).catch(()=>{});await browser.close();await fs.writeFile(output,JSON.stringify({testedAt:new Date().toISOString(),environment:'PRODUCTION actual Edge, read-only except administrator login/logout',status:cases.length===6&&cases.every(c=>c.status==='PASS')&&pageErrors.length===0?'PASS':'FAIL',cases,pageErrors,screens},null,2));}

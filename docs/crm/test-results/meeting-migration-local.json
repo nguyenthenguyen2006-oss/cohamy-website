@@ -1,0 +1,15 @@
+{
+  "testedAt": "2026-10-02T09:24:07.995Z",
+  "environment": "LOCAL in-memory PGlite; pre-meeting legacy fixtures",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Meeting migrations preserve every legacy document and notification type",
+      "status": "PASS"
+    },
+    {
+      "name": "New payment/deal document types remain writable by the runtime role",
+      "status": "PASS"
+    }
+  ]
+}

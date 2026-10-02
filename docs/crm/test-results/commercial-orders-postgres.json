@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-02T09:14:33.323Z",
+  "testedAt": "2026-10-02T09:24:50.639Z",
   "environment": "STAGING isolated fictitious PostgreSQL, DML-only service role; no real order/stock/money/provider mutation",
   "status": "PASS",
   "cases": [

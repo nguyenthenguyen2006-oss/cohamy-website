@@ -10,7 +10,7 @@ if(!config.POSTGRES_PASSWORD)throw Error('QA_OWNER_PASSWORD_UNAVAILABLE');
 const target=new URL('postgres://127.0.0.1:55432/postgres');target.username=config.POSTGRES_USER||'cohamy_owner';target.password=config.POSTGRES_PASSWORD;
 const owner=new pg.Pool({connectionString:target.href,max:1});
 try{
-  for(const script of ['verify-meeting-53-amendments.ts','verify-meeting-contract.ts','verify-commercial-orders.ts','verify-inventory.ts','verify-finance.ts']){
+  for(const script of ['verify-meeting-migration.ts','verify-meeting-53-amendments.ts','verify-meeting-contract.ts','verify-commercial-orders.ts','verify-inventory.ts','verify-finance.ts']){
     const name='cohamy_qa_meeting_'+randomUUID().replaceAll('-','');assertName(name);
     await owner.query('CREATE DATABASE "'+name+'"');const url=new URL(target);url.pathname='/'+name;
     console.log('STAGING PostgreSQL: '+script+'; isolated fictitious database; actual DML runtime role');

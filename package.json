@@ -94,6 +94,7 @@
     "crm:demo-security-test": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/test-unauthenticated-reset.ts",
     "crm:demo-verify-db": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify-db.ts",
     "crm:demo-target-test": "node --import tsx scripts/crm/demo/test-database-target.ts",
+    "test:crm:meeting-migration": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-migration.ts",
     "test:crm:meeting-runtime-browser": "node scripts/crm/verify-meeting-runtime-browser.mjs"
   },
   "dependencies": {

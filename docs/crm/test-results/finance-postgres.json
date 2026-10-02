@@ -1,13 +1,13 @@
 {
-  "testedAt": "2026-10-02T09:14:49.423Z",
+  "testedAt": "2026-10-02T09:25:08.026Z",
   "environment": "STAGING isolated fictitious PostgreSQL; no real money/order/provider mutation",
   "status": "PASS",
   "references": {
-    "firstOrder": "dac7082e-59e7-476b-ab08-429d18a5c6df",
-    "receivable": "ba47cdfa-bc1d-4d13-943b-20ef2f923e34",
-    "payment": "003418b6-3d41-4505-93f5-12b699aa07f3",
-    "documentVersion": "dbaedc31-6e05-4acb-9daf-886f544626ba",
-    "cash": "3b1ee211-b5b0-4992-8fa7-a62ea5e1405f"
+    "firstOrder": "b4bf17ec-f3fb-4100-9b69-2b8a8d1bdc6f",
+    "receivable": "5ce570cf-2c81-4f15-addb-8383b45abc4f",
+    "payment": "b20c8015-8c8c-49a4-bd84-5e399be3cdcf",
+    "documentVersion": "88dd424c-4dcc-4748-8757-648bbaee501f",
+    "cash": "c3431ff9-0225-4b7d-bc40-2e25aff7ca57"
   },
   "cases": [
     {

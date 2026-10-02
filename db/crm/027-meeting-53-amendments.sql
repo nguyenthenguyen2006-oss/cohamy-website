@@ -114,7 +114,7 @@ ALTER TABLE cohamy_crm.payment_receipts
 -- 9. Expand private documents and notifications entity types
 ALTER TABLE cohamy_crm.private_documents DROP CONSTRAINT IF EXISTS private_documents_entity_type_check;
 ALTER TABLE cohamy_crm.private_documents ADD CONSTRAINT private_documents_entity_type_check
-  CHECK (entity_type IN ('partner','order','payment','deal'));
+  CHECK (entity_type IN ('partner','order','ticket','library','visit','payment','deal'));
 
 ALTER TABLE cohamy_crm.notifications DROP CONSTRAINT IF EXISTS notifications_entity_type_check;
 ALTER TABLE cohamy_crm.notifications ADD CONSTRAINT notifications_entity_type_check

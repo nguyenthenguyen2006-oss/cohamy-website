@@ -16,8 +16,9 @@
 | Meeting 53 | LOCAL + STAGING PostgreSQL riêng | 45/45 PASS mỗi môi trường; meeting-53-*.json |
 | Meeting contract | LOCAL + STAGING PostgreSQL riêng | 72/72 PASS mỗi môi trường; meeting-contract-*.json |
 | Commercial orders, inventory | STAGING PostgreSQL riêng | PASS; commercial-orders-postgres.json, inventory-postgres.json |
-| Finance | LOCAL + STAGING PostgreSQL riêng | 10 nhóm; finance-*.json |
+| Finance | LOCAL + STAGING PostgreSQL riêng | 10/10 PASS; finance-*.json |
 | Browser runtime | LOCAL Edge + Next server/API | 5/5 PASS; meeting-runtime-browser-local.json |
+| Migration tương thích | LOCAL + STAGING PostgreSQL riêng | 2/2; meeting-migration-*.json |
 | Restart CMS | LOCAL Edge, dừng và khởi động lại QA server | 1/1 PASS; meeting-runtime-browser-restart-local.json |
 | Decimal, pricing-model | LOCAL | 6/6 và 10/10 PASS |
 | ESLint, Next production build | LOCAL | Exit 0 |
@@ -32,6 +33,10 @@ Dữ liệu nghiệp vụ được tạo bởi kiểm thử chỉ nằm trong c�
 - BLOG_SOURCE thực tế được giữ theo cấu hình VPS. CMS legacy là nguồn đã kiểm chứng trong đợt này; WordPress báo read-only thay vì giả vờ lưu.
 - Không tuyên bố mọi chi tiết của 53 mục đã được kiểm thử end-to-end chỉ vì suite dịch vụ xanh.
 
+## Tương thích dữ liệu cũ
+
+Candidate da2c345 đã dừng trước cutover vì migration 027 thu hẹp loại private_documents, trong khi production có tài liệu library. Transaction 027 rollback hoàn toàn; migration 026 thêm cấu trúc đã hoàn tất, bản web/worker cũ tiếp tục chạy. Sửa 027 giữ đủ partner/order/ticket/library/visit và thêm payment/deal. Không đổi checksum migration 026 hoặc các migration đã áp dụng. Kiểm thử mới tạo tài liệu và thông báo trước migration, sau đó nâng cấp và xác nhận dữ liệu cũ còn nguyên, loại mới dùng được bằng quyền runtime.
+
 ## Triển khai
 
-Đang chuẩn bị push và deploy exact SHA. Dùng release riêng, backup và kiểm tra restore trước migration/cutover; chỉ thay tiến trình Cohamy web và CRM worker. Báo cáo production sau triển khai phải ghi exact SHA, migration, health HTTPS, PM2 và backup.
+Kế hoạch release: push và deploy exact SHA. Dùng release riêng, backup và kiểm tra restore trước migration/cutover; chỉ thay tiến trình Cohamy web và CRM worker. Báo cáo production sau triển khai phải ghi exact SHA, migration, health HTTPS, PM2 và backup.

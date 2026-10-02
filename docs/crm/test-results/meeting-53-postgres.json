@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-02T09:14:03.253Z",
+  "testedAt": "2026-10-02T09:24:22.904Z",
   "environment": "STAGING PostgreSQL DML role, real competing allocations",
   "status": "PASS",
   "cases": [
