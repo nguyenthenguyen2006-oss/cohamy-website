@@ -1,0 +1,25 @@
+{
+  "testedAt": "2026-10-02T14:22:41.121Z",
+  "environment": "LOCAL real Edge and Next APIs; isolated fictitious PGlite; email OTP not used",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Unverified applicant registers and submits through the real UI without any email-code request",
+      "status": "PASS"
+    },
+    {
+      "name": "An existing unverified submitted application can be supplemented and resubmitted without mail",
+      "status": "PASS"
+    },
+    {
+      "name": "Cohamy approves the unverified application and only then the applicant can log in to the dealer portal",
+      "status": "PASS"
+    }
+  ],
+  "screens": [
+    ".local/onboarding-no-email/draft-desktop.png",
+    ".local/onboarding-no-email/draft-390.png"
+  ],
+  "pageErrors": [],
+  "mailRequests": []
+}

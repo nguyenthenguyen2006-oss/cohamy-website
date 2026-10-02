@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-10-02T09:17:09.663Z",
+  "testedAt": "2026-10-02T14:22:10.044Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -45,7 +45,8 @@
     "db/crm/026-distribution-multitier.sql",
     "db/crm/027-meeting-53-amendments.sql",
     "db/crm/028-meeting-runtime.sql",
-    "db/crm/029-bank-match-lock.sql"
+    "db/crm/029-bank-match-lock.sql",
+    "db/crm/030-onboarding-without-email-code.sql"
   ],
   "includedPdfAssets": [
     "assets/crm/fonts/BeVietnamPro-Regular.ttf",

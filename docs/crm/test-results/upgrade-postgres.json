@@ -1,6 +1,6 @@
 {
-  "testedAt": "2026-10-02T14:19:37.403Z",
-  "environment": "LOCAL isolated PGlite, fictitious data",
+  "testedAt": "2026-10-02T14:19:52.495Z",
+  "environment": "STAGING isolated PostgreSQL runtime DML, fictitious data",
   "status": "PASS",
   "cases": [
     {
@@ -81,5 +81,5 @@
     }
   ],
   "brevoDelivery": "MOCK_ONLY",
-  "postgresConcurrency": "NOT_RUN"
+  "postgresConcurrency": "RUNTIME_DML"
 }
