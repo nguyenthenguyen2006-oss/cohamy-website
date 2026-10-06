@@ -4,7 +4,7 @@ defined('ABSPATH') || exit;
 
 function analysis_hash(int $id): string {
     $post=get_post($id); if (!$post) return '';
-    $parts=[$post->post_title,$post->post_content,$post->post_excerpt,meta($id,'locale','en'),'cohamy-rank-context-v2',wp_json_encode(get_option('rank-math-options-titles',[]))];
+    $parts=[$post->post_title,$post->post_content,$post->post_excerpt,meta($id,'locale','en'),'cohamy-rank-context-v3',wp_json_encode(get_option('rank-math-options-titles',[]))];
     foreach (['rank_math_title','rank_math_description','rank_math_focus_keyword','_thumbnail_id'] as $key) $parts[]=wp_json_encode(get_post_meta($id,$key,true));
     $parts[]=(string)get_post_meta((int)get_post_thumbnail_id($id),'_wp_attachment_image_alt',true); return hash('sha256',implode('|',$parts));
 }
@@ -28,7 +28,7 @@ function analysis_execute(int $id,int $attempt=0): void {
     $general=(array)get_option('rank-math-options-general',[]);
     $schemas=[]; foreach (get_post_meta($id) as $key=>$values) if (str_starts_with($key,'rank_math_schema_')) $schemas[$key]=maybe_unserialize($values[0]);
     $analysis_locale=['vi'=>'vi_VN','en'=>'en_US','zh'=>'zh_CN','ko'=>'ko_KR','ja'=>'ja_JP'][meta($id,'locale','en')] ?? get_locale();
-    $body=wp_json_encode(['rank_math_version'=>RANK_MATH_VERSION,'base_url'=>public_base(),'url'=>public_url($id),'post_type'=>$post->post_type,'locale'=>$analysis_locale,'has_toc'=>$post->post_type==='post'&&(bool)preg_match('/<h[23]\b/i',$row['content_html']),'title'=>$row['seo_title'],'description'=>$row['seo_description'],'slug'=>$row['slug'],'content_html'=>$row['content_html'],'keywords'=>$keywords,'keyword_is_new'=>$is_new,'thumbnail'=>$row['cover_image'],'thumbnail_alt'=>$row['cover_image_alt'],'schemas'=>$schemas ?: new \stdClass(),'nofollow_external'=>!empty($general['nofollow_external_links']),'nofollow_domains'=>csv_list($general['nofollow_domains'] ?? ''),'nofollow_exclusions'=>csv_list($general['nofollow_exclude_domains'] ?? '')]);
+    $body=wp_json_encode(['rank_math_version'=>RANK_MATH_VERSION,'base_url'=>public_base(),'url'=>public_url($id),'post_type'=>$post->post_type,'locale'=>$analysis_locale,'has_toc'=>$post->post_type==='post'&&(bool)preg_match('/<h[23]\b/i',$row['content_html']),'title'=>$row['seo_title'],'description'=>$row['seo_description'],'slug'=>$row['slug'],'content_html'=>$row['content_html'],'keywords'=>$keywords,'keyword_is_new'=>$is_new,'thumbnail'=>$row['cover_image'],'thumbnail_alt'=>$row['cover_image_alt'],'schemas'=>$schemas ?: new \stdClass(),'nofollow_external'=>in_array($general['nofollow_external_links']??false,[true,1,'1','on','yes'],true),'nofollow_domains'=>csv_list($general['nofollow_domains'] ?? ''),'nofollow_exclusions'=>csv_list($general['nofollow_exclude_domains'] ?? '')]);
     $timestamp=(string)time(); $url=preview_base().'/api/wordpress/analyze';
     $result=wp_remote_post($url,['timeout'=>20,'redirection'=>0,'limit_response_size'=>1024*1024,'headers'=>['Content-Type'=>'application/json','X-Cohamy-Timestamp'=>$timestamp,'X-Cohamy-Signature'=>hash_hmac('sha256',$timestamp.'.'.$body,secret())],'body'=>$body]);
     $data=is_wp_error($result) ? [] : json_decode(wp_remote_retrieve_body($result),true);
