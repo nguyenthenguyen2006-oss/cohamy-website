@@ -16,6 +16,7 @@ assert.equal(getBlogPostCanonical({...row, locale:"vi",slug:"copy",canonical_url
 const schema = {"@type":"ImageObject",name:"</script><script>alert(1)</script>",contentUrl:"https://cohamy.vn/image.jpg"};
 const parsed = blogRowSchema.parse({...row,seo:{follow:true,pillar:false,facebook_title:"",facebook_description:"",facebook_image:"",twitter_title:"",twitter_description:"",twitter_image:"",twitter_card_type:"",custom_schema:[schema]}});
 assert.deepEqual(parsed.seo?.custom_schema,[schema]);
+assert.equal(blogRowSchema.parse({...parsed,seo:{...parsed.seo!,custom_schema:Array.from({length:100},()=>schema)}}).seo?.custom_schema?.length,100);
 const serialized=JSON.stringify({...schema,"@context":"https://schema.org"}).replace(/</gu,"\\u003c");
 assert(!serialized.includes("</script>"));
 assert.equal(JSON.parse(serialized).name,schema.name);

@@ -100,7 +100,7 @@ const blogRowBaseSchema = z
       follow: z.boolean(), pillar: z.boolean(),
       facebook_title: z.string(), facebook_description: z.string(), facebook_image: z.string(),
       twitter_title: z.string(), twitter_description: z.string(), twitter_image: z.string(), twitter_card_type: z.string(),
-      custom_schema: z.array(z.record(z.string(), z.unknown())).max(64).optional(),
+      custom_schema: z.array(z.record(z.string(), z.unknown())).max(11000).optional(),
     }).optional(),
   });
 
