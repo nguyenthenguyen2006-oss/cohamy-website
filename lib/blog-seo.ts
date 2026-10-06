@@ -23,6 +23,24 @@ export function buildBlogPostUrl(post: BlogUrlSource): string {
   return `${SITE_URL}${buildBlogPostPath(post)}`;
 }
 
+export function getBlogPostCanonical(post: BlogUrlSource & { canonical_url?: string }): string {
+  return getContentCanonical(post.canonical_url, buildBlogPostUrl(post));
+}
+
+export function getContentCanonical(value: string | undefined, fallback: string): string {
+  if (!value) return fallback;
+  try {
+    const url = new URL(value);
+    const own = new URL(fallback);
+    if (url.protocol !== "https:" || url.origin !== own.origin || url.username || url.password || url.hash || url.search) return fallback;
+    const prefix = own.pathname.slice(0, own.pathname.lastIndexOf("/") + 1);
+    const slug = url.pathname.slice(prefix.length);
+    return url.pathname.startsWith(prefix) && /^[a-z0-9]+(?:-[a-z0-9]+)*$/u.test(slug) ? url.href : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export function getBlogPostRobots(
   post: Pick<BlogRow, "robots_index" | "seo">,
 ): Metadata["robots"] {

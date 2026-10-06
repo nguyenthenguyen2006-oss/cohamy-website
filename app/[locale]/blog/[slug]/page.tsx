@@ -11,7 +11,7 @@ import {
   getBlogRedirect,
 } from "@/lib/blog-repository";
 import {
-  buildBlogPostUrl,
+  getBlogPostCanonical,
   getBlogPostRobots,
 } from "@/lib/blog-seo";
 import type { BlogLocale } from "@/lib/blog-schema";
@@ -61,7 +61,7 @@ export async function generateMetadata({
 
   const post = await getPublicPostBySlug(locale as BlogLocale, slug);
   if (!post) return {};
-  const canonical = buildBlogPostUrl(post);
+  const canonical = getBlogPostCanonical(post);
 
   return generatePageMetadata({
     locale,
@@ -112,7 +112,7 @@ export default async function BlogDetailPage({
     author: post.author,
     publishedAt,
     modifiedAt: post.updated_at,
-    canonicalUrl: buildBlogPostUrl(post),
+    canonicalUrl: getBlogPostCanonical(post),
   });
   const breadcrumbJsonLd = generateBlogBreadcrumbJsonLd({
     locale: locale as Locale,
@@ -130,6 +130,13 @@ export default async function BlogDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</gu, "\\u003c") }}
       />
+      {(post.seo?.custom_schema ?? []).map((node, index) => (
+        <script
+          key={`custom-schema-${index}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({ ...node, "@context": "https://schema.org" }).replace(/</gu, "\\u003c") }}
+        />
+      ))}
       <BlogArticle
         post={post}
         locale={locale as Locale}

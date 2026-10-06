@@ -12,9 +12,9 @@ add_action('wp_after_insert_post',function ($id,$post) { if ($post->post_status!
 add_action('set_object_terms',function ($id,$terms,$tt_ids,$taxonomy) { if (in_array($taxonomy,['category','post_tag'],true)) dirty((int)$id); },100,4);
 add_action('edited_term',function ($id,$tt_id,$taxonomy) { if (in_array($taxonomy,['category','post_tag'],true)) foreach (get_objects_in_term($id,$taxonomy) as $post) dirty((int)$post); },100,3);
 foreach (['added_post_meta','updated_post_meta','deleted_post_meta'] as $hook) add_action($hook,function ($mid,$id,$key) {
-    if (str_starts_with($key,'_cohamy_analysis_')) return;
+    if (str_starts_with($key,'_cohamy_analysis_') || $key==='_chseo_scan_dirty') return;
     // Ignore Rank Math's derived score/link-analysis jobs and WP editor locks: they are not editorial changes.
-    if (str_starts_with($key,'_cohamy_') || (str_starts_with($key,'rank_math_') && !in_array($key,['rank_math_seo_score','rank_math_internal_links_processed','rank_math_analytic_object_id'],true)) || $key==='_thumbnail_id') dirty((int)$id);
+    if (str_starts_with($key,'_cohamy_') || str_starts_with($key,'_chseo_') || (str_starts_with($key,'rank_math_') && !in_array($key,['rank_math_seo_score','rank_math_internal_links_processed','rank_math_analytic_object_id'],true)) || $key==='_thumbnail_id') dirty((int)$id);
     if ($key==='_wp_attachment_image_alt') {
         $posts=get_posts(['post_type'=>'post','post_status'=>'any','numberposts'=>-1,'fields'=>'ids','meta_key'=>'_thumbnail_id','meta_value'=>(string)$id]);
         foreach ($posts as $post) dirty((int)$post);
@@ -62,7 +62,7 @@ function flush_changes(): void {
 // Defer revision and outbox until the complete request, never POST to Next.js from a partial save hook.
 add_action('shutdown',__NAMESPACE__.'\\flush_changes',999);
 add_action('updated_option',function($name,$old,$new){
-    if(!in_array($name,['rank-math-options-titles','rank-math-options-general','blogname','blogdescription'],true) || $old===$new)return;
+    if(!in_array($name,['rank-math-options-titles','rank-math-options-general','blogname','blogdescription','chseo_settings_v1','chseo_templates_v1','chseo_keyword_rules_v1'],true) || $old===$new)return;
     global $wpdb;$version=wp_generate_uuid4();update_option('cohamy_revision',$version,false);
     $wpdb->query($wpdb->prepare('UPDATE '.op_table('shard').' SET revision=%s,modified=%s',$version,gmdate('Y-m-d\TH:i:s.000\Z')));
     $event=wp_generate_uuid4();$wpdb->insert(op_table('outbox'),['event_id'=>$event,'body'=>wp_json_encode(['event_id'=>$event,'revision'=>$version,'post_ids'=>[],'paths'=>[]]),'attempts'=>0,'next_attempt'=>time(),'delivered'=>0,'last_error'=>'']);

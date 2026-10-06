@@ -9,6 +9,7 @@ function public_row(int $id): array {
     $row['references']=[];foreach(['country','topic','subject','location'] as $kind)$row['references'][$kind]=meta($id,$kind.'_id');
     // Analysis keywords/scores are editorial data, served only by authorized ops APIs.
     $row['seo']=['follow'=>!in_array('nofollow',$robots,true),'pillar'=>get_post_meta($id,'rank_math_pillar_content',true)==='on'];
+    if (class_exists('CHSEO_Schema')) $row['seo']['custom_schema']=\CHSEO_Schema::nodes($id);
     foreach (['facebook_title','facebook_description','facebook_image','twitter_title','twitter_description','twitter_image','twitter_card_type'] as $key) {
         $raw=(string)get_post_meta($id,'rank_math_'.$key,true);
         $row['seo'][$key]=str_contains($key,'title') || str_contains($key,'description') ? trim(wp_strip_all_tags(\RankMath\Helper::replace_vars($raw,get_post($id)))) : $raw;

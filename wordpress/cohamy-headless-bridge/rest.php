@@ -83,6 +83,7 @@ function row_for(int $id, ?\WP_Post $override = null): array {
     if ($status==='scheduled' && (!$schedule || strtotime($schedule)!==strtotime($post->post_date_gmt.' UTC'))) $schedule=utc($post->post_date_gmt);
     $content=do_blocks($post->post_content);
     if (!has_blocks($post->post_content)) $content=wpautop($content);
+    if (class_exists('CHSEO_Content')) $content=\CHSEO_Content::render_for($content,$id);
     $seo_context=clone $post; $seo_context->ID=$id;
     return [
       'id'=>meta($id,'legacy_id','wp-'.$id),'group_id'=>meta($id,'group_id','wp-'.$id),'locale'=>meta($id,'locale','en'),'slug'=>meta($id,'public_slug'),
@@ -92,7 +93,7 @@ function row_for(int $id, ?\WP_Post $override = null): array {
       'author'=>meta($id,'author',get_the_author_meta('display_name',$post->post_author)),'category'=>$category,'tags'=>is_wp_error($tags) ? [] : array_values($tags),
       'featured'=>meta($id,'featured')==='TRUE','related_product_ids'=>csv_list(meta($id,'related_product_ids')),
       'seo_title'=>seo_value($seo_context,'title'),'seo_description'=>seo_value($seo_context,'description'),
-      'canonical_url'=>meta($id,'canonical_url'),'robots_index'=>indexable($id),'status'=>$status,
+      'canonical_url'=>(string)get_post_meta($id,'rank_math_canonical_url',true) ?: meta($id,'canonical_url'),'robots_index'=>indexable($id),'status'=>$status,
       'scheduled_at'=>utc($schedule),
       'published_at'=>utc($status==='published' ? meta($id,'published_at',utc($post->post_date_gmt)) : meta($id,'published_at')),
       'created_at'=>utc(meta($id,'created_at',utc($post->post_date_gmt))),
