@@ -29,7 +29,7 @@ export function ProductDetailView({ product, related, locale, orderIntakeEnabled
             {product.name[locale]}
           </h1>
           <p className="mt-4 text-lg font-medium text-[#4A2418]/80">
-            {t("contactForPrice")}
+            {product.outOfStock ? t("outOfStock") : t("contactForPrice")}
           </p>
           <p className="text-[#4A2418]/80 mb-6 mt-4 leading-relaxed">
             {product.description[locale]}
@@ -45,12 +45,12 @@ export function ProductDetailView({ product, related, locale, orderIntakeEnabled
           </div>
 
           <Link
-            href="/contact"
+            href={product.outOfStock ? "/products" : "/contact"}
             className="btn-primary inline-flex h-14 items-center rounded-2xl px-10"
           >
-            {t("contactCta")}
+            {product.outOfStock ? t("viewNewProducts") : t("contactCta")}
           </Link>
-          {orderIntakeEnabled && product.price !== null && <button type="button" className="btn-primary mt-3 inline-flex h-14 items-center rounded-2xl px-10 md:ml-3" onClick={() => { if (product.price !== null) addItem({productId:product.id,price:product.price,name:product.name,image:product.images[0]}); }}>{t("addOrderItem")}</button>}
+          {orderIntakeEnabled && !product.outOfStock && product.price !== null && <button type="button" className="btn-primary mt-3 inline-flex h-14 items-center rounded-2xl px-10 md:ml-3" onClick={() => { if (product.price !== null) addItem({productId:product.id,price:product.price,name:product.name,image:product.images[0]}); }}>{t("addOrderItem")}</button>}
         </div>
       </div>
 

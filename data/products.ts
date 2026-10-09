@@ -1,8 +1,7 @@
 import type { Product } from "@/lib/types";
 import { productArrivals } from "@/data/product-arrivals";
 
-export const products: Product[] = [
-  ...productArrivals,
+const legacyProducts: Product[] = [
   {
     id: "cohamy-almond-chocolate",
     slug: {
@@ -575,6 +574,15 @@ export const products: Product[] = [
   },
 ];
 
+export const products: Product[] = [
+  ...productArrivals,
+  ...legacyProducts.map((product) => ({
+    ...product,
+    outOfStock: true,
+    featured: false,
+  })),
+];
+
 export function getProductById(id: string): Product | undefined {
   return products.find((product) => product.id === id);
 }
@@ -587,7 +595,7 @@ export function getProductBySlug(
 }
 
 export function getFeaturedProducts(): Product[] {
-  return products.filter((product) => product.featured);
+  return products.filter((product) => product.featured && !product.outOfStock);
 }
 
 export function getProductsByCategory(

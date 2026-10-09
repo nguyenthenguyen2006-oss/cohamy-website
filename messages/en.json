@@ -16,21 +16,21 @@
   "home": {
     "hero": {
       "badge": "Cohamy and Jamy Green",
-      "title": "Premium Nut Chocolate & Dried Fruit",
-      "subtitle": "Cohamy combines selected nuts, tropical fruits and refined chocolate layers to create sweet, modern gifts that are easy to enjoy.",
+      "title": "New products from Cohamy",
+      "subtitle": "Seven 80g chocolate pouches and 65g colorful chocolate candy. Explore the images and details of each product.",
       "ctaPrimary": "Explore Products",
-      "ctaSecondary": "View Gift Collection",
+      "ctaSecondary": "Explore the flavors",
       "scrollHint": "Scroll to explore",
       "premiumLabel": "Premium",
-      "pouchLabel": "55g Pouch"
+      "pouchLabel": "{weight} pouch"
     },
     "gift": {
-      "eyebrow": "Gift Collection",
-      "title": "Gift Collection",
-      "subtitle": "Five almond flavors in glass jars — ideal for holidays, festivals and corporate gifting.",
-      "cta": "Explore Gift Sets",
-      "badge": "Gift Set",
-      "imageAlt": "Cohamy Gift Jar Collection"
+      "eyebrow": "Cohamy gifts",
+      "title": "Cohamy chocolate for gifts",
+      "subtitle": "80g pouches and 65g colorful chocolate candy. Contact Cohamy to choose products and request a quote.",
+      "cta": "View new products",
+      "badge": "Gifts",
+      "imageAlt": "Cohamy Cashew Chocolate 80g"
     },
     "marquee": {
       "phrase1": "Premium Nut Chocolate",
@@ -42,7 +42,7 @@
     },
     "flavorRibbon": {
       "title": "Explore the Flavors",
-      "subtitle": "From classic almond to matcha, dried mango and durian — each flavor tells its own story.",
+      "subtitle": "Choose a flavor to view the product.",
       "item1": "Almond",
       "item2": "Dried Mango",
       "item3": "Macadamia",
@@ -52,30 +52,30 @@
     },
     "visualBreak": {
       "number": "01",
-      "title": "Fan-Favorite Collection",
-      "subtitle": "Our best-selling flavors — perfect to try, gift, or order in bulk.",
+      "title": "New flavors from Cohamy",
+      "subtitle": "Explore our 80g pouches and 65g colorful chocolate candy.",
       "cta": "View All"
     },
     "taste": {
       "title": "Flavors for Every Moment",
-      "subtitle": "From classic almonds to tropical dried mango — each pack tells its own flavor story."
+      "subtitle": "Chocolate-coated nuts and dried mango in 80g pouches."
     },
     "bento": {
       "almond": {
         "title": "Almond",
-        "subtitle": "55% dark chocolate with hand-roasted California almonds"
+        "subtitle": "Almonds coated in dark chocolate. 80g"
       },
       "mango": {
         "title": "Dried Mango",
-        "subtitle": "Cold-dried Hoa Loc mango or milk chocolate-coated in glass jars"
+        "subtitle": "Dried mango coated in dark chocolate. 80g"
       },
       "macadamia": {
         "title": "Macadamia",
-        "subtitle": "Australian macadamia coated in white and milk chocolate"
+        "subtitle": "Macadamia nuts coated in dark chocolate. 80g"
       },
       "matcha": {
         "title": "Matcha",
-        "subtitle": "Japanese Uji matcha white chocolate over roasted almonds"
+        "subtitle": "Almonds coated in matcha chocolate. 80g"
       }
     },
     "quality": {
@@ -90,8 +90,8 @@
       }
     },
     "featured": {
-      "title": "Featured Products",
-      "subtitle": "Customer favorites from the Cohamy & Jamy collection",
+      "title": "New products",
+      "subtitle": "Cohamy chocolate in 80g and 65g pouches.",
       "viewAll": "View All Products",
       "contactCta": "Contact us",
       "viewDetail": "View Details",
@@ -248,7 +248,8 @@
         "question": "Do you support bulk orders and corporate gifts?",
         "answer": "Cohamy offers holiday combos, event gifting, and custom logo printing. Contact hotline/Zalo 0981 956 111 or email Cohamyvietnam@gmail.com for a quote."
       }
-    }
+    },
+    "viewNewProducts": "View new products"
   },
   "cart": {
     "title": "Shopping Cart",
@@ -314,7 +315,8 @@
     "confirmedSubtotal": "Saved item subtotal (shipping excluded)",
     "saveFailed": "The order could not be confirmed. Your cart is unchanged. Check the connection or contact Cohamy and retry.",
     "pendingNotice": "This is an order request awaiting review. Selecting bank transfer or MoMo does not confirm payment. Cohamy will confirm pricing and shipping.",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "outOfStockNotice": "Your cart contains an out-of-stock product. Remove it or choose a new product before submitting your request."
   },
   "blog": {
     "title": "Blog",

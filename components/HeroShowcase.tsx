@@ -5,22 +5,20 @@ import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/lib/types";
-import { getAssetById } from "@/lib/assets/manifest";
+import { getProductById } from "@/lib/products";
 import { CTAButton } from "./CTAButton";
 
-const heroImage =
-  getAssetById("cohamy-almond-chocolate-55g")?.path ??
-  "/images/products/cohamy-almond-chocolate-55g.jpg";
+const heroProduct = getProductById("cohamy-almond-chocolate-80g")!;
+const heroImage = heroProduct.images[0];
 
 const floatProducts = [
-  getAssetById("cohamy-cashew-chocolate-55g"),
-  getAssetById("cohamy-almond-matcha-chocolate-55g"),
+  getProductById("cohamy-cashew-chocolate-80g"),
+  getProductById("cohamy-almond-matcha-chocolate-80g"),
 ] as const;
 
 export function HeroShowcase() {
   const t = useTranslations("home.hero");
   const locale = useLocale() as Locale;
-  const heroAsset = getAssetById("cohamy-almond-chocolate-55g");
   const containerRef = useRef<HTMLElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -75,7 +73,7 @@ export function HeroShowcase() {
             }`}
           >
             <div className="ring-glow overflow-hidden rounded-2xl border border-[#4A2418]/10 bg-white/50 p-2 backdrop-blur-sm">
-              <Image src={asset.path} alt="" width={72} height={96} className="h-20 w-auto object-contain" />
+              <Image src={asset.images[0]} alt="" width={72} height={96} className="h-20 w-auto object-contain" />
             </div>
           </motion.div>
         ) : null,
@@ -134,7 +132,7 @@ export function HeroShowcase() {
                 />
                 <Image
                   src={heroImage}
-                  alt={heroAsset?.alt[locale] ?? t("pouchLabel")}
+                  alt={heroProduct.name[locale]}
                   width={480}
                   height={640}
                   priority
@@ -150,7 +148,7 @@ export function HeroShowcase() {
               className="absolute -bottom-5 -left-5 hidden rounded-2xl border border-[#4A2418]/10 bg-white/90 px-6 py-5 shadow-lg backdrop-blur-sm md:block"
             >
               <p className="type-label text-[#D9A441]">{t("premiumLabel")}</p>
-              <p className="type-display-sm mt-1 font-serif text-[#2A120C]">{t("pouchLabel")}</p>
+              <p className="type-display-sm mt-1 font-serif text-[#2A120C]">{t("pouchLabel", { weight: heroProduct.weight })}</p>
             </motion.div>
           </motion.div>
         </div>

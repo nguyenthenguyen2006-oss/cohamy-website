@@ -16,21 +16,21 @@
   "home": {
     "hero": {
       "badge": "Cohamy và Jamy Green",
-      "title": "Socola hạt & trái cây sấy cao cấp",
-      "subtitle": "Cohamy kết hợp hạt tuyển chọn, trái cây nhiệt đới và lớp socola tinh tế để tạo nên những món quà ngọt ngào, hiện đại và dễ thưởng thức.",
+      "title": "Các mẫu mới của Cohamy",
+      "subtitle": "7 mẫu socola túi 80g và socola ngũ sắc 65g. Khám phá hình ảnh và thông tin của từng sản phẩm.",
       "ctaPrimary": "Khám phá sản phẩm",
-      "ctaSecondary": "Xem bộ sưu tập quà tặng",
+      "ctaSecondary": "Xem các hương vị",
       "scrollHint": "Cuộn để khám phá",
       "premiumLabel": "Premium",
-      "pouchLabel": "Gói 55g"
+      "pouchLabel": "Gói {weight}"
     },
     "gift": {
-      "eyebrow": "Bộ sưu tập quà",
-      "title": "Bộ sưu tập quà tặng",
-      "subtitle": "Năm hương vị hạnh nhân trong hũ thủy tinh — lý tưởng cho Tết, lễ hội và quà biếu doanh nghiệp.",
-      "cta": "Khám phá bộ quà tặng",
-      "badge": "Bộ quà tặng",
-      "imageAlt": "Bộ quà tặng Cohamy – Bộ sưu tập hũ socola"
+      "eyebrow": "Quà tặng Cohamy",
+      "title": "Socola Cohamy làm quà tặng",
+      "subtitle": "Các mẫu túi 80g và socola ngũ sắc 65g. Liên hệ Cohamy để chọn mẫu và nhận báo giá.",
+      "cta": "Xem sản phẩm mới",
+      "badge": "Quà tặng",
+      "imageAlt": "Cohamy Socola Hạt Điều 80g"
     },
     "marquee": {
       "phrase1": "Socola hạt cao cấp",
@@ -42,7 +42,7 @@
     },
     "flavorRibbon": {
       "title": "Khám phá hương vị",
-      "subtitle": "Từ hạnh nhân cổ điển đến matcha, xoài sấy và sầu riêng — mỗi vị là một câu chuyện riêng.",
+      "subtitle": "Chọn hương vị để xem sản phẩm.",
       "item1": "Hạnh nhân",
       "item2": "Xoài sấy",
       "item3": "Macca",
@@ -52,30 +52,30 @@
     },
     "visualBreak": {
       "number": "01",
-      "title": "Bộ sưu tập được yêu thích",
-      "subtitle": "Những hương vị bán chạy nhất — lý tưởng để thử, biếu tặng hoặc đặt số lượng lớn.",
+      "title": "Hương vị mới từ Cohamy",
+      "subtitle": "Khám phá các mẫu túi 80g và socola ngũ sắc 65g.",
       "cta": "Xem tất cả"
     },
     "taste": {
       "title": "Nhiều hương vị cho từng khoảnh khắc",
-      "subtitle": "Từ hạnh nhân cổ điển đến xoài sấy nhiệt đới — mỗi gói là một câu chuyện hương vị riêng."
+      "subtitle": "Socola phủ hạt và xoài sấy dẻo phủ socola, quy cách túi 80g."
     },
     "bento": {
       "almond": {
         "title": "Hạnh nhân",
-        "subtitle": "Socola đen 55% cacao, hạnh nhân California rang giòn"
+        "subtitle": "Hạnh nhân phủ socola đen. 80g"
       },
       "mango": {
         "title": "Xoài sấy",
-        "subtitle": "Xoài Hòa Lộc sấy lạnh hoặc phủ socola sữa trong hũ thủy tinh"
+        "subtitle": "Xoài sấy dẻo phủ socola đen. 80g"
       },
       "macadamia": {
         "title": "Macadamia",
-        "subtitle": "Hạt macca Úc phủ socola trắng và socola sữa cao cấp"
+        "subtitle": "Hạt mắc ca phủ socola đen. 80g"
       },
       "matcha": {
         "title": "Matcha",
-        "subtitle": "Socola trắng matcha Uji Nhật Bản bọc hạnh nhân rang"
+        "subtitle": "Hạnh nhân phủ socola vị matcha. 80g"
       }
     },
     "quality": {
@@ -90,8 +90,8 @@
       }
     },
     "featured": {
-      "title": "Bộ sưu tập nổi bật",
-      "subtitle": "Những hương vị được yêu thích cho ăn vặt, biếu tặng và chia sẻ mỗi ngày.",
+      "title": "Sản phẩm mới",
+      "subtitle": "Các mẫu socola túi 80g và 65g của Cohamy.",
       "viewAll": "Xem tất cả sản phẩm",
       "contactCta": "Liên hệ",
       "viewDetail": "Xem chi tiết",
@@ -248,7 +248,8 @@
         "question": "Có hỗ trợ đặt hàng số lượng lớn và quà doanh nghiệp không?",
         "answer": "Cohamy hỗ trợ đặt combo quà Tết, sự kiện và in logo theo yêu cầu. Liên hệ hotline/Zalo 0981 956 111 hoặc email Cohamyvietnam@gmail.com để được báo giá."
       }
-    }
+    },
+    "viewNewProducts": "Xem sản phẩm mới"
   },
   "cart": {
     "title": "Giỏ hàng",
@@ -314,7 +315,8 @@
     "confirmedSubtotal": "Tổng hàng server đã lưu (chưa gồm phí giao)",
     "saveFailed": "Chưa xác nhận lưu được đơn. Giỏ hàng được giữ nguyên. Kiểm tra kết nối hoặc liên hệ Cohamy rồi thử lại.",
     "pendingNotice": "Bạn gửi yêu cầu đặt hàng chờ duyệt. Chọn chuyển khoản/MoMo không có nghĩa đã thanh toán; Cohamy sẽ xác nhận giá và phí giao hàng.",
-    "saving": "Đang lưu..."
+    "saving": "Đang lưu...",
+    "outOfStockNotice": "Giỏ hàng có sản phẩm đã hết hàng. Vui lòng xóa sản phẩm đó khỏi giỏ hoặc chọn mẫu mới trước khi gửi yêu cầu."
   },
   "blog": {
     "title": "Bài viết",

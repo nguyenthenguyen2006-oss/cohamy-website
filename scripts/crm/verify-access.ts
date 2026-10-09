@@ -10,6 +10,8 @@ async function main() {
   const {assertPermission}=await import("../../lib/crm/permissions");
   const {migrate,importWebsiteCatalog}=await import("../../lib/crm/bootstrap");
   const {createWebsiteOrder,listWebsiteOrders}=await import("../../lib/crm/website-orders");
+  const {products}=await import("../../data/products");
+  const qaWebsiteProductId="qa-in-stock-website-product";
   const cases:{name:string;status:string}[]=[];
   async function test(name:string,run:()=>Promise<void>) {try{await run();cases.push({name,status:"PASS"});console.log(`PASS ${name}`);}catch(error){cases.push({name,status:"FAIL"});throw error;}}
   const ids=await createQaFixture();const db=await database();
@@ -32,13 +34,18 @@ async function main() {
     await test("account role cannot cross organization kind",async()=>{await assert.rejects(repo.createAccount(admin.user,{email:"escape@crm-qa.invalid",displayName:"Bad",password:qaPassword,role:"ADMIN",organizationId:ids.dealerA}),/ROLE_ORGANIZATION_MISMATCH/);});
     await test("login throttling uses persistent atomic counter",async()=>{for(let i=0;i<8;i++)await assert.rejects(login("limited@crm-qa.invalid","wrong"),/INVALID_CREDENTIALS/);await assert.rejects(login("limited@crm-qa.invalid","wrong"),/LOGIN_RATE_LIMITED/);});
     await test("dealer table response exposes no password/session data",async()=>{const data=JSON.stringify(await repo.listOrganizations(dealerA.user));assert.ok(!data.includes("password_hash")&&!data.includes("token_hash")&&!data.includes(ids.dealerB));});
-    const order={idempotencyKey:randomUUID(),locale:"vi",payment:"bank",contact:{fullName:"LOCAL QA Buyer",email:"buyer@crm-qa.invalid",phone:"0900000000",address:"LOCAL QA Test Address",city:"LOCAL QA City",district:"",ward:"",note:""},items:[{productId:"cohamy-almond-chocolate",quantity:2}]};
+    // A priced, available fixture keeps order persistence tests independent of the real catalog lifecycle.
+    products.push({...products.find(product=>product.price!==null)!,id:qaWebsiteProductId,name:{vi:"LOCAL QA Website Product",en:"LOCAL QA Website Product",zh:"LOCAL QA Website Product",ko:"LOCAL QA Website Product",ja:"LOCAL QA Website Product"},outOfStock:false,featured:false});
+    const order={idempotencyKey:randomUUID(),locale:"vi",payment:"bank",contact:{fullName:"LOCAL QA Buyer",email:"buyer@crm-qa.invalid",phone:"0900000000",address:"LOCAL QA Test Address",city:"LOCAL QA City",district:"",ward:"",note:""},items:[{productId:qaWebsiteProductId,quantity:2}]};
     await test("intake disabled until explicitly configured",async()=>{process.env.CRM_WEBSITE_ORDER_INTAKE="false";await assert.rejects(createWebsiteOrder(order),/ORDER_INTAKE_NOT_ENABLED/);process.env.CRM_WEBSITE_ORDER_INTAKE="true";});
+    await test("all ten discontinued products are rejected without persisting an order",async()=>{const before=(await db.query("SELECT id FROM cohamy_crm.website_orders")).rows.length;const soldOut=products.filter(product=>product.outOfStock);assert.equal(soldOut.length,10);for(const product of soldOut){await assert.rejects(createWebsiteOrder({...order,idempotencyKey:randomUUID(),items:[{productId:product.id,quantity:1}]}),/PRODUCT_OUT_OF_STOCK/);}assert.equal((await db.query("SELECT id FROM cohamy_crm.website_orders")).rows.length,before);});
     await test("inquiry-only arrivals cannot create a zero-price website order",async()=>{const {productArrivals}=await import("../../data/product-arrivals");const before=(await db.query("SELECT id FROM cohamy_crm.website_orders")).rows.length;for(const product of productArrivals){assert.equal(product.price,null);await assert.rejects(createWebsiteOrder({...order,idempotencyKey:randomUUID(),items:[{productId:product.id,quantity:1}]}),/PRICE_ON_REQUEST/);}assert.equal((await db.query("SELECT id FROM cohamy_crm.website_orders")).rows.length,before);});
     await test("website order saved once under parallel retry, unpaid with no posting",async()=>{const [first,second]=await Promise.all([createWebsiteOrder(order),createWebsiteOrder(order)]);assert.equal(first.code,second.code);assert.equal(first.paid,false);assert.equal(first.status,"PENDING_REVIEW");assert.equal(first.shippingQuotePending,true);assert.equal((await db.query("SELECT id FROM cohamy_crm.website_orders")).rows.length,1);});
-    await test("changed request cannot reuse key; client price injection rejected",async()=>{await assert.rejects(createWebsiteOrder({...order,items:[{productId:"cohamy-almond-chocolate",quantity:3}]}),/IDEMPOTENCY_CONFLICT/);await assert.rejects(createWebsiteOrder({...order,items:[{productId:"cohamy-almond-chocolate",quantity:2,price:1}]}),/INVALID_FIELDS/);});
+    await test("changed request cannot reuse key; client price injection rejected",async()=>{await assert.rejects(createWebsiteOrder({...order,items:[{productId:qaWebsiteProductId,quantity:3}]}),/IDEMPOTENCY_CONFLICT/);await assert.rejects(createWebsiteOrder({...order,items:[{productId:qaWebsiteProductId,quantity:2,price:1}]}),/INVALID_FIELDS/);});
     await test("unassigned website orders hidden from dealers and sales",async()=>{assert.equal((await listWebsiteOrders(admin.user)).length,1);assert.equal((await listWebsiteOrders(dealerA.user)).length,0);assert.equal((await listWebsiteOrders(sales.user)).length,0);});
   } finally {
+    const qaProductIndex=products.findIndex(product=>product.id===qaWebsiteProductId);
+    if(qaProductIndex>=0)products.splice(qaProductIndex,1);
     await fs.mkdir("docs/crm/test-results",{recursive:true});await fs.writeFile("docs/crm/test-results/access-local.json",JSON.stringify({environment:"LOCAL",engine:"PGlite (PostgreSQL WASM, single exclusive connection)",fixture:"separate .local/crm-qa-* directory; fictitious .invalid users",testedAt:new Date().toISOString(),cases,standalonePostgres:"NOT RUN",stockFinance:"NOT RUN"},null,2)+"\n");
     await db.close();
   }
