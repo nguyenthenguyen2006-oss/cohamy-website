@@ -207,6 +207,7 @@
     }
   },
   "products": {
+    "newArrival": "Mẫu mới",
     "title": "Sản phẩm",
     "subtitle": "Bộ sưu tập chocolate Cohamy & Jamy",
     "count": "{count} sản phẩm",
@@ -526,6 +527,7 @@
     "weight": "Trọng lượng",
     "flavor": "Hương vị",
     "flavors": {
+      "candy": "Ngũ sắc",
       "original": "Nguyên bản",
       "matcha": "Matcha",
       "durian": "Sầu riêng",

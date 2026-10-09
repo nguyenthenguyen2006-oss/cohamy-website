@@ -207,6 +207,7 @@
     }
   },
   "products": {
+    "newArrival": "新商品",
     "title": "製品",
     "subtitle": "Cohamy & Jamy チョコレートコレクション",
     "count": "{count}件の製品",
@@ -525,6 +526,7 @@
     "weight": "重量",
     "flavor": "フレーバー",
     "flavors": {
+      "candy": "カラフルキャンディ",
       "original": "オリジナル",
       "matcha": "抹茶",
       "durian": "ドリアン",

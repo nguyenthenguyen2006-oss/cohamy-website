@@ -18,6 +18,7 @@ export type ProductFlavor =
   | "almond-matcha"
   | "almond-strawberry"
   | "almond-milk"
+  | "chocolate-candy"
   | "gift-collection";
 
 export interface Product {
@@ -26,15 +27,17 @@ export interface Product {
   name: LocalizedString;
   shortDescription: LocalizedString;
   description: LocalizedString;
+  article?: Partial<LocalizedString>;
   category: ProductCategory;
   flavor: ProductFlavor;
   weight: string;
-  price: number;
+  price: number | null;
   images: string[];
   ingredients: LocalizedString;
   storage: LocalizedString;
   tags: string[];
   featured: boolean;
+  newArrival?: boolean;
   relatedProductIds: string[];
 }
 

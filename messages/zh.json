@@ -207,6 +207,7 @@
     }
   },
   "products": {
+    "newArrival": "新品",
     "title": "产品",
     "subtitle": "Cohamy & Jamy 巧克力系列",
     "count": "{count} 件产品",
@@ -525,6 +526,7 @@
     "weight": "重量",
     "flavor": "口味",
     "flavors": {
+      "candy": "彩色糖",
       "original": "原味",
       "matcha": "抹茶",
       "durian": "榴莲",
