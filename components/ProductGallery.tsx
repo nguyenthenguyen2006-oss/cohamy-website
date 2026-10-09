@@ -13,23 +13,25 @@ export function ProductGallery({ images, alt }: ProductGalleryProps) {
   const gallery = images.length ? images : ["/images/products/cohamy-almond-chocolate-55g.jpg"];
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <Image
         src={gallery[active]}
         alt={alt}
         width={900}
         height={900}
         priority
-        className="rounded-3xl w-full aspect-square object-cover"
+        className="rounded-3xl w-full aspect-square object-contain bg-white"
       />
       {gallery.length > 1 && (
-        <div className="flex gap-3">
+        <div className="flex gap-3 overflow-x-auto pb-2">
           {gallery.map((image, index) => (
             <button
               key={image}
               type="button"
               onClick={() => setActive(index)}
-              className={`rounded-xl overflow-hidden border-2 ${
+              aria-label={`${alt} (${index + 1}/${gallery.length})`}
+              aria-pressed={active === index}
+              className={`shrink-0 rounded-xl overflow-hidden border-2 ${
                 active === index ? "border-[#D9A441]" : "border-transparent"
               }`}
             >

@@ -27,19 +27,24 @@ export function ProductCard({ product }: ProductCardProps) {
               src={product.images[0]}
               alt={product.name[locale]}
               fill
-              className="object-cover transition duration-500 group-hover:scale-110"
+              className={`${product.newArrival ? "object-contain" : "object-cover"} transition duration-500 group-hover:scale-110`}
               sizes="(max-width: 768px) 100vw, 33vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#2A120C]/30 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            {product.newArrival && (
+              <span className="absolute right-3 top-3 rounded-full bg-white/95 px-3 py-1.5 text-sm font-medium text-[#4A2418] shadow-sm">
+                {product.weight}
+              </span>
+            )}
             {product.featured && (
               <span className="absolute left-3 top-3 rounded-full bg-[#D9A441] px-3 py-1.5 text-sm font-medium text-white shadow-md">
-                ★ {tFeatured("bestseller")}
+                {product.newArrival ? t("newArrival") : `★ ${tFeatured("bestseller")}`}
               </span>
             )}
           </div>
           <div className="flex flex-1 flex-col p-6">
             <div className="flex items-start justify-between gap-2">
-              <div className="line-clamp-1 text-lg font-medium">{product.name[locale]}</div>
+              <div className="line-clamp-2 text-lg font-medium">{product.name[locale]}</div>
               <div className="whitespace-nowrap rounded-full border border-[#D9A441]/30 bg-[#FFF4D8]/60 px-2.5 py-1 text-sm font-medium text-[#4A2418]/80">
                 {t("contactForPrice")}
               </div>

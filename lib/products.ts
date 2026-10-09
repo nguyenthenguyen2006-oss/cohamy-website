@@ -34,6 +34,7 @@ export function matchesFilterCategory(
       return (
         product.category === "pouch" &&
         product.flavor !== "dried-mango" &&
+        product.flavor !== "chocolate-candy" &&
         !product.tags.includes("dried-fruit")
       );
     case "dried-fruit":
@@ -48,7 +49,7 @@ export function matchesFilterCategory(
       return (
         product.tags.includes("premium") ||
         product.category === "gift" ||
-        product.price >= 98000
+        (product.price ?? 0) >= 98000
       );
     default:
       return true;

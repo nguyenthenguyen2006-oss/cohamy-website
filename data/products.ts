@@ -1,6 +1,8 @@
 import type { Product } from "@/lib/types";
+import { productArrivals } from "@/data/product-arrivals";
 
 export const products: Product[] = [
+  ...productArrivals,
   {
     id: "cohamy-almond-chocolate",
     slug: {

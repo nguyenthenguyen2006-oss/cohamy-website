@@ -117,8 +117,9 @@ export function generateProductJsonLd(options: {
   image: string;
   slug: string;
   sku: string;
+  inquiryOnly?: boolean;
 }) {
-  const { locale, name, description, image, slug, sku } = options;
+  const { locale, name, description, image, slug, sku, inquiryOnly = false } = options;
   const url = buildLocalizedUrl(locale, {
     pathname: "/products/[slug]",
     params: { slug },
@@ -136,15 +137,17 @@ export function generateProductJsonLd(options: {
       "@type": "Brand",
       name: SITE_NAME,
     },
-    offers: {
-      "@type": "Offer",
-      url,
-      availability: "https://schema.org/InStock",
-      seller: {
-        "@type": "Organization",
-        name: SITE_NAME,
+    ...(inquiryOnly ? { url } : {
+      offers: {
+        "@type": "Offer",
+        url,
+        availability: "https://schema.org/InStock",
+        seller: {
+          "@type": "Organization",
+          name: SITE_NAME,
+        },
       },
-    },
+    }),
   };
 }
 

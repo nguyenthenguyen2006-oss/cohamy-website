@@ -12,6 +12,7 @@ import {
 import { generatePageMetadata, generateProductJsonLd } from "@/lib/seo";
 import type { Locale } from "@/lib/types";
 import type { Metadata } from "next";
+import { sanitizeBlogHtml } from "@/lib/blog-sanitize";
 
 export function generateStaticParams() {
   return getAllProductSlugs().map(({ locale, slug }) => ({ locale, slug }));
@@ -34,7 +35,9 @@ export async function generateMetadata({
     locale,
     pathname: { pathname: "/products/[slug]", params: { slug } },
     title: t("title", { name: product.name[locale as Locale] }),
-    description: t("description", { name: product.name[locale as Locale] }),
+    description: product.newArrival
+      ? product.description[locale as Locale]
+      : t("description", { name: product.name[locale as Locale] }),
     image: product.images[0],
   });
 }
@@ -58,6 +61,7 @@ export default async function ProductDetailPage({
     image: product.images[0],
     slug,
     sku: product.id,
+    inquiryOnly: product.price === null,
   });
 
   return (
@@ -71,6 +75,9 @@ export default async function ProductDetailPage({
         related={related}
         locale={locale as Locale}
         orderIntakeEnabled={process.env.CRM_WEBSITE_ORDER_INTAKE === "true"}
+        articleHtml={product.article?.[locale as Locale]
+          ? sanitizeBlogHtml(product.article[locale as Locale]!)
+          : undefined}
       />
     </>
   );

@@ -39,6 +39,7 @@ const flavorOptions: FlavorFilter[] = [
   "dried-mango",
   "mango-chocolate",
   "macadamia-chocolate",
+  "chocolate-candy",
   "gift-collection",
 ];
 
@@ -58,6 +59,7 @@ const flavorLabelKeys: Partial<Record<Exclude<FlavorFilter, "all">, string>> = {
   "dried-mango": "mango",
   "mango-chocolate": "mango",
   "macadamia-chocolate": "macadamia",
+  "chocolate-candy": "candy",
 };
 
 export function ProductFilters({

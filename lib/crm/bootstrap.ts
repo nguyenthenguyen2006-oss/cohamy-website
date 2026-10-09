@@ -29,6 +29,8 @@ export async function importWebsiteCatalog() {
   return db.transaction(async tx=> {
     let imported=0;
     for(const product of products) {
+      // The CRM requires a confirmed retail price; inquiry-only arrivals stay on the website.
+      if(product.price===null)continue;
       // Stable mapping, not an invented commercial SKU or unit conversion.
       const result=await tx.query<{id:string}>(`INSERT INTO cohamy_crm.products(id,website_id,sku,name,category,weight_label,retail_price,translations)
         VALUES ($1,$2,$3,$4,$5,$6,$7,$8::jsonb) ON CONFLICT(website_id) DO NOTHING RETURNING id`,

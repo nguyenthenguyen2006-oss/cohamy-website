@@ -207,6 +207,7 @@
     }
   },
   "products": {
+    "newArrival": "신제품",
     "title": "제품",
     "subtitle": "Cohamy & Jamy 초콜릿 컬렉션",
     "count": "제품 {count}개",
@@ -525,6 +526,7 @@
     "weight": "중량",
     "flavor": "맛",
     "flavors": {
+      "candy": "컬러 캔디",
       "original": "오리지널",
       "matcha": "말차",
       "durian": "두리안",

@@ -1,0 +1,2 @@
+# Keep the original bytes of vendor assets verified against the SHA256 manifest.
+wordpress/rank-math-analysis/assets/* -text

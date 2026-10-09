@@ -16,7 +16,7 @@ export async function createWebsiteOrder(input:unknown) {
   const parsed=intake.safeParse(input);if(!parsed.success)throw new CrmError("INVALID_FIELDS",400);
   const data=parsed.data;
   if(new Set(data.items.map(item=>item.productId)).size!==data.items.length)throw new CrmError("DUPLICATE_PRODUCT",400);
-  const lines=data.items.map(item=>{const product=getProductById(item.productId);if(!product)throw new CrmError("INVALID_PRODUCT",400);return {websiteId:product.id,name:product.name[data.locale],quantity:item.quantity,unitPrice:String(product.price),lineTotal:String(BigInt(product.price)*BigInt(item.quantity))};});
+  const lines=data.items.map(item=>{const product=getProductById(item.productId);if(!product)throw new CrmError("INVALID_PRODUCT",400);if(product.price===null)throw new CrmError("PRICE_ON_REQUEST",409);return {websiteId:product.id,name:product.name[data.locale],quantity:item.quantity,unitPrice:String(product.price),lineTotal:String(BigInt(product.price)*BigInt(item.quantity))};});
   const subtotal=lines.reduce((sum,line)=>sum+BigInt(line.lineTotal),BigInt(0)).toString();
   const requestHash=digest(JSON.stringify({...data,idempotencyKey:undefined}));
   const db=await database();

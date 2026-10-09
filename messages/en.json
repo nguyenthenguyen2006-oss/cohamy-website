@@ -207,6 +207,7 @@
     }
   },
   "products": {
+    "newArrival": "New arrival",
     "title": "Products",
     "subtitle": "Cohamy & Jamy Chocolate Collection",
     "count": "{count} products",
@@ -526,6 +527,7 @@
     "weight": "Weight",
     "flavor": "Flavor",
     "flavors": {
+      "candy": "Colorful candy",
       "original": "Original",
       "matcha": "Matcha",
       "durian": "Durian",

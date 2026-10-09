@@ -13,9 +13,10 @@ interface ProductDetailViewProps {
   related: Product[];
   locale: Locale;
   orderIntakeEnabled?: boolean;
+  articleHtml?: string;
 }
 
-export function ProductDetailView({ product, related, locale, orderIntakeEnabled = false }: ProductDetailViewProps) {
+export function ProductDetailView({ product, related, locale, orderIntakeEnabled = false, articleHtml }: ProductDetailViewProps) {
   const t = useTranslations("products");
   const addItem = useCartStore(state => state.addItem);
 
@@ -49,9 +50,16 @@ export function ProductDetailView({ product, related, locale, orderIntakeEnabled
           >
             {t("contactCta")}
           </Link>
-          {orderIntakeEnabled && <button type="button" className="btn-primary mt-3 inline-flex h-14 items-center rounded-2xl px-10 md:ml-3" onClick={() => addItem({productId:product.id,price:product.price,name:product.name,image:product.images[0]})}>{t("addOrderItem")}</button>}
+          {orderIntakeEnabled && product.price !== null && <button type="button" className="btn-primary mt-3 inline-flex h-14 items-center rounded-2xl px-10 md:ml-3" onClick={() => { if (product.price !== null) addItem({productId:product.id,price:product.price,name:product.name,image:product.images[0]}); }}>{t("addOrderItem")}</button>}
         </div>
       </div>
+
+      {articleHtml && (
+        <article
+          className="prose-cohamy mx-auto mt-16 max-w-3xl"
+          dangerouslySetInnerHTML={{ __html: articleHtml }}
+        />
+      )}
 
       {related.length > 0 && (
         <section className="mt-20">
@@ -60,7 +68,7 @@ export function ProductDetailView({ product, related, locale, orderIntakeEnabled
         </section>
       )}
 
-      <ProductFAQ />
+      {!product.newArrival && <ProductFAQ />}
     </div>
   );
 }
