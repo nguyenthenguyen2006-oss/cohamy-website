@@ -38,6 +38,7 @@ export interface Product {
   tags: string[];
   featured: boolean;
   newArrival?: boolean;
+  outOfStock?: boolean;
   relatedProductIds: string[];
 }
 

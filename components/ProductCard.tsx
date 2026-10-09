@@ -36,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 {product.weight}
               </span>
             )}
-            {product.featured && (
+            {product.featured && !product.outOfStock && (
               <span className="absolute left-3 top-3 rounded-full bg-[#D9A441] px-3 py-1.5 text-sm font-medium text-white shadow-md">
                 {product.newArrival ? t("newArrival") : `★ ${tFeatured("bestseller")}`}
               </span>
@@ -46,7 +46,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="flex items-start justify-between gap-2">
               <div className="line-clamp-2 text-lg font-medium">{product.name[locale]}</div>
               <div className="whitespace-nowrap rounded-full border border-[#D9A441]/30 bg-[#FFF4D8]/60 px-2.5 py-1 text-sm font-medium text-[#4A2418]/80">
-                {t("contactForPrice")}
+                {product.outOfStock ? t("outOfStock") : t("contactForPrice")}
               </div>
             </div>
             <div className="type-body-md mt-2 line-clamp-2 text-[#4A2418]/70">

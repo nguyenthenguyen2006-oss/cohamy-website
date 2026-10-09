@@ -57,7 +57,7 @@ export function generatePageMetadata(options: {
     pathname,
     title,
     description,
-    image = "/images/products/cohamy-almond-chocolate-55g.jpg",
+    image = "/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg",
     type = "website",
     publishedTime,
     modifiedTime,
@@ -72,7 +72,7 @@ export function generatePageMetadata(options: {
 
   const url = buildLocalizedUrl(locale, pathname);
   const resolvedImage =
-    image || "/images/products/cohamy-almond-chocolate-55g.jpg";
+    image || "/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg";
   const imageUrl = resolvedImage.startsWith("http")
     ? resolvedImage
     : `${SITE_URL}${resolvedImage}`;
@@ -118,8 +118,9 @@ export function generateProductJsonLd(options: {
   slug: string;
   sku: string;
   inquiryOnly?: boolean;
+  outOfStock?: boolean;
 }) {
-  const { locale, name, description, image, slug, sku, inquiryOnly = false } = options;
+  const { locale, name, description, image, slug, sku, inquiryOnly = false, outOfStock = false } = options;
   const url = buildLocalizedUrl(locale, {
     pathname: "/products/[slug]",
     params: { slug },
@@ -141,7 +142,7 @@ export function generateProductJsonLd(options: {
       offers: {
         "@type": "Offer",
         url,
-        availability: "https://schema.org/InStock",
+        availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
         seller: {
           "@type": "Organization",
           name: SITE_NAME,
@@ -225,7 +226,7 @@ export function generateArticleJsonLd(options: {
       params: { slug },
     });
   const resolvedImage =
-    image || "/images/products/cohamy-almond-chocolate-55g.jpg";
+    image || "/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg";
   const imageUrl = resolvedImage.startsWith("http")
     ? resolvedImage
     : `${SITE_URL}${resolvedImage}`;

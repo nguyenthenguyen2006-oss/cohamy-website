@@ -10,7 +10,7 @@ import { SectionOrnament } from "@/components/SectionOrnament";
 
 export function FeaturedProducts() {
   const t = useTranslations("home.featured");
-  const featured = getFeaturedProducts().slice(0, 6);
+  const featured = getFeaturedProducts();
 
   return (
     <section className="relative overflow-hidden py-20 md:py-24">

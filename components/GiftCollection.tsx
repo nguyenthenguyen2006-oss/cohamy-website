@@ -5,20 +5,18 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 import { Gift } from "lucide-react";
-import { getAssetById } from "@/lib/assets/manifest";
+import { getProductById } from "@/lib/products";
 import { MotionWrapper } from "./MotionWrapper";
 import { SectionHeading } from "./SectionHeading";
 import { Tilt3D } from "./ui/Tilt3D";
 import { DecorativeOrbs } from "./DecorativeOrbs";
 
-const giftImage =
-  getAssetById("cohamy-gift-jar-collection")?.path ??
-  "/images/products/cohamy-gift-jar-collection.jpg";
+const giftProduct = getProductById("cohamy-cashew-chocolate-80g")!;
+const giftImage = giftProduct.images[4];
 
 export function GiftCollection() {
   const t = useTranslations("home.gift");
   const locale = useLocale() as Locale;
-  const giftAsset = getAssetById("cohamy-gift-jar-collection");
 
   return (
     <section className="relative overflow-hidden bg-[#FFF4D8]/40 py-20 md:py-28">
@@ -34,10 +32,10 @@ export function GiftCollection() {
               <div className="card-shine relative overflow-hidden rounded-[2rem] shadow-[0_20px_50px_-15px_rgba(42,18,12,0.25)]">
                 <Image
                   src={giftImage}
-                  alt={giftAsset?.alt[locale] ?? t("imageAlt")}
+                  alt={giftProduct.name[locale]}
                   width={720}
-                  height={540}
-                  className="object-cover transition duration-700 group-hover:scale-[1.03]"
+                  height={900}
+                  className="h-auto w-full object-contain transition duration-700 group-hover:scale-[1.03]"
                 />
               </div>
               <div className="floating-chip absolute -bottom-5 -left-3 hidden rounded-2xl border border-[#4A2418]/10 bg-white/90 px-5 py-3 shadow-lg backdrop-blur-sm md:block">

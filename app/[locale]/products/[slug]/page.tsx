@@ -62,6 +62,7 @@ export default async function ProductDetailPage({
     slug,
     sku: product.id,
     inquiryOnly: product.price === null,
+    outOfStock: product.outOfStock,
   });
 
   return (

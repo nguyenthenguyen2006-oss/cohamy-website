@@ -10,7 +10,7 @@ interface ProductGalleryProps {
 
 export function ProductGallery({ images, alt }: ProductGalleryProps) {
   const [active, setActive] = useState(0);
-  const gallery = images.length ? images : ["/images/products/cohamy-almond-chocolate-55g.jpg"];
+  const gallery = images.length ? images : ["/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg"];
 
   return (
     <div className="min-w-0 space-y-4">

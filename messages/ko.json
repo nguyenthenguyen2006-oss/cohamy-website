@@ -16,21 +16,21 @@
   "home": {
     "hero": {
       "badge": "Cohamy와 Jamy Green",
-      "title": "프리미엄 견과 초콜릿 & 건조 과일",
-      "subtitle": "코하미는 엄선된 견과류, 열대 과일과 정교한 초콜릿 층을 결합하여 달콤하고 현대적인 선물을 만듭니다.",
+      "title": "Cohamy 신제품",
+      "subtitle": "80g 초콜릿 파우치 7종과 65g 컬러 초콜릿 캔디. 각 제품의 사진과 상세 정보를 확인하세요.",
       "ctaPrimary": "제품 둘러보기",
-      "ctaSecondary": "선물 컬렉션 보기",
+      "ctaSecondary": "맛 살펴보기",
       "scrollHint": "스크롤하여 탐색하기",
       "premiumLabel": "Premium",
-      "pouchLabel": "55g 파우치"
+      "pouchLabel": "{weight} 파우치"
     },
     "gift": {
-      "eyebrow": "선물 컬렉션",
-      "title": "선물 컬렉션",
-      "subtitle": "유리병에 담긴 5가지 아몬드 맛 — 명절, 축제, 기업 선물에 이상적입니다.",
-      "cta": "선물 세트 둘러보기",
-      "badge": "기프트 세트",
-      "imageAlt": "코하미 기프트 병 컬렉션"
+      "eyebrow": "Cohamy 선물",
+      "title": "선물용 Cohamy 초콜릿",
+      "subtitle": "80g 파우치와 65g 컬러 초콜릿 캔디. 제품 선택과 견적은 Cohamy에 문의하세요.",
+      "cta": "신제품 보기",
+      "badge": "선물",
+      "imageAlt": "Cohamy 캐슈넛 초콜릿 80g"
     },
     "marquee": {
       "phrase1": "프리미엄 견과 초콜릿",
@@ -42,7 +42,7 @@
     },
     "flavorRibbon": {
       "title": "맛 탐험",
-      "subtitle": "클래식 아몬드부터 말차, 망고 건조, 두리안까지 — 각 맛마다 고유한 이야기가 있습니다.",
+      "subtitle": "맛을 선택해 제품을 확인하세요.",
       "item1": "아몬드",
       "item2": "망고 건조",
       "item3": "마카다미아",
@@ -52,30 +52,30 @@
     },
     "visualBreak": {
       "number": "01",
-      "title": "인기 컬렉션",
-      "subtitle": "가장 사랑받는 베스트셀러 맛 — 시식, 선물, 대량 주문에 이상적입니다.",
+      "title": "Cohamy의 새로운 맛",
+      "subtitle": "80g 파우치와 65g 컬러 초콜릿 캔디를 살펴보세요.",
       "cta": "전체 보기"
     },
     "taste": {
       "title": "모든 순간을 위한 다양한 맛",
-      "subtitle": "클래식 아몬드부터 열대 망고 건조 과일까지 — 각 포장마다 고유한 이야기가 있습니다."
+      "subtitle": "80g 파우치에 담긴 초콜릿 코팅 견과류와 건망고."
     },
     "bento": {
       "almond": {
         "title": "아몬드",
-        "subtitle": "55% 다크 초콜릿과 손으로 로스팅한 캘리포니아 아몬드"
+        "subtitle": "다크 초콜릿으로 코팅한 아몬드. 80g"
       },
       "mango": {
         "title": "망고 건조",
-        "subtitle": "호아록 망고 냉동 건조 또는 유리병 밀크 초콜릿 코팅"
+        "subtitle": "다크 초콜릿으로 코팅한 건망고. 80g"
       },
       "macadamia": {
         "title": "마카다미아",
-        "subtitle": "호주산 마카다미아를 화이트·밀크 초콜릿으로 코팅"
+        "subtitle": "다크 초콜릿으로 코팅한 마카다미아. 80g"
       },
       "matcha": {
         "title": "말차",
-        "subtitle": "일본 우지 말차 화이트 초콜릿과 로스팅 아몬드"
+        "subtitle": "말차 초콜릿으로 코팅한 아몬드. 80g"
       }
     },
     "quality": {
@@ -90,8 +90,8 @@
       }
     },
     "featured": {
-      "title": "추천 제품",
-      "subtitle": "Cohamy & Jamy 컬렉션의 인기 제품",
+      "title": "신제품",
+      "subtitle": "Cohamy의 80g 및 65g 초콜릿 파우치.",
       "viewAll": "전체 제품 보기",
       "contactCta": "문의하기",
       "viewDetail": "상세 보기",
@@ -248,7 +248,8 @@
         "question": "대량 주문과 기업 선물을 지원하나요?",
         "answer": "코하미는 명절 세트, 이벤트 선물, 맞춤 로고 인쇄를 지원합니다. 핫라인/Zalo 0981 956 111 또는 Cohamyvietnam@gmail.com 으로 견적 문의하세요."
       }
-    }
+    },
+    "viewNewProducts": "신제품 보기"
   },
   "cart": {
     "title": "장바구니",
@@ -314,7 +315,8 @@
     "confirmedSubtotal": "저장된 상품 소계 (배송비 제외)",
     "saveFailed": "주문 저장을 확인하지 못했습니다. 장바구니는 유지됩니다. 연결을 확인하거나 Cohamy에 문의 후 다시 시도하세요.",
     "pendingNotice": "승인 대기 주문 요청입니다. 계좌이체나 MoMo 선택은 결제 완료를 의미하지 않습니다. Cohamy가 가격과 배송비를 확인합니다.",
-    "saving": "저장 중..."
+    "saving": "저장 중...",
+    "outOfStockNotice": "장바구니에 품절 제품이 있습니다. 해당 제품을 삭제하거나 신제품을 선택한 후 요청을 제출하세요."
   },
   "blog": {
     "title": "블로그",

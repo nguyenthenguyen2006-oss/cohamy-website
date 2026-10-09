@@ -16,21 +16,21 @@
   "home": {
     "hero": {
       "badge": "Cohamy 与 Jamy Green",
-      "title": "高端坚果巧克力与果干",
-      "subtitle": "Cohamy 精选坚果、热带水果与精致巧克力层，打造甜美、现代、易于享用的礼品。",
+      "title": "Cohamy 新品",
+      "subtitle": "七款80g袋装巧克力和65g彩色巧克力糖。查看各款产品的图片与详细信息。",
       "ctaPrimary": "探索产品",
-      "ctaSecondary": "查看礼品系列",
+      "ctaSecondary": "探索风味",
       "scrollHint": "向下滚动探索",
       "premiumLabel": "Premium",
-      "pouchLabel": "55克袋装"
+      "pouchLabel": "{weight}袋装"
     },
     "gift": {
-      "eyebrow": "礼品系列",
-      "title": "礼品系列",
-      "subtitle": "五款杏仁风味玻璃罐装——适合节日、庆典与企业赠礼。",
-      "cta": "探索礼品套装",
-      "badge": "礼品套装",
-      "imageAlt": "Cohamy 礼品罐装巧克力套装"
+      "eyebrow": "Cohamy 礼品",
+      "title": "Cohamy 巧克力礼品",
+      "subtitle": "80g袋装产品及65g彩色巧克力糖。联系 Cohamy 选择产品并获取报价。",
+      "cta": "查看新品",
+      "badge": "礼品",
+      "imageAlt": "Cohamy 腰果巧克力 80g"
     },
     "marquee": {
       "phrase1": "优质坚果巧克力",
@@ -42,7 +42,7 @@
     },
     "flavorRibbon": {
       "title": "探索风味",
-      "subtitle": "从经典杏仁到抹茶、芒果干和榴莲——每种风味都有独特故事。",
+      "subtitle": "选择风味，查看对应产品。",
       "item1": "杏仁",
       "item2": "芒果干",
       "item3": "夏威夷果",
@@ -52,30 +52,30 @@
     },
     "visualBreak": {
       "number": "01",
-      "title": "人气精选系列",
-      "subtitle": "最畅销的风味——适合品尝、送礼或批量订购。",
+      "title": "Cohamy 新风味",
+      "subtitle": "探索80g袋装产品及65g彩色巧克力糖。",
       "cta": "查看全部"
     },
     "taste": {
       "title": "每个时刻的不同风味",
-      "subtitle": "从经典杏仁到热带芒果干——每一包都有独特的故事。"
+      "subtitle": "80g袋装巧克力裹坚果与芒果干。"
     },
     "bento": {
       "almond": {
         "title": "杏仁",
-        "subtitle": "55%黑巧克力裹手工烘烤加州杏仁"
+        "subtitle": "黑巧克力包裹杏仁。 80g"
       },
       "mango": {
         "title": "芒果干",
-        "subtitle": "和平乐芒果冷干或玻璃罐装牛奶巧克力"
+        "subtitle": "黑巧克力包裹芒果干。 80g"
       },
       "macadamia": {
         "title": "夏威夷果",
-        "subtitle": "澳洲夏威夷果裹白巧克力和牛奶巧克力"
+        "subtitle": "黑巧克力包裹夏威夷果。 80g"
       },
       "matcha": {
         "title": "抹茶",
-        "subtitle": "日本宇治抹茶白巧克力裹烤杏仁"
+        "subtitle": "抹茶味巧克力包裹杏仁。 80g"
       }
     },
     "quality": {
@@ -90,8 +90,8 @@
       }
     },
     "featured": {
-      "title": "精选产品",
-      "subtitle": "Cohamy & Jamy 系列中最受欢迎的产品",
+      "title": "新品",
+      "subtitle": "Cohamy 80g及65g袋装巧克力。",
       "viewAll": "查看全部产品",
       "contactCta": "联系我们",
       "viewDetail": "查看详情",
@@ -248,7 +248,8 @@
         "question": "是否支持批量订购和企业礼品？",
         "answer": "Cohamy 提供节日礼盒、活动礼品及定制logo服务。请联系热线/Zalo 0981 956 111 或电邮 Cohamyvietnam@gmail.com 获取报价。"
       }
-    }
+    },
+    "viewNewProducts": "查看新品"
   },
   "cart": {
     "title": "购物车",
@@ -314,7 +315,8 @@
     "confirmedSubtotal": "已保存商品小计（不含运费）",
     "saveFailed": "尚未确认订单已保存，购物车保持不变。请检查网络或联系Cohamy后重试。",
     "pendingNotice": "您提交的是待审核订单申请。选择银行转账或MoMo不代表已付款；Cohamy将确认价格和运费。",
-    "saving": "正在保存..."
+    "saving": "正在保存...",
+    "outOfStockNotice": "购物车中有缺货产品。请移除该产品或选择新品后再提交申请。"
   },
   "blog": {
     "title": "博客",

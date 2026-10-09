@@ -1,14 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/lib/types";
 import { Link } from "@/i18n/navigation";
 import { Cookie, Cherry, Nut, Leaf } from "lucide-react";
 import { Tilt3D } from "@/components/ui/Tilt3D";
 import { MotionWrapper } from "@/components/MotionWrapper";
 import { DecorativeOrbs } from "@/components/DecorativeOrbs";
 import { SectionOrnament } from "@/components/SectionOrnament";
-import { getAssetById } from "@/lib/assets/manifest";
+import { getProductById } from "@/lib/products";
 
 const FLAVOR_KEYS = ["almond", "mango", "macadamia", "matcha"] as const;
 
@@ -17,29 +18,30 @@ const flavorMeta = {
     className: "md:col-span-2",
     bg: "bg-[#2A120C] text-[#FAF6EF]",
     icon: Cookie,
-    imageId: "cohamy-almond-chocolate-55g",
+    productId: "cohamy-almond-chocolate-80g",
   },
   mango: {
     className: "",
     bg: "bg-[#FFF4D8] text-[#2A120C]",
     icon: Cherry,
-    imageId: "jamy-mango-dried-chocolate-160g",
+    productId: "cohamy-mango-chocolate-80g",
   },
   macadamia: {
     className: "",
     bg: "bg-white text-[#2A120C]",
     icon: Nut,
-    imageId: "jamy-macadamia-chocolate-160g",
+    productId: "cohamy-macadamia-chocolate-80g",
   },
   matcha: {
     className: "md:col-span-2",
     bg: "bg-[#E8F0E4] text-[#2A120C]",
     icon: Leaf,
-    imageId: "cohamy-almond-matcha-chocolate-55g",
+    productId: "cohamy-almond-matcha-chocolate-80g",
   },
 } as const;
 
 export function BentoGrid() {
+  const locale = useLocale() as Locale;
   const t = useTranslations("home.taste");
   const tBento = useTranslations("home.bento");
   const tExplore = useTranslations("home.categories");
@@ -58,11 +60,13 @@ export function BentoGrid() {
           {FLAVOR_KEYS.map((key, index) => {
             const meta = flavorMeta[key];
             const Icon = meta.icon;
-            const image = getAssetById(meta.imageId)?.path;
+            const product = getProductById(meta.productId);
+            if (!product) return null;
+            const image = product.images[0];
 
             return (
               <MotionWrapper key={key} delay={index * 0.08} className={meta.className}>
-                <Link href="/products" className="group block h-full">
+                <Link href={{ pathname: "/products/[slug]", params: { slug: product.slug[locale] } }} className="group block h-full">
                   <Tilt3D intensity={14} scale={1.03} className="h-full">
                     <div
                       className={`card-shine relative h-full min-h-[220px] overflow-hidden rounded-2xl border border-[#4A2418]/10 p-9 shadow-[0_18px_48px_-24px_rgba(42,18,12,0.32)] ${meta.bg}`}
@@ -83,7 +87,7 @@ export function BentoGrid() {
                         {tBento(`${key}.title`)}
                       </div>
                       <div className="relative z-10 mt-2 type-body-md opacity-85">
-                        {tBento(`${key}.subtitle`)}
+                        {product.shortDescription[locale]} {product.weight}
                       </div>
                       <div className="relative z-10 mt-6 text-sm underline opacity-75 transition group-hover:translate-x-1 md:text-base">
                         {tExplore("explore")} →

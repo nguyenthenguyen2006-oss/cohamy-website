@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { useCartStore } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
 import type { Locale } from "@/lib/types";
+import { getProductById } from "@/lib/products";
 
 interface CheckoutFormProps {
   locale: Locale;
@@ -23,6 +24,7 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
   const [error, setError] = useState("");
   const busy = useRef(false);
   const [payment, setPayment] = useState("cod");
+  const hasSoldOutItems = items.some((item) => getProductById(item.productId)?.outOfStock);
   useEffect(() => { if (done) window.scrollTo({ top: 0, behavior: "instant" }); }, [done]);
 
   if (!items.length && !done) {
@@ -56,6 +58,7 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
         className="lg:col-span-3 space-y-8"
         onSubmit={async (e) => {
           e.preventDefault();
+          if (hasSoldOutItems) { setError(t("outOfStockNotice")); return; }
           if (busy.current) return;
           busy.current = true; setPending(true); setError("");
           const form = new FormData(e.currentTarget);
@@ -116,9 +119,9 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
           ))}
         </fieldset>
 
-        {error && <p role="alert" className="text-red-800">{error}</p>}
+        {(hasSoldOutItems || error) && <p role="alert" className="text-red-800">{hasSoldOutItems ? t("outOfStockNotice") : error}</p>}
         <p className="text-sm text-[#4A2418]/80">{t("pendingNotice")}</p>
-        <button type="submit" disabled={pending} className="btn-primary w-full h-14 rounded-2xl disabled:opacity-50">
+        <button type="submit" disabled={pending || hasSoldOutItems} className="btn-primary w-full h-14 rounded-2xl disabled:opacity-50">
           {pending ? t("saving") : t("placeOrder")}
         </button>
       </form>

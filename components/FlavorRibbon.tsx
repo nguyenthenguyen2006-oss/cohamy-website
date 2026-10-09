@@ -1,13 +1,16 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "@/lib/types";
+import { getFeaturedProducts } from "@/lib/products";
+import { Link } from "@/i18n/navigation";
 import { Tilt3D } from "@/components/ui/Tilt3D";
 import { MotionWrapper } from "@/components/MotionWrapper";
 
-const FLAVOR_KEYS = ["item1", "item2", "item3", "item4", "item5", "item6"] as const;
-
 export function FlavorRibbon() {
   const t = useTranslations("home.flavorRibbon");
+  const locale = useLocale() as Locale;
+  const flavors = getFeaturedProducts();
 
   return (
     <section className="pattern-chocolate relative overflow-hidden border-y border-[#4A2418]/10 bg-[#FFF4D8]/70 py-10 md:py-12">
@@ -19,13 +22,13 @@ export function FlavorRibbon() {
         </MotionWrapper>
 
         <div className="flex flex-wrap justify-center gap-3 md:gap-4">
-          {FLAVOR_KEYS.map((key, index) => (
-            <MotionWrapper key={key} delay={index * 0.06}>
+          {flavors.map((product, index) => (
+            <MotionWrapper key={product.id} delay={index * 0.06} className="max-w-full">
               <Tilt3D intensity={14} scale={1.06} glare={false}>
-                <div className="card-shine group relative overflow-hidden rounded-full border border-[#4A2418]/15 bg-white/80 px-6 py-3 shadow-[0_10px_30px_-16px_rgba(42,18,12,0.22)] backdrop-blur-sm md:px-8 md:py-3.5">
+                <Link href={{ pathname: "/products/[slug]", params: { slug: product.slug[locale] } }} className="card-shine group relative block overflow-hidden rounded-full border border-[#4A2418]/15 bg-white/80 px-6 py-3 shadow-[0_10px_30px_-16px_rgba(42,18,12,0.22)] backdrop-blur-sm md:px-8 md:py-3.5">
                   <span className="type-label text-[#D9A441]">{String(index + 1).padStart(2, "0")}</span>
-                  <span className="type-body-md ml-3 font-medium text-[#2A120C]">{t(key)}</span>
-                </div>
+                  <span className="type-body-md ml-3 font-medium text-[#2A120C]">{product.name[locale]}</span>
+                </Link>
               </Tilt3D>
             </MotionWrapper>
           ))}
