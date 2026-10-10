@@ -62,7 +62,12 @@ export default async function proxy(request: NextRequest) {
   request.headers.set("x-cohamy-public-path",pathname);
   request.headers.set("x-cohamy-request-time",String(Math.floor(Date.now()/1000)));
   request.headers.set("x-cohamy-request-id",randomUUID());
-  return intl(request);
+  const response = intl(request);
+  // Product slugs differ by locale; the page emits their verified HTML alternates.
+  if (/^\/(vi|en|zh|ko|ja)\/(products|san-pham)\/[^/]+\/?$/u.test(pathname)) {
+    response.headers.delete("link");
+  }
+  return response;
 }
 
 export const config = {
