@@ -50,16 +50,19 @@ function buildSchema(props: SEOJsonLdProps): Record<string, unknown> {
       const p = props.product!;
       return {
         "@context": "https://schema.org",
-        "@type": "Product",
+        "@type": "WebPage",
+        url: p.url,
         name: p.name,
         description: p.description,
         image: p.image,
-        sku: p.sku,
         inLanguage: locale,
-        offers: {
-          "@type": "Offer",
-          availability: "https://schema.org/InStock",
+        about: {
+          "@type": "Thing",
           url: p.url,
+          name: p.name,
+          description: p.description,
+          image: p.image,
+          identifier: p.sku,
         },
       };
     }
@@ -117,7 +120,7 @@ export function SEOJsonLd(props: SEOJsonLdProps) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema).replace(/</gu, "\\u003c") }}
     />
   );
 }

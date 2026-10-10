@@ -9,7 +9,7 @@ import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/lib/products";
-import { generatePageMetadata, generateProductJsonLd } from "@/lib/seo";
+import { buildProductAlternates, generatePageMetadata, generateProductCatalogJsonLd } from "@/lib/seo";
 import type { Locale } from "@/lib/types";
 import type { Metadata } from "next";
 import { sanitizeBlogHtml } from "@/lib/blog-sanitize";
@@ -39,6 +39,7 @@ export async function generateMetadata({
       ? product.description[locale as Locale]
       : t("description", { name: product.name[locale as Locale] }),
     image: product.images[0],
+    alternates: buildProductAlternates(product, locale),
   });
 }
 
@@ -54,22 +55,20 @@ export default async function ProductDetailPage({
   if (!product) notFound();
 
   const related = getRelatedProducts(product);
-  const jsonLd = generateProductJsonLd({
+  const jsonLd = generateProductCatalogJsonLd({
     locale: locale as Locale,
     name: product.name[locale as Locale],
     description: product.description[locale as Locale],
     image: product.images[0],
     slug,
     sku: product.id,
-    inquiryOnly: product.price === null,
-    outOfStock: product.outOfStock,
   });
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</gu, "\\u003c") }}
       />
       <ProductDetailView
         product={product}

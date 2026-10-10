@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getPathname } from "@/i18n/navigation";
 import { routing, type Locale } from "@/i18n/routing";
 import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
+import type { Product } from "@/lib/types";
 
 const configuredSiteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://cohamy.vn";
@@ -110,17 +111,31 @@ export function generatePageMetadata(options: {
   };
 }
 
-export function generateProductJsonLd(options: {
+export function buildProductAlternates(
+  product: Pick<Product, "slug">,
+  locale: Locale,
+): Metadata["alternates"] {
+  const languages: Record<string, string> = {};
+  for (const targetLocale of routing.locales) {
+    languages[targetLocale] = buildLocalizedUrl(targetLocale, {
+      pathname: "/products/[slug]",
+      params: { slug: product.slug[targetLocale] },
+    });
+  }
+  languages["x-default"] = languages[routing.defaultLocale];
+  return { canonical: languages[locale], languages };
+}
+
+/** Catalogue pages show contact-for-price or sold-out status, not a public offer. */
+export function generateProductCatalogJsonLd(options: {
   locale: Locale;
   name: string;
   description: string;
   image: string;
   slug: string;
   sku: string;
-  inquiryOnly?: boolean;
-  outOfStock?: boolean;
 }) {
-  const { locale, name, description, image, slug, sku, inquiryOnly = false, outOfStock = false } = options;
+  const { locale, name, description, image, slug, sku } = options;
   const url = buildLocalizedUrl(locale, {
     pathname: "/products/[slug]",
     params: { slug },
@@ -129,26 +144,23 @@ export function generateProductJsonLd(options: {
 
   return {
     "@context": "https://schema.org",
-    "@type": "Product",
+    "@type": "WebPage",
+    "@id": `${url}#webpage`,
+    url,
     name,
     description,
     image: imageUrl,
-    sku,
-    brand: {
-      "@type": "Brand",
-      name: SITE_NAME,
+    inLanguage: locale,
+    about: {
+      "@type": "Thing",
+      "@id": `${url}#catalog-item`,
+      url,
+      name,
+      description,
+      image: imageUrl,
+      identifier: sku,
     },
-    ...(inquiryOnly ? { url } : {
-      offers: {
-        "@type": "Offer",
-        url,
-        availability: outOfStock ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-        seller: {
-          "@type": "Organization",
-          name: SITE_NAME,
-        },
-      },
-    }),
+    isPartOf: { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: SITE_URL },
   };
 }
 
