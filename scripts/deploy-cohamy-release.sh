@@ -56,7 +56,14 @@ cp "$PREVIOUS/.env.production" "$BACKUP/previous.env.production"
 git -C "$PREVIOUS" diff --binary > "$BACKUP/previous-working-tree.patch"
 git -C "$PREVIOUS" rev-parse HEAD > "$BACKUP/previous-sha.txt"
 pm2 jlist | node -e 'let s="";process.stdin.on("data",c=>s+=c);process.stdin.on("end",()=>require("fs").writeFileSync(process.argv[1],JSON.stringify(JSON.parse(s).filter(a=>a.name==="cohamy")),{mode:0o600}));' "$BACKUP/pm2-private.json"
-tar --exclude=node_modules --exclude=.next --exclude=.git -czf "$BACKUP/previous-source.tar.gz" -C "$PREVIOUS" .
+# The source snapshot enumerates files rather than the live root directory.
+# A runtime core dump remains in the untouched previous release.
+git -C "$PREVIOUS" ls-files --cached --others --exclude-standard -z | while IFS= read -r -d "" source_file; do
+  [[ "$source_file" = core ]] && continue
+  printf "%s\0" "$source_file"
+done > "$BACKUP/previous-source-files.nul"
+test -s "$BACKUP/previous-source-files.nul"
+tar --null --verbatim-files-from -C "$PREVIOUS" -czf "$BACKUP/previous-source.tar.gz" -T "$BACKUP/previous-source-files.nul"
 sha256sum "$BACKUP/previous-source.tar.gz" > "$BACKUP/SHA256SUMS"
 git clone --quiet https://github.com/nguyenthenguyen2006-oss/cohamy-website.git "$RELEASE"
 git -C "$RELEASE" checkout --quiet --detach "$SHA"
