@@ -20,10 +20,12 @@ export async function notifyShortage(
     updatedBy: string;
     organizationId: string;
     actorId: string;
+    /** Meeting 12/10: extra context, e.g. stock available in the other region's warehouse. */
+    note?: string;
   }
 ) {
   const expectedStr = input.expectedOn ? ` Dự kiến giao: ${input.expectedOn}.` : ' Thời gian dự kiến: Chưa xác định.';
-  const message = `Kho báo thiếu hàng cho ${input.code}: SKU ${input.sku}. Cần: ${input.needed}, Khả dụng: ${input.allocated}, Thiếu: ${input.missing}.${expectedStr} Người cập nhật: ${input.updatedBy}.`;
+  const message = `Kho báo thiếu hàng cho ${input.code}: SKU ${input.sku}. Cần: ${input.needed}, Khả dụng: ${input.allocated}, Thiếu: ${input.missing}.${expectedStr} Người cập nhật: ${input.updatedBy}.${input.note ? ' ' + input.note : ''}`;
 
   const recipients = (await sql.query<{ user_id: string }>(
     `SELECT DISTINCT m.user_id FROM cohamy_crm.memberships m

@@ -18,6 +18,10 @@ export function can(user: Principal, permission: string): boolean {
   if(permission==="deals.write")return ["ADMIN","MANAGER","SALES","DEALER_OWNER"].includes(user.role);
   if(permission==="distribution.network.manage")return user.role==="ADMIN"||(user.area==="portal"&&user.role==="DEALER_OWNER");
   if(permission==="discount.ceiling.manage")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
+  // Meeting 12/10: network (shareholders, levels, promotions, transfers), period reports, KPI programs.
+  if(permission==="channel.manage"||permission==="incentives.manage")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
+  if(permission==="channel.network")return user.area==="portal"&&user.role==="DEALER_OWNER";
+  if(permission==="reports.period")return user.area==="crm"?["ADMIN","MANAGER","ACCOUNTANT","SALES"].includes(user.role):user.role==="DEALER_OWNER";
   return permissions[user.role]?.some(value => value === "*" || value === permission) ?? false;
 }
 export function assertPermission(user: Principal, permission: string) {

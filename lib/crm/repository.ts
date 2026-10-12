@@ -15,14 +15,14 @@ export const organizationSchema = z.object({
   address: z.string().trim().max(500).default(""),
   source: z.string().trim().max(120).default(""), segment: z.string().trim().max(120).default(""),
   contactName: z.string().trim().max(120).default(""), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),
-  partnerType: z.enum(['COHAMY','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),
+  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),
   pricingTierId: z.uuid().nullable().optional(),
   creditEnabled: z.boolean().optional(),
 }).strict();
 const updateSchema = organizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() });
-const warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid() }).strict();
+const warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum(["NORTH","SOUTH"]).nullable().optional() }).strict();
 const accountSchema = z.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() }).strict();
-const organizationColumns = "o.id,o.code,o.name,o.kind,o.phone,o.email,o.address,o.active,o.version,o.created_at,o.source,o.segment,o.contact_name,o.stage,o.business_id,o.merged_into_id,o.partner_type,o.pricing_tier_id,o.credit_enabled";
+const organizationColumns = "o.id,o.code,o.name,o.kind,o.phone,o.email,o.address,o.active,o.version,o.created_at,o.source,o.segment,o.contact_name,o.stage,o.business_id,o.merged_into_id,o.partner_type,o.pricing_tier_id,o.credit_enabled,o.membership_level_id,o.region";
 const parse = <T>(schema: z.ZodType<T>, input: unknown): T => {
   const result = schema.safeParse(input);
   if (!result.success) throw new CrmError("INVALID_FIELDS", 400);
@@ -136,7 +136,7 @@ export async function listWarehouses(user: Principal) {
   if (["ADMIN", "MANAGER"].includes(user.role)) where = "true";
   else if (user.area === "portal") { where = "w.organization_id=$1"; params.push(user.organizationId); }
   else { where = "EXISTS (SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$1)"; params.push(user.membershipId); }
-  return (await db.query<Warehouse>(`SELECT w.id,w.code,w.name,w.organization_id,o.name AS organization_name,w.active FROM cohamy_crm.warehouses w JOIN cohamy_crm.organizations o ON o.id=w.organization_id WHERE ${where} ORDER BY w.code`, params)).rows;
+  return (await db.query<Warehouse>(`SELECT w.id,w.code,w.name,w.organization_id,o.name AS organization_name,w.active,w.region FROM cohamy_crm.warehouses w JOIN cohamy_crm.organizations o ON o.id=w.organization_id WHERE ${where} ORDER BY w.code`, params)).rows;
 }
 export async function createWarehouse(user: Principal, input: unknown) {
   assertPermission(user, "warehouses.write");
@@ -146,7 +146,7 @@ export async function createWarehouse(user: Principal, input: unknown) {
     const org = await getOrganization(user, data.organizationId, tx);
     if (!org.active || !["COHAMY", "DEALER"].includes(org.kind)) throw new CrmError("INVALID_WAREHOUSE_OWNER", 400);
     const id = randomUUID();
-    await tx.query("INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id) VALUES ($1,$2,$3,$4)", [id, data.code, data.name, data.organizationId]);
+    await tx.query("INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id,region) VALUES ($1,$2,$3,$4,$5)", [id, data.code, data.name, data.organizationId, data.region ?? null]);
     await audit(tx, user.id, "warehouse.created", id, { organizationId: data.organizationId });
     return { id };
   });

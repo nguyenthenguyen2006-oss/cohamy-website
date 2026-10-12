@@ -83,6 +83,7 @@
     "test:crm:commercial-orders": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-commercial-orders.ts",
     "test:crm:meeting-contract": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-contract.ts",
     "test:crm:meeting-53": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-53-amendments.ts",
+    "test:crm:meeting-1012": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-1012.ts",
     "test:crm:request-excel": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-request-excel.ts",
     "test:crm:quotation-pdf": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotation-pdf.ts",
     "test:crm:samples-browser": "node scripts/crm/verify-sample-browser.mjs",

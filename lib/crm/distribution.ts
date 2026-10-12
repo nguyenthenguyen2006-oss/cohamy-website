@@ -7,7 +7,7 @@ import { assertPermission, CrmError } from './permissions';
 import { partnerScope } from './repository';
 import type { Principal, Organization } from './types';
 
-export type PartnerType = 'COHAMY' | 'DEALER_L1' | 'DEALER_L2' | 'STORE' | 'END_CUSTOMER';
+export type PartnerType = 'COHAMY' | 'SHAREHOLDER' | 'DEALER_L1' | 'DEALER_L2' | 'STORE' | 'END_CUSTOMER';
 
 export interface DistributionRelation {
   id: string;

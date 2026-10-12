@@ -22,6 +22,7 @@ export interface Organization {
   email: string; address: string; active: boolean; version: number; created_at: string;
   merged_into_id?: string|null; business_id?: string; source?: string; segment?: string; contact_name?: string; stage?: string;
   partner_type?: string; pricing_tier_id?: string|null; credit_enabled?: boolean;
+  membership_level_id?: string|null; region?: "NORTH"|"SOUTH"|null;
 }
 export interface CatalogProduct {
   id: string; website_id: string; sku: string; name: string; category: string;
@@ -29,7 +30,7 @@ export interface CatalogProduct {
   stock_unit: string; units_per_case: number|null; active: boolean; version: number;
 }
 export interface Warehouse {
-  id: string; code: string; name: string; organization_id: string; organization_name: string; active: boolean;
+  id: string; code: string; name: string; organization_id: string; organization_name: string; active: boolean; region?: "NORTH"|"SOUTH"|null;
 }
 
 export interface Deal {

@@ -1,0 +1,80 @@
+{
+  "testedAt": "2026-10-12T01:14:10.566Z",
+  "environment": "LOCAL PGlite",
+  "total": 18,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "M01: Bốn hạng Đồng/Bạc/Vàng/Kim cương có sẵn, chưa gán % (doanh nghiệp tự nhập)",
+      "status": "PASS"
+    },
+    {
+      "name": "M02: Đối tác chưa cấu hình kênh → tính giá giữ nguyên như cũ (không có lớp kênh)",
+      "status": "PASS"
+    },
+    {
+      "name": "M03: Hạng Bạc 30% áp dụng cố định cho đối tác được xếp hạng; lưu lịch sử nâng hạng",
+      "status": "PASS"
+    },
+    {
+      "name": "M04: Chiết khấu riêng của tài khoản (fix 40%) ưu tiên hơn % theo hạng",
+      "status": "PASS"
+    },
+    {
+      "name": "M05: Khuyến mãi toàn hệ thống 10% HOT cộng dồn tuần tự trước chiết khấu tài khoản",
+      "status": "PASS"
+    },
+    {
+      "name": "M06: Khuyến mãi chỉ định chỉ áp dụng cho đối tác/hạng được chọn",
+      "status": "PASS"
+    },
+    {
+      "name": "M07: Khuyến mãi theo số lượng chỉ áp dụng khi đạt ngưỡng",
+      "status": "PASS"
+    },
+    {
+      "name": "M08: Cổ đông là gốc cây; đối tác bên dưới ghi danh đầu mối",
+      "status": "PASS"
+    },
+    {
+      "name": "M09: Đại lý đặt chiết khấu cho cấp dưới trực tiếp, không vượt mức mình nhận",
+      "status": "PASS"
+    },
+    {
+      "name": "M10: Chuỗi quản lý hiện cấp 1, 2…; cấp dưới không thấy phía trên; nhà máy liên hệ quản lý gần nhất",
+      "status": "PASS"
+    },
+    {
+      "name": "M11: Xin chuyển cây phải được quản trị duyệt; duyệt xong mới đổi cây",
+      "status": "PASS"
+    },
+    {
+      "name": "M12: Catalog đặt hàng: ảnh/giá/KM/HOT và trạng thái còn hàng, không lộ số tồn",
+      "status": "PASS"
+    },
+    {
+      "name": "M13: Đơn từ catalog → gửi → xác nhận; đơn giá lưu theo giá kênh",
+      "status": "PASS"
+    },
+    {
+      "name": "M14: Xuất hoá đơn cho chính đơn vị hoặc công ty thương mại khác",
+      "status": "PASS"
+    },
+    {
+      "name": "M15: Kho báo thiếu → thông báo quản lý trực tiếp kèm tồn kho miền khác, không tự đặt ngày",
+      "status": "PASS"
+    },
+    {
+      "name": "M16: Doanh số theo tháng/quý/năm, theo đầu mối, sản phẩm và ma trận",
+      "status": "PASS"
+    },
+    {
+      "name": "M17: KPI đạt mục tiêu → quản lý duyệt nâng hạng Kim cương; không trao 2 lần, không trao khi chưa đạt",
+      "status": "PASS"
+    },
+    {
+      "name": "M18: Phân quyền: chỉ ADMIN/MANAGER quản trị kênh; chủ đại lý xem mạng lưới & doanh số của mình",
+      "status": "PASS"
+    }
+  ]
+}

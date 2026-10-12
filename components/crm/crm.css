@@ -4624,3 +4624,21 @@
     transition-property:none !important;
   }
 }
+
+/* Meeting 12/10 — order catalog (lưới sản phẩm), badges, stock status and management chain. */
+.channel-catalog{display:grid;gap:1.25rem}
+.channel-grid{list-style:none;margin:0;padding:0;display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.channel-card{display:flex;flex-direction:column;background:var(--portal-paper);border:1px solid var(--portal-rule);border-radius:var(--portal-radius);overflow:hidden}
+.channel-card__media{position:relative;aspect-ratio:4/3;background:var(--portal-paper-muted);display:grid;place-items:center;font-size:2rem;color:var(--portal-muted)}
+.channel-card__media img{width:100%;height:100%;object-fit:cover}
+.channel-card__body{display:grid;gap:.35rem;padding:.75rem}
+.channel-card__body h3{margin:0;font-size:1rem;line-height:1.3}
+.channel-price{margin:0}.channel-price s{color:var(--portal-muted);font-size:.85em;margin-right:.25rem}
+.channel-promo{margin:0;color:var(--portal-danger);font-size:.875rem}
+.channel-badge{position:absolute;top:.5rem;left:.5rem;padding:.15rem .5rem;border-radius:999px;font-size:.75rem;font-weight:700;background:var(--portal-green);color:#fff}
+.channel-badge--hot{background:var(--portal-danger)}.channel-badge--sale{background:var(--portal-warning)}
+.channel-stock{margin:0;font-size:.8rem;font-weight:600}
+.channel-stock--in_stock{color:var(--portal-green)}.channel-stock--low{color:var(--portal-warning)}.channel-stock--out{color:var(--portal-danger)}.channel-stock--unknown{color:var(--portal-muted)}
+.channel-qty{display:grid;gap:.25rem;font-size:.85rem}.channel-qty input{min-height:44px}
+.channel-chain{margin:0;padding-left:1.25rem;display:grid;gap:.35rem}
+.channel-chain li[aria-current="true"]{font-weight:600}

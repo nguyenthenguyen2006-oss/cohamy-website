@@ -34,6 +34,7 @@ import {MfaControls} from './SecurityForms';
 import {mfaStatus} from '@/lib/crm/account-security';
 
 import { CrmHubPage } from "./CrmHubPage";
+import {NetworkPage,PortalNetworkPage,PeriodSalesPage,KpiPage,PartnerChannelPanel,PortalOrderCatalogPage} from "./ChannelPages";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
 function Header({title,description}:{title:string;description:string}) {return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
@@ -52,7 +53,10 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   const workQuery=Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string'));
   if(slug==='requests')return <RequestsPage user={user} id={id} query={workQuery}/>;
   if(slug==='sales'&&area==='crm'||slug==='orders'&&area==='portal')return <SalesOrdersPage user={user} id={id} query={workQuery}/>;
-  if(slug==='goods'&&area==='portal'&&!id){await markCatalogSeen(user);return <RequestsPage user={user} id="new" query={workQuery}/>;}
+  if(slug==='goods'&&area==='portal'&&!id){await markCatalogSeen(user);return <PortalOrderCatalogPage user={user}/>;}
+  if(slug==='network'&&!id)return area==='crm'?<NetworkPage user={user} query={workQuery}/>:<PortalNetworkPage user={user}/>;
+  if(slug==='period-sales'&&!id)return <PeriodSalesPage user={user} query={workQuery}/>;
+  if(slug==='kpi'&&area==='crm'&&!id)return <KpiPage user={user} query={workQuery}/>;
   if(slug==='visits')return id?<VisitPage user={user} id={id}/>:<VisitsIndexPage user={user} query={workQuery}/>;
   if(slug==='pricing'&&area==='crm')return <PricePage user={user} id={id} query={workQuery}/>;
   if(slug==='quotations')return <QuotationsPage user={user} id={id} query={workQuery}/>;
@@ -92,7 +96,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
       const record=await getOrganization(user,id).catch(error=>{if(error instanceof CrmError&&error.status===404)notFound();throw error;});
       if(record.kind!==kind)notFound();
       if(record.merged_into_id)return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={'Mã '+record.code+' · Hồ sơ nguồn lịch sử'}/><p className="crm-status-note">Hồ sơ lịch sử đã được gộp. <Link href={root+'/'+record.merged_into_id}>Mở hồ sơ giữ lại</Link> để cập nhật dữ liệu và xem toàn bộ liên kết.</p><dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||'Chưa ghi nhận'}</dd><dt>Email</dt><dd>{record.email||'Chưa ghi nhận'}</dd><dt>Mã doanh nghiệp</dt><dd>{record.business_id||'Chưa ghi nhận'}</dd><dt>Địa chỉ</dt><dd>{record.address||'Chưa ghi nhận'}</dd></dl><PartnerMergePanel user={user} id={id}/></>;
-      return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={`Mã ${record.code} · phiên bản ${record.version}`}/>{can(user,"partners.write")&&!record.merged_into_id?<RecordForm resource="partners" record={record}/>:<dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||"Chưa ghi nhận"}</dd><dt>Email</dt><dd>{record.email||"Chưa ghi nhận"}</dd><dt>Địa chỉ</dt><dd>{record.address||"Chưa ghi nhận"}</dd></dl>}{record.merged_into_id&&<p className="crm-status-note">Hồ sơ lịch sử đã được gộp. <Link href={root+'/'+record.merged_into_id}>Mở hồ sơ giữ lại</Link> để cập nhật dữ liệu và xem toàn bộ liên kết.</p>}<RecordActions type="partner" id={id} phone={record.phone} address={record.address}/><ContactsPanel user={user} id={id}/><CustomFieldsPanel user={user} id={id}/><RelationshipPanel user={user} id={id}/><DocumentsPanel user={user} type="partner" id={id} q={workQuery.documents??''}/><PartnerDuplicates user={user} id={id}/><PartnerMergePanel user={user} id={id}/><EntityWork user={user} type="partner" id={id}/></>;
+      return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={`Mã ${record.code} · phiên bản ${record.version}`}/>{can(user,"partners.write")&&!record.merged_into_id?<RecordForm resource="partners" record={record}/>:<dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||"Chưa ghi nhận"}</dd><dt>Email</dt><dd>{record.email||"Chưa ghi nhận"}</dd><dt>Địa chỉ</dt><dd>{record.address||"Chưa ghi nhận"}</dd></dl>}{record.merged_into_id&&<p className="crm-status-note">Hồ sơ lịch sử đã được gộp. <Link href={root+'/'+record.merged_into_id}>Mở hồ sơ giữ lại</Link> để cập nhật dữ liệu và xem toàn bộ liên kết.</p>}<RecordActions type="partner" id={id} phone={record.phone} address={record.address}/><ContactsPanel user={user} id={id}/><CustomFieldsPanel user={user} id={id}/><PartnerChannelPanel user={user} id={id}/><RelationshipPanel user={user} id={id}/><DocumentsPanel user={user} type="partner" id={id} q={workQuery.documents??''}/><PartnerDuplicates user={user} id={id}/><PartnerMergePanel user={user} id={id}/><EntityWork user={user} type="partner" id={id}/></>;
     }
     const collection=await listOrganizations(user,{kind,q,page,tags});const pref=await preferences(user),tagChoices=(await careDictionary(user,'tags')).filter(t=>t.active);
     const href=(next:number)=>`${root}?${new URLSearchParams({q,tags,page:String(next)})}`;

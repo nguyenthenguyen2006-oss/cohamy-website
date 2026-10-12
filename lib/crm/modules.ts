@@ -47,6 +47,9 @@ const internal: CrmModule[] = [
   {id:'applications',label:'Xét duyệt đối tác',shortLabel:'Xét duyệt',icon:'applications',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   {id:'invitations',label:'Link mời đối tác',shortLabel:'Link mời',icon:'invitations',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   {id:'audit',label:'Lịch sử thao tác',shortLabel:'Lịch sử',icon:'audit',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
+  {id:'network',label:'Mạng lưới, hạng & khuyến mãi',shortLabel:'Mạng lưới',icon:'dealer',tone:'primary',permission:'channel.manage',status:'CONNECTED'},
+  {id:'period-sales',label:'Doanh số tháng / quý / năm',shortLabel:'Doanh số kỳ',icon:'report',tone:'emerald',permission:'reports.period',status:'CONNECTED'},
+  {id:'kpi',label:'Chương trình KPI & thưởng',shortLabel:'KPI',icon:'report',tone:'orange',permission:'incentives.manage',status:'CONNECTED'},
   { id: "customers", label: "Khách hàng", shortLabel: "Khách hàng", icon: "customer", tone: "success", permission: "partners.read", status: "CONNECTED", bottom: 1 },
   { id: "dealers", label: "Đại lý", shortLabel: "Đại lý", icon: "dealer", tone: "indigoDark", permission: "partners.read", status: "CONNECTED" },
   { id: "goods", label: "Hàng hóa", shortLabel: "Hàng hóa", icon: "goods", tone: "primary", permission: "catalog.read", status: "CONNECTED", bottom: 2 },
@@ -64,6 +67,8 @@ const internal: CrmModule[] = [
 const dealer: CrmModule[] = [
   {id:'requests',label:'Đề nghị mua hàng',shortLabel:'Đề nghị',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   {id:'quotations',label:'Báo giá của tôi',shortLabel:'Báo giá',icon:'quotations',tone:'primary',permission:'orders.read',status:'CONNECTED'},
+  {id:'network',label:'Mạng lưới của tôi',shortLabel:'Mạng lưới',icon:'dealer',tone:'primary',permission:'channel.network',status:'CONNECTED'},
+  {id:'period-sales',label:'Doanh số tháng / quý / năm',shortLabel:'Doanh số',icon:'report',tone:'emerald',permission:'reports.period',status:'CONNECTED'},
   {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'library',tone:'primary',permission:'catalog.read',status:'CONNECTED'},
   {id:'members',label:'Nhân viên đại lý',shortLabel:'Nhân viên',icon:'members',tone:'primary',permission:'dealer.invite',status:'CONNECTED'},
   {id:'support',label:'Phiếu hỗ trợ',shortLabel:'Hỗ trợ',icon:'support',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
@@ -121,7 +126,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "dealer",
     color: "#dc2626",
     gradient: "linear-gradient(135deg, #ef4444, #b91c1c)",
-    moduleIds: ["dealers", "applications", "invitations"],
+    moduleIds: ["dealers", "network", "applications", "invitations"],
   },
   {
     id: "goods",
@@ -175,7 +180,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "report",
     color: "#f59e0b",
     gradient: "linear-gradient(135deg, #f59e0b, #b45309)",
-    moduleIds: ["reports", "data", "search"],
+    moduleIds: ["reports", "period-sales", "kpi", "data", "search"],
   },
   {
     id: "library",
