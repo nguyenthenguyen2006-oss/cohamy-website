@@ -190,8 +190,6 @@ export async function resetDemoData(options?: { preserveCredentialsFile?: boolea
     await runDelete('workspace_drafts', `DELETE FROM cohamy_crm.workspace_drafts WHERE user_id IN ${demoUserSubquery}`);
     await runDelete('workspace_preferences', `DELETE FROM cohamy_crm.workspace_preferences WHERE user_id IN ${demoUserSubquery}`);
     await runDelete('saved_filters', `DELETE FROM cohamy_crm.saved_filters WHERE user_id IN ${demoUserSubquery}`);
-    await runDelete('dealer_carts', `DELETE FROM cohamy_crm.dealer_carts WHERE organization_id IN ${demoOrgSubquery} OR user_id IN ${demoUserSubquery}`);
-    await runDelete('dealer_addresses', `DELETE FROM cohamy_crm.dealer_addresses WHERE organization_id IN ${demoOrgSubquery}`);
 
     console.log('[DEMO RESET] Purging demo opportunities, visits, care, tasks...');
     await runDelete(
@@ -237,25 +235,6 @@ export async function resetDemoData(options?: { preserveCredentialsFile?: boolea
        WHERE organization_id IN ${demoOrgSubquery}`
     );
 
-    console.log('[DEMO RESET] Purging demo sample management...');
-    const demoSampleIssueSubquery = `(SELECT id FROM cohamy_crm.sample_issues WHERE organization_id IN ${demoOrgSubquery})`;
-
-    await runDelete(
-      'sample_events',
-      `DELETE FROM cohamy_crm.sample_events WHERE issue_id IN ${demoSampleIssueSubquery}`
-    );
-    await runDelete(
-      'sample_allocations',
-      `DELETE FROM cohamy_crm.sample_allocations WHERE line_id IN (SELECT id FROM cohamy_crm.sample_issue_lines WHERE issue_id IN ${demoSampleIssueSubquery})`
-    );
-    await runDelete(
-      'sample_issue_lines',
-      `DELETE FROM cohamy_crm.sample_issue_lines WHERE issue_id IN ${demoSampleIssueSubquery}`
-    );
-    await runDelete(
-      'sample_issues',
-      `DELETE FROM cohamy_crm.sample_issues WHERE organization_id IN ${demoOrgSubquery}`
-    );
 
     console.log('[DEMO RESET] Purging demo consignment...');
     const demoAgreementSubquery = `(SELECT id FROM cohamy_crm.consignment_agreements WHERE organization_id IN ${demoOrgSubquery} OR code LIKE 'HD-DEMO-%')`;

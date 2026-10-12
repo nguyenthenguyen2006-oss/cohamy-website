@@ -9,13 +9,13 @@ import type {Principal,Organization} from './types';
 
 export const mergeFields=['name','phone','email','business_id','address','source','segment','contact_name','stage'] as const;
 const choice=z.enum(['SOURCE','TARGET']);
-const choicesSchema=z.object({name:choice,phone:choice,email:choice,business_id:choice,address:choice,source:choice,segment:choice,contact_name:choice,stage:choice,contactPreferences:choice,primaryContact:choice,defaultAddress:choice}).strict();
+const choicesSchema=z.object({name:choice,phone:choice,email:choice,business_id:choice,address:choice,source:choice,segment:choice,contact_name:choice,stage:choice,contactPreferences:choice,primaryContact:choice}).strict();
 type Choices=z.infer<typeof choicesSchema>;
 interface LinkGroup {table:string;count:number;items:{id:string;label:string}[];retained:boolean}
-export interface MergeManifest {source:Organization;target:Organization;fields:{field:string;before:string;after:string}[];groups:LinkGroup[];sessionCount:number;digest:string;settings:{preferences:Record<string,unknown>[];primaryContacts:Record<string,unknown>[];defaultAddresses:Record<string,unknown>[];outcome:{preferences:Record<string,unknown>|null;primaryContact:Record<string,unknown>|null;defaultAddress:Record<string,unknown>|null;preferenceFallback:boolean}}}
+export interface MergeManifest {source:Organization;target:Organization;fields:{field:string;before:string;after:string}[];groups:LinkGroup[];sessionCount:number;digest:string;settings:{preferences:Record<string,unknown>[];primaryContacts:Record<string,unknown>[];outcome:{preferences:Record<string,unknown>|null;primaryContact:Record<string,unknown>|null;preferenceFallback:boolean}}}
 function manager(user:Principal){if(user.area!=='crm'||!['ADMIN','MANAGER'].includes(user.role))throw new CrmError('FORBIDDEN',403);}
 function parse<T>(schema:z.ZodType<T>,input:unknown){const d=schema.safeParse(input);if(!d.success)throw new CrmError('INVALID_FIELDS',400);return d.data;}
-const mutable=new Set(['memberships','partner_assignments','partner_tags','partner_contacts','dealer_addresses','dealer_carts','support_tickets','website_orders','opportunities','quotations','commercial_requests','sales_orders','private_documents','tasks','care_schedules','partner_library','partner_applications','partner_invitations']);
+const mutable=new Set(['memberships','partner_assignments','partner_tags','partner_contacts','support_tickets','website_orders','opportunities','quotations','commercial_requests','sales_orders','private_documents','tasks','care_schedules','partner_library','partner_applications','partner_invitations']);
 // Source rows remain available for immutable history and future source ledgers.
 // Current scope follows the canonical organization; ledger amounts never move.
 export async function partnerFamily(sql:Sql,id:string) {return(await sql.query<{id:string}>('SELECT id FROM cohamy_crm.organizations WHERE id=$1 OR merged_into_id=$1 ORDER BY id',[id])).rows.map(r=>r.id);}
@@ -63,11 +63,10 @@ async function manifest(sql:Sql,user:Principal,sourceId:string,targetId:string,c
   const oldSettings={
     preferences:(await sql.query('SELECT * FROM cohamy_crm.contact_preferences WHERE organization_id=ANY($1::uuid[]) ORDER BY organization_id',[[sourceId,targetId]])).rows,
     primaryContacts:(await sql.query('SELECT id,organization_id,name,phone,email FROM cohamy_crm.partner_contacts WHERE organization_id=ANY($1::uuid[]) AND is_primary AND active ORDER BY organization_id',[[sourceId,targetId]])).rows,
-    defaultAddresses:(await sql.query('SELECT id,organization_id,label,recipient,phone,address FROM cohamy_crm.dealer_addresses WHERE organization_id=ANY($1::uuid[]) AND is_default AND active ORDER BY organization_id',[[sourceId,targetId]])).rows,
   };
   const from=(rows:Record<string,unknown>[],selected:Choices[keyof Choices])=>rows.find(r=>r.organization_id===(selected==='SOURCE'?sourceId:targetId))??null;
   const selectedPreferences=from(oldSettings.preferences,choices.contactPreferences);
-  const settings={...oldSettings,outcome:{preferences:selectedPreferences??from(oldSettings.preferences,'TARGET'),primaryContact:from(oldSettings.primaryContacts,choices.primaryContact),defaultAddress:from(oldSettings.defaultAddresses,choices.defaultAddress),preferenceFallback:choices.contactPreferences==='SOURCE'&&!selectedPreferences}};
+  const settings={...oldSettings,outcome:{preferences:selectedPreferences??from(oldSettings.preferences,'TARGET'),primaryContact:from(oldSettings.primaryContacts,choices.primaryContact),preferenceFallback:choices.contactPreferences==='SOURCE'&&!selectedPreferences}};
   return {source,target,fields:mergeFields.map(field=>({field,before:String(target[field]??''),after:String((choices[field]==='SOURCE'?source:target)[field]??'')})),groups,sessionCount,digest:hash.digest('hex'),settings};
 }
 export async function mergePreview(user:Principal,input:unknown) {
@@ -83,14 +82,14 @@ export async function mergeConfirm(user:Principal,input:unknown) {
     const current=await manifest(sql,user,preview.source_id,preview.target_id,choicesSchema.parse(preview.choices),tables);if(current.digest!==preview.manifest.digest)throw new CrmError('VERSION_CONFLICT',409);
     const sourceIds=await partnerFamily(sql,preview.source_id),target=preview.target_id;
     for(const table of ['partner_assignments','partner_tags']){const key=table==='partner_tags'?'tag_id':'membership_id';await sql.query(`INSERT INTO cohamy_crm.${table}(${key},organization_id) SELECT ${key},$2 FROM cohamy_crm.${table} WHERE organization_id=ANY($1::uuid[]) ON CONFLICT DO NOTHING`,[sourceIds,target]);}
-    for(const [table,flag,selected] of [['partner_contacts','is_primary',preview.choices.primaryContact],['dealer_addresses','is_default',preview.choices.defaultAddress]]){
+    for(const [table,flag,selected] of [['partner_contacts','is_primary',preview.choices.primaryContact]]){
       const keeper=selected==='SOURCE'?preview.source_id:target;
       await sql.query(`UPDATE cohamy_crm.${table} SET ${flag}=false,version=version+1 WHERE organization_id=ANY($1::uuid[]) AND organization_id<>$2 AND ${flag}`,[ [...sourceIds,target],keeper]);
       await sql.query(`UPDATE cohamy_crm.${table} SET organization_id=$2,version=version+1 WHERE organization_id=ANY($1::uuid[])`,[sourceIds,target]);
     }
     await sql.query('UPDATE cohamy_crm.sessions SET revoked_at=now() WHERE membership_id IN(SELECT id FROM cohamy_crm.memberships WHERE organization_id=ANY($1::uuid[])) AND revoked_at IS NULL',[[...sourceIds,target]]);
     await sql.query('UPDATE cohamy_crm.memberships SET version=version+1 WHERE organization_id=$1',[target]);
-    for(const table of ['memberships','dealer_carts','support_tickets','website_orders','opportunities','quotations','commercial_requests','sales_orders','partner_applications'])await sql.query(`UPDATE cohamy_crm.${table} SET organization_id=$2,version=version+1 WHERE organization_id=ANY($1::uuid[])`,[sourceIds,target]);
+    for(const table of ['memberships','support_tickets','website_orders','opportunities','quotations','commercial_requests','sales_orders','partner_applications'])await sql.query(`UPDATE cohamy_crm.${table} SET organization_id=$2,version=version+1 WHERE organization_id=ANY($1::uuid[])`,[sourceIds,target]);
     await sql.query("UPDATE cohamy_crm.partner_invitations SET revoked_at=now() WHERE organization_id=ANY($1::uuid[]) AND revoked_at IS NULL",[sourceIds]);
     await sql.query('UPDATE cohamy_crm.partner_library SET organization_id=$2,version=version+1 WHERE organization_id=ANY($1::uuid[])',[sourceIds,target]);
     for(const table of ['tasks','care_schedules'])await sql.query(`UPDATE cohamy_crm.${table} SET entity_id=$2,version=version+1 WHERE entity_type='partner' AND entity_id=ANY($1::uuid[])`,[sourceIds,target]);

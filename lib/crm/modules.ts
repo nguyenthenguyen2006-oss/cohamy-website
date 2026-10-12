@@ -24,8 +24,7 @@ export type ModuleIcon =
   | "procurement"
   | "pricing"
   | "quotations"
-  | "members"
-  | "cart";
+  | "members";
 
 export interface CrmModule { id: string; label: string; shortLabel: string; icon: ModuleIcon; tone: string; permission: string; status: "CONNECTED" | "PENDING"; bottom?: number }
 const internal: CrmModule[] = [
@@ -56,7 +55,6 @@ const internal: CrmModule[] = [
   { id: "orders", label: "Yêu cầu đặt hàng", shortLabel: "Đơn hàng", icon: "order", tone: "info", permission: "orders.read", status: "CONNECTED", bottom: 3 },
   { id: "tasks", label: "Việc cần làm", shortLabel: "Công việc", icon: "tasks", tone: "primary", permission: "partners.write", status: "CONNECTED" },
   { id: "inventory", label: "Danh mục kho", shortLabel: "Kho", icon: "warehouse", tone: "indigo", permission: "warehouses.read", status: "CONNECTED" },
-  { id: "samples", label: "Hàng mẫu và chuyển đổi", shortLabel: "Hàng mẫu", icon: "goods", tone: "orange", permission: "samples.read", status: "CONNECTED" },
   { id: "procurement", label: "Mua hàng và nhà cung cấp", shortLabel: "Mua hàng", icon: "procurement", tone: "indigoDark", permission: "procurement.read", status: "CONNECTED" },
   { id: "consignment", label: "Ký gửi", shortLabel: "Ký gửi", icon: "consignment", tone: "warning", permission: "consignment.read", status: "CONNECTED" },
   { id: "debts", label: "Công nợ", shortLabel: "Công nợ", icon: "debt", tone: "danger", permission: "finance.read", status: "CONNECTED" },
@@ -72,8 +70,6 @@ const dealer: CrmModule[] = [
   {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'library',tone:'primary',permission:'catalog.read',status:'CONNECTED'},
   {id:'members',label:'Nhân viên đại lý',shortLabel:'Nhân viên',icon:'members',tone:'primary',permission:'dealer.invite',status:'CONNECTED'},
   {id:'support',label:'Phiếu hỗ trợ',shortLabel:'Hỗ trợ',icon:'support',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
-  {id:'addresses',label:'Địa chỉ giao hàng',shortLabel:'Địa chỉ',icon:'warehouse',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
-  {id:'cart',label:'Giỏ hàng nháp',shortLabel:'Giỏ nháp',icon:'cart',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
   {id:'invitations',label:'Mời nhân viên',shortLabel:'Mời',icon:'invitations',tone:'primary',permission:'dealer.invite',status:'CONNECTED'},
   {id:'search',label:'Tìm kiếm',shortLabel:'Tìm kiếm',icon:'search',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
   {id:'notifications',label:'Thông báo',shortLabel:'Thông báo',icon:'notifications',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
@@ -131,11 +127,11 @@ export const crmHubs: readonly CrmHub[] = [
   {
     id: "goods",
     label: "SẢN PHẨM & KHO",
-    description: "Danh mục sản phẩm, theo dõi tồn kho và luân chuyển hàng mẫu",
+    description: "Danh mục sản phẩm và theo dõi tồn kho",
     icon: "warehouse",
     color: "#6366f1",
     gradient: "linear-gradient(135deg, #6366f1, #4338ca)",
-    moduleIds: ["goods", "inventory", "samples"],
+    moduleIds: ["goods", "inventory"],
   },
   {
     id: "procurement",

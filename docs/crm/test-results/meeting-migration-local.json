@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-12T01:12:12.790Z",
+  "testedAt": "2026-10-12T08:10:32.911Z",
   "environment": "LOCAL in-memory PGlite; pre-meeting legacy fixtures",
   "status": "PASS",
   "cases": [

@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-12T01:12:10.132Z",
+  "testedAt": "2026-10-12T07:48:40.228Z",
   "environment": "LOCAL pure exact price model; fictitious rates only, no production policy or posting",
   "status": "PASS",
   "cases": [

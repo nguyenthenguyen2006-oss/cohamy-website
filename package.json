@@ -79,14 +79,14 @@
     "test:crm:security": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-security.ts",
     "test:crm:reports": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-reports.ts",
     "test:crm:pwa": "node scripts/crm/verify-pwa.mjs",
-    "test:crm:samples": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-samples.ts",
+
     "test:crm:commercial-orders": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-commercial-orders.ts",
     "test:crm:meeting-contract": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-contract.ts",
     "test:crm:meeting-53": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-53-amendments.ts",
     "test:crm:meeting-1012": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-1012.ts",
     "test:crm:request-excel": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-request-excel.ts",
     "test:crm:quotation-pdf": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotation-pdf.ts",
-    "test:crm:samples-browser": "node scripts/crm/verify-sample-browser.mjs",
+
     "test:crm:browser-140": "node scripts/crm/verify-140-browser-smoke.mjs",
     "crm:demo-verify": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify.ts",
     "crm:demo-browser": "node scripts/crm/demo/browser-smoke.mjs",

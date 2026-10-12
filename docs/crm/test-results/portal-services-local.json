@@ -1,15 +1,7 @@
 {
-  "testedAt": "2026-10-02T07:10:03.804Z",
+  "testedAt": "2026-10-12T08:09:31.738Z",
   "environment": "LOCAL isolated fictitious PGlite",
   "cases": [
-    {
-      "name": "F014 carts persist per account, conflict on stale device and cannot inject organization/price",
-      "status": "PASS"
-    },
-    {
-      "name": "F016 address defaults, history and owner/staff boundaries persist",
-      "status": "PASS"
-    },
     {
       "name": "F020 support retry creates one ticket, A/B reads are isolated and internal messages remain private",
       "status": "PASS"

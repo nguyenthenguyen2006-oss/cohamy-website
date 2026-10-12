@@ -1,13 +1,13 @@
 {
-  "testedAt": "2026-09-19T03:22:03.139Z",
+  "testedAt": "2026-10-12T08:11:24.638Z",
   "environment": "LOCAL isolated fictitious PGlite; no real delivery/stock/money/provider mutation",
   "status": "PASS",
   "references": {
-    "orderId": "df0fcb5f-7275-4dfc-963a-f354f9b31f6c",
-    "firstDelivery": "aaa245fe-5b93-4fa4-81be-ce8f19ca1448",
-    "firstParcel": "e136140e-f470-4187-9fbd-6d1c50269510",
-    "firstTrip": "dced4131-aa75-4a1c-9e5d-c483fcd2b21a",
-    "returnId": "b71389b7-1705-451e-ac2c-e7e692da62ea"
+    "orderId": "1acc8ece-da2a-4b21-a10c-2c8ab1f48528",
+    "firstDelivery": "1602d6d0-4968-435a-9182-589f67283130",
+    "firstParcel": "2b211dac-65e1-40e9-bccf-fec2b7bed346",
+    "firstTrip": "656cdb2e-639a-4ae9-be9e-ea4dbaa0f8ab",
+    "returnId": "6d347b80-bdf2-40fc-9a78-2e32314118f4"
   },
   "cases": [
     {

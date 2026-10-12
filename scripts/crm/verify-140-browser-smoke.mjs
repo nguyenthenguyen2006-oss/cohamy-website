@@ -42,8 +42,8 @@ const cases = [];
 const errors = [];
 const screens = [];
 const folder = '.impeccable/review/release-140';
-const internal = ['requests', 'sales', 'pricing', 'quotations', 'automation', 'fields', 'care', 'visits', 'library', 'support', 'data', 'search', 'notifications', 'workspace', 'applications', 'invitations', 'audit', 'customers', 'dealers', 'goods', 'orders', 'tasks', 'inventory', 'samples', 'procurement', 'consignment', 'debts', 'cash', 'reports', 'accounts'];
-const portal = ['requests', 'quotations', 'library', 'members', 'support', 'addresses', 'cart', 'invitations', 'search', 'notifications', 'workspace', 'goods', 'orders', 'inventory', 'consignment', 'settlements', 'debts', 'payments', 'profile'];
+const internal = ['requests', 'sales', 'pricing', 'quotations', 'automation', 'fields', 'care', 'visits', 'library', 'support', 'data', 'search', 'notifications', 'workspace', 'applications', 'invitations', 'audit', 'customers', 'dealers', 'goods', 'orders', 'tasks', 'inventory', 'procurement', 'consignment', 'debts', 'cash', 'reports', 'accounts'];
+const portal = ['requests', 'quotations', 'library', 'members', 'support', 'invitations', 'search', 'notifications', 'workspace', 'goods', 'orders', 'inventory', 'consignment', 'settlements', 'debts', 'payments', 'profile'];
 
 const test = async (name, run) => {
   try {
@@ -159,8 +159,8 @@ try {
     await visit(admin, 'crm', internal, 390);
   });
 
-  await test('F001–F140 internal dashboard, ledger and sample surfaces capture at release viewports', async () => {
-    for (const [path, name, width] of [['/crm', 'crm-dashboard-desktop', 1366], ['/crm/inventory', 'inventory-mobile', 390], ['/crm/samples', 'samples-mobile', 390], ['/crm/reports', 'reports-desktop', 1366]]) {
+  await test('F001–F140 internal dashboard, ledger and reporting surfaces capture at release viewports', async () => {
+    for (const [path, name, width] of [['/crm', 'crm-dashboard-desktop', 1366], ['/crm/inventory', 'inventory-mobile', 390], ['/crm/reports', 'reports-desktop', 1366]]) {
       await admin.setViewportSize({ width, height: 844 });
       await admin.goto(base + path);
       await capture(admin, name);

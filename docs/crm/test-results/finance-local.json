@@ -1,13 +1,13 @@
 {
-  "testedAt": "2026-10-02T09:13:52.752Z",
+  "testedAt": "2026-10-12T08:11:43.494Z",
   "environment": "LOCAL isolated fictitious PGlite; no real money/order/provider mutation",
   "status": "PASS",
   "references": {
-    "firstOrder": "b9dc3589-d438-444a-abde-cd66a390a412",
-    "receivable": "561f6c3b-3e83-4625-b386-dd73be9586c4",
-    "payment": "197b8a36-a581-4009-b989-6340b79f8599",
-    "documentVersion": "fe5b15e7-504d-4e03-a409-6daaf874b33e",
-    "cash": "c01245d2-af48-468b-977f-8c9cef9b33d1"
+    "firstOrder": "67670591-d0bb-4d90-a0b9-33840538dfa7",
+    "receivable": "41afe6c8-681a-4e89-a8e9-3ae27f975342",
+    "payment": "10dcb3d6-4284-45d8-996c-04f3ec6d27d7",
+    "documentVersion": "99cf2400-6df1-454b-ad8a-a3f57ffd24fc",
+    "cash": "72437764-10a1-40e1-80ee-d980f4cacbe2"
   },
   "cases": [
     {

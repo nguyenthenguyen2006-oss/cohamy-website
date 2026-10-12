@@ -65,7 +65,6 @@ import * as quotes from "../../../lib/crm/quotations";
 import * as fulfillment from "../../../lib/crm/fulfillment";
 import * as procurement from "../../../lib/crm/procurement";
 import * as consignment from "../../../lib/crm/consignment";
-import * as samples from "../../../lib/crm/samples";
 import * as finance from "../../../lib/crm/finance";
 import * as workspace from "../../../lib/crm/workspace";
 import * as websiteOrders from "../../../lib/crm/website-orders";
@@ -736,15 +735,7 @@ async function main() {
       }
     }
 
-    // Delivery Address
-    const addr = (await db.query("SELECT id FROM cohamy_crm.dealer_addresses WHERE organization_id=$1", [dRow.id])).rows[0];
-    if (!addr) {
-      await db.query(
-        `INSERT INTO cohamy_crm.dealer_addresses(id, organization_id, label, recipient, phone, address, is_default, active)
-         VALUES($1, $2, 'Kho nhận hàng chính', $3, $4, $5, true, true)`,
-        [randomUUID(), dRow.id, d.contactName, d.phone, d.address]
-      );
-    }
+
 
     // Configure Credit Account
     const cred = (await db.query("SELECT organization_id FROM cohamy_crm.credit_accounts WHERE organization_id=$1", [dRow.id])).rows[0];
@@ -1222,42 +1213,7 @@ async function main() {
     }
     console.log("- Đã tạo dữ liệu công nợ đủ 5 dải tuổi nợ (Current, 1-30, 31-60, 61-90, >90 ngày) và phiếu thu tiền.");
 
-  // Sample Management Seed
-  const sampleExisting = await db.query(
-    "SELECT count(*)::text AS n FROM cohamy_crm.sample_issues s JOIN cohamy_crm.organizations org ON org.id=s.organization_id WHERE org.code LIKE 'DEMO_%'"
-  );
-  if (Number(sampleExisting.rows[0].n) === 0) {
-    const sInput = {
-      organizationId: orgA.id,
-      warehouseId: warehouseMap["DEMO_KHO_SAMPLE"],
-      recipientName: "Chị Bùi Thị Mai (Trưởng phòng Thu mua)",
-      recipientPhone: "0912.333.444",
-      purpose: "Đánh giá chất lượng dòng Bột Ngũ Cốc Dinh Dưỡng mới",
-      lines: [{ productId: productMap["DEMO-BAR-03"], quantity: "3" }],
-      reason: "DEMO · Yêu cầu cấp phát mẫu chào hàng đại lý",
-      idempotencyKey: randomUUID(),
-    };
-    const sCreated = await samples.createSample(sales, sInput) as { id: string; version: number };
-    const sIssued = await samples.issueSample(warehouseUser, {
-      id: sCreated.id,
-      version: sCreated.version,
-      minimumShelfLifeDays: 0,
-      reason: "Xuất kho mẫu theo phiếu duyệt",
-      idempotencyKey: randomUUID(),
-    }) as { version: number };
 
-    await samples.actSample(sales, {
-      id: sCreated.id,
-      version: sIssued.version,
-      action: "RECEIVE",
-      feedback: "",
-      outcome: null,
-      salesOrderId: null,
-      reason: "Đại lý đã nhận mẫu nguyên vẹn",
-      idempotencyKey: randomUUID(),
-    });
-    console.log("- Đã tạo nghiệp vụ hàng mẫu (Yêu cầu -> Xuất kho FEFO -> Nhận mẫu).");
-  }
 
   // Consignment Agreement Seed
   const consignExisting = await db.query(
