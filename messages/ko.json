@@ -14,6 +14,30 @@
     "close": "닫기"
   },
   "home": {
+    "cacao": {
+      "heroLine1": "초콜릿.",
+      "heroLine2": "좋아하는 맛을 골라요.",
+      "heroDescription": "80g 파우치 초콜릿 7종과 65g 파우치 컬러 초콜릿.",
+      "productsTitle": "Cohamy의 새 제품",
+      "productLink": "제품 보기",
+      "giftTitle": "선물할 초콜릿을 골라보세요",
+      "giftDescription": "제품 선택과 견적은 Cohamy에 문의하세요.",
+      "giftCta": "문의하기",
+      "blogTitle": "Cohamy 이야기",
+      "partnerTitle": "고객에게 Cohamy 제품을 소개하세요",
+      "partnerCta": "파트너 안내",
+      "flavorsLabel": "맛 선택",
+      "flavors": {
+        "almond": "아몬드",
+        "cashew": "캐슈넛",
+        "matcha": "말차",
+        "strawberry": "딸기",
+        "durian": "두리안",
+        "macadamia": "마카다미아",
+        "mango": "망고",
+        "candy": "컬러"
+      }
+    },
     "hero": {
       "badge": "Cohamy와 Jamy Green",
       "title": "Cohamy 신제품",

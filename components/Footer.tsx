@@ -1,16 +1,69 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import Image from "next/image";
+import { Link, usePathname } from "@/i18n/navigation";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 import type { Locale } from "@/lib/types";
+import styles from "@/components/home/CacaoHome.module.css";
 
 export function Footer() {
   const t = useTranslations("footer");
   const nav = useTranslations("nav");
   const contact = useTranslations("contact.info");
   const locale = useLocale() as Locale;
+  const pathname = usePathname();
+  const home = useTranslations("home.cacao");
+
+  if (pathname === "/") {
+    const addresses = getAddresses(locale);
+    return (
+      <footer className={styles.footer}>
+        <div className={styles.footerMain}>
+          <div className={styles.footerBrand}>
+            <Link href="/" className={styles.logo} aria-label="Cohamy">
+              <Image src="/images/home-cacao/logo.png" alt="Cohamy" width={925} height={267} sizes="(max-width: 600px) 142px, (max-width: 1100px) 170px, 211px" />
+            </Link>
+            <div className={styles.footerContact}>
+              <p>{getCompanyName(locale)}</p>
+              <a href={CONTACT.phoneTel}>{CONTACT.phoneDisplay}</a>
+              <a href={CONTACT.emailMailto}>
+                {CONTACT.email.split("@")[0]}<wbr />@{CONTACT.email.split("@")[1]}
+              </a>
+            </div>
+          </div>
+          <nav className={styles.footerNavigation} aria-label={t("quickLinks")}>
+            <Link href="/products">{nav("products")}</Link>
+            <Link href="/blog">{nav("blog")}</Link>
+            <Link href="/about">{nav("about")}</Link>
+            <Link href="/activities">{nav("activities")}</Link>
+            <Link href="/contact">{nav("contact")}</Link>
+            <Link href="/partners">{home("partnerCta")}</Link>
+          </nav>
+        </div>
+        <div className={styles.footerBottom}>
+          <p>{t("copyright", { year: new Date().getFullYear() })}</p>
+          <details className={styles.footerDetails}>
+            <summary>{contact("title")}</summary>
+            <div className={styles.footerAddresses}>
+              <div>
+                <p>{contact("addressHanoi")}</p>
+                <p>{addresses.hanoi}</p>
+                <a href={CONTACT.mapsLink} target="_blank" rel="noopener noreferrer">{contact("openMapsHanoi")}</a>
+              </div>
+              <div>
+                <p>{contact("addressHcmc")}</p>
+                <p>{addresses.hcmc}</p>
+                <a href={CONTACT.mapsLinkHcmc} target="_blank" rel="noopener noreferrer">{contact("openMapsHcmc")}</a>
+              </div>
+              <a href={CONTACT.zaloUrl} target="_blank" rel="noopener noreferrer">{contact("zalo")}: {CONTACT.phoneDisplay}</a>
+            </div>
+          </details>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="bg-[#2A120C] text-[#FAF6EF] text-base pt-16 pb-10">

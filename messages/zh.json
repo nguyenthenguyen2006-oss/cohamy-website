@@ -14,6 +14,30 @@
     "close": "关闭"
   },
   "home": {
+    "cacao": {
+      "heroLine1": "巧克力。",
+      "heroLine2": "选你喜欢的口味。",
+      "heroDescription": "7款80g袋装巧克力，以及65g袋装五彩巧克力。",
+      "productsTitle": "Cohamy 新品",
+      "productLink": "查看产品",
+      "giftTitle": "挑选巧克力礼品",
+      "giftDescription": "联系 Cohamy，选择产品并获取报价。",
+      "giftCta": "联系我们",
+      "blogTitle": "Cohamy 文章",
+      "partnerTitle": "将 Cohamy 产品带给您的客户",
+      "partnerCta": "合作伙伴",
+      "flavorsLabel": "选择口味",
+      "flavors": {
+        "almond": "杏仁",
+        "cashew": "腰果",
+        "matcha": "抹茶",
+        "strawberry": "草莓",
+        "durian": "榴莲",
+        "macadamia": "夏威夷果",
+        "mango": "芒果",
+        "candy": "五彩"
+      }
+    },
     "hero": {
       "badge": "Cohamy 与 Jamy Green",
       "title": "Cohamy 新品",

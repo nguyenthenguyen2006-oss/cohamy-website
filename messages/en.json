@@ -14,6 +14,30 @@
     "close": "Close"
   },
   "home": {
+    "cacao": {
+      "heroLine1": "Chocolate.",
+      "heroLine2": "Your kind of flavor.",
+      "heroDescription": "7 chocolate varieties in 80g pouches, plus multicolor chocolate in a 65g pouch.",
+      "productsTitle": "The latest from Cohamy",
+      "productLink": "View product",
+      "giftTitle": "Choose chocolate for a gift",
+      "giftDescription": "Contact Cohamy to choose products and request a quote.",
+      "giftCta": "Get in touch",
+      "blogTitle": "Stories from Cohamy",
+      "partnerTitle": "Bring Cohamy products to your customers",
+      "partnerCta": "For partners",
+      "flavorsLabel": "Choose a flavor",
+      "flavors": {
+        "almond": "Almond",
+        "cashew": "Cashew",
+        "matcha": "Matcha",
+        "strawberry": "Strawberry",
+        "durian": "Durian",
+        "macadamia": "Macadamia",
+        "mango": "Mango",
+        "candy": "Multicolor"
+      }
+    },
     "hero": {
       "badge": "Cohamy and Jamy Green",
       "title": "New products from Cohamy",

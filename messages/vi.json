@@ -14,6 +14,30 @@
     "close": "Đóng"
   },
   "home": {
+    "cacao": {
+      "heroLine1": "Socola.",
+      "heroLine2": "Đúng vị bạn.",
+      "heroDescription": "7 mẫu socola túi 80g và socola ngũ sắc 65g.",
+      "productsTitle": "Các mẫu mới của Cohamy",
+      "productLink": "Xem sản phẩm",
+      "giftTitle": "Chọn socola làm quà tặng",
+      "giftDescription": "Liên hệ Cohamy để chọn mẫu và nhận báo giá.",
+      "giftCta": "Nhận tư vấn",
+      "blogTitle": "Bài viết từ Cohamy",
+      "partnerTitle": "Cùng Cohamy đưa sản phẩm đến khách hàng",
+      "partnerCta": "Dành cho đối tác",
+      "flavorsLabel": "Chọn hương vị",
+      "flavors": {
+        "almond": "Hạnh nhân",
+        "cashew": "Hạt điều",
+        "matcha": "Matcha",
+        "strawberry": "Dâu",
+        "durian": "Sầu riêng",
+        "macadamia": "Mắc ca",
+        "mango": "Xoài",
+        "candy": "Ngũ sắc"
+      }
+    },
     "hero": {
       "badge": "Cohamy và Jamy Green",
       "title": "Các mẫu mới của Cohamy",

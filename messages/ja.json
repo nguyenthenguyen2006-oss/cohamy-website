@@ -14,6 +14,30 @@
     "close": "閉じる"
   },
   "home": {
+    "cacao": {
+      "heroLine1": "チョコレート。",
+      "heroLine2": "お好みの味を。",
+      "heroDescription": "80gパウチのチョコレート7種類と、65gパウチのカラフルなチョコレート。",
+      "productsTitle": "Cohamyの新商品",
+      "productLink": "商品を見る",
+      "giftTitle": "ギフトにチョコレートを",
+      "giftDescription": "商品の選び方やお見積もりはCohamyへお問い合わせください。",
+      "giftCta": "お問い合わせ",
+      "blogTitle": "Cohamyの記事",
+      "partnerTitle": "Cohamyの商品をお客様へ",
+      "partnerCta": "パートナーの皆様へ",
+      "flavorsLabel": "味を選ぶ",
+      "flavors": {
+        "almond": "アーモンド",
+        "cashew": "カシューナッツ",
+        "matcha": "抹茶",
+        "strawberry": "いちご",
+        "durian": "ドリアン",
+        "macadamia": "マカダミア",
+        "mango": "マンゴー",
+        "candy": "カラフル"
+      }
+    },
     "hero": {
       "badge": "CohamyとJamy Green",
       "title": "Cohamyの新商品",
