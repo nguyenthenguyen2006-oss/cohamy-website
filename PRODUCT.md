@@ -22,7 +22,7 @@ Chưa chốt mốc chuyển sở hữu/ghi phải thu mua đứt, công thức g
 
 ## Brand Commitments
 
-Ban đầu chuyển giao diện HumanBank. Yêu cầu tiếp theo của người dùng cho phép thiết kế lại UI/UX để thuận tiện vận hành: giữ logo Cohamy, Be Vietnam Pro và nhận diện navy/cam; thay launcher bằng bàn làm việc có hàng đợi, điều hướng cố định và trang chi tiết theo tác vụ. Website công khai giữ giao diện riêng.
+Người dùng đã chốt thiết kế lại toàn bộ UI/UX của CRM Nội bộ (`/crm`) theo hướng **Chuẩn SaaS Enterprise B2B Hiện Đại (Modern Enterprise SaaS Standard — Workspace-First)** với **tông màu chủ đạo Vàng Cam (Golden-Amber `#F59E0B` / `#D97706` & Warm Orange `#EA580C`)**, giữ logo Cohamy và phông chữ Be Vietnam Pro; thay thế hoàn toàn màn hình launcher tối và thanh dock nổi bằng khung điều hướng cố định bên trái (7 nhóm phân hệ / 33 module), thanh lệnh trên cùng, dải 4 hàng đợi trực tiếp đầu trang và không gian bảng/chứng từ mật độ cao. Giữ nguyên Cổng Đại lý (`/portal`) và Website công khai.
 
 ## Evidence on Hand
 

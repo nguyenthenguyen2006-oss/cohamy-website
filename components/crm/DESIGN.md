@@ -1,11 +1,72 @@
 ---
 name: Cohamy CRM workspace
-description: Boundary-local design system extracted from the implemented operations workspace.
+description: Boundary-local design system for the Golden-Orange Modern Enterprise SaaS CRM workspace and Portal operations.
 colors:
   action-orange: "#b9420c"
   action-hover: "#983409"
   action-pressed: "#802906"
   focus-orange: "#bf4b14"
+  golden-amber: "#f59e0b"
+  golden-amber-deep: "#d97706"
+  golden-orange: "#ea580c"
+  golden-orange-deep: "#c2410c"
+  golden-bronze: "#9a3412"
+  golden-cacao: "#7c2d12"
+  golden-link: "#b45309"
+  golden-canvas: "#fffbf5"
+  golden-surface-warm: "#fffdf9"
+  golden-surface-tint: "#fff7e8"
+  golden-table-head: "#faf3e6"
+  golden-badge-bg: "#fef3c7"
+  golden-badge-border: "#fcd34d"
+  golden-badge-highlight: "#fde68a"
+  golden-badge-ink: "#92400e"
+  golden-note-ink: "#78350f"
+  golden-yellow-tag: "#fef08a"
+  golden-border: "#eadbc5"
+  golden-border-alt: "#ecd9ba"
+  golden-border-card: "#f3d29c"
+  golden-border-subtle: "#f2dec0"
+  golden-border-row: "#f2e8d9"
+  golden-border-rule: "#efe4d2"
+  golden-border-menu: "#dfc8a6"
+  golden-border-divider: "#f0e4d0"
+  golden-border-input: "#d6c5ad"
+  golden-border-search: "#e2cbb0"
+  golden-ink: "#1c1917"
+  golden-ink-strong: "#292524"
+  golden-ink-body: "#44403c"
+  golden-ink-secondary: "#57534e"
+  golden-ink-muted: "#78716c"
+  golden-alert-tint: "#fff7ed"
+  golden-danger-bg: "#fee2e2"
+  golden-danger-border: "#fecaca"
+  golden-danger-ink: "#b91c1c"
+  golden-danger-deep: "#991b1b"
+  golden-info-bg: "#e0f2fe"
+  golden-info-border: "#bae6fd"
+  golden-info-ink: "#075985"
+  golden-ready-bg: "#dcfce7"
+  golden-ready-border: "#bbf7d0"
+  golden-ready-ink: "#166534"
+  golden-success-bg: "#ecfdf5"
+  golden-success-border: "#a7f3d0"
+  golden-success-ink: "#15803d"
+  golden-sidebar: "#fff6e6"
+  golden-elevated: "#fef9ef"
+  golden-hover-row: "#fffaf0"
+  golden-border-main: "#f3e3c3"
+  golden-border-soft: "#f5ebd6"
+  golden-warn-soft: "#fffbeb"
+  golden-danger-soft: "#fef2f2"
+  golden-info-warm-border: "#fed7aa"
+  golden-neutral-bg: "#f5f5f4"
+  golden-neutral-border: "#d6d3d1"
+  golden-story-base: "#26170c"
+  golden-story-start: "#291d12"
+  golden-story-mid: "#432810"
+  golden-story-pillar: "#362110"
+  golden-amber-bright: "#fbbf24"
   navy: "#172b43"
   nav-hover: "#243e58"
   nav-text: "#dae4ee"
@@ -35,44 +96,75 @@ typography:
   display:
     fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
     fontSize: "36px"
-    fontWeight: 600
-    lineHeight: 1.45
+    fontWeight: 800
+    lineHeight: 1.3
     letterSpacing: "-0.025em"
+  kpi-number:
+    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontSize: "30px"
+    fontWeight: 800
+    lineHeight: 1.1
   headline:
     fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
     fontSize: "27px"
     fontWeight: 700
     lineHeight: 1.35
     letterSpacing: "-0.025em"
+  page-title:
+    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontSize: "24px"
+    fontWeight: 800
+    lineHeight: 1.3
+  login-heading:
+    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontSize: "23px"
+    fontWeight: 800
+    lineHeight: 1.3
   title:
     fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
     fontSize: "17px"
     fontWeight: 600
     lineHeight: 1.45
+  section-title:
+    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontSize: "16px"
+    fontWeight: 700
+    lineHeight: 1.4
+  card-title:
+    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontSize: "15px"
+    fontWeight: 700
+    lineHeight: 1.35
   body:
     fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
     fontSize: "14px"
-    lineHeight: 1.6
-  label:
-    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
-    fontSize: "12px"
-    fontWeight: 500
     lineHeight: 1.6
   button:
     fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
     fontSize: "13px"
     fontWeight: 600
     lineHeight: 1.4
+  label:
+    fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
+    fontSize: "12px"
+    fontWeight: 500
+    lineHeight: 1.6
   status:
     fontFamily: "Be Vietnam Pro, system-ui, sans-serif"
     fontSize: "11px"
     fontWeight: 500
     lineHeight: 1.6
 rounded:
+  badge-sm: "4px"
   field-and-status: "5px"
   control: "6px"
   toolbar-and-mobile-section: "8px"
+  tile-icon: "9px"
   section: "10px"
+  card: "12px"
+  hero: "14px"
+  auth-card: "18px"
+  pill: "999px"
 spacing:
   label-gap: "7px"
   control-gap: "8px"
@@ -83,34 +175,34 @@ spacing:
   section-padding: "24px"
 components:
   button-primary:
-    backgroundColor: "{colors.action-orange}"
+    backgroundColor: "{colors.golden-amber-deep}"
     textColor: "{colors.white-paper}"
     typography: "{typography.button}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.toolbar-and-mobile-section}"
     padding: "10px 16px"
   button-primary-hover:
-    backgroundColor: "{colors.action-hover}"
+    backgroundColor: "{colors.golden-orange-deep}"
   button-primary-active:
-    backgroundColor: "{colors.action-pressed}"
+    backgroundColor: "{colors.golden-bronze}"
   button-secondary:
     backgroundColor: "{colors.white-paper}"
-    textColor: "{colors.ink}"
+    textColor: "{colors.golden-ink}"
     typography: "{typography.button}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.toolbar-and-mobile-section}"
     padding: "10px 16px"
   field:
     backgroundColor: "{colors.white-paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.field-and-status}"
+    textColor: "{colors.golden-ink}"
+    rounded: "{rounded.toolbar-and-mobile-section}"
     padding: "9px 11px"
   navigation:
-    backgroundColor: "{colors.navy}"
-    textColor: "{colors.nav-text}"
-    rounded: "{rounded.control}"
-    padding: "11px 13px"
+    backgroundColor: "{colors.golden-surface-warm}"
+    textColor: "{colors.golden-ink-body}"
+    rounded: "{rounded.toolbar-and-mobile-section}"
+    padding: "8px 11px"
   navigation-active:
-    backgroundColor: "{colors.white-paper}"
-    textColor: "{colors.navy}"
+    backgroundColor: "{colors.golden-amber}"
+    textColor: "{colors.white-paper}"
   status:
     backgroundColor: "{colors.status-paper}"
     textColor: "{colors.status-ink}"
@@ -118,15 +210,15 @@ components:
     rounded: "{rounded.field-and-status}"
     padding: "5px 8px"
   status-ready:
-    backgroundColor: "{colors.ready-paper}"
-    textColor: "{colors.ready-ink}"
+    backgroundColor: "{colors.golden-ready-bg}"
+    textColor: "{colors.golden-ready-ink}"
   section:
     backgroundColor: "{colors.white-paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.section}"
-    padding: "24px"
+    textColor: "{colors.golden-ink}"
+    rounded: "{rounded.card}"
+    padding: "22px"
   disclosure:
-    textColor: "{colors.record-link}"
+    textColor: "{colors.golden-link}"
     padding: "10px 0"
   quick-create-dialog:
     backgroundColor: "{colors.white-paper}"
@@ -146,32 +238,29 @@ components:
 
 ## Overview
 
-**Creative North Star: "The Cohamy work desk"**
+**Creative North Star: "Golden-Orange Modern Enterprise SaaS Workbench (`canon`)"**
 
-Cohamy operations use a navy navigation rail, white working surfaces and orange primary actions. Be Vietnam Pro and the Cohamy logo carry the identity while compact records, readable labels and local feedback support daily work. This system applies only inside `.cohamy-crm`; the public website and independent CMS retain their own design.
+Cohamy's internal CRM (`/crm`) uses a warm Golden-Orange (`#F59E0B` amber-gold to `#EA580C` vibrant orange) Modern Enterprise SaaS workspace (`canon`, seed key `d6192f7e`) paired with warm ivory-cream working canvas (`#FFFBF5`), crisp white ledger cards (`#FFFFFF`), and deep espresso-charcoal ink (`#1C1917`). Meanwhile, the Dealer Portal (`/portal`) preserves its `.work-shell` navy/white/orange palette, and the public website (`app/[locale]/*`) retains its independent luxury editorial design.
 
-This is a scan of the implemented workspace and its CRM/portal extensions, including governance, care automation, duplicate/merge controls, versioned pricing/quotations and commercial requests/orders. `app/(operations)/layout.tsx` loads `components/crm/work.css`, `components/crm/upgrade.css` and then `components/crm/commercial.css`; that cascade and the current shell, pages and forms are the visual authority. The first six lines of `work.css` retain the incumbent direction contract—named owner and next action, Cohamy navy/white/orange, persistent desktop navigation and task-oriented Operate form—with seed key `5abdd0e3`. The direction is code-led preservation of that incumbent system; there is no approved replacement comp. The former HumanBank launcher, floating dock and glass login are superseded. The retained `crm.css` is historical reference, not the loaded workspace palette. The surface contract records the task strategy; this document records the reusable visual system.
+`app/(operations)/layout.tsx` loads `components/crm/work.css`, `components/crm/upgrade.css`, `components/crm/commercial.css`, and `components/crm/crm-humanbank.css`. The first six lines of `components/crm/crm-humanbank.css` and the root markup of `/crm` carry the active direction contract with seed key `d6192f7e` and the approved Golden-Orange North-Star comp at `.impeccable/mocks/canon-golden-orange.png`.
 
 **Key Characteristics:**
 
-- Persistent navy navigation beside white operational surfaces.
-- Be Vietnam Pro with compact labels and clear page headings.
-- Orange primary actions, text-labeled statuses and visible keyboard focus.
-- Mobile request lists and early customer-context disclosures.
-- Explicit pending, empty, error and success feedback.
+- Persistent 256px Golden-Orange SaaS left sidebar (`#work-navigation`) with instant client-side filtering across all 33 operational modules, plus sticky 64px top command bar.
+- Direct-to-workspace dashboard (`Bàn làm việc`) featuring 4 live operational queue KPI cards (`REQ`, `TSK`, `TOD`, `APP/QUO`) above a 2-column enterprise workbench (`minmax(0, 1fr) 340px`).
+- Split-story enterprise authentication (`/crm/login`, `/crm/forgot-password`, `/crm/reset-password`) pairing a warm Golden-Orange/Cacao brand story column with a clean white authentication card.
+- Be Vietnam Pro typography with tabular numerals (`font-variant-numeric: tabular-nums`) on all monetary, quantity, and unit-conversion columns.
+- Golden-Orange primary actions, semantic text-labeled statuses, and visible keyboard focus outlines.
+- Mobile request lists and early customer-context disclosures across `390×844` and `320×844` viewports with zero horizontal overflow.
+- Explicit pending, empty, error, and success feedback; unopened financial/warehouse ledgers explicitly display "Chưa mở ghi sổ".
 - Native dialogs and disclosures keep quick actions close to their record.
 - Dated document-version receipts distinguish acknowledged and current versions.
-- Explicit impact previews precede bulk updates and role changes.
-- Typed custom fields preserve earlier definition versions; audit comparisons lead with readable Vietnamese.
-- Contextual care schedules, named rule histories and complete handover inventories reuse the working-surface language.
-- Before-save duplicate warnings, explicit merge results and dated saved-impact disclosures preserve record context.
-- Structured pricing, confirmed unit ratios and tier assignment reuse native labeled forms.
-- Version-specific quotation totals, source prices, expiry, saved PDFs and dealer responses keep commercial context visible.
-- Multi-SKU requests, owner/Cohamy approval routes, immutable order versions and separate order/delivery/payment states keep commercial decisions inspectable.
+- Explicit 10-minute impact previews precede bulk updates, role changes, and duplicate partner merges.
+- Structured pricing, confirmed 24/1 unit ratios, versioned quotations, and multi-SKU commercial requests/orders remain inspectable on crisp white ledger tables.
 
 ## Colors
 
-The source palette combines deep navy, white and cool gray working paper with burnt orange controls. Frontmatter values are extracted from the current stylesheet; the sidecar's synthesized eight-step ramps are preview-only metadata, not an application palette.
+The workspace combines a Golden-Orange enterprise SaaS palette for `/crm` (`.crm-golden-saas-shell` and `.crm-login-page`) with the preserved navy/white/orange tokens for `/portal` (`.work-shell`). Frontmatter values document both boundaries so automated audits verify token discipline.
 
 ### Primary
 

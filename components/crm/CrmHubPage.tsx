@@ -59,19 +59,16 @@ export function CrmHubPage({ hubId, user }: { hubId: string; user: Principal }) 
         <nav className="crm-hub-nav" aria-label="Điều hướng nhóm phân hệ">
           <Link href={root} className="crm-hub-back">
             <ArrowLeft size={16} aria-hidden />
-            <span>Quay lại tổng quan</span>
+            <span>Quay lại Bàn làm việc</span>
           </Link>
         </nav>
 
         <header className="crm-hub-header">
-          <div
-            className="crm-hub-badge-icon"
-            style={{ background: hub.gradient }}
-            aria-hidden
-          >
-            <CrmModuleIcon name={hub.icon} size={36} color="#ffffff" />
+          <div className="crm-hub-badge-icon" aria-hidden>
+            <CrmModuleIcon name={hub.icon} size={32} />
           </div>
           <div className="crm-hub-title-box">
+            <span className="crm-eyebrow-pill">NHÓM PHÂN HỆ NGHIỆP VỤ</span>
             <h1>{hub.label}</h1>
             <p>{hub.description}</p>
           </div>
@@ -82,7 +79,7 @@ export function CrmHubPage({ hubId, user }: { hubId: string; user: Principal }) 
             <h2>Chưa được cấp quyền</h2>
             <p>Tài khoản của bạn chưa có quyền truy cập phân hệ nào trong nhóm này.</p>
             <Link href={root} className="button button--secondary">
-              Về trang chủ
+              Về Bàn làm việc
             </Link>
           </div>
         ) : (
@@ -97,15 +94,8 @@ export function CrmHubPage({ hubId, user }: { hubId: string; user: Principal }) 
                     href={`${root}/${m.id}`}
                     className="crm-hub-submodule-card"
                   >
-                    <div
-                      className="crm-hub-submodule-icon"
-                      style={{
-                        background: `linear-gradient(135deg, ${hub.color}22, ${hub.color}44)`,
-                        border: `1px solid ${hub.color}55`,
-                      }}
-                      aria-hidden
-                    >
-                      <CrmModuleIcon name={m.icon} size={28} color={hub.color} />
+                    <div className="crm-hub-submodule-icon" aria-hidden>
+                      <CrmModuleIcon name={m.icon} size={24} />
                     </div>
                     <div className="crm-hub-submodule-info">
                       <h3>{m.label}</h3>

@@ -1,157 +1,154 @@
-'use client';
-import { QuickCreate } from './QuickCreate';
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import {
+  Bell,
+  CaretRight,
   House,
-  SignOut,
   List,
-  X,
+  MagnifyingGlass,
+  ShieldCheck,
+  SignOut,
+  SquaresFour,
   UserCircle,
-  Gear,
-  ShoppingCart,
-  Users,
-  Warehouse,
-  ChartBar,
-  RocketLaunch,
-  CaretDown,
-} from '@phosphor-icons/react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState, useRef, useEffect, type ReactNode } from 'react';
-import { roleLabels, type Principal } from '@/lib/crm/types';
-import { visibleModules, crmHubs } from '@/lib/crm/modules';
-import { can } from '@/lib/crm/permissions';
-import { CrmModuleIcon } from './ModuleIcon';
-import { ParticleNetwork } from './ParticleNetwork';
+  X,
+} from "@phosphor-icons/react";
+import { crmHubs, getVisibleHubs, visibleModules } from "@/lib/crm/modules";
+import { roleLabels, type Principal } from "@/lib/crm/types";
+import { CrmModuleIcon } from "./ModuleIcon";
+import { PwaRegistrar } from "./PwaRegistrar";
+import { QuickCreate } from "./QuickCreate";
 
-const DESIGN_CONTRACT =
-  'THESIS: HumanBank-inspired dark CRM shell with topbar, launcher tiles, and floating bottom dock. OWN-WORLD: Cohamy navy (#070B14-#0B111E), orange actions (#f97316), Be Vietnam Pro, Phosphor icons. FIRST VIEWPORT: Centered hero, 11 colored module hub tiles in 5 columns, dock in first viewport. FINISH: verified via browser visual QA and automated test suite.';
+const subLabels: Record<string, string> = {
+  new: "Tạo mới",
+  profile: "Hồ sơ & bảo mật",
+};
 
-function getInitials(name: string): string {
-  if (!name) return 'CH';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-
-export function CrmShell({ children, user }: { children: ReactNode; user: Principal }) {
+export function CrmShell({
+  user,
+  children,
+}: {
+  user: Principal;
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const router = useRouter();
-  const root = '/' + user.area;
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-  const userMenuRef = useRef<HTMLDetailsElement>(null);
-  const drawerRef = useRef<HTMLElement>(null);
-  const menuBtnRef = useRef<HTMLButtonElement>(null);
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
-  const wasOpenRef = useRef(false);
+  const root = `/${user.area}`;
+  const isPortal = user.area === "portal";
+  const modules = visibleModules(user);
+  const connected = modules.filter((item) => item.status === "CONNECTED");
+  const planned = modules.filter((item) => item.status === "PENDING");
+  const visibleHubs = getVisibleHubs(user);
 
-  // Focus management: move focus into drawer on open; restore focus to toggle button on close
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      wasOpenRef.current = true;
-      const timer = setTimeout(() => {
-        closeBtnRef.current?.focus();
-      }, 50);
-      return () => clearTimeout(timer);
-    } else if (wasOpenRef.current) {
-      wasOpenRef.current = false;
-      menuBtnRef.current?.focus();
-    }
-  }, [mobileMenuOpen]);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [openMenuPath, setOpenMenuPath] = useState<string | null>(null);
+  const [navFilter, setNavFilter] = useState("");
+  const menuToggleRef = useRef<HTMLButtonElement>(null);
 
-  // Keyboard trap: Escape closes drawer, Tab/Shift+Tab cycles only within drawer
+  const mobileMenuOpen = openMenuPath === pathname;
+  function setMobileMenuOpen(next: boolean | ((prev: boolean) => boolean)) {
+    const resolved = typeof next === "function" ? next(mobileMenuOpen) : next;
+    setOpenMenuPath(resolved ? pathname : null);
+  }
+
+  const parts = pathname.split("/").filter(Boolean);
+  const activeSlug = parts[1] ?? "";
+  const activeSub = parts[2] ?? "";
+  const isHubRoute = activeSlug === "hub" && Boolean(activeSub);
+  const activeModule = modules.find((item) => item.id === activeSlug);
+  const activeHubEntry = isHubRoute
+    ? visibleHubs.find((entry) => entry.hub.id === activeSub) ??
+      (crmHubs.find((h) => h.id === activeSub)
+        ? { hub: crmHubs.find((h) => h.id === activeSub)!, modules: [] }
+        : undefined)
+    : activeModule
+      ? visibleHubs.find((entry) => entry.modules.some((m) => m.id === activeModule.id))
+      : undefined;
+
+  const normalizedFilter = navFilter.trim().toLowerCase();
+  const connectedHubs = visibleHubs
+    .map((entry) => ({
+      hub: entry.hub,
+      modules: entry.modules.filter((m) => m.status === "CONNECTED"),
+    }))
+    .filter((entry) => entry.modules.length > 0);
+
+  const filteredHubs = !normalizedFilter
+    ? connectedHubs
+    : connectedHubs
+        .map((entry) => ({
+          hub: entry.hub,
+          modules: entry.modules.filter(
+            (item) =>
+              item.label.toLowerCase().includes(normalizedFilter) ||
+              entry.hub.label.toLowerCase().includes(normalizedFilter) ||
+              item.id.toLowerCase().includes(normalizedFilter)
+          ),
+        }))
+        .filter((entry) => entry.modules.length > 0);
+
+  const filteredPlanned = !normalizedFilter
+    ? planned
+    : planned.filter(
+        (item) =>
+          item.label.toLowerCase().includes(normalizedFilter) ||
+          item.id.toLowerCase().includes(normalizedFilter)
+      );
+
   useEffect(() => {
     if (!mobileMenuOpen) return;
-
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        setMobileMenuOpen(false);
-        return;
-      }
-
-      if (e.key === 'Tab') {
-        if (!drawerRef.current) return;
-        const focusable = Array.from(
-          drawerRef.current.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), a[href]:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-          )
-        ).filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0);
-
-        if (focusable.length === 0) return;
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-
-        if (e.shiftKey) {
-          if (document.activeElement === first || !drawerRef.current.contains(document.activeElement)) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last || !drawerRef.current.contains(document.activeElement)) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpenMenuPath(null);
+        menuToggleRef.current?.focus();
       }
     }
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [mobileMenuOpen]);
 
-  const modules = visibleModules(user);
-  const active = modules.find(
-    (m) => pathname === root + '/' + m.id || pathname.startsWith(root + '/' + m.id + '/')
-  );
-  const hubMatch = pathname.match(/\/hub\/([^/]+)/);
-  const currentHub = hubMatch ? crmHubs.find((h) => h.id === hubMatch[1]) : null;
-
   async function logout() {
-    if (busy) return;
-    setBusy(true);
+    if (loggingOut) return;
+    setLoggingOut(true);
     try {
-      const r = await fetch('/api/crm/auth/logout', { method: 'POST' });
-      if (!r.ok) throw new Error();
-      router.replace(root + '/login');
+      await fetch("/api/crm/auth/logout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ area: user.area }),
+      });
+      router.replace(`${root}/login`);
       router.refresh();
     } catch {
-      setError('Chưa đăng xuất được. Thử lại khi có kết nối.');
-      setBusy(false);
+      setLoggingOut(false);
     }
   }
 
-  // Close user menu on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
-        userMenuRef.current.removeAttribute('open');
-      }
-    }
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
-  // For portal area, preserve the existing portal shell layout to respect Rule 5
-  if (user.area === 'portal') {
+  // Keep Dealer Portal (/portal) 100% untouched
+  if (isPortal) {
     return (
-      <div className="work-shell" data-design-contract={DESIGN_CONTRACT}>
+      <div className="work-shell">
+        <PwaRegistrar />
         <a className="skip-link" href="#portal-content">
           Đến nội dung chính
         </a>
         <header className="work-topbar">
           <button
+            ref={menuToggleRef}
             className="work-menu-toggle"
             type="button"
             aria-expanded={mobileMenuOpen}
             aria-controls="work-navigation"
-            aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Đóng menu" : "Mở menu"}
+            onClick={() => setMobileMenuOpen((v) => !v)}
           >
-            {mobileMenuOpen ? <X size={24} /> : <List size={24} />}
+            {mobileMenuOpen ? (
+              <X size={24} aria-hidden="true" />
+            ) : (
+              <List size={24} aria-hidden="true" />
+            )}
           </button>
           <Link className="work-brand" href={root}>
             <Image
@@ -159,7 +156,7 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
               width={925}
               height={267}
               alt="Cohamy"
-              style={{ width: 'auto' }}
+              style={{ width: "auto" }}
               preload
             />
             <span>Cổng đại lý</span>
@@ -167,10 +164,10 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
           <QuickCreate user={user} />
           <Link
             className="work-user"
-            href={root + '/profile'}
-            aria-label={'Hồ sơ và bảo mật của ' + user.displayName}
+            href={`${root}/profile`}
+            aria-label={`Hồ sơ và bảo mật của ${user.displayName}`}
           >
-            <UserCircle size={28} aria-hidden />
+            <UserCircle size={28} aria-hidden="true" />
             <span>
               <strong>{user.displayName}</strong>
               <small>{roleLabels[user.role]}</small>
@@ -179,56 +176,53 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
         </header>
         <aside
           id="work-navigation"
-          className={'work-sidebar' + (mobileMenuOpen ? ' is-open' : '')}
+          className={`work-sidebar${mobileMenuOpen ? " is-open" : ""}`}
         >
           <nav aria-label="Điều hướng chính">
             <Link
               href={root}
-              className={pathname === root ? 'active' : ''}
-              aria-current={pathname === root ? 'page' : undefined}
+              className={pathname === root ? "active" : ""}
+              aria-current={pathname === root ? "page" : undefined}
               onClick={() => setMobileMenuOpen(false)}
             >
-              <House size={21} aria-hidden />
+              <House size={21} aria-hidden="true" />
               <span>Bàn làm việc</span>
             </Link>
             <p className="work-nav-label">Công việc hằng ngày</p>
-            {modules
-              .filter((m) => m.status === 'CONNECTED')
-              .map((m) => (
-                <Link
-                  key={m.id}
-                  href={root + '/' + m.id}
-                  className={active?.id === m.id ? 'active' : ''}
-                  aria-current={active?.id === m.id ? 'page' : undefined}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <CrmModuleIcon name={m.icon} size={21} aria-hidden />
-                  <span>{m.label}</span>
-                </Link>
-              ))}
-            <details className="work-nav-pending">
-              <summary>Chưa mở giao dịch</summary>
-              {modules
-                .filter((m) => m.status === 'PENDING')
-                .map((m) => (
+            {connected.map((m) => (
+              <Link
+                key={m.id}
+                href={`${root}/${m.id}`}
+                className={activeModule?.id === m.id ? "active" : ""}
+                aria-current={activeModule?.id === m.id ? "page" : undefined}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <CrmModuleIcon name={m.icon} size={21} />
+                <span>{m.label}</span>
+              </Link>
+            ))}
+            {planned.length > 0 && (
+              <details className="work-nav-pending">
+                <summary>Chưa mở giao dịch</summary>
+                {planned.map((m) => (
                   <Link
-                    href={root + '/' + m.id}
+                    href={`${root}/${m.id}`}
                     key={m.id}
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <CrmModuleIcon name={m.icon} size={19} aria-hidden />
+                    <CrmModuleIcon name={m.icon} size={19} />
                     <span>{m.label}</span>
                   </Link>
                 ))}
-            </details>
+              </details>
+            )}
           </nav>
           <div className="work-sidebar-footer">
-            <Link href={root + '/profile'}>Hồ sơ và bảo mật</Link>
-            <button type="button" disabled={busy} onClick={logout}>
-              <SignOut size={20} aria-hidden />
-              {busy ? 'Đang đăng xuất…' : 'Đăng xuất'}
+            <Link href={`${root}/profile`}>Hồ sơ và bảo mật</Link>
+            <button type="button" disabled={loggingOut} onClick={logout}>
+              <SignOut size={20} aria-hidden="true" />
+              {loggingOut ? "Đang đăng xuất…" : "Đăng xuất"}
             </button>
-            {error && <p role="alert">{error}</p>}
           </div>
         </aside>
         {mobileMenuOpen && (
@@ -243,8 +237,8 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
             <Link href={root}>Cohamy</Link>
             <span>/</span>
             <span>
-              {active?.label ??
-                (pathname.endsWith('/profile') ? 'Hồ sơ cá nhân' : 'Bàn làm việc')}
+              {activeModule?.label ??
+                (pathname.endsWith("/profile") ? "Hồ sơ cá nhân" : "Bàn làm việc")}
             </span>
           </nav>
           <main id="portal-content">{children}</main>
@@ -254,277 +248,260 @@ export function CrmShell({ children, user }: { children: ReactNode; user: Princi
     );
   }
 
-  // CRM Area: Redesigned HumanBank-style shell
-  const isDashboard = pathname === root;
+  // UI/UX Pro Max — Golden-Amber & Warm Cacao Enterprise SaaS Shell for /crm
+  const userInitial = (user.displayName || user.email || "C").trim().charAt(0).toUpperCase();
 
   return (
-    <div
-      className={`portal-shell crm-humanbank-shell ${isDashboard ? 'portal-shell--dashboard' : ''}`}
-      data-design-contract={DESIGN_CONTRACT}
-    >
-      <div className="crm-shell-background" aria-hidden="true">
-        <ParticleNetwork tone="white" />
-      </div>
-      <a className="skip-link" href="#portal-content">
-        Đến nội dung chính
+    <div className="crm-golden-saas-shell">
+      <PwaRegistrar />
+      <a className="skip-link" href="#crm-main">
+        Chuyển đến nội dung chính
       </a>
 
-      {/* Top Header matching HumanBank */}
-      <header className="portal-topbar">
-        <div className="portal-masthead-brand">
+      <header className="crm-topbar">
+        <div className="crm-topbar__left">
           <button
-            ref={menuBtnRef}
-            className="crm-mobile-menu-btn work-menu-toggle"
+            ref={menuToggleRef}
             type="button"
+            className="crm-mobile-toggle"
             aria-expanded={mobileMenuOpen}
             aria-controls="work-navigation"
-            aria-label={mobileMenuOpen ? 'Đóng menu' : 'Mở menu'}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Đóng menu" : "Mở menu"}
+            onClick={() => setMobileMenuOpen((value) => !value)}
           >
-            {mobileMenuOpen ? <X size={22} /> : <List size={22} />}
+            {mobileMenuOpen ? (
+              <X size={20} weight="bold" aria-hidden="true" />
+            ) : (
+              <List size={20} weight="bold" aria-hidden="true" />
+            )}
           </button>
-          <Link className="portal-brand-link" href={root} aria-label="CRM Cohamy">
-            <Image
-              src="/images/logo/cohamy-brand-logo.png"
-              width={925}
-              height={267}
-              alt="Cohamy"
-              className="portal-brand-logo"
-              style={{ width: 'auto' }}
-              priority
-            />
-            <span className="portal-system-title">CRM Cohamy</span>
+
+          <Link href={root} className="crm-brand" aria-label="CRM Cohamy — Bàn làm việc điều hành">
+            <span className="crm-brand__logo-wrap">
+              <Image
+                alt="Cohamy"
+                src="/images/logo/cohamy-brand-logo.png"
+                width={108}
+                height={31}
+                style={{ width: "auto", height: "26px" }}
+              />
+            </span>
+            <span className="crm-brand__badge">CRM COHAMY</span>
           </Link>
+
+          <nav className="crm-breadcrumb" aria-label="Vị trí hiện tại">
+            <Link href={root} className="crm-breadcrumb__root">
+              Bàn làm việc
+            </Link>
+            {isHubRoute && activeHubEntry && (
+              <>
+                <CaretRight size={12} aria-hidden="true" className="crm-breadcrumb__sep" />
+                <span className="crm-breadcrumb__current">{activeHubEntry.hub.label}</span>
+              </>
+            )}
+            {activeModule && (
+              <>
+                {activeHubEntry && (
+                  <>
+                    <CaretRight size={12} aria-hidden="true" className="crm-breadcrumb__sep" />
+                    <Link
+                      href={`${root}/hub/${activeHubEntry.hub.id}`}
+                      className="crm-breadcrumb__link"
+                    >
+                      {activeHubEntry.hub.label}
+                    </Link>
+                  </>
+                )}
+                <CaretRight size={12} aria-hidden="true" className="crm-breadcrumb__sep" />
+                <Link
+                  href={`${root}/${activeModule.id}`}
+                  className={activeSub ? "crm-breadcrumb__link" : "crm-breadcrumb__current"}
+                >
+                  {activeModule.label}
+                </Link>
+              </>
+            )}
+            {!isHubRoute && activeSub && (
+              <>
+                <CaretRight size={12} aria-hidden="true" className="crm-breadcrumb__sep" />
+                <span className="crm-breadcrumb__current">
+                  {subLabels[activeSub] ?? "Chi tiết chứng từ"}
+                </span>
+              </>
+            )}
+          </nav>
         </div>
 
-        <div className="portal-topbar__actions">
-          <QuickCreate user={user} />
+        <div className="crm-topbar__actions">
+          <Link
+            href="/crm/search"
+            className="crm-topbar__search-pill"
+            aria-label="Tìm kiếm toàn hệ thống CRM"
+          >
+            <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
+            <span>Tìm chứng từ, đối tác, SKU…</span>
+            <kbd aria-hidden="true">Ctrl K</kbd>
+          </Link>
 
-          {/* User Account Menu Dropdown */}
-          <details className="portal-user-menu" ref={userMenuRef}>
-            <summary aria-label="Mở menu người dùng" role="button">
-              <div className="portal-user-avatar" aria-hidden>
-                {getInitials(user.displayName)}
-              </div>
-              <div className="portal-user-summary">
-                <strong>{user.displayName}</strong>
-                <span>{roleLabels[user.role]}</span>
-              </div>
-              <CaretDown size={14} aria-hidden />
-            </summary>
-            <div className="portal-user-menu__content">
-              <Link
-                href={root + '/profile'}
-                onClick={() => userMenuRef.current?.removeAttribute('open')}
-              >
-                <UserCircle size={16} aria-hidden />
-                <span>Hồ sơ và phiên đăng nhập</span>
-              </Link>
-              <Link
-                href={root + '/workspace'}
-                onClick={() => userMenuRef.current?.removeAttribute('open')}
-              >
-                <Gear size={16} aria-hidden />
-                <span>Không gian cá nhân</span>
-              </Link>
-              <button
-                type="button"
-                onClick={logout}
-                disabled={busy}
-                className="crm-logout-action"
-              >
-                <SignOut size={16} aria-hidden />
-                <span>Đăng xuất</span>
-              </button>
-              {error && <p role="alert">{error}</p>}
-            </div>
-          </details>
+          <Link
+            href="/crm/notifications"
+            className="crm-topbar__icon-btn"
+            aria-label="Thông báo hệ thống"
+            title="Thông báo hệ thống"
+          >
+            <Bell size={18} weight="bold" aria-hidden="true" />
+          </Link>
+
+          <div className="crm-topbar__quick-create">
+            <QuickCreate user={user} />
+          </div>
+
+          <Link
+            href={`${root}/profile`}
+            className="crm-user-pill"
+            aria-label={`Hồ sơ ${user.displayName} (${roleLabels[user.role]})`}
+          >
+            <span className="crm-user-avatar" aria-hidden="true">
+              {userInitial}
+            </span>
+            <span className="crm-user-meta">
+              <strong>{user.displayName}</strong>
+              <small>
+                {roleLabels[user.role]} · {user.organizationName}
+              </small>
+            </span>
+          </Link>
+
+          <button
+            type="button"
+            className="button button--secondary crm-logout-btn"
+            onClick={logout}
+            disabled={loggingOut}
+          >
+            <SignOut size={16} weight="bold" aria-hidden="true" />
+            <span>{loggingOut ? "Đang thoát…" : "Đăng xuất"}</span>
+          </button>
         </div>
       </header>
 
-      {/* Mobile Navigation Drawer for accessibility and responsive testing */}
-      <aside
-        id="work-navigation"
-        ref={drawerRef}
-        className={`work-sidebar crm-mobile-drawer ${mobileMenuOpen ? 'is-open' : ''}`}
-        aria-label="Điều hướng di động"
-        aria-hidden={!mobileMenuOpen}
-        inert={!mobileMenuOpen ? true : undefined}
-      >
-        <div className="crm-mobile-drawer-header">
-          <span>Danh mục CRM</span>
-          <button
-            ref={closeBtnRef}
-            type="button"
+      <div className="crm-workspace-body">
+        {mobileMenuOpen && (
+          <div
+            className="crm-sidebar-backdrop"
+            aria-hidden="true"
             onClick={() => setMobileMenuOpen(false)}
-            aria-label="Đóng menu"
-          >
-            <X size={20} />
-          </button>
-        </div>
-        <nav aria-label="Điều hướng di động">
-          <Link
-            href={root}
-            className={pathname === root ? 'active' : ''}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <House size={18} aria-hidden />
-            <span>Bàn làm việc</span>
-          </Link>
-          <div className="crm-drawer-section-title">Phân hệ nghiệp vụ</div>
-          {modules
-            .filter((m) => m.status === 'CONNECTED')
-            .map((m) => (
-              <Link
-                key={m.id}
-                href={root + '/' + m.id}
-                className={active?.id === m.id ? 'active' : ''}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <CrmModuleIcon name={m.icon} size={18} aria-hidden />
-                <span>{m.label}</span>
-              </Link>
-            ))}
-        </nav>
-        <div className="crm-drawer-footer">
-          <Link href={root + '/profile'} onClick={() => setMobileMenuOpen(false)}>
-            Hồ sơ và bảo mật
-          </Link>
-          <button type="button" onClick={logout} disabled={busy}>
-            <SignOut size={18} aria-hidden />
-            <span>Đăng xuất</span>
-          </button>
-        </div>
-      </aside>
+          />
+        )}
 
-      {mobileMenuOpen && (
-        <button
-          className="work-menu-backdrop crm-drawer-backdrop"
-          onClick={() => setMobileMenuOpen(false)}
-          aria-label="Đóng menu điều hướng"
-        />
-      )}
-
-      {/* Main Workspace Content */}
-      <div
-        className={`portal-workspace ${isDashboard ? 'portal-workspace--dashboard' : 'crm-business-workspace'}`}
-      >
-        <main
-          id="portal-content"
-          className={`portal-content ${isDashboard ? 'portal-content--dashboard' : 'crm-business-content'}`}
+        <aside
+          id="work-navigation"
+          className={`crm-sidebar${mobileMenuOpen ? " is-open" : ""}`}
+          aria-label="Điều hướng nghiệp vụ"
         >
-          {!isDashboard && (
-            <nav className="crm-breadcrumb work-breadcrumb" aria-label="Đường dẫn">
-              <Link href={root}>CRM Cohamy</Link>
-              <span>/</span>
-              <span>
-                {active?.label ??
-                  currentHub?.label ??
-                  (pathname.endsWith('/profile')
-                    ? 'Hồ sơ và bảo mật'
-                    : 'Bàn làm việc')}
+          <div className="crm-sidebar__search">
+            <label htmlFor="crm-nav-filter" className="sr-only">
+              Lọc nhanh phân hệ
+            </label>
+            <MagnifyingGlass size={15} weight="bold" aria-hidden="true" />
+            <input
+              id="crm-nav-filter"
+              type="search"
+              value={navFilter}
+              onChange={(event) => setNavFilter(event.target.value)}
+              placeholder="Lọc nhanh 33 phân hệ…"
+              autoComplete="off"
+            />
+            {navFilter && (
+              <button
+                type="button"
+                className="crm-sidebar__search-clear"
+                aria-label="Xóa từ khóa lọc phân hệ"
+                onClick={() => setNavFilter("")}
+              >
+                <X size={14} weight="bold" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          <nav className="crm-nav" aria-label="Danh mục phân hệ CRM">
+            <Link
+              href={root}
+              className={`crm-nav__item crm-nav__item--overview${pathname === root ? " is-active" : ""}`}
+              aria-current={pathname === root ? "page" : undefined}
+            >
+              <span className="crm-nav__icon-box" aria-hidden="true">
+                <SquaresFour size={16} weight="bold" aria-hidden="true" />
               </span>
-            </nav>
-          )}
-          {children}
-        </main>
-      </div>
-
-      {/* Bottom Floating Navigation Dock matching HumanBank */}
-      <nav className="portal-bottom-navigation" aria-label="Truy cập nhanh">
-        <div className="portal-bottom-navigation__inner">
-          <Link
-            href={root}
-            className={pathname === root ? 'is-active' : ''}
-            aria-current={pathname === root ? 'page' : undefined}
-          >
-            <RocketLaunch size={24} weight="fill" />
-            <small>Home</small>
-          </Link>
-
-          {can(user, 'orders.read') && (
-            <Link
-              href={`${root}/orders`}
-              className={
-                pathname.startsWith(`${root}/orders`) ||
-                pathname.startsWith(`${root}/requests`) ||
-                pathname.startsWith(`${root}/sales`) ||
-                pathname.startsWith(`${root}/quotations`) ||
-                pathname === `${root}/hub/orders`
-                  ? 'is-active'
-                  : ''
-              }
-            >
-              <ShoppingCart size={24} weight="fill" />
-              <small>Đơn hàng</small>
+              <span>Bàn làm việc</span>
             </Link>
-          )}
 
-          {can(user, 'partners.read') && (
-            <Link
-              href={`${root}/customers`}
-              className={
-                pathname.startsWith(`${root}/customers`) ||
-                pathname.startsWith(`${root}/dealers`) ||
-                pathname.startsWith(`${root}/care`) ||
-                pathname.startsWith(`${root}/visits`) ||
-                pathname === `${root}/hub/customers` ||
-                pathname === `${root}/hub/dealers`
-                  ? 'is-active'
-                  : ''
-              }
-            >
-              <Users size={24} weight="fill" />
-              <small>Khách hàng</small>
-            </Link>
-          )}
+            {filteredHubs.map(({ hub, modules: hubItems }) => (
+              <div className="crm-nav__group" key={hub.id}>
+                <div className="crm-nav__group-header">
+                  <Link href={`${root}/hub/${hub.id}`} className="crm-nav__heading">
+                    {hub.label}
+                  </Link>
+                </div>
+                <div className="crm-nav__items">
+                  {hubItems.map((item) => {
+                    const href = `${root}/${item.id}`;
+                    const active = pathname === href || pathname.startsWith(`${href}/`);
+                    return (
+                      <Link
+                        key={item.id}
+                        href={href}
+                        className={`crm-nav__item${active ? " is-active" : ""}`}
+                        aria-current={active ? "page" : undefined}
+                      >
+                        <CrmModuleIcon name={item.icon} size={16} />
+                        <span className="crm-nav__label">{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
 
-          {(can(user, 'warehouses.read') || can(user, 'catalog.read')) && (
-            <Link
-              href={`${root}/inventory`}
-              className={
-                pathname.startsWith(`${root}/inventory`) ||
-                pathname.startsWith(`${root}/goods`) ||
-                pathname.startsWith(`${root}/samples`) ||
-                pathname === `${root}/hub/goods`
-                  ? 'is-active'
-                  : ''
-              }
-            >
-              <Warehouse size={24} weight="fill" />
-              <small>Kho</small>
-            </Link>
-          )}
+            {filteredPlanned.length > 0 && (
+              <details className="crm-nav__planned" open={Boolean(normalizedFilter)}>
+                <summary>Chưa mở giao dịch ({filteredPlanned.length})</summary>
+                <div className="crm-nav__items">
+                  {filteredPlanned.map((item) => {
+                    const href = `${root}/${item.id}`;
+                    const active = pathname === href;
+                    return (
+                      <Link
+                        key={item.id}
+                        href={href}
+                        className={`crm-nav__item crm-nav__item--planned${active ? " is-active" : ""}`}
+                      >
+                        <CrmModuleIcon name={item.icon} size={15} />
+                        <span className="crm-nav__label">{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </details>
+            )}
+          </nav>
 
-          {can(user, 'reports.read') && (
-            <Link
-              href={`${root}/reports`}
-              className={
-                pathname.startsWith(`${root}/reports`) ||
-                pathname.startsWith(`${root}/data`) ||
-                pathname.startsWith(`${root}/search`) ||
-                pathname === `${root}/hub/reports`
-                  ? 'is-active'
-                  : ''
-              }
-            >
-              <ChartBar size={24} weight="fill" />
-              <small>Báo cáo</small>
-            </Link>
-          )}
+          <footer className="crm-sidebar__footer" aria-label="Thông tin phiên bảo mật">
+            <div className="crm-sidebar__footer-row">
+              <ShieldCheck size={16} weight="bold" aria-hidden="true" />
+              <div>
+                <strong>{roleLabels[user.role]}</strong>
+                <span>{user.organizationName} · Phiên nội bộ</span>
+              </div>
+            </div>
+          </footer>
+        </aside>
 
-          <button
-            type="button"
-            onClick={logout}
-            disabled={busy}
-            title="Đăng xuất khỏi CRM"
-            aria-label="Thoát"
-          >
-            <SignOut size={24} weight="bold" />
-            <small>Thoát</small>
-          </button>
+        <div className="crm-main-column">
+          <main id="crm-main" className="crm-main">
+            {children}
+          </main>
         </div>
-      </nav>
+      </div>
     </div>
   );
 }

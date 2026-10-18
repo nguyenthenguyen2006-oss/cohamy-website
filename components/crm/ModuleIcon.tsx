@@ -58,5 +58,5 @@ const icons: Record<string, React.ComponentType<IconProps>> = {
 
 export function CrmModuleIcon({ name, ...props }: IconProps & { name: ModuleIcon }) {
   const Icon = icons[name] || ChartBar;
-  return <Icon {...props} />;
+  return <Icon aria-hidden="true" {...props} />;
 }
