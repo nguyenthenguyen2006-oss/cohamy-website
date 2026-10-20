@@ -706,8 +706,6 @@ export function SalesReconciliationSheet({
    {mode === 'orders' ? (
     <CrmSpreadsheet
      sheetKey="reconciliation_orders"
-     title="Sổ Đối Chiếu Bán Hàng – Giao Hàng – Công Nợ"
-     subtitle="Mỗi đơn bán là 1 dòng tổng hợp (không nhân bản số tiền khi có nhiều dòng hàng, nhiều lần giao hoặc nhiều lần thanh toán)"
      tabs={[
       {key: 'orders', label: '1. Tổng hợp theo Đơn bán & Công nợ', count: data.orders.length},
       {key: 'lines', label: '2. Bảng kê chi tiết từng dòng SKU & Chiết khấu', count: data.lineItems.length},
@@ -721,20 +719,11 @@ export function SalesReconciliationSheet({
      drawerTitle={order => `Đơn bán ${order.orderCode} · ${order.organizationName}`}
      drawerFullPageHref={order => `${basePath}/sales/${order.orderId}`}
      totalDatasetCount={data.totals.orderCount}
-     datasetTotals={[
-      {label: 'Tiền gốc', value: money(data.totals.listSubtotal)},
-      {label: 'Chiết khấu', value: `-${money(data.totals.discountAmount)}`, tone: 'warning'},
-      {label: 'Thành tiền', value: money(data.totals.netTotal), tone: 'accent'},
-      {label: 'Phải thu', value: money(data.totals.receivableOriginal)},
-      {label: 'Đã thu', value: money(data.totals.paidAmount), tone: 'positive'},
-      {label: 'Còn nợ', value: money(data.totals.remainingDebt), tone: 'danger'},
-     ]}
+     hideFooterSums
     />
    ) : (
     <CrmSpreadsheet
      sheetKey="reconciliation_lines"
-     title="Bảng Kê Chi Tiết Dòng Hàng, Đơn Giá & Chiết Khấu"
-     subtitle="Đối chiếu từng mặt hàng SKU, số lượng, đơn giá niêm yết, tỷ lệ chiết khấu (VD: 40% đại lý) và thành tiền sau chiết khấu"
      tabs={[
       {key: 'orders', label: '1. Tổng hợp theo Đơn bán & Công nợ', count: data.orders.length},
       {key: 'lines', label: '2. Bảng kê chi tiết từng dòng SKU & Chiết khấu', count: data.lineItems.length},
@@ -751,13 +740,7 @@ export function SalesReconciliationSheet({
      drawerTitle={line => `Đơn ${line.orderCode} · ${line.productName}`}
      drawerFullPageHref={line => `${basePath}/sales/${line.orderId}`}
      totalDatasetCount={data.totals.lineCount}
-     datasetTotals={[
-      {label: 'Tổng SL', value: `${data.totals.totalBaseQty} gói`},
-      {label: 'Tổng tiền gốc', value: money(data.totals.listSubtotal)},
-      {label: 'Tổng chiết khấu', value: `-${money(data.totals.discountAmount)}`, tone: 'warning'},
-      {label: 'Tổng thành tiền sau CK', value: money(data.totals.netTotal), tone: 'accent'},
-      {label: 'Công nợ đơn (không cộng trùng dòng)', value: money(data.totals.remainingDebt), tone: 'danger'},
-     ]}
+     hideFooterSums
     />
    )}
   </section>
@@ -1218,8 +1201,6 @@ export function InventoryMatrixSheet({
    {tab === 'matrix' ? (
     <CrmSpreadsheet
      sheetKey="inventory_matrix_sheet"
-     title="Bảng Nhập – Xuất – Tồn Dạng Ma Trận (Cột Động Theo Đợt Xuất & Đối Tác)"
-     subtitle="Đối chiếu trực tiếp số lượng nhập kho, từng đợt xuất cho khách/đại lý và tồn thực tế còn lại trên cùng một mặt bảng"
      tabs={[
       {key: 'matrix', label: '1. Ma trận Nhập – Xuất – Tồn (Theo SKU & Cột xuất động)', count: data.rows.length},
       {key: 'movements', label: '2. Sổ chi tiết phiếu kho & Biến động lô', count: data.movements.length},
@@ -1325,23 +1306,11 @@ export function InventoryMatrixSheet({
       );
      }}
      totalDatasetCount={data.totals.skuCount}
-     datasetTotals={[
-      {label: 'Tổng nhập', value: `+${data.totals.receiptQty} gói`, tone: 'positive'},
-      ...data.dynamicColumns.map(c => ({
-       label: `Xuất ${c.label}`,
-       value: `-${data.totals.columnTotals[c.key] ?? '0'} gói`,
-       tone: 'warning' as const,
-      })),
-      {label: 'Tổng xuất', value: `-${data.totals.totalOutboundQty} gói`, tone: 'warning'},
-      {label: 'Tồn thực tế', value: `${data.totals.closingOnHand} gói`, tone: 'accent'},
-      {label: 'Khả dụng', value: `${data.totals.availableQty} gói`, tone: 'positive'},
-     ]}
+     hideFooterSums
     />
    ) : (
     <CrmSpreadsheet
      sheetKey="inventory_movements_ledger"
-     title="Sổ Chi Tiết Phiếu Nhập – Xuất – Biến Động Tồn Kho"
-     subtitle="Mỗi dòng là một bút toán xuất/nhập gắn liền với mã phiếu kho, lô hàng, vị trí và đơn hàng gốc"
      tabs={[
       {key: 'matrix', label: '1. Ma trận Nhập – Xuất – Tồn (Theo SKU & Cột xuất động)', count: data.rows.length},
       {key: 'movements', label: '2. Sổ chi tiết phiếu kho & Biến động lô', count: data.movements.length},
@@ -1352,11 +1321,7 @@ export function InventoryMatrixSheet({
      rows={data.movements}
      getRowKey={r => r.id}
      totalDatasetCount={data.movements.length}
-     datasetTotals={[
-      {label: 'Tổng nhập', value: `+${data.totals.receiptQty} gói`, tone: 'positive'},
-      {label: 'Tổng xuất', value: `-${data.totals.totalOutboundQty} gói`, tone: 'warning'},
-      {label: 'Tồn cuối kỳ', value: `${data.totals.closingOnHand} gói`, tone: 'accent'},
-     ]}
+     hideFooterSums
     />
    )}
   </section>

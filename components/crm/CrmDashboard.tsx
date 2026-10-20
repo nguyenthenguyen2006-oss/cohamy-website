@@ -1,16 +1,10 @@
 import Link from "next/link";
-import {
-  CalendarCheck,
-  ChartLineUp,
-  ShoppingCart,
-  SquaresFour,
-} from "@phosphor-icons/react/dist/ssr";
+import { SquaresFour } from "@phosphor-icons/react/dist/ssr";
 import { visibleModules } from "@/lib/crm/modules";
 import { reviewQueue } from "@/lib/crm/onboarding";
 import { can } from "@/lib/crm/permissions";
 import { salesReconciliation, inventoryMatrix } from "@/lib/crm/reconciliation";
-import { roleDashboard } from "@/lib/crm/reports";
-import { roleLabels, type Principal } from "@/lib/crm/types";
+import { type Principal } from "@/lib/crm/types";
 import { canManageWork, listOrders, listTasks } from "@/lib/crm/work";
 import { DealerCommercePanel } from "./DealerCommercePanel";
 import { CrmModuleIcon } from "./ModuleIcon";
@@ -28,7 +22,6 @@ export async function CrmDashboard({ user }: { user: Principal }) {
   let applications: Awaited<ReturnType<typeof reviewQueue>> | null = null;
   let tasks: Awaited<ReturnType<typeof listTasks>> = [];
   let overdue: Awaited<ReturnType<typeof listTasks>> = [];
-  let roleQueue: Awaited<ReturnType<typeof roleDashboard>> = [];
   let reconciliationData: Awaited<ReturnType<typeof salesReconciliation>> | null = null;
   let matrixData: Awaited<ReturnType<typeof inventoryMatrix>> | null = null;
 
@@ -75,12 +68,6 @@ export async function CrmDashboard({ user }: { user: Principal }) {
     } catch {
       tasks = [];
       overdue = [];
-    }
-
-    try {
-      roleQueue = await roleDashboard(user);
-    } catch {
-      roleQueue = [];
     }
   }
 
@@ -149,9 +136,6 @@ export async function CrmDashboard({ user }: { user: Principal }) {
             BẢNG TÍNH VẬN HÀNH COHAMY
           </span>
           <h1>Bàn làm việc</h1>
-          <span className="crm-dash-compact-bar__role">
-            {roleLabels[user.role]} · {user.organizationName}
-          </span>
         </div>
 
         <div className="crm-dash-compact-kpis" aria-label="Dải số liệu hàng đợi">
@@ -178,21 +162,6 @@ export async function CrmDashboard({ user }: { user: Principal }) {
             </Link>
           )}
         </div>
-
-        <div className="crm-dash-quickbar" aria-label="Lối tắt tác nghiệp">
-          <Link href="/crm/sales" className="button button--primary button--compact">
-            <ShoppingCart size={14} weight="bold" aria-hidden="true" />
-            <span>Đơn bán & Đối soát</span>
-          </Link>
-          <Link href="/crm/inventory" className="button button--secondary button--compact">
-            <CalendarCheck size={14} weight="bold" aria-hidden="true" />
-            <span>Sổ kho Ma trận</span>
-          </Link>
-          <Link href="/crm/quotations" className="button button--secondary button--compact">
-            <ChartLineUp size={14} weight="bold" aria-hidden="true" />
-            <span>Báo giá</span>
-          </Link>
-        </div>
       </header>
 
       {/* Main Excel-Style Multi-Sheet Operational Workbench */}
@@ -202,8 +171,6 @@ export async function CrmDashboard({ user }: { user: Principal }) {
         pendingOrders={pendingOrders?.items ?? []}
         tasks={tasks}
         overdueTasks={overdue}
-        roleQueue={roleQueue}
-        applications={applications?.items ?? null}
       />
     </div>
   );

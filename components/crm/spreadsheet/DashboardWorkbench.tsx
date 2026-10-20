@@ -26,16 +26,12 @@ export function DashboardWorkbench({
  pendingOrders,
  tasks,
  overdueTasks,
- roleQueue,
- applications,
 }: {
  reconciliation: SalesReconciliationResult | null;
  inventoryMatrix: InventoryMatrixResult | null;
  pendingOrders: OrderRecord[];
  tasks: TaskRecord[];
  overdueTasks: TaskRecord[];
- roleQueue: {label: string; value: string; href: string}[];
- applications: {id: string; company_name: string; representative: string; phone: string}[] | null;
 }) {
  const defaultSheet =
   reconciliation && reconciliation.orders.length > 0
@@ -237,8 +233,7 @@ export function DashboardWorkbench({
     <div className="crm-dash-queues-stack">
      <CrmSpreadsheet
       sheetKey="dashboard_website_orders_queue"
-      title="Hàng đợi Yêu cầu Đặt hàng từ Website cần tiếp nhận"
-      subtitle="Mở chi tiết ngay bằng panel bên phải hoặc chuyển sang trang xử lý"
+      title="Yêu cầu Đặt hàng từ Website cần tiếp nhận"
       columns={websiteOrderCols}
       rows={pendingOrders}
       getRowKey={r => r.id}
@@ -285,7 +280,7 @@ export function DashboardWorkbench({
 
      <CrmSpreadsheet
       sheetKey="dashboard_tasks_queue"
-      title="Bảng Việc Quá Hạn & Đến Hạn Hôm Nay"
+      title="Việc Quá Hạn & Đến Hạn Hôm Nay"
       columns={taskCols}
       rows={allTasks}
       getRowKey={r => r.id}
@@ -297,193 +292,6 @@ export function DashboardWorkbench({
      />
     </div>
    )}
-
-   {/* Persistent Compact Operational Queues (Overdue, Today, Role Queue, Applications) */}
-   <div className="crm-dash-operational-queues">
-    <section className="crm-panel">
-     <div className="crm-panel__head">
-      <h2>Việc quá hạn</h2>
-      <Link href="/crm/tasks?overdue=true" className="crm-text-action">
-       Xem tất cả ({overdueTasks.length}) →
-      </Link>
-     </div>
-     <div className="crm-table-wrap" tabIndex={0}>
-      <table className="data-table crm-spreadsheet-table">
-       <thead>
-        <tr>
-         <th>Công việc</th>
-         <th>Hồ sơ</th>
-         <th>Phụ trách</th>
-         <th>Hạn</th>
-        </tr>
-       </thead>
-       <tbody>
-        {overdueTasks.length === 0 ? (
-         <tr>
-          <td colSpan={4} className="muted">
-           Không có việc quá hạn trong phạm vi phụ trách.
-          </td>
-         </tr>
-        ) : (
-         overdueTasks.slice(0, 5).map(t => (
-          <tr key={t.id}>
-           <td>
-            <Link href={`/crm/tasks/${t.id}`} className="crm-cell-strong-link">
-             {t.title}
-            </Link>
-           </td>
-           <td>
-            <Link
-             href={t.entity_type === 'order' ? `/crm/orders/${t.entity_id}` : `/crm/partners/${t.entity_id}`}
-             className="crm-code-chip"
-            >
-             {t.entity_label}
-            </Link>
-           </td>
-           <td>{t.assignee_name}</td>
-           <td className="crm-nowrap">{String(t.due_at).slice(0, 10)}</td>
-          </tr>
-         ))
-        )}
-       </tbody>
-      </table>
-     </div>
-    </section>
-
-    <section className="crm-panel">
-     <div className="crm-panel__head">
-      <h2>Còn hạn hôm nay</h2>
-      <Link href="/crm/tasks?today=true" className="crm-text-action">
-       Mở lịch hẹn ({tasks.length}) →
-      </Link>
-     </div>
-     <div className="crm-table-wrap" tabIndex={0}>
-      <table className="data-table crm-spreadsheet-table">
-       <thead>
-        <tr>
-         <th>Công việc</th>
-         <th>Hồ sơ</th>
-         <th>Phụ trách</th>
-         <th>Hạn</th>
-        </tr>
-       </thead>
-       <tbody>
-        {tasks.length === 0 ? (
-         <tr>
-          <td colSpan={4} className="muted">
-           Không có việc đến hạn hôm nay.
-          </td>
-         </tr>
-        ) : (
-         tasks.slice(0, 5).map(t => (
-          <tr key={t.id}>
-           <td>
-            <Link href={`/crm/tasks/${t.id}`} className="crm-cell-strong-link">
-             {t.title}
-            </Link>
-           </td>
-           <td>
-            <Link
-             href={t.entity_type === 'order' ? `/crm/orders/${t.entity_id}` : `/crm/partners/${t.entity_id}`}
-             className="crm-code-chip"
-            >
-             {t.entity_label}
-            </Link>
-           </td>
-           <td>{t.assignee_name}</td>
-           <td className="crm-nowrap">{String(t.due_at).slice(0, 10)}</td>
-          </tr>
-         ))
-        )}
-       </tbody>
-      </table>
-     </div>
-    </section>
-
-    <section className="crm-panel">
-     <div className="crm-panel__head">
-      <h2>Hàng đợi theo vai trò</h2>
-      <Link href="/crm/reports" className="crm-text-action">
-       Báo cáo →
-      </Link>
-     </div>
-     <div className="crm-table-wrap" tabIndex={0}>
-      <table className="data-table crm-spreadsheet-table">
-       <thead>
-        <tr>
-         <th>Hàng đợi nghiệp vụ</th>
-         <th className="align-right">Số lượng</th>
-        </tr>
-       </thead>
-       <tbody>
-        {roleQueue.length === 0 ? (
-         <tr>
-          <td colSpan={2} className="muted">
-           Không có mục tồn đọng.
-          </td>
-         </tr>
-        ) : (
-         roleQueue.map(q => (
-          <tr key={q.label}>
-           <td>
-            <Link href={q.href} className="crm-cell-strong-link">
-             {q.label}
-            </Link>
-           </td>
-           <td className="align-right crm-nowrap">
-            <strong>{q.value}</strong>
-           </td>
-          </tr>
-         ))
-        )}
-       </tbody>
-      </table>
-     </div>
-    </section>
-
-    {applications && (
-     <section className="crm-panel">
-      <div className="crm-panel__head">
-       <h2>Hồ sơ chờ xét duyệt ({applications.length})</h2>
-       <Link href="/crm/applications" className="crm-text-action">
-        Mở hàng chờ xét duyệt →
-       </Link>
-      </div>
-      <div className="crm-table-wrap" tabIndex={0}>
-       <table className="data-table crm-spreadsheet-table">
-        <thead>
-         <tr>
-          <th>Đơn vị đăng ký</th>
-          <th>Người đại diện</th>
-          <th>Điện thoại</th>
-         </tr>
-        </thead>
-        <tbody>
-         {applications.length === 0 ? (
-          <tr>
-           <td colSpan={3} className="muted">
-            Không có hồ sơ chờ duyệt.
-           </td>
-          </tr>
-         ) : (
-          applications.slice(0, 6).map(a => (
-           <tr key={a.id}>
-            <td>
-             <Link href={`/crm/applications/${a.id}`} className="crm-cell-strong-link">
-              {a.company_name}
-             </Link>
-            </td>
-            <td>{a.representative}</td>
-            <td className="crm-nowrap">{a.phone}</td>
-           </tr>
-          ))
-         )}
-        </tbody>
-       </table>
-      </div>
-     </section>
-    )}
-   </div>
   </div>
  );
 }

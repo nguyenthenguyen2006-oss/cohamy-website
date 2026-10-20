@@ -84,6 +84,7 @@ export interface CrmSpreadsheetProps<T> {
  emptyMessage?: string;
  searchPlaceholder?: string;
  hideToolbar?: boolean;
+ hideFooterSums?: boolean;
 }
 
 interface CellPos {
@@ -158,6 +159,7 @@ export function CrmSpreadsheet<T>({
  emptyMessage = 'Không có bản ghi nào khớp điều kiện lọc hiện tại.',
  searchPlaceholder = 'Tìm nhanh trên bảng (Mã, tên, SĐT, SKU, trạng thái...) — Phím tắt /',
  hideToolbar = false,
+ hideFooterSums = false,
 }: CrmSpreadsheetProps<T>) {
  const storageKey = `cohamy_crm_sheet_v1_${sheetKey}`;
 
@@ -955,14 +957,16 @@ export function CrmSpreadsheet<T>({
  return (
   <div className={`crm-spreadsheet-shell density-${density}`}>
    {/* Sheet Tabs & Saved Views Strip */}
-   {(tabs && tabs.length > 0) || savedViews.length > 0 || title ? (
+   {title || subtitle || savedViews.length > 0 || (hideToolbar && tabs && tabs.length > 0) ? (
     <div className="crm-sheet-header-bar">
-     <div className="crm-sheet-title-group">
-      {title && <h2 className="crm-sheet-title">{title}</h2>}
-      {subtitle && <span className="crm-sheet-subtitle">{subtitle}</span>}
-     </div>
+     {(title || subtitle) && (
+      <div className="crm-sheet-title-group">
+       {title && <h2 className="crm-sheet-title">{title}</h2>}
+       {subtitle && <span className="crm-sheet-subtitle">{subtitle}</span>}
+      </div>
+     )}
 
-     {tabs && tabs.length > 0 && (
+     {(title || subtitle || hideToolbar) && tabs && tabs.length > 0 && (
       <div className="crm-sheet-tabs" role="tablist" aria-label="Các trang bảng tính">
        {tabs.map(t => (
         <button
@@ -1113,6 +1117,23 @@ export function CrmSpreadsheet<T>({
           </button>
          </>
         )}
+       </div>
+      )}
+      {!title && !subtitle && tabs && tabs.length > 0 && (
+       <div className="crm-sheet-tabs" role="tablist" aria-label="Các trang bảng tính">
+        {tabs.map(t => (
+         <button
+          key={t.key}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === t.key}
+          className={`crm-sheet-tab ${activeTab === t.key ? 'active' : ''}`}
+          onClick={() => onTabChange?.(t.key)}
+         >
+          <span>{t.label}</span>
+          {t.count !== undefined && <span className={`crm-sheet-tab-badge tone-${t.badgeTone ?? 'default'}`}>{t.count}</span>}
+         </button>
+        ))}
        </div>
       )}
       {toolbarActions}
@@ -1536,29 +1557,31 @@ export function CrmSpreadsheet<T>({
      )}
     </div>
 
-    <div className="crm-sheet-footer-section">
-     {pageColumnSums.length > 0 && (
-      <div className="crm-sheet-footer-sums">
-       <span className="crm-sheet-footer-tag">Tổng trang đang hiển thị:</span>
-       {pageColumnSums.map(s => (
-        <span key={s.key} className="crm-sheet-footer-sum-pill">
-         {s.label}: <strong>{formatNum(s.sum, s.isMoney)}</strong>
-        </span>
-       ))}
-      </div>
-     )}
+    {!hideFooterSums && (
+     <div className="crm-sheet-footer-section">
+      {pageColumnSums.length > 0 && (
+       <div className="crm-sheet-footer-sums">
+        <span className="crm-sheet-footer-tag">Tổng trang đang hiển thị:</span>
+        {pageColumnSums.map(s => (
+         <span key={s.key} className="crm-sheet-footer-sum-pill">
+          {s.label}: <strong>{formatNum(s.sum, s.isMoney)}</strong>
+         </span>
+        ))}
+       </div>
+      )}
 
-     {datasetTotals && datasetTotals.length > 0 && (
-      <div className="crm-sheet-footer-sums dataset-totals">
-       <span className="crm-sheet-footer-tag accent">Tổng toàn bộ kết quả lọc:</span>
-       {datasetTotals.map((dt, idx) => (
-        <span key={idx} className={`crm-sheet-footer-sum-pill tone-${dt.tone ?? 'default'}`}>
-         {dt.label}: <strong>{dt.value}</strong>
-        </span>
-       ))}
-      </div>
-     )}
-    </div>
+      {datasetTotals && datasetTotals.length > 0 && (
+       <div className="crm-sheet-footer-sums dataset-totals">
+        <span className="crm-sheet-footer-tag accent">Tổng toàn bộ kết quả lọc:</span>
+        {datasetTotals.map((dt, idx) => (
+         <span key={idx} className={`crm-sheet-footer-sum-pill tone-${dt.tone ?? 'default'}`}>
+          {dt.label}: <strong>{dt.value}</strong>
+         </span>
+        ))}
+       </div>
+      )}
+     </div>
+    )}
    </div>
 
    {/* Excel Paste Validation & Preview Modal */}
