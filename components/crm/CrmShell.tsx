@@ -46,7 +46,20 @@ export function CrmShell({
   const [loggingOut, setLoggingOut] = useState(false);
   const [openMenuPath, setOpenMenuPath] = useState<string | null>(null);
   const [navFilter, setNavFilter] = useState("");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const menuToggleRef = useRef<HTMLButtonElement>(null);
+
+  function toggleSidebarCollapsed() {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem("cohamy_crm_sidebar_collapsed", next ? "1" : "0");
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  }
 
   const mobileMenuOpen = openMenuPath === pathname;
   function setMobileMenuOpen(next: boolean | ((prev: boolean) => boolean)) {
@@ -252,7 +265,7 @@ export function CrmShell({
   const userInitial = (user.displayName || user.email || "C").trim().charAt(0).toUpperCase();
 
   return (
-    <div className="crm-golden-saas-shell">
+    <div className={`crm-golden-saas-shell${sidebarCollapsed ? " sidebar-collapsed" : ""}`}>
       <PwaRegistrar />
       <a className="skip-link" href="#crm-main">
         Chuyển đến nội dung chính
@@ -274,6 +287,16 @@ export function CrmShell({
             ) : (
               <List size={20} weight="bold" aria-hidden="true" />
             )}
+          </button>
+
+          <button
+            type="button"
+            className="crm-desktop-sidebar-toggle"
+            aria-label={sidebarCollapsed ? "Mở rộng menu điều hướng" : "Thu gọn menu điều hướng"}
+            title={sidebarCollapsed ? "Mở rộng menu bên trái" : "Thu gọn menu bên trái để mở rộng vùng bảng tính"}
+            onClick={toggleSidebarCollapsed}
+          >
+            <List size={18} weight="bold" aria-hidden="true" />
           </button>
 
           <Link href={root} className="crm-brand" aria-label="CRM Cohamy — Bàn làm việc điều hành">
@@ -450,6 +473,7 @@ export function CrmShell({
                       <Link
                         key={item.id}
                         href={href}
+                        title={item.label}
                         className={`crm-nav__item${active ? " is-active" : ""}`}
                         aria-current={active ? "page" : undefined}
                       >
