@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {CrmSpreadsheet, type SpreadsheetColumn} from './CrmSpreadsheet';
+import {resolveProductImage} from '../CommercialForms';
 import type {CatalogProduct} from '@/lib/crm/types';
 
 export function CatalogSpreadsheet({
@@ -14,6 +15,22 @@ export function CatalogSpreadsheet({
  canWrite: boolean;
 }) {
  const columns: SpreadsheetColumn<CatalogProduct>[] = [
+  {
+   key: 'image',
+   label: 'Hình ảnh',
+   type: 'text',
+   width: 72,
+   sticky: true,
+   getValue: r => r.sku,
+   renderCell: r => (
+    <img
+     src={resolveProductImage(r.sku)}
+     alt={r.name}
+     className="crm-basket-thumb"
+     loading="lazy"
+    />
+   ),
+  },
   {
    key: 'sku',
    label: 'SKU ánh xạ',
