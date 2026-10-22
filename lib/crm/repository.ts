@@ -125,7 +125,7 @@ export async function updateOrganization(user: Principal, id: string, input: unk
 export async function listCatalog(user: Principal, q = "") {
   assertPermission(user, "catalog.read");
   const db = await database();
-  const data = await db.query<CatalogProduct>(`SELECT id,website_id,sku,name,category,weight_label,retail_price::text,translations,mapping_status,stock_unit,units_per_case,active,version FROM cohamy_crm.products WHERE (name ILIKE $1 OR sku ILIKE $1) ${user.area==='portal'?'AND active':''} ORDER BY sku`, [`%${q.slice(0, 120)}%`]);
+  const data = await db.query<CatalogProduct>(`SELECT id,website_id,sku,name,category,weight_label,retail_price::text,translations,mapping_status,stock_unit,units_per_case,active,version FROM cohamy_crm.products WHERE (name ILIKE $1 OR sku ILIKE $1) AND active ORDER BY sku`, [`%${q.slice(0, 120)}%`]);
   return data.rows;
 }
 export async function listWarehouses(user: Principal) {

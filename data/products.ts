@@ -601,5 +601,5 @@ export function getFeaturedProducts(): Product[] {
 export function getProductsByCategory(
   category: Product["category"],
 ): Product[] {
-  return products.filter((product) => product.category === category);
+  return products.filter((product) => product.category === category && !product.outOfStock);
 }

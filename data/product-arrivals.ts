@@ -72,7 +72,7 @@ export const productArrivals: Product[] = [
     "relatedProductIds": [
       "cohamy-almond-chocolate-80g",
       "cohamy-macadamia-chocolate-80g",
-      "cohamy-cashew-chocolate"
+      "cohamy-almond-matcha-chocolate-80g"
     ]
   }),
   arrival({
@@ -102,7 +102,7 @@ export const productArrivals: Product[] = [
     "relatedProductIds": [
       "cohamy-almond-durian-chocolate-80g",
       "cohamy-almond-matcha-chocolate-80g",
-      "cohamy-almond-chocolate"
+      "cohamy-cashew-chocolate-80g"
     ]
   }),
   arrival({
@@ -132,7 +132,7 @@ export const productArrivals: Product[] = [
     "relatedProductIds": [
       "cohamy-almond-strawberry-chocolate-80g",
       "cohamy-almond-matcha-chocolate-80g",
-      "cohamy-almond-durian-chocolate"
+      "cohamy-almond-chocolate-80g"
     ]
   }),
   arrival({
@@ -162,8 +162,8 @@ export const productArrivals: Product[] = [
     ],
     "relatedProductIds": [
       "cohamy-macadamia-chocolate-80g",
-      "jamy-mango-dried-chocolate",
-      "jamy-dried-mango"
+      "cohamy-almond-strawberry-chocolate-80g",
+      "cohamy-almond-durian-chocolate-80g"
     ]
   }),
   arrival({
@@ -193,7 +193,7 @@ export const productArrivals: Product[] = [
     "relatedProductIds": [
       "cohamy-cashew-chocolate-80g",
       "cohamy-almond-chocolate-80g",
-      "jamy-macadamia-chocolate"
+      "cohamy-mango-chocolate-80g"
     ]
   }),
   arrival({
@@ -223,7 +223,7 @@ export const productArrivals: Product[] = [
     "relatedProductIds": [
       "cohamy-almond-matcha-chocolate-80g",
       "cohamy-almond-durian-chocolate-80g",
-      "cohamy-almond-strawberry-chocolate"
+      "cohamy-chocolate-candy-65g"
     ]
   }),
   arrival({
@@ -253,7 +253,7 @@ export const productArrivals: Product[] = [
     "relatedProductIds": [
       "cohamy-almond-strawberry-chocolate-80g",
       "cohamy-almond-durian-chocolate-80g",
-      "cohamy-almond-matcha-chocolate"
+      "cohamy-almond-chocolate-80g"
     ]
   }),
   arrival({

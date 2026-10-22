@@ -6,24 +6,27 @@ import {productPriceUnits} from './pricing';
 import type {Principal} from './types';
 
 const fallbackImagesBySku:Record<string,string>={
-  'WEB-cohamy-almond-chocolate':'/images/products/cohamy-almond-chocolate-55g.jpg',
-  'WEB-cohamy-almond-durian-chocolate':'/images/products/cohamy-almond-durian-chocolate-55g.jpg',
-  'WEB-cohamy-almond-matcha-chocolate':'/images/products/cohamy-almond-matcha-chocolate-55g.jpg',
-  'WEB-cohamy-almond-milk-chocolate':'/images/products/cohamy-almond-milk-chocolate-55g.jpg',
-  'WEB-cohamy-almond-strawberry-chocolate':'/images/products/cohamy-almond-strawberry-chocolate-55g.jpg',
-  'WEB-cohamy-cashew-chocolate':'/images/products/cohamy-cashew-chocolate-55g.jpg',
-  'WEB-cohamy-gift-jar-collection':'/images/products/cohamy-gift-jar-collection.jpg',
+  'WEB-cohamy-almond-chocolate':'/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg',
+  'WEB-cohamy-almond-durian-chocolate':'/images/products/20261009/cohamy-almond-durian-chocolate-80g/01.jpg',
+  'WEB-cohamy-almond-matcha-chocolate':'/images/products/20261009/cohamy-almond-matcha-chocolate-80g/01.jpg',
+  'WEB-cohamy-almond-strawberry-chocolate':'/images/products/20261009/cohamy-almond-strawberry-chocolate-80g/01.jpg',
+  'WEB-cohamy-cashew-chocolate':'/images/products/20261009/cohamy-cashew-chocolate-80g/01.jpg',
   'WEB-cohamy-rainbow-chocolate':'/images/products/20261009/cohamy-chocolate-candy-65g/01.jpg',
-  'WEB-jamy-dried-mango':'/images/products/jamy-dried-mango-150g.jpg',
-  'WEB-jamy-macadamia-chocolate':'/images/products/jamy-macadamia-chocolate-160g.jpg',
-  'WEB-jamy-mango-dried-chocolate':'/images/products/jamy-mango-dried-chocolate-160g.jpg',
+  'WEB-jamy-macadamia-chocolate':'/images/products/20261009/cohamy-macadamia-chocolate-80g/01.jpg',
+  'WEB-jamy-mango-dried-chocolate':'/images/products/20261009/cohamy-mango-chocolate-80g/01.jpg',
 };
+const discontinuedSkus=new Set([
+  'WEB-cohamy-almond-milk-chocolate',
+  'WEB-cohamy-gift-jar-collection',
+  'WEB-jamy-dried-mango',
+]);
 
 export async function commercialProducts(user:Principal){
   assertPermission(user,'catalog.read');
-  const rows=(await(await database()).query<{id:string;sku:string;name:string;stock_unit:string;weight_label:string;retail_price:string;translations:{images?:string[]}|null;version:number}>('SELECT id,sku,name,stock_unit,weight_label,retail_price::text AS retail_price,translations,version FROM cohamy_crm.products WHERE active ORDER BY sku LIMIT 1000')).rows;
+  const rows=(await(await database()).query<{id:string;sku:string;name:string;stock_unit:string;weight_label:string;retail_price:string;translations:{images?:string[]}|null;version:number}>('SELECT id,sku,name,stock_unit,weight_label,retail_price::text AS retail_price,translations,version FROM cohamy_crm.products WHERE active ORDER BY sku LIMIT 1000')).rows.filter(p=>!discontinuedSkus.has(p.sku));
   return Promise.all(rows.map(async p=>{
-    const firstImage=Array.isArray(p.translations?.images)&&typeof p.translations.images[0]==='string'&&p.translations.images[0]?p.translations.images[0]:(fallbackImagesBySku[p.sku]??'/images/logo/cohamy-c-gold.png');
+    const rawImg=Array.isArray(p.translations?.images)&&typeof p.translations.images[0]==='string'&&p.translations.images[0]?p.translations.images[0]:'';
+    const firstImage=fallbackImagesBySku[p.sku]??(rawImg&&!rawImg.includes('-55g.')&&!rawImg.includes('-150g.')&&!rawImg.includes('-160g.')?rawImg:'/images/logo/cohamy-c-gold.png');
     return {id:p.id,sku:p.sku,name:p.name,stock_unit:p.stock_unit,weight_label:p.weight_label,retail_price:p.retail_price,image:firstImage,version:p.version,units:await productPriceUnits(user,p.id)};
   }));
 }

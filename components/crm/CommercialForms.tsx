@@ -1,5 +1,6 @@
 'use client';
 import {useEffect,useRef,useState,useTransition,type ReactNode} from 'react';
+import {createPortal} from 'react-dom';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 import type {PriceDefinition,Basket,PriceCalculation} from '@/lib/crm/pricing-model';
@@ -14,19 +15,75 @@ Object.assign(errors,{ORDER_POLICY_UNAVAILABLE:'Chưa có quy tắc đơn hàng 
 Object.assign(errors,{INVALID_TIERS:'Bậc số lượng phải tăng dần, không chồng nhau; mỗi dòng dạng từ;đến;%.',LEVEL_UNAVAILABLE:'Hạng thành viên không còn hoạt động.',LEVEL_CODE_OR_RANK_TAKEN:'Mã hoặc thứ tự hạng đã tồn tại.',COMMERCIAL_PARTNER_UNAVAILABLE:'Đối tác không hoạt động hoặc đã được gộp.',NOT_DIRECT_CHILD:'Chỉ đặt chiết khấu cho cấp dưới trực tiếp của bạn.',DISCOUNT_CEILING_UNCONFIGURED:'Bạn chưa có chiết khấu từ cấp trên nên chưa thể đặt cho cấp dưới.',DISCOUNT_EXCEEDS_UPSTREAM:'Chiết khấu cho cấp dưới không được vượt mức bạn đang nhận từ cấp trên.',TRANSFER_SAME_PARENT:'Đơn vị đã thuộc quản lý này.',TRANSFER_ALREADY_PENDING:'Đơn vị đang có yêu cầu chuyển cây chờ duyệt.',DISTRIBUTION_CYCLE_DETECTED:'Không thể chuyển vào nhánh cấp dưới của chính đơn vị đó.',DISTRIBUTION_SELF_PARENT_BLOCKED:'Không thể tự quản lý chính mình.',ALREADY_PROCESSED:'Yêu cầu đã được xử lý.',ORGANIZATION_INACTIVE_OR_NOT_FOUND:'Đơn vị không hoạt động hoặc không tồn tại.',TARGET_NOT_REACHED:'Đối tác chưa đạt chỉ tiêu chương trình.',ALREADY_AWARDED:'Đối tác đã được trao thưởng chương trình này.',NOT_ELIGIBLE:'Đối tác không thuộc đối tượng chương trình.',PROGRAM_NOT_ACTIVE:'Chương trình chưa kích hoạt.',INVALID_PERIOD:'Mã kỳ không hợp lệ (2026-10, 2026-Q4 hoặc 2026).',SHAREHOLDER_NOT_FOUND:'Không tìm thấy cổ đông.',NO_SHORTAGE:'Số lượng kho có đã đủ, không cần báo thiếu.',ORDER_CLOSED:'Đơn đã đóng.'});
 export interface ProductChoice {id:string;sku:string;name:string;stock_unit:string;weight_label?:string;retail_price?:string;image?:string;version:number;units:{code:string;label:string;version:number;numerator:string;denominator:string;is_case:boolean;allow_fractional:boolean;active:boolean}[]}
 const skuImageMap:Record<string,string>={
-  'WEB-cohamy-almond-chocolate':'/images/products/cohamy-almond-chocolate-55g.jpg',
-  'WEB-cohamy-almond-durian-chocolate':'/images/products/cohamy-almond-durian-chocolate-55g.jpg',
-  'WEB-cohamy-almond-matcha-chocolate':'/images/products/cohamy-almond-matcha-chocolate-55g.jpg',
-  'WEB-cohamy-almond-milk-chocolate':'/images/products/cohamy-almond-milk-chocolate-55g.jpg',
-  'WEB-cohamy-almond-strawberry-chocolate':'/images/products/cohamy-almond-strawberry-chocolate-55g.jpg',
-  'WEB-cohamy-cashew-chocolate':'/images/products/cohamy-cashew-chocolate-55g.jpg',
-  'WEB-cohamy-gift-jar-collection':'/images/products/cohamy-gift-jar-collection.jpg',
+  'WEB-cohamy-almond-chocolate':'/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg',
+  'WEB-cohamy-almond-durian-chocolate':'/images/products/20261009/cohamy-almond-durian-chocolate-80g/01.jpg',
+  'WEB-cohamy-almond-matcha-chocolate':'/images/products/20261009/cohamy-almond-matcha-chocolate-80g/01.jpg',
+  'WEB-cohamy-almond-strawberry-chocolate':'/images/products/20261009/cohamy-almond-strawberry-chocolate-80g/01.jpg',
+  'WEB-cohamy-cashew-chocolate':'/images/products/20261009/cohamy-cashew-chocolate-80g/01.jpg',
   'WEB-cohamy-rainbow-chocolate':'/images/products/20261009/cohamy-chocolate-candy-65g/01.jpg',
-  'WEB-jamy-dried-mango':'/images/products/jamy-dried-mango-150g.jpg',
-  'WEB-jamy-macadamia-chocolate':'/images/products/jamy-macadamia-chocolate-160g.jpg',
-  'WEB-jamy-mango-dried-chocolate':'/images/products/jamy-mango-dried-chocolate-160g.jpg',
+  'WEB-jamy-macadamia-chocolate':'/images/products/20261009/cohamy-macadamia-chocolate-80g/01.jpg',
+  'WEB-jamy-mango-dried-chocolate':'/images/products/20261009/cohamy-mango-chocolate-80g/01.jpg',
+  'cohamy-almond-chocolate-80g':'/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg',
+  'cohamy-almond-durian-chocolate-80g':'/images/products/20261009/cohamy-almond-durian-chocolate-80g/01.jpg',
+  'cohamy-almond-matcha-chocolate-80g':'/images/products/20261009/cohamy-almond-matcha-chocolate-80g/01.jpg',
+  'cohamy-almond-strawberry-chocolate-80g':'/images/products/20261009/cohamy-almond-strawberry-chocolate-80g/01.jpg',
+  'cohamy-cashew-chocolate-80g':'/images/products/20261009/cohamy-cashew-chocolate-80g/01.jpg',
+  'cohamy-chocolate-candy-65g':'/images/products/20261009/cohamy-chocolate-candy-65g/01.jpg',
+  'cohamy-macadamia-chocolate-80g':'/images/products/20261009/cohamy-macadamia-chocolate-80g/01.jpg',
+  'cohamy-mango-chocolate-80g':'/images/products/20261009/cohamy-mango-chocolate-80g/01.jpg',
 };
-export function resolveProductImage(sku:string,productImage?:string){return productImage||skuImageMap[sku]||'/images/logo/cohamy-c-gold.png';}
+export function resolveProductImage(sku:string,productImage?:string){
+  if(skuImageMap[sku])return skuImageMap[sku];
+  if(productImage&&!productImage.includes('-55g.')&&!productImage.includes('-150g.')&&!productImage.includes('-160g.'))return productImage;
+  return '/images/logo/cohamy-c-gold.png';
+}
+export function ProductThumbZoom({src,name,sku,weightLabel,retailPrice,stockUnit,rowIndex}:{src?:string;name?:string;sku?:string;weightLabel?:string;retailPrice?:string;stockUnit?:string;rowIndex?:number}){
+  const [pos,setPos]=useState<{top:number;left:number}|null>(null);
+  const openZoom=(el:HTMLElement)=>{
+    if(!src)return;
+    const rect=el.getBoundingClientRect();
+    const cardW=280;
+    const cardH=340;
+    const vw=typeof window!=='undefined'?window.innerWidth:1280;
+    const vh=typeof window!=='undefined'?window.innerHeight:800;
+    const left=rect.right+14+cardW<vw?rect.right+14:Math.max(12,rect.left-cardW-14);
+    const top=Math.min(Math.max(12,rect.top-64),Math.max(12,vh-cardH-12));
+    setPos({top,left});
+  };
+  return (
+    <div
+      className={`crm-basket-thumb-box${src?' is-zoomable':''}`}
+      onMouseEnter={e=>openZoom(e.currentTarget)}
+      onMouseLeave={()=>setPos(null)}
+    >
+      {typeof rowIndex==='number'&&<span className="crm-basket-row-idx">#{rowIndex+1}</span>}
+      {src?(
+        <>
+          <img src={src} alt={name||sku||'Sản phẩm'} className="crm-basket-thumb" loading="lazy"/>
+          <span className="crm-basket-zoom-badge" aria-hidden="true">🔍</span>
+          {pos&&typeof document!=='undefined'&&createPortal(
+            <div className="crm-thumb-zoom-popover" style={{top:pos.top,left:pos.left}} role="tooltip">
+              <div className="crm-thumb-zoom-img-wrap">
+                <img src={src} alt={name||sku||'Sản phẩm'} className="crm-thumb-zoom-img"/>
+              </div>
+              <div className="crm-thumb-zoom-info">
+                <strong>{name||sku}</strong>
+                <div className="crm-thumb-zoom-meta">
+                  {sku&&<span className="crm-basket-sku-badge">{sku}</span>}
+                  {weightLabel&&<span className="crm-basket-weight-badge">{weightLabel}</span>}
+                  {retailPrice&&<span className="crm-thumb-zoom-price">{Number(retailPrice).toLocaleString('vi-VN')} ₫/{stockUnit||'Gói'}</span>}
+                </div>
+              </div>
+            </div>,
+            document.body
+          )}
+        </>
+      ):(
+        <div className="crm-basket-thumb-placeholder">SP</div>
+      )}
+    </div>
+  );
+}
 export function defaultUnitForProduct(product?:ProductChoice){if(!product)return '';const active=product.units.filter(u=>u.active);const base=active.find(u=>u.code==='BASE'||u.label.toLowerCase()==='gói');return (base??active[0])?.code??'';}
 const str=(f:FormData,key:string)=>String(f.get(key)??'');
 const localDate=(iso?:string|null)=>iso?new Date(new Date(iso).getTime()+7*3600000).toISOString().slice(0,16):'';
@@ -130,10 +187,7 @@ function BasketFields({products,lines,setLines,discount=0,credit=false}:{product
       const unitLabel=p?.units.find(u=>u.code===l.unitCode)?.label||(p?.stock_unit||'Gói');
       return <tr key={i} className={Number(l.quantity)>0?'is-filled':''}>
        <td className="col-img">
-        <div className="crm-basket-thumb-box">
-         <span className="crm-basket-row-idx">#{i+1}</span>
-         {imgSrc?<img src={imgSrc} alt={p?.name||l.sku} className="crm-basket-thumb" loading="lazy"/>:<div className="crm-basket-thumb-placeholder">SP</div>}
-        </div>
+        <ProductThumbZoom src={imgSrc} name={p?.name||l.sku} sku={l.sku} weightLabel={p?.weight_label} retailPrice={p?.retail_price} stockUnit={p?.stock_unit} rowIndex={i}/>
        </td>
        <td className="col-product">
         <select aria-label={'SKU đặt '+(i+1)} required={rowRequired} value={l.sku} onChange={e=>{const sku=e.target.value,prod=products.find(x=>x.sku===sku);setLines(lines.map((r,n)=>n===i?{sku,unitCode:defaultUnitForProduct(prod),quantity:r.quantity,requestedUnitPrice:r.requestedUnitPrice}:r));}}>

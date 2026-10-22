@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import {CrmSpreadsheet, type SpreadsheetColumn} from './CrmSpreadsheet';
-import {resolveProductImage} from '../CommercialForms';
+import {resolveProductImage, ProductThumbZoom} from '../CommercialForms';
 import type {CatalogProduct} from '@/lib/crm/types';
 
 export function CatalogSpreadsheet({
@@ -23,11 +23,13 @@ export function CatalogSpreadsheet({
    sticky: true,
    getValue: r => r.sku,
    renderCell: r => (
-    <img
+    <ProductThumbZoom
      src={resolveProductImage(r.sku)}
-     alt={r.name}
-     className="crm-basket-thumb"
-     loading="lazy"
+     name={r.name}
+     sku={r.sku}
+     weightLabel={r.weight_label}
+     retailPrice={r.retail_price}
+     stockUnit={r.stock_unit ?? undefined}
     />
    ),
   },

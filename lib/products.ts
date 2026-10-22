@@ -61,7 +61,7 @@ export function filterProducts(options: {
   flavor?: ProductFlavor;
   locale?: Locale;
 }): Product[] {
-  let result = [...products];
+  let result = products.filter((p) => !p.outOfStock);
 
   if (options.category) {
     result = result.filter((p) => matchesFilterCategory(p, options.category!));
@@ -77,7 +77,7 @@ export function filterProducts(options: {
 export function getRelatedProducts(product: Product): Product[] {
   return product.relatedProductIds
     .map((id) => getProductById(id))
-    .filter((p): p is Product => Boolean(p));
+    .filter((p): p is Product => Boolean(p) && !p.outOfStock);
 }
 
 export function getAllProductSlugs(): { locale: Locale; slug: string }[] {
