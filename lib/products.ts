@@ -77,7 +77,7 @@ export function filterProducts(options: {
 export function getRelatedProducts(product: Product): Product[] {
   return product.relatedProductIds
     .map((id) => getProductById(id))
-    .filter((p): p is Product => Boolean(p) && !p.outOfStock);
+    .filter((p): p is Product => Boolean(p && !p.outOfStock));
 }
 
 export function getAllProductSlugs(): { locale: Locale; slug: string }[] {
