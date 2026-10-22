@@ -3,7 +3,7 @@ import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
 import {database,type Sql} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
-import {assertPermission,CrmError} from './permissions';
+import {assertPermission,CrmError,isWarehouseRole,warehouseRoleRegion} from './permissions';
 import {partnerScope,getOrganization} from './repository';
 import {pricingOrganization,calculateForOrganization} from './pricing';
 import {commercialRequestAccess,requestVersionAccess,type CommercialRequest} from './order-requests';
@@ -12,6 +12,7 @@ import {commercialDigest as hash,parseCommercial as parse,vietnamBusinessDate} f
 import type {QuotationSnapshot} from './quotations';
 import type {Principal} from './types';
 import {commercialNotification} from './order-notifications';
+import {syncOrderClearanceOnRequestSave} from './accountant-workflow';
 import {defaultProvisionalPolicy,reserveSubmittedRequest,releaseRequestReservations} from './request-reservations';
 
 export interface SalesOrder {
@@ -25,7 +26,7 @@ export interface SalesOrder {
 export interface SalesSnapshot {quote:QuotationSnapshot;request:{id:string;code:string;versionId:string;creatorId:string;channel:string;sourceWebsiteId:string|null;sourceQuotationId:string|null;sourceOrderId:string|null};orderPolicy:{id:string;number:number;definition:OrderPolicyDefinition;checksum:string};reservationPolicy?:NonNullable<OrderPolicyDefinition['provisionalReservation']>;approvalReasons:string[];issuedAt:string}
 export interface SalesVersion {id:string;order_id:string;number:number;request_version_id:string;order_policy_id:string;snapshot:SalesSnapshot;checksum:string;approval_required:boolean;actor_id:string;created_at:string}
 export async function salesOrderAccess(sql:Sql,user:Principal,id:string,lock=false):Promise<SalesOrder>{
- assertPermission(user,'orders.read');parse(z.uuid(),id);const scope=user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user);
+ assertPermission(user,'orders.read');parse(z.uuid(),id);const region=warehouseRoleRegion(user.role),scope=user.area==='crm'&&region?{sql:`(EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouses w ON w.id=ir.warehouse_id WHERE ir.order_id=s.id AND w.region=$1 AND (w.organization_id=$2 OR EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments wa WHERE wa.warehouse_id=w.id AND wa.membership_id=$3))) OR (s.status='CONFIRMED' AND COALESCE(s.seller_organization_id,$2)=$2 AND (o.region=$1 OR o.region IS NULL) AND NOT EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir2 WHERE ir2.order_id=s.id AND ir2.status IN('ACTIVE','PARTIAL'))))`,params:[region,user.organizationId,user.membershipId]}:user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user);
  const row=(await sql.query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) ${user.area==='portal'?`AND(s.organization_id=$1 OR s.seller_organization_id=$1)`:''} AND s.id=$${scope.params.length+1}`+(lock?' FOR UPDATE OF s':''),[...scope.params,id])).rows[0];
  if(!row)throw new CrmError('NOT_FOUND',404);return row;
 }
@@ -33,7 +34,7 @@ export async function salesVersionAccess(sql:Sql,head:SalesOrder,id:string){
  const v=(await sql.query<SalesVersion>('SELECT * FROM cohamy_crm.sales_order_versions WHERE order_id=$1 AND id=$2',[head.id,parse(z.uuid(),id)])).rows[0];if(!v)throw new CrmError('NOT_FOUND',404);if(v.checksum!==hash(v.snapshot))throw new CrmError('ORDER_SNAPSHOT_INVALID',503);return v;
 }
 export async function listSalesOrders(user:Principal,q=''){
- assertPermission(user,'orders.read');const scope=user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user),params=[...scope.params,'%'+q.trim().slice(0,120)+'%'];
+ assertPermission(user,'orders.read');const region=warehouseRoleRegion(user.role),scope=user.area==='crm'&&region?{sql:`(EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouses w ON w.id=ir.warehouse_id WHERE ir.order_id=s.id AND w.region=$1 AND (w.organization_id=$2 OR EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments wa WHERE wa.warehouse_id=w.id AND wa.membership_id=$3))) OR (s.status='CONFIRMED' AND COALESCE(s.seller_organization_id,$2)=$2 AND (o.region=$1 OR o.region IS NULL) AND NOT EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir2 WHERE ir2.order_id=s.id AND ir2.status IN('ACTIVE','PARTIAL'))))`,params:[region,user.organizationId,user.membershipId]}:user.area==='crm'&&user.role==='WAREHOUSE'?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId]}:partnerScope(user),params=[...scope.params,'%'+q.trim().slice(0,120)+'%'];
  return(await(await database()).query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) ${user.area==='portal'?`AND(s.organization_id=$1 OR s.seller_organization_id=$1)`:''} AND(s.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY s.updated_at DESC,s.id LIMIT 100`,params)).rows;
 }
 export async function salesOrderVersions(user:Principal,id:string){return(await database()).transaction(async sql=>{
@@ -85,6 +86,7 @@ export async function submitSalesRequest(user:Principal,input:unknown){
   await sql.query("INSERT INTO cohamy_crm.commercial_events(id,order_id,source_version_id,action,actor_id,reason,idempotency_key,request_hash,result) VALUES($1,$2,$3,'CREATED',$4,$5,$6,$7,$8::jsonb)",[randomUUID(),id,versionId,user.id,d.reason,randomUUID(),hash({sourceRequestId:head.id}),JSON.stringify(result)]);
   const seller=(await sql.query<{kind:string}>('SELECT kind FROM cohamy_crm.organizations WHERE id=$1',[sellerOrgId])).rows[0];
   await commercialNotification(sql,{organizationId:seller?.kind==='COHAMY'?org.id:sellerOrgId!,type:'sales-order',id,versionId,action:'CREATED',message:head.code+' đã gửi đến bên bán và đang chờ xác nhận.',actorId:user.id,audience:seller?.kind==='COHAMY'?'COHAMY':'OWNER'});
+  await syncOrderClearanceOnRequestSave(sql,{requestId:head.id,actorId:user.id,isNew:false});
   await audit(sql,user.id,'sales-order.created',id,{after:{requestId:head.id,requestVersionId:v.id,versionId,orderPolicyId:policy.id,approvalReasons:reasons},reason:d.reason});return result;
  });
 }

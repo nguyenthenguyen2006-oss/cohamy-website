@@ -11,26 +11,24 @@ import { CrmModuleIcon } from "./ModuleIcon";
 import { OnboardingChecklist } from "./PartnerLibraryPages";
 import { WorkHeader } from "./WorkPages";
 import { DashboardWorkbench } from "./spreadsheet/DashboardWorkbench";
+import { AccountantWorkspace } from "./AccountantWorkspace";
+import { getAccountantWorkspaceData } from "@/lib/crm/accountant-workflow";
 
 export async function CrmDashboard({ user }: { user: Principal }) {
   if (user.area === "crm" && user.role === "ACCOUNTANT") {
+    const accountantData = await getAccountantWorkspaceData(user);
     return (
       <div className="crm-dashboard-saas crm-spreadsheet-desk">
         <header className="crm-dash-compact-bar">
           <div className="crm-dash-compact-bar__left">
             <span className="crm-dash-header__eyebrow">
               <SquaresFour size={13} weight="bold" aria-hidden="true" />
-              TÀI KHOẢN KẾ TOÁN COHAMY
+              BÀN ĐIỀU HÀNH KẾ TOÁN COHAMY
             </span>
-            <h1>Không gian làm việc Kế toán</h1>
+            <h1>Đối soát Hóa đơn Khách đặt · Bàn giao Nhân viên · Hóa đơn Nhà máy & Tồn kho HN/HCM</h1>
           </div>
         </header>
-        <section className="work-section" style={{ padding: "36px 24px", textAlign: "center" }}>
-          <h2>Đã xóa toàn bộ chức năng cũ của tài khoản Kế toán</h2>
-          <p className="crm-status-note" style={{ maxWidth: 560, margin: "10px auto 0" }}>
-            Giao diện và các phân hệ cũ của tài khoản Kế toán đã được dọn sạch hoàn toàn, sẵn sàng để xây dựng lại từ đầu theo yêu cầu mới.
-          </p>
-        </section>
+        <AccountantWorkspace initialData={accountantData} initialTab="orders" userRole={user.role} />
       </div>
     );
   }

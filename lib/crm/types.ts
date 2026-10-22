@@ -1,5 +1,12 @@
-export const roles = ["ADMIN", "MANAGER", "SALES", "WAREHOUSE", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
+export const roles = ["ADMIN", "MANAGER", "SALES", "WAREHOUSE_HCM", "WAREHOUSE_HN", "WAREHOUSE", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
+export const accountAssignableRoles = ["ADMIN", "MANAGER", "SALES", "WAREHOUSE_HCM", "WAREHOUSE_HN", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
 export type Role = typeof roles[number];
+export function isWarehouseRole(role: string): role is "WAREHOUSE" | "WAREHOUSE_HCM" | "WAREHOUSE_HN" {
+  return role === "WAREHOUSE" || role === "WAREHOUSE_HCM" || role === "WAREHOUSE_HN";
+}
+export function warehouseRoleRegion(role: string): "SOUTH" | "NORTH" | null {
+  return role === "WAREHOUSE_HCM" ? "SOUTH" : role === "WAREHOUSE_HN" ? "NORTH" : null;
+}
 export type Area = "crm" | "portal";
 export type OrganizationKind = "COHAMY" | "DEALER" | "CUSTOMER" | "SUPPLIER";
 export interface Principal {
@@ -14,8 +21,15 @@ export interface Principal {
   area: Area;
 }
 export const roleLabels: Record<Role, string> = {
-  ADMIN: "Quản trị hệ thống", MANAGER: "Quản lý", SALES: "Sales", WAREHOUSE: "Thủ kho",
-  ACCOUNTANT: "Kế toán", DEALER_OWNER: "Chủ đại lý", DEALER_STAFF: "Nhân viên đại lý",
+  ADMIN: "Quản trị hệ thống",
+  MANAGER: "Quản lý",
+  SALES: "Sales",
+  WAREHOUSE_HCM: "Thủ kho HCM (Kho miền Nam)",
+  WAREHOUSE_HN: "Thủ kho HN (Kho miền Bắc)",
+  WAREHOUSE: "Thủ kho",
+  ACCOUNTANT: "Kế toán",
+  DEALER_OWNER: "Chủ đại lý",
+  DEALER_STAFF: "Nhân viên đại lý",
 };
 export interface Organization {
   id: string; code: string; name: string; kind: OrganizationKind; phone: string;

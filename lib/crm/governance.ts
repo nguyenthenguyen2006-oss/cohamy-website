@@ -3,7 +3,7 @@ import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
 import {database,type Sql} from './db';
 import {audit,membershipPrincipal,digest} from './auth';
-import {assertPermission,CrmError,can} from './permissions';
+import {assertPermission,CrmError,can,isWarehouseRole} from './permissions';
 import {getOrganization,listAccounts,assertWritableOrganization} from './repository';
 import {roles,type Principal} from './types';
 import {parse} from './workspace';
@@ -37,7 +37,7 @@ export async function bulkConfirm(user:Principal,input:unknown){
 }
 
 export interface FieldDefinition{id:string;field_key:string;label:string;kind:string;options:string[];required:boolean;read_roles:string[];write_roles:string[];active:boolean;version:number}
-const definitionSchema=z.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(7),writeRoles:z.array(z.enum(roles)).max(7),active:z.boolean()}).strict();
+const definitionSchema=z.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(roles.length),writeRoles:z.array(z.enum(roles)).max(roles.length),active:z.boolean()}).strict();
 export async function fieldDefinitions(user:Principal){assertPermission(user,'partners.read');return(await(await database()).query<FieldDefinition>('SELECT * FROM cohamy_crm.custom_field_definitions WHERE $1=ANY(read_roles) OR $2 ORDER BY label',[user.role,user.role==='ADMIN'&&user.area==='crm'])).rows;}
 export async function saveFieldDefinition(user:Principal,input:unknown){
  assertPermission(user,'accounts.manage');const d=parse(definitionSchema,input);if(user.area!=='crm'||!d.writeRoles.every(role=>d.readRoles.includes(role))||d.kind==='ENUM'&&(!d.options.length||new Set(d.options).size!==d.options.length)||d.kind!=='ENUM'&&d.options.length)throw new CrmError('INVALID_FIELDS',400);
@@ -74,8 +74,8 @@ export async function saveCustomValue(user:Principal,input:unknown){
 
 const permissionNames:Record<string,string>={'partners.read':'Xem hồ sơ đối tác','partners.write':'Tạo/sửa hồ sơ, ghi chú và công việc','catalog.read':'Xem hàng hóa và đơn vị','warehouses.read':'Xem tồn kho được cấp','warehouses.write':'Quản lý kho, vị trí và sổ tồn','orders.read':'Xem đề nghị, đơn và giao nhận được cấp','consignment.read':'Xem ký gửi và đối soát được cấp','finance.read':'Xem công nợ, thanh toán và thu chi được cấp','procurement.read':'Xem mua hàng và nhà cung cấp','reports.read':'Xem báo cáo theo phạm vi dữ liệu','accounts.manage':'Cấp tài khoản, cấu hình và xem audit','dealer.invite':'Mời/quản lý nhân viên của đại lý','workspace.use':'Tìm kiếm, thông báo và không gian riêng'};
 export function permissionExplanation(user:Principal){
- const scope=user.area==='portal'?'Chỉ tổ chức đại lý của bạn':user.role==='SALES'?'Chỉ đối tác được phân công':user.role==='WAREHOUSE'?'Chỉ kho được phân công':user.role==='ADMIN'?'Toàn bộ dữ liệu nội bộ':'Theo vai trò nội bộ và phạm vi được gán',permissions=Object.entries(permissionNames).filter(([key])=>can(user,key)).map(([key,label])=>({key,label}));
- const manager=user.area==='crm'&&['ADMIN','MANAGER'].includes(user.role),writer=user.area==='crm'&&['ADMIN','MANAGER','SALES'].includes(user.role),warehouse=user.area==='crm'&&['ADMIN','MANAGER','WAREHOUSE'].includes(user.role),accounting=user.area==='crm'&&['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role),owner=user.area==='portal'&&user.role==='DEALER_OWNER';
+ const scope=user.area==='portal'?'Chỉ tổ chức đại lý của bạn':user.role==='SALES'?'Chỉ đối tác được phân công':user.role==='WAREHOUSE_HCM'?'Chỉ Kho Hồ Chí Minh (Miền Nam)':user.role==='WAREHOUSE_HN'?'Chỉ Kho Hà Nội (Miền Bắc)':user.role==='WAREHOUSE'?'Chỉ kho được phân công':user.role==='ADMIN'?'Toàn bộ dữ liệu nội bộ':'Theo vai trò nội bộ và phạm vi được gán',permissions=Object.entries(permissionNames).filter(([key])=>can(user,key)).map(([key,label])=>({key,label}));
+ const manager=user.area==='crm'&&['ADMIN','MANAGER'].includes(user.role),writer=user.area==='crm'&&['ADMIN','MANAGER','SALES'].includes(user.role),warehouse=user.area==='crm'&&(['ADMIN','MANAGER'].includes(user.role)||isWarehouseRole(user.role)),accounting=user.area==='crm'&&['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role),owner=user.area==='portal'&&user.role==='DEALER_OWNER';
  const capabilities=[
   {action:'Xem',detail:permissions.length?permissions.map(p=>p.label).join('; '):'Không có tài nguyên nghiệp vụ được cấp.'},
   {action:'Tạo',detail:manager?'Hồ sơ, giá, đơn, hàng mẫu, kho, mua hàng, ký gửi, tài chính và báo cáo.':writer?'Hồ sơ, ghi chú, công việc, báo giá, hàng mẫu và đề nghị mua.':warehouse?'Phiếu kho, xuất hàng mẫu, giao nhận và kiểm kê trong kho được gán.':accounting?'Chứng từ tài chính, đối soát và thanh toán được cấp.':owner?'Đề nghị mua, báo bán ký gửi, hỗ trợ và nhân viên đại lý.':user.area==='portal'?'Đề nghị mua, báo bán ký gửi và hỗ trợ trong tổ chức.':'Theo các màn được cấp.'},

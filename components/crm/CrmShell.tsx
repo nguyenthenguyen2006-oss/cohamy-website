@@ -357,30 +357,30 @@ export function CrmShell({
 
         <div className="crm-topbar__actions">
           {user.role !== "ACCOUNTANT" && (
-            <>
-              <Link
-                href="/crm/search"
-                className="crm-topbar__search-pill"
-                aria-label="Tìm kiếm toàn hệ thống CRM"
-              >
-                <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
-                <span>Tìm chứng từ, đối tác, SKU…</span>
-                <kbd aria-hidden="true">Ctrl K</kbd>
-              </Link>
+            <Link
+              href="/crm/search"
+              className="crm-topbar__search-pill"
+              aria-label="Tìm kiếm toàn hệ thống CRM"
+            >
+              <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
+              <span>Tìm chứng từ, đối tác, SKU…</span>
+              <kbd aria-hidden="true">Ctrl K</kbd>
+            </Link>
+          )}
 
-              <Link
-                href="/crm/notifications"
-                className="crm-topbar__icon-btn"
-                aria-label="Thông báo hệ thống"
-                title="Thông báo hệ thống"
-              >
-                <Bell size={18} weight="bold" aria-hidden="true" />
-              </Link>
+          <Link
+            href="/crm/notifications"
+            className="crm-topbar__icon-btn"
+            aria-label="Thông báo hóa đơn & hệ thống"
+            title="Thông báo hóa đơn & hệ thống"
+          >
+            <Bell size={18} weight="bold" aria-hidden="true" />
+          </Link>
 
-              <div className="crm-topbar__quick-create">
-                <QuickCreate user={user} />
-              </div>
-            </>
+          {user.role !== "ACCOUNTANT" && (
+            <div className="crm-topbar__quick-create">
+              <QuickCreate user={user} />
+            </div>
           )}
 
           <Link

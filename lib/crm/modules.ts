@@ -61,6 +61,15 @@ const internal: CrmModule[] = [
   { id: "cash", label: "Thu chi", shortLabel: "Thu chi", icon: "cash", tone: "orange", permission: "finance.read", status: "CONNECTED" },
   { id: "reports", label: "Báo cáo tiếp nhận", shortLabel: "Báo cáo", icon: "report", tone: "emerald", permission: "reports.read", status: "CONNECTED" },
   { id: "accounts", label: "Tài khoản và quyền", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "accounts.manage", status: "CONNECTED" },
+  { id: "accounting-orders", label: "HĐ Khách đặt & NV bàn giao", shortLabel: "HĐ Khách & NV", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED" },
+  { id: "accounting-factory", label: "HĐ Nhà máy & Đối chiếu Kho", shortLabel: "HĐ Nhà máy & Kho", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED" },
+  { id: "accounting-warehouses", label: "Tồn kho HN-HCM & Công nợ NM", shortLabel: "Tồn HN-HCM & Nợ NM", icon: "warehouse", tone: "orange", permission: "warehouses.read", status: "CONNECTED" },
+];
+const accountantModules: CrmModule[] = [
+  { id: "accounting-orders", label: "1. HĐ Khách đặt & NV bàn giao", shortLabel: "HĐ Khách & NV", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED", bottom: 1 },
+  { id: "accounting-factory", label: "2. HĐ Nhà máy & Đối chiếu Kho", shortLabel: "HĐ Nhà máy & Kho", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 2 },
+  { id: "accounting-warehouses", label: "3. Tồn kho HN-HCM & Công nợ NM", shortLabel: "Tồn & Nợ NM", icon: "warehouse", tone: "orange", permission: "warehouses.read", status: "CONNECTED", bottom: 3 },
+  { id: "notifications", label: "4. Thông báo Hóa đơn", shortLabel: "Thông báo HĐ", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED" },
 ];
 const dealer: CrmModule[] = [
   {id:'requests',label:'Đề nghị mua hàng',shortLabel:'Đề nghị',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
@@ -85,7 +94,7 @@ const dealer: CrmModule[] = [
   { id: "profile", label: "Tài khoản", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "profile.read", status: "CONNECTED" },
 ];
 export const visibleModules = (user: Principal) => {
-  if (user.area === "crm" && user.role === "ACCOUNTANT") return [];
+  if (user.area === "crm" && user.role === "ACCOUNTANT") return accountantModules;
   return (user.area === "crm" ? internal : dealer).filter(module => can(user, module.permission));
 };
 
@@ -100,6 +109,15 @@ export interface CrmHub {
 }
 
 export const crmHubs: readonly CrmHub[] = [
+  {
+    id: "accounting",
+    label: "KẾ TOÁN & ĐỐI CHIẾU KHO - NHÀ MÁY",
+    description: "Hóa đơn khách đặt & NV bàn giao, hóa đơn đặt/xuất Nhà máy, đối chiếu kho HN/HCM và công nợ Nhà máy",
+    icon: "debt",
+    color: "#c84b11",
+    gradient: "linear-gradient(135deg, #ea580c, #c2410c)",
+    moduleIds: ["accounting-orders", "accounting-factory", "accounting-warehouses"],
+  },
   {
     id: "orders",
     label: "ĐƠN HÀNG",

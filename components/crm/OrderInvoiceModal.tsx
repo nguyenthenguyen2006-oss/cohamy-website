@@ -64,10 +64,11 @@ export function OrderInvoiceTrigger({
  const [downloading,setDownloading]=useState(false);
  const [error,setError]=useState('');
  const [payload,setPayload]=useState<OrderInvoicePayload|null>(initialPayload??null);
-
- useEffect(()=>{
+ const [prevInitial,setPrevInitial]=useState<OrderInvoicePayload|undefined>(initialPayload);
+ if(initialPayload!==prevInitial){
+  setPrevInitial(initialPayload);
   if(initialPayload)setPayload(initialPayload);
- },[initialPayload]);
+ }
 
  useEffect(()=>{
   if(autoOpen&&!open){

@@ -2,7 +2,7 @@ import 'server-only';
 import {randomUUID} from 'node:crypto';
 import {database, type Sql} from './db';
 import {assertCurrentPrincipal, audit} from './auth';
-import {CrmError} from './permissions';
+import {CrmError,isWarehouseRole,warehouseRoleRegion} from './permissions';
 import {commercialRequestAccess} from './order-requests';
 import {salesVersionAccess, type SalesOrder} from './sales-orders';
 import {fixed, fixedText} from './decimal';
@@ -44,11 +44,12 @@ export async function reserveSubmittedRequest(sql:Sql,user:Principal,input:Reser
   const policy=version.snapshot.reservationPolicy ?? version.snapshot.orderPolicy.definition.provisionalReservation ?? defaultProvisionalPolicy;
   if(policy.mode!=='ON_SUBMIT')return {requestId:head.id,reservationIds:[],status:'PROVISIONAL' as const,shortages:[]};
   if(input.warehouseId) {
-    if(user.area!=='crm'||!['ADMIN','MANAGER','WAREHOUSE'].includes(user.role))throw new CrmError('FORBIDDEN',403);
-    const warehouse=(await sql.query<{id:string}>(`SELECT w.id FROM cohamy_crm.warehouses w WHERE w.id=$1 AND w.active AND w.organization_id=$2
-      AND ($3 OR EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$4))`,
-    [input.warehouseId,order.seller_organization_id,['ADMIN','MANAGER'].includes(user.role),user.membershipId])).rows[0];
-    if(!warehouse)throw new CrmError('WAREHOUSE_OUTSIDE_SELLER_SCOPE',403);
+    if(user.area!=='crm'||!(['ADMIN','MANAGER'].includes(user.role)||isWarehouseRole(user.role)))throw new CrmError('FORBIDDEN',403);
+    const reqRegion=warehouseRoleRegion(user.role);
+    const warehouse=(await sql.query<{id:string;region:string|null}>(`SELECT w.id,w.region FROM cohamy_crm.warehouses w WHERE w.id=$1 AND w.active AND w.organization_id=$2
+      AND ($3 OR ($5::text IS NOT NULL AND w.region=$5::text) OR EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$4))`,
+    [input.warehouseId,order.seller_organization_id,['ADMIN','MANAGER'].includes(user.role),user.membershipId,reqRegion])).rows[0];
+    if(!warehouse||(reqRegion&&warehouse.region!==reqRegion))throw new CrmError('WAREHOUSE_OUTSIDE_SELLER_SCOPE',403);
   }
   // TTL/partial fulfillment are taken from the submitted policy, never from client payloads.
   await expiredForRequest(sql,head.id);

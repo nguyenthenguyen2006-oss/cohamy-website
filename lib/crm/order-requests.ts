@@ -12,6 +12,7 @@ import {currentOrderPolicy} from './order-policy';
 import {commercialDigest as hash,parseCommercial as parse,vietnamBusinessDate,commercialWriter} from './commercial-common';
 import {getOrder} from './work';
 import {commercialNotification} from './order-notifications';
+import {syncOrderClearanceOnRequestSave} from './accountant-workflow';
 import type {Principal} from './types';
 
 export interface CommercialRequest {
@@ -116,6 +117,7 @@ export async function saveCommercialRequest(user:Principal,input:unknown,transac
   await sql.query('INSERT INTO cohamy_crm.commercial_request_versions(id,request_id,number,snapshot,checksum,actor_id,idempotency_key,request_hash) VALUES($1,$2,$3,$4::jsonb,$5,$6,$7,$8)',[versionId,id,number,JSON.stringify(snapshot),hash(snapshot),user.id,d.idempotencyKey,requestHash]);
 
   await sql.query("UPDATE cohamy_crm.commercial_requests SET latest_version_id=$1,owner_approved_version_id=NULL,status='DRAFT',version=$2,updated_at=now() WHERE id=$3",[versionId,d.version+1,id]);
+  await syncOrderClearanceOnRequestSave(sql,{requestId:id,actorId:user.id,isNew:!head});
   await audit(sql,user.id,'commercial-request.version-created',id,{after:{number,versionId,priceVersionId:snapshot.priceBook.versionId,channel:d.channel},reason:'Lưu đề nghị; chưa chuyển thành đơn bán hàng.'});return {id,versionId,number,version:d.version+1};
  };return transactionSql?run(transactionSql):(await database()).transaction(run);
 }

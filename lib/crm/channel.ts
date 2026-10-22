@@ -3,7 +3,7 @@ import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
 import {database,type Sql} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
-import {assertPermission,can,CrmError} from './permissions';
+import {assertPermission,can,CrmError,isWarehouseRole} from './permissions';
 import {getOrganization,partnerScope} from './repository';
 import {parseCommercial as parse,commercialManager as manager} from './commercial-common';
 import {assertNoDistributionCycle,getActiveParentOrganization,getDescendantOrganizationIds} from './distribution';
@@ -317,15 +317,15 @@ export async function regionWarehouses(sql:Sql,sellerOrganizationId:string,buyer
 const shortageSchema=z.object({orderId:z.uuid(),sku:z.string().trim().min(2).max(80),needed:quantityText,available:quantityText,note:z.string().trim().max(500).default(''),idempotencyKey:idem}).strict();
 export async function reportShortage(user:Principal,input:unknown){
  const d=parse(shortageSchema,input);
- const crmAllowed=user.area==='crm'&&['ADMIN','MANAGER','WAREHOUSE'].includes(user.role),portalAllowed=user.area==='portal'&&user.role==='DEALER_OWNER';
+ const crmAllowed=user.area==='crm'&&(['ADMIN','MANAGER'].includes(user.role)||isWarehouseRole(user.role)),portalAllowed=user.area==='portal'&&user.role==='DEALER_OWNER';
  if(!crmAllowed&&!portalAllowed)throw new CrmError('FORBIDDEN',403);
  if(fixed(d.available)>=fixed(d.needed))throw new CrmError('NO_SHORTAGE',400);
  return(await database()).transaction(async tx=>{await assertCurrentPrincipal(tx,user);
-  const order=user.area==='crm'&&user.role==='WAREHOUSE'?(await tx.query<{id:string;code:string;organization_id:string;seller_organization_id:string|null;status:string}>('SELECT id,code,organization_id,seller_organization_id,status FROM cohamy_crm.sales_orders WHERE id=$1',[d.orderId])).rows[0]:await salesOrderAccess(tx,user,d.orderId);
+  const order=user.area==='crm'&&isWarehouseRole(user.role)?(await tx.query<{id:string;code:string;organization_id:string;seller_organization_id:string|null;status:string}>('SELECT id,code,organization_id,seller_organization_id,status FROM cohamy_crm.sales_orders WHERE id=$1',[d.orderId])).rows[0]:await salesOrderAccess(tx,user,d.orderId);
   if(!order)throw new CrmError('NOT_FOUND',404);
   const cohamy=await cohamyId(tx),seller=order.seller_organization_id??cohamy;
   if(user.area==='portal'&&seller!==user.organizationId)throw new CrmError('FORBIDDEN',403);
-  if(user.area==='crm'&&user.role==='WAREHOUSE'&&seller!==cohamy)throw new CrmError('FORBIDDEN',403);
+  if(user.area==='crm'&&isWarehouseRole(user.role)&&seller!==cohamy)throw new CrmError('FORBIDDEN',403);
   const byRegion=(await tx.query<{region:string|null;name:string;available:string}>(`SELECT w.region,w.name,COALESCE(SUM(b.on_hand-b.reserved),0)::text AS available FROM cohamy_crm.inventory_balances b JOIN cohamy_crm.products p ON p.id=b.product_id JOIN cohamy_crm.inventory_lots t ON t.id=b.lot_id JOIN cohamy_crm.warehouse_locations l ON l.id=b.location_id JOIN cohamy_crm.warehouses w ON w.id=b.warehouse_id
    WHERE p.sku=$1 AND w.organization_id=$2 AND w.active AND t.status='AVAILABLE' AND l.active AND l.kind='PICK' GROUP BY w.region,w.name ORDER BY w.name`,[d.sku,seller])).rows;
   const other=byRegion.filter(r=>fixed(r.available.startsWith('-')?'0':r.available)>0n).map(r=>`${r.name}${r.region?` (${r.region==='NORTH'?'Hà Nội':'Hồ Chí Minh'})`:''}: ${r.available}`).join('; ');

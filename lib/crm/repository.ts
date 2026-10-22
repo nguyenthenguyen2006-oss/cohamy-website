@@ -3,8 +3,8 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { database, type Sql } from "./db";
 import { audit, assertCurrentPrincipal } from "./auth";
-import { allPartners, assertPermission, CrmError } from "./permissions";
-import { roles, type CatalogProduct, type Organization, type Principal, type Warehouse } from "./types";
+import { allPartners, assertPermission, CrmError, warehouseRoleRegion } from "./permissions";
+import { roles, type CatalogProduct, type Organization, type Principal, type Role, type Warehouse } from "./types";
 import bcrypt from "bcryptjs";
 
 export const organizationSchema = z.object({
@@ -128,13 +128,46 @@ export async function listCatalog(user: Principal, q = "") {
   const data = await db.query<CatalogProduct>(`SELECT id,website_id,sku,name,category,weight_label,retail_price::text,translations,mapping_status,stock_unit,units_per_case,active,version FROM cohamy_crm.products WHERE (name ILIKE $1 OR sku ILIKE $1) AND active ORDER BY sku`, [`%${q.slice(0, 120)}%`]);
   return data.rows;
 }
+export async function ensureRegionalWarehouseAssignments(tx: Sql, organizationId: string, membershipId: string, role: Role | string) {
+  const targetRegion = warehouseRoleRegion(role);
+  if (!targetRegion) return;
+  await tx.query("UPDATE cohamy_crm.warehouses SET region='SOUTH' WHERE organization_id=$1 AND region IS NULL AND (code ILIKE '%HCM%' OR name ILIKE '%Hồ Chí Minh%' OR name ILIKE '%Miền Nam%')", [organizationId]);
+  await tx.query("UPDATE cohamy_crm.warehouses SET region='NORTH' WHERE organization_id=$1 AND region IS NULL AND (code ILIKE '%HN%' OR name ILIKE '%Hà Nội%' OR name ILIKE '%Miền Bắc%')", [organizationId]);
+  const specs: Array<{ region: "SOUTH" | "NORTH"; baseCode: string; name: string }> = [
+    { region: "SOUTH", baseCode: "KHO-HCM", name: "Kho Hồ Chí Minh (Miền Nam)" },
+    { region: "NORTH", baseCode: "KHO-HN", name: "Kho Hà Nội (Miền Bắc)" },
+  ];
+  for (const spec of specs) {
+    let whRows = (await tx.query<{ id: string }>("SELECT id FROM cohamy_crm.warehouses WHERE organization_id=$1 AND region=$2 AND active ORDER BY created_at ASC", [organizationId, spec.region])).rows;
+    if (!whRows.length) {
+      const taken = (await tx.query("SELECT 1 FROM cohamy_crm.warehouses WHERE code=$1", [spec.baseCode])).rows.length > 0;
+      const code = taken ? `${spec.baseCode}-${organizationId.slice(0, 4).toUpperCase()}` : spec.baseCode;
+      const whId = randomUUID();
+      await tx.query("INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id,region) VALUES ($1,$2,$3,$4,$5) ON CONFLICT(code) DO NOTHING", [whId, code, spec.name, organizationId, spec.region]);
+      whRows = (await tx.query<{ id: string }>("SELECT id FROM cohamy_crm.warehouses WHERE organization_id=$1 AND region=$2 AND active ORDER BY created_at ASC", [organizationId, spec.region])).rows;
+    }
+    for (const wh of whRows) {
+      const locCount = (await tx.query<{ n: string }>("SELECT count(*)::text AS n FROM cohamy_crm.warehouse_locations WHERE warehouse_id=$1 AND active", [wh.id])).rows[0]?.n ?? "0";
+      if (locCount === "0") {
+        await tx.query("INSERT INTO cohamy_crm.warehouse_locations(id,warehouse_id,code,name,kind) VALUES ($1,$2,'PICK-01','Vị trí soạn hàng chính','PICK'),($3,$2,'QUARANTINE-01','Khu vực cách ly / chờ kiểm','QUARANTINE'),($4,$2,'DAMAGED-01','Khu vực hàng lỗi / hỏng','DAMAGED') ON CONFLICT(warehouse_id,code) DO NOTHING", [randomUUID(), wh.id, randomUUID(), randomUUID()]);
+      }
+    }
+  }
+  await tx.query("DELETE FROM cohamy_crm.warehouse_assignments wa USING cohamy_crm.warehouses w WHERE wa.membership_id=$1 AND wa.warehouse_id=w.id AND w.region IS DISTINCT FROM $2", [membershipId, targetRegion]);
+  await tx.query("INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) SELECT $1,id FROM cohamy_crm.warehouses WHERE organization_id=$2 AND region=$3 AND active ON CONFLICT DO NOTHING", [membershipId, organizationId, targetRegion]);
+}
 export async function listWarehouses(user: Principal) {
   assertPermission(user, "warehouses.read");
   const db = await database();
+  const region = warehouseRoleRegion(user.role);
+  if (user.area === "crm" && region) {
+    await db.transaction(tx => ensureRegionalWarehouseAssignments(tx, user.organizationId, user.membershipId, user.role));
+  }
   let where = "false";
   const params: unknown[] = [];
-  if (["ADMIN", "MANAGER"].includes(user.role)) where = "true";
+  if (["ADMIN", "MANAGER", "ACCOUNTANT"].includes(user.role)) where = "true";
   else if (user.area === "portal") { where = "w.organization_id=$1"; params.push(user.organizationId); }
+  else if (region) { where = "w.region=$1 AND (w.organization_id=$2 OR EXISTS (SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$3))"; params.push(region, user.organizationId, user.membershipId); }
   else { where = "EXISTS (SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$1)"; params.push(user.membershipId); }
   return (await db.query<Warehouse>(`SELECT w.id,w.code,w.name,w.organization_id,o.name AS organization_name,w.active,w.region FROM cohamy_crm.warehouses w JOIN cohamy_crm.organizations o ON o.id=w.organization_id WHERE ${where} ORDER BY w.code`, params)).rows;
 }
@@ -147,7 +180,11 @@ export async function createWarehouse(user: Principal, input: unknown) {
     if (!org.active || !["COHAMY", "DEALER"].includes(org.kind)) throw new CrmError("INVALID_WAREHOUSE_OWNER", 400);
     const id = randomUUID();
     await tx.query("INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id,region) VALUES ($1,$2,$3,$4,$5)", [id, data.code, data.name, data.organizationId, data.region ?? null]);
-    await audit(tx, user.id, "warehouse.created", id, { organizationId: data.organizationId });
+    if (data.region === "SOUTH" || data.region === "NORTH") {
+      const regionalRole = data.region === "SOUTH" ? "WAREHOUSE_HCM" : "WAREHOUSE_HN";
+      await tx.query("INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) SELECT id,$1 FROM cohamy_crm.memberships WHERE organization_id=$2 AND role=$3 AND active ON CONFLICT DO NOTHING", [id, data.organizationId, regionalRole]);
+    }
+    await audit(tx, user.id, "warehouse.created", id, { organizationId: data.organizationId, region: data.region ?? null });
     return { id };
   });
 }
@@ -166,8 +203,10 @@ export async function createAccount(user: Principal, input: unknown) {
     const isDealer = data.role.startsWith("DEALER_");
     if (!org.active || org.kind !== (isDealer ? "DEALER" : "COHAMY")) throw new CrmError("ROLE_ORGANIZATION_MISMATCH", 400);
     const id = randomUUID();
+    const membershipId = randomUUID();
     await tx.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash) VALUES ($1,$2,$3,$4)", [id, data.email, data.displayName, hash]);
-    await tx.query("INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES ($1,$2,$3,$4)", [randomUUID(), id, org.id, data.role]);
+    await tx.query("INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES ($1,$2,$3,$4)", [membershipId, id, org.id, data.role]);
+    await ensureRegionalWarehouseAssignments(tx, org.id, membershipId, data.role);
     await audit(tx, user.id, "account.created", id, { role: data.role, organizationId: org.id });
     return { id };
   });

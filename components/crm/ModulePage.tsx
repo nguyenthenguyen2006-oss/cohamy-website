@@ -35,13 +35,14 @@ import {mfaStatus} from '@/lib/crm/account-security';
 
 import { CrmHubPage } from "./CrmHubPage";
 import {NetworkPage,PortalNetworkPage,PeriodSalesPage,KpiPage,PartnerChannelPanel,PortalOrderCatalogPage} from "./ChannelPages";
+import {AccountantWorkspace} from "./AccountantWorkspace";
+import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
 function Header({title,description}:{title:string;description:string}) {return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
 export function Profile({user}:{user:Principal}) {return <><Header title="Hồ sơ và phiên đăng nhập" description="Quyền và tổ chức dưới đây lấy từ phiên database, không lấy từ trình duyệt."/><dl className="crm-readonly"><dt>Tài khoản</dt><dd>{user.displayName} · {user.email}</dd><dt>Vai trò</dt><dd>{roleLabels[user.role]}</dd><dt>Tổ chức</dt><dd>{user.organizationName}</dd><dt>Phạm vi truy cập</dt><dd>{user.area==="portal"?"Tổ chức của bạn. Không truy cập dữ liệu đại lý khác.":"Theo vai trò và đối tác/kho được giao."}</dd></dl></>;}
 export async function CrmModulePage({area,segments,query}:{area:Area;segments:string[];query:Record<string,string|string[]|undefined>}) {
   const user=await pageUser(area);const [slug,id]=segments;
-  if(area==="crm"&&user.role==="ACCOUNTANT"&&slug!=="profile")redirect("/crm");
   if(segments.length>2)notFound();
   if(slug==="hub"&&id)return <CrmHubPage hubId={id} user={user}/>;
   if(slug==="hub"&&!id)redirect(`/${area}`);
@@ -49,6 +50,11 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(slug==='partners'&&id){const partner=await getOrganization(user,id);redirect(`/${area}/${partner.kind==='DEALER'?'dealers':'customers'}/${id}`);}
   const selectedModule=visibleModules(user).find(item=>item.id===slug);
   if(!selectedModule)return <><Header title="Không có quyền truy cập" description="Tài khoản của bạn không được cấp quyền mở phân hệ này."/><Link className="button button--secondary" href={`/${area}`}>Về trang chủ</Link></>;
+  if(slug==='accounting-orders'||slug==='accounting-factory'||slug==='accounting-warehouses'||(user.role==='ACCOUNTANT'&&slug==='notifications')){
+    const accData=await getAccountantWorkspaceData(user);
+    const initialTab=slug==='accounting-factory'?'factory':slug==='accounting-warehouses'?'warehouses':slug==='notifications'?'notifications':'orders';
+    return <AccountantWorkspace initialData={accData} initialTab={initialTab} userRole={user.role}/>;
+  }
   let q=typeof query.q==="string"?query.q:"";const page=typeof query.page==="string"?Math.min(100000,Math.max(1,Math.floor(Number(query.page)||1))):1;
   const root=`/${area}/${slug}`;let tags=Array.isArray(query.tags)?query.tags.join(','):typeof query.tags==='string'?query.tags:'';
   const workQuery=Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string'));

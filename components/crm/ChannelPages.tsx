@@ -5,7 +5,7 @@ import {listCatalog} from '@/lib/crm/repository';
 import {listMembershipLevels,listPromotions,listTransferRequests,networkOverview,networkRequests,orderCatalog,partnerChannelProfile,receivedMaxBp,regionWarehouses,requestManagementChain} from '@/lib/crm/channel';
 import {currentPeriodKey,incentiveProgress,listIncentivePrograms,periodSalesReport,type PeriodType,type PeriodView} from '@/lib/crm/period-reports';
 import {partnerTypeLabels,percentText,promotionScopeLabels,badgeLabels,regionLabels,rewardLabels,periodLabels,transferStatusLabels} from '@/lib/crm/channel-labels';
-import type {Principal} from '@/lib/crm/types';
+import {isWarehouseRole,type Principal} from '@/lib/crm/types';
 import {AwardForm,ChildDiscountForm,IncentiveForm,InvoiceRecipientForm,LevelForm,OrderCatalog,PartnerProfileForm,PromotionForm,PromotionToggle,ShortageForm,TransferDecisionForm,TransferRequestForm} from './ChannelForms';
 
 /** Meeting 12/10 — server pages and panels for the distribution channel. */
@@ -127,7 +127,7 @@ export async function OrderChannelPanel({user,orderId,lines}:{user:Principal;ord
  const order=(await db.query<{organization_id:string;seller_organization_id:string|null;invoice_recipient:{kind?:string;companyName?:string;taxCode?:string;address?:string;email?:string};status:string}>('SELECT organization_id,seller_organization_id,invoice_recipient,status FROM cohamy_crm.sales_orders WHERE id=$1',[orderId])).rows[0];if(!order)return null;
  const seller=order.seller_organization_id??(await cohamyChoice()).id,wh=await regionWarehouses(db,seller,order.organization_id);
  const canInvoice=!['CANCELLED','REJECTED'].includes(order.status)&&(user.area==='crm'?['ADMIN','MANAGER','SALES','ACCOUNTANT'].includes(user.role):user.role==='DEALER_OWNER'&&order.organization_id===user.organizationId);
- const canShortage=order.status==='CONFIRMED'&&(user.area==='crm'?['ADMIN','MANAGER','WAREHOUSE'].includes(user.role):user.role==='DEALER_OWNER'&&seller===user.organizationId);
+ const canShortage=order.status==='CONFIRMED'&&(user.area==='crm'?(['ADMIN','MANAGER'].includes(user.role)||isWarehouseRole(user.role)):user.role==='DEALER_OWNER'&&seller===user.organizationId);
  const r=order.invoice_recipient??{};const merged=[...new Map(lines.filter(l=>!l.gift).map(l=>[l.sku,l])).values()];
  return <section className="work-section"><h2>Hoá đơn & kho xuất</h2>
   <dl className="work-facts"><dt>Xuất hoá đơn cho</dt><dd>{r.kind==='COMPANY'?`${r.companyName} · MST ${r.taxCode} · ${r.address}`:'Chính đơn vị mua'}</dd>

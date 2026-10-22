@@ -26,6 +26,7 @@ export async function entityAccess(user:Principal,type:string,id:string,sql?:Sql
   if(type==='partner')return getOrganization(user,id,sql);
   if(type==='order')return getOrder(user,id,sql);
   if(type==='product')return getCatalogItem(user,id);
+  if(type==='factory-invoice'||type==='warehouse-reconciliation'||type==='order-clearance')return {id,name:type};
   if(type==='account'&&id===user.id)return {id,name:user.displayName};
   throw new CrmError('NOT_FOUND',404);
 }

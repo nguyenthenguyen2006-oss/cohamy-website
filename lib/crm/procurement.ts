@@ -3,7 +3,7 @@ import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
 import {database,type Sql} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
-import {CrmError} from './permissions';
+import {CrmError,isWarehouseRole} from './permissions';
 import {commercialDigest as digest,parseCommercial as parse,vietnamBusinessDate} from './commercial-common';
 import {fixed,fixedText} from './decimal';
 import {sendTransactionalEmail} from './brevo';
@@ -11,7 +11,7 @@ import type {Principal} from './types';
 
 const key=z.uuid(),reason=z.string().trim().min(3).max(2000),quantity=z.string().regex(/^\d{1,18}(?:\.\d{1,6})?$/u).refine(v=>fixed(v)>0n),money=z.string().regex(/^(0|[1-9][0-9]{0,29})$/u),day=z.iso.date();
 type Supplier={organization_id:string;name:string;code:string;contact_name:string;contact_email:string;contact_phone:string;terms_days:number;payable_enabled:boolean;active:boolean;version:number};
-function writer(user:Principal){if(user.area!=='crm'||!['ADMIN','MANAGER','SALES','WAREHOUSE','ACCOUNTANT'].includes(user.role))throw new CrmError('FORBIDDEN',403);}
+function writer(user:Principal){if(user.area!=='crm'||!(['ADMIN','MANAGER','SALES','ACCOUNTANT'].includes(user.role)||isWarehouseRole(user.role)))throw new CrmError('FORBIDDEN',403);}
 function manager(user:Principal){if(user.area!=='crm'||!['ADMIN','MANAGER'].includes(user.role))throw new CrmError('FORBIDDEN',403);}
 function accountant(user:Principal){if(user.area!=='crm'||!['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role))throw new CrmError('FORBIDDEN',403);}
 async function prior(sql:Sql,user:Principal,idempotencyKey:string,h:string){const row=(await sql.query<{request_hash:string;result:unknown}>('SELECT request_hash,result FROM cohamy_crm.procurement_actions WHERE actor_id=$1 AND idempotency_key=$2',[user.id,idempotencyKey])).rows[0];if(!row)return null;if(row.request_hash!==h)throw new CrmError('IDEMPOTENCY_CONFLICT',409);return row.result;}

@@ -2,7 +2,7 @@ import 'server-only';
 import {z} from 'zod';
 import {database} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
-import {assertPermission,CrmError} from './permissions';
+import {assertPermission,CrmError,isWarehouseRole,warehouseRoleRegion} from './permissions';
 import {partnerScope,getOrganization,listWarehouses} from './repository';
 import {fixed,fixedText,integer,lineAmount} from './decimal';
 import type {Principal} from './types';
@@ -122,8 +122,11 @@ export interface SalesReconciliationResult {
 export async function salesReconciliation(user:Principal,query:Record<string,string>={}):Promise<SalesReconciliationResult>{
  assertPermission(user,'orders.read');
  const db=await database();
- const scope=user.area==='crm'&&user.role==='WAREHOUSE'
-  ?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId] as unknown[]}
+ const whRegion=warehouseRoleRegion(user.role);
+ const scope=user.area==='crm'&&isWarehouseRole(user.role)
+  ?(whRegion
+   ?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id JOIN cohamy_crm.warehouses w ON w.id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1 AND w.region=$2)',params:[user.membershipId,whRegion] as unknown[]}
+   :{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId] as unknown[]})
   :partnerScope(user,'o');
  const params:unknown[]=[...scope.params];
  const conds:string[]=[`(${scope.sql})`];
@@ -466,7 +469,7 @@ export async function salesReconciliation(user:Principal,query:Record<string,str
 }
 
 function canWarehouseRead(user:Principal){
- return user.area==='crm'&&['ADMIN','MANAGER','WAREHOUSE','SALES','ACCOUNTANT'].includes(user.role);
+ return user.area==='crm'&&(['ADMIN','MANAGER','SALES','ACCOUNTANT'].includes(user.role)||isWarehouseRole(user.role));
 }
 
 export interface MatrixColumnDef {
