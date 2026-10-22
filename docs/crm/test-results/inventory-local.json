@@ -1,11 +1,11 @@
 {
-  "testedAt": "2026-10-12T08:11:07.513Z",
+  "testedAt": "2026-10-22T10:15:49.944Z",
   "environment": "LOCAL isolated fictitious PGlite; no real stock/order/provider mutation",
   "status": "PASS",
   "references": {
-    "receiptId": "df7e941c-f362-4151-bc35-75fa1d686f10",
-    "transferId": "9f673b1a-df29-4c74-9eaf-15e5386e87ae",
-    "countId": "710c71be-3a4d-43c5-9480-2c00b37d419d"
+    "receiptId": "ede96215-7158-4441-bd69-c605bb98171b",
+    "transferId": "f26b7d48-0244-4109-9f67-d62e5d75d2d7",
+    "countId": "4e394599-4640-41e7-a4b5-7cd67162fbec"
   },
   "cases": [
     {
@@ -38,6 +38,10 @@
     },
     {
       "name": "F047 cancellation keeps consumed quantity separate and retry releases reservation once",
+      "status": "PASS"
+    },
+    {
+      "name": "REGIONAL-WH: WAREHOUSE_HCM and WAREHOUSE_HN isolate South/North warehouses and allow inter-regional transfers",
       "status": "PASS"
     }
   ]

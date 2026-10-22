@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-10-02T14:22:10.044Z",
+  "testedAt": "2026-10-22T10:17:56.182Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -15,7 +15,7 @@
       "status": "PASS"
     }
   ],
-  "traceCount": 88,
+  "traceCount": 91,
   "includedMigrations": [
     "db/crm/001-access-catalog.sql",
     "db/crm/002-website-order-intake.sql",
@@ -46,7 +46,12 @@
     "db/crm/027-meeting-53-amendments.sql",
     "db/crm/028-meeting-runtime.sql",
     "db/crm/029-bank-match-lock.sql",
-    "db/crm/030-onboarding-without-email-code.sql"
+    "db/crm/030-onboarding-without-email-code.sql",
+    "db/crm/031-meeting-2026-10-12-channel.sql",
+    "db/crm/032-remove-out-of-scope-features.sql",
+    "db/crm/033-regional-warehouse-roles.sql",
+    "db/crm/034-accountant-factory-workflow.sql",
+    "db/crm/035-warehouse-handover-schema.sql"
   ],
   "includedPdfAssets": [
     "assets/crm/fonts/BeVietnamPro-Regular.ttf",

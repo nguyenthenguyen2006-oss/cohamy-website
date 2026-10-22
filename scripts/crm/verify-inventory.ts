@@ -44,11 +44,25 @@ async function main(){
    const hnBalancesAfter=await inventory.listInventory(whHn);
    assert.ok(hnBalancesAfter.some(b=>b.lot_code==='LOT-HCM-01'&&b.on_hand==='15.000000'));
    const regOrder=await makeOrder();
-   await inventory.releaseOrderReservations(whHcm,{orderId:regOrder,reason:'Giải phóng để kiểm tra giữ hàng theo vùng',idempotencyKey:randomUUID()});
+   await inventory.releaseOrderReservations(admin,{orderId:regOrder,reason:'Giải phóng để kiểm tra giữ hàng theo vùng',idempotencyKey:randomUUID()});
    await assert.rejects(inventory.reserveOrder(whHcm,{orderId:regOrder,warehouseId:hnWarehouses[0].id,minimumShelfLifeDays:0,reason:'HCM cannot reserve HN warehouse',idempotencyKey:randomUUID()}),/FORBIDDEN|NOT_FOUND/);
    await inventory.reserveOrder(whHcm,{orderId:regOrder,warehouseId:hcmWarehouses[0].id,minimumShelfLifeDays:0,reason:'Thủ kho HCM giữ hàng tại Kho HCM',idempotencyKey:randomUUID()});
    await assert.rejects(orders.salesOrderAccess(db,whHn,regOrder),/NOT_FOUND/);
    assert.equal((await orders.salesOrderAccess(db,whHcm,regOrder)).id,regOrder);
+   const wf=await import('../../lib/crm/accountant-workflow');
+   const hcmReg=await wf.handleAccountantWorkflowAction(whHcm,'register-warehouse-order',{warehouseId:hcmWarehouses[0].id,ordererType:'CUSTOMER',organizationName:'Khách hàng HCM QA',ordererName:'Anh Nam HCM',ordererPhone:'0909111222',discountPercent:5,paymentSubmitted:true,lines:[{productId,quantity:10,unitPrice:50000}]}) as {ok:boolean;id:string;documentCode:string};
+   assert.ok(hcmReg.ok&&hcmReg.documentCode);
+   await assert.rejects(wf.handleAccountantWorkflowAction(whHcm,'register-warehouse-order',{warehouseId:hnWarehouses[0].id,ordererType:'STAFF',ordererName:'NV HN',lines:[{productId,quantity:5,unitPrice:50000}]}),/FORBIDDEN/);
+   const disp=await wf.handleAccountantWorkflowAction(admin,'create-factory-dispatch',{warehouseId:hcmWarehouses[0].id,note:'Nhà máy xuất về Kho HCM',lines:[{productId,dispatchedQty:30,factoryUnitPrice:35000}]}) as {ok:boolean;id:string};
+   assert.ok(disp.ok);
+   await assert.rejects(wf.handleAccountantWorkflowAction(whHn,'create-warehouse-reconciliation',{dispatchInvoiceId:disp.id,lines:[{productId,receivedQty:30}]}),/FORBIDDEN/);
+   const rec=await wf.handleAccountantWorkflowAction(whHcm,'create-warehouse-reconciliation',{dispatchInvoiceId:disp.id,note:'Thủ kho HCM đối chiếu đủ 30 gói',lines:[{productId,receivedQty:30}]}) as {ok:boolean;code:string;status:string};
+   assert.equal(rec.status,'RECONCILED');
+   const handover=await wf.handleAccountantWorkflowAction(whHcm,'create-handover-invoice',{warehouseId:hcmWarehouses[0].id,clearanceId:hcmReg.id,recipientType:'STAFF',recipientName:'Nhân viên Giao hàng HCM',recipientPhone:'0909888999',lines:[{productId,quantity:10,unitPrice:47500}]}) as {ok:boolean;code:string};
+   assert.ok(handover.ok&&handover.code.startsWith('BG-'));
+   const hcmWs=await wf.getAccountantWorkspaceData(whHcm),hnWs=await wf.getAccountantWorkspaceData(whHn);
+   assert.ok(hcmWs.warehouses.every(w=>w.region==='SOUTH')&&hnWs.warehouses.every(w=>w.region==='NORTH'));
+   assert.ok(hcmWs.handoverInvoices.some(h=>h.code===handover.code)&&!hnWs.handoverInvoices.some(h=>h.code===handover.code));
   });
   if(postgres)await test('F056 PostgreSQL competing reservations serialize without negative availability',async()=>{const lot='QA-CONCURRENT-'+randomUUID().slice(0,6),receipt=await inventory.postReceipt(admin,{locationId:sourceLocation,lines:[{productId,lotCode:lot,manufacturedOn:null,expiresOn:null,quantity:'24'}],referenceType:'qa-concurrency',referenceId:randomUUID(),reason:'QA concurrency stock',idempotencyKey:randomUUID()});assert.ok(receipt);const one=await makeOrder(),two=await makeOrder(),results=await Promise.allSettled([inventory.reserveOrder(admin,{orderId:one,warehouseId:ids.warehouseA,minimumShelfLifeDays:0,reason:'QA competing one',idempotencyKey:randomUUID()}),inventory.reserveOrder(admin,{orderId:two,warehouseId:ids.warehouseA,minimumShelfLifeDays:0,reason:'QA competing two',idempotencyKey:randomUUID()})]);assert.ok(results.some(r=>r.status==='fulfilled'));const negative=(await db.query<{n:string}>('SELECT count(*)::text AS n FROM cohamy_crm.inventory_balances WHERE reserved<0 OR on_hand<0 OR reserved>on_hand')).rows[0].n;assert.equal(negative,'0');});
  }finally{await fs.mkdir('docs/crm/test-results',{recursive:true});await fs.writeFile('docs/crm/test-results/inventory-'+(postgres?'postgres':'local')+'.json',JSON.stringify({testedAt:new Date().toISOString(),environment:postgres?'STAGING isolated fictitious PostgreSQL; no real stock/order/provider mutation':'LOCAL isolated fictitious PGlite; no real stock/order/provider mutation',status:cases.length===(postgres?10:9)&&cases.every(c=>c.status==='PASS')?'PASS':'FAIL',references:{receiptId,transferId,countId},cases},null,2));await close();await owner.close();}

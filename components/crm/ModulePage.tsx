@@ -23,7 +23,7 @@ import {ApplicationsPage,InvitationsPage,SearchPage,WorkspacePage,NotificationsP
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { pageUser } from "@/lib/crm/http";
-import { can, CrmError } from "@/lib/crm/permissions";
+import { can, CrmError, isWarehouseRole } from "@/lib/crm/permissions";
 import { visibleModules } from "@/lib/crm/modules";
 import { getOrganization, listAccounts, listCatalog, listOrganizationOptions, listOrganizations } from "@/lib/crm/repository";
 import { roleLabels, type Area, type Principal } from "@/lib/crm/types";
@@ -36,7 +36,7 @@ import {mfaStatus} from '@/lib/crm/account-security';
 import { CrmHubPage } from "./CrmHubPage";
 import {NetworkPage,PortalNetworkPage,PeriodSalesPage,KpiPage,PartnerChannelPanel,PortalOrderCatalogPage} from "./ChannelPages";
 import {AccountantWorkspace} from "./AccountantWorkspace";
-import {WarehouseKeeperWorkspace} from "./WarehouseKeeperWorkspace";
+import {WarehouseKeeperWorkspace, type WarehouseKeeperTab} from "./WarehouseKeeperWorkspace";
 import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
@@ -49,17 +49,26 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(slug==="hub"&&!id)redirect(`/${area}`);
   if(slug==="profile"&&!id){const security=await mfaStatus(user);return <><Profile user={user}/><PermissionPanel user={user}/><SessionsPanel user={user}/><MfaControls enabled={security.enabled} recoveryCodesRemaining={security.recoveryCodesRemaining}/><section className="work-section"><h2>Bảo mật tài khoản</h2><PasswordForm/></section></>;}
   if(slug==='partners'&&id){const partner=await getOrganization(user,id);redirect(`/${area}/${partner.kind==='DEALER'?'dealers':'customers'}/${id}`);}
+  if(area==='crm'&&(isWarehouseRole(user.role)||slug.startsWith('warehouse-'))){
+    const whData=await getAccountantWorkspaceData(user);
+    const initialTab:WarehouseKeeperTab=
+      slug==='warehouse-orders'||slug==='orders'||slug==='requests'||slug==='sales'
+        ?'orders'
+        :slug==='warehouse-factory'||slug==='procurement'
+        ?'factory'
+        :slug==='warehouse-handover'||slug==='consignment'
+        ?'handover'
+        :slug==='warehouse-notifications'||slug==='notifications'
+        ?'notifications'
+        :'stock';
+    return <WarehouseKeeperWorkspace initialData={whData} initialTab={initialTab} userRole={user.role} userName={user.displayName}/>;
+  }
   const selectedModule=visibleModules(user).find(item=>item.id===slug);
   if(!selectedModule)return <><Header title="Không có quyền truy cập" description="Tài khoản của bạn không được cấp quyền mở phân hệ này."/><Link className="button button--secondary" href={`/${area}`}>Về trang chủ</Link></>;
   if(slug==='accounting-orders'||slug==='accounting-factory'||slug==='accounting-warehouses'||(user.role==='ACCOUNTANT'&&slug==='notifications')){
     const accData=await getAccountantWorkspaceData(user);
     const initialTab=slug==='accounting-factory'?'factory':slug==='accounting-warehouses'?'warehouses':slug==='notifications'?'notifications':'orders';
     return <AccountantWorkspace initialData={accData} initialTab={initialTab} userRole={user.role}/>;
-  }
-  if(slug==='warehouse-stock'||slug==='warehouse-orders'||slug==='warehouse-factory'||slug==='warehouse-handover'||slug==='warehouse-notifications'){
-    const whData=await getAccountantWorkspaceData(user);
-    const initialTab=slug==='warehouse-orders'?'orders':slug==='warehouse-factory'?'factory':slug==='warehouse-handover'?'handover':slug==='warehouse-notifications'?'notifications':'stock';
-    return <WarehouseKeeperWorkspace initialData={whData} initialTab={initialTab} userRole={user.role} userName={user.displayName}/>;
   }
   let q=typeof query.q==="string"?query.q:"";const page=typeof query.page==="string"?Math.min(100000,Math.max(1,Math.floor(Number(query.page)||1))):1;
   const root=`/${area}/${slug}`;let tags=Array.isArray(query.tags)?query.tags.join(','):typeof query.tags==='string'?query.tags:'';
