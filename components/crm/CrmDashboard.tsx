@@ -2,7 +2,7 @@ import Link from "next/link";
 import { SquaresFour } from "@phosphor-icons/react/dist/ssr";
 import { visibleModules } from "@/lib/crm/modules";
 import { reviewQueue } from "@/lib/crm/onboarding";
-import { can } from "@/lib/crm/permissions";
+import { can, isWarehouseRole } from "@/lib/crm/permissions";
 import { salesReconciliation, inventoryMatrix } from "@/lib/crm/reconciliation";
 import { type Principal } from "@/lib/crm/types";
 import { canManageWork, listOrders, listTasks } from "@/lib/crm/work";
@@ -12,6 +12,7 @@ import { OnboardingChecklist } from "./PartnerLibraryPages";
 import { WorkHeader } from "./WorkPages";
 import { DashboardWorkbench } from "./spreadsheet/DashboardWorkbench";
 import { AccountantWorkspace } from "./AccountantWorkspace";
+import { WarehouseKeeperWorkspace } from "./WarehouseKeeperWorkspace";
 import { getAccountantWorkspaceData } from "@/lib/crm/accountant-workflow";
 
 export async function CrmDashboard({ user }: { user: Principal }) {
@@ -29,6 +30,20 @@ export async function CrmDashboard({ user }: { user: Principal }) {
           </div>
         </header>
         <AccountantWorkspace initialData={accountantData} initialTab="orders" userRole={user.role} />
+      </div>
+    );
+  }
+
+  if (user.area === "crm" && isWarehouseRole(user.role)) {
+    const warehouseData = await getAccountantWorkspaceData(user);
+    return (
+      <div className="crm-dashboard-saas crm-spreadsheet-desk">
+        <WarehouseKeeperWorkspace
+          initialData={warehouseData}
+          initialTab="stock"
+          userRole={user.role}
+          userName={user.displayName}
+        />
       </div>
     );
   }

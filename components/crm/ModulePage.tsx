@@ -36,6 +36,7 @@ import {mfaStatus} from '@/lib/crm/account-security';
 import { CrmHubPage } from "./CrmHubPage";
 import {NetworkPage,PortalNetworkPage,PeriodSalesPage,KpiPage,PartnerChannelPanel,PortalOrderCatalogPage} from "./ChannelPages";
 import {AccountantWorkspace} from "./AccountantWorkspace";
+import {WarehouseKeeperWorkspace} from "./WarehouseKeeperWorkspace";
 import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
@@ -54,6 +55,11 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
     const accData=await getAccountantWorkspaceData(user);
     const initialTab=slug==='accounting-factory'?'factory':slug==='accounting-warehouses'?'warehouses':slug==='notifications'?'notifications':'orders';
     return <AccountantWorkspace initialData={accData} initialTab={initialTab} userRole={user.role}/>;
+  }
+  if(slug==='warehouse-stock'||slug==='warehouse-orders'||slug==='warehouse-factory'||slug==='warehouse-handover'||slug==='warehouse-notifications'){
+    const whData=await getAccountantWorkspaceData(user);
+    const initialTab=slug==='warehouse-orders'?'orders':slug==='warehouse-factory'?'factory':slug==='warehouse-handover'?'handover':slug==='warehouse-notifications'?'notifications':'stock';
+    return <WarehouseKeeperWorkspace initialData={whData} initialTab={initialTab} userRole={user.role} userName={user.displayName}/>;
   }
   let q=typeof query.q==="string"?query.q:"";const page=typeof query.page==="string"?Math.min(100000,Math.max(1,Math.floor(Number(query.page)||1))):1;
   const root=`/${area}/${slug}`;let tags=Array.isArray(query.tags)?query.tags.join(','):typeof query.tags==='string'?query.tags:'';

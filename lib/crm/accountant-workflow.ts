@@ -1,9 +1,9 @@
 import 'server-only';
 import {randomUUID} from 'node:crypto';
 import {database, type Sql} from './db';
-import {CrmError} from './permissions';
+import {CrmError, warehouseRoleRegion} from './permissions';
 import {enqueueNotification} from './workspace';
-import {vietnamBusinessDate} from './commercial-common';
+import {commercialDigest, vietnamBusinessDate} from './commercial-common';
 import type {Principal} from './types';
 
 export interface OrderClearanceLine {
@@ -31,7 +31,12 @@ export interface OrderClearanceRecord {
   warehouseId: string | null;
   warehouseCode: string | null;
   warehouseName: string | null;
+  warehouseRegion?: string | null;
   creatorName: string;
+  ordererType?: 'CUSTOMER' | 'STAFF';
+  ordererName?: string;
+  ordererPhone?: string;
+  note?: string;
   channel: string;
   requestStatus: string;
   listSubtotal: string;
@@ -52,6 +57,58 @@ export interface OrderClearanceRecord {
   createdAt: string;
   updatedAt: string;
   lines: OrderClearanceLine[];
+}
+
+export interface WarehouseHandoverLine {
+  productId: string;
+  sku: string;
+  name: string;
+  unitLabel: string;
+  quantity: number;
+  unitPrice: number;
+  lineTotal: number;
+  note: string;
+}
+
+export interface WarehouseHandoverInvoiceRecord {
+  id: string;
+  code: string;
+  warehouseId: string;
+  warehouseCode: string;
+  warehouseName: string;
+  warehouseRegion: string | null;
+  clearanceId: string | null;
+  requestId: string | null;
+  orderCode: string;
+  recipientType: 'STAFF' | 'CUSTOMER';
+  recipientName: string;
+  recipientPhone: string;
+  organizationName: string;
+  status: 'HANDED_OVER' | 'CONFIRMED';
+  lines: WarehouseHandoverLine[];
+  totalQuantity: string;
+  totalAmount: string;
+  note: string;
+  createdByName: string;
+  createdByRole: string;
+  createdAt: string;
+}
+
+export interface PartnerOptionRecord {
+  id: string;
+  code: string;
+  name: string;
+  kind: string;
+  phone: string;
+  address: string;
+  region: string | null;
+}
+
+export interface StaffOptionRecord {
+  id: string;
+  displayName: string;
+  email: string;
+  role: string;
 }
 
 export interface FactoryInvoiceLine {
@@ -138,79 +195,115 @@ let schemaEnsured = false;
 
 export async function ensureAccountantWorkflowSchema(sql: Sql) {
   if (schemaEnsured) return;
-  await sql.exec(`
-    ALTER TABLE cohamy_crm.notifications DROP CONSTRAINT IF EXISTS notifications_entity_type_check;
-    ALTER TABLE cohamy_crm.notifications ADD CONSTRAINT notifications_entity_type_check
-      CHECK (entity_type IN (
-        'partner','order','product','account','ticket','commercial-request','sales-order',
-        'delivery','return-request','factory-invoice','warehouse-reconciliation','order-clearance'
-      ));
+  if (process.env.CRM_DATABASE_MODE !== 'postgres') {
+    await sql.exec(`
+      ALTER TABLE cohamy_crm.notifications DROP CONSTRAINT IF EXISTS notifications_entity_type_check;
+      ALTER TABLE cohamy_crm.notifications ADD CONSTRAINT notifications_entity_type_check
+        CHECK (entity_type IN (
+          'partner','order','product','account','ticket','commercial-request','sales-order',
+          'delivery','return-request','factory-invoice','warehouse-reconciliation','order-clearance'
+        ));
 
-    CREATE TABLE IF NOT EXISTS cohamy_crm.factory_invoices (
-      id uuid PRIMARY KEY,
-      code text NOT NULL UNIQUE,
-      stage text NOT NULL CHECK (stage IN ('FACTORY_ORDER', 'FACTORY_DISPATCH', 'WAREHOUSE_RECONCILIATION')),
-      parent_id uuid REFERENCES cohamy_crm.factory_invoices(id),
-      warehouse_id uuid NOT NULL REFERENCES cohamy_crm.warehouses(id),
-      factory_name text NOT NULL DEFAULT 'Nhà máy Sản xuất Cohamy',
-      status text NOT NULL DEFAULT 'ISSUED' CHECK (status IN ('ISSUED', 'DISPATCHED', 'RECONCILED', 'DISCREPANCY', 'PARTIAL_PAID', 'PAID')),
-      lines jsonb NOT NULL DEFAULT '[]'::jsonb,
-      total_ordered_qty numeric(30,2) NOT NULL DEFAULT 0,
-      total_dispatched_qty numeric(30,2) NOT NULL DEFAULT 0,
-      total_received_qty numeric(30,2) NOT NULL DEFAULT 0,
-      total_amount numeric(30,0) NOT NULL DEFAULT 0,
-      paid_amount numeric(30,0) NOT NULL DEFAULT 0,
-      note text NOT NULL DEFAULT '',
-      created_by uuid NOT NULL REFERENCES cohamy_crm.users(id),
-      created_by_name text NOT NULL DEFAULT '',
-      created_by_role text NOT NULL DEFAULT '',
-      reconciled_by uuid REFERENCES cohamy_crm.users(id),
-      reconciled_by_name text,
-      reconciled_at timestamptz,
-      accountant_verified boolean NOT NULL DEFAULT false,
-      accountant_verified_by uuid REFERENCES cohamy_crm.users(id),
-      accountant_verified_by_name text,
-      accountant_verified_at timestamptz,
-      created_at timestamptz NOT NULL DEFAULT now(),
-      updated_at timestamptz NOT NULL DEFAULT now()
-    );
+      CREATE TABLE IF NOT EXISTS cohamy_crm.factory_invoices (
+        id uuid PRIMARY KEY,
+        code text NOT NULL UNIQUE,
+        stage text NOT NULL CHECK (stage IN ('FACTORY_ORDER', 'FACTORY_DISPATCH', 'WAREHOUSE_RECONCILIATION')),
+        parent_id uuid REFERENCES cohamy_crm.factory_invoices(id),
+        warehouse_id uuid NOT NULL REFERENCES cohamy_crm.warehouses(id),
+        factory_name text NOT NULL DEFAULT 'Nhà máy Sản xuất Cohamy',
+        status text NOT NULL DEFAULT 'ISSUED' CHECK (status IN ('ISSUED', 'DISPATCHED', 'RECONCILED', 'DISCREPANCY', 'PARTIAL_PAID', 'PAID')),
+        lines jsonb NOT NULL DEFAULT '[]'::jsonb,
+        total_ordered_qty numeric(30,2) NOT NULL DEFAULT 0,
+        total_dispatched_qty numeric(30,2) NOT NULL DEFAULT 0,
+        total_received_qty numeric(30,2) NOT NULL DEFAULT 0,
+        total_amount numeric(30,0) NOT NULL DEFAULT 0,
+        paid_amount numeric(30,0) NOT NULL DEFAULT 0,
+        note text NOT NULL DEFAULT '',
+        created_by uuid NOT NULL REFERENCES cohamy_crm.users(id),
+        created_by_name text NOT NULL DEFAULT '',
+        created_by_role text NOT NULL DEFAULT '',
+        reconciled_by uuid REFERENCES cohamy_crm.users(id),
+        reconciled_by_name text,
+        reconciled_at timestamptz,
+        accountant_verified boolean NOT NULL DEFAULT false,
+        accountant_verified_by uuid REFERENCES cohamy_crm.users(id),
+        accountant_verified_by_name text,
+        accountant_verified_at timestamptz,
+        created_at timestamptz NOT NULL DEFAULT now(),
+        updated_at timestamptz NOT NULL DEFAULT now()
+      );
 
-    CREATE TABLE IF NOT EXISTS cohamy_crm.accounting_order_clearances (
-      id uuid PRIMARY KEY,
-      request_id uuid UNIQUE REFERENCES cohamy_crm.commercial_requests(id),
-      order_id uuid REFERENCES cohamy_crm.sales_orders(id),
-      document_code text NOT NULL,
-      organization_id uuid NOT NULL REFERENCES cohamy_crm.organizations(id),
-      warehouse_id uuid REFERENCES cohamy_crm.warehouses(id),
-      list_subtotal numeric(30,0) NOT NULL DEFAULT 0,
-      discount_percent numeric(10,2) NOT NULL DEFAULT 0,
-      discount_amount numeric(30,0) NOT NULL DEFAULT 0,
-      net_total numeric(30,0) NOT NULL DEFAULT 0,
-      staff_submitted_amount numeric(30,0) NOT NULL DEFAULT 0,
-      staff_payment_method text NOT NULL DEFAULT 'BANK_TRANSFER',
-      staff_reference text NOT NULL DEFAULT '',
-      staff_submitted_by uuid REFERENCES cohamy_crm.users(id),
-      staff_submitted_by_name text NOT NULL DEFAULT '',
-      staff_submitted_at timestamptz,
-      status text NOT NULL DEFAULT 'NEW_ORDER' CHECK (status IN (
-        'NEW_ORDER','STAFF_SUBMITTED','ACCOUNTANT_CLEARED','ACCOUNTANT_REJECTED','PICKED_UP_DELIVERED'
-      )),
-      accountant_id uuid REFERENCES cohamy_crm.users(id),
-      accountant_name text NOT NULL DEFAULT '',
-      accountant_note text NOT NULL DEFAULT '',
-      accountant_cleared_at timestamptz,
-      picked_up_at timestamptz,
-      picked_up_by_name text NOT NULL DEFAULT '',
-      created_at timestamptz NOT NULL DEFAULT now(),
-      updated_at timestamptz NOT NULL DEFAULT now()
-    );
-  `);
+      CREATE TABLE IF NOT EXISTS cohamy_crm.accounting_order_clearances (
+        id uuid PRIMARY KEY,
+        request_id uuid UNIQUE REFERENCES cohamy_crm.commercial_requests(id),
+        order_id uuid REFERENCES cohamy_crm.sales_orders(id),
+        document_code text NOT NULL,
+        organization_id uuid NOT NULL REFERENCES cohamy_crm.organizations(id),
+        warehouse_id uuid REFERENCES cohamy_crm.warehouses(id),
+        orderer_type text NOT NULL DEFAULT 'CUSTOMER',
+        orderer_name text NOT NULL DEFAULT '',
+        orderer_phone text NOT NULL DEFAULT '',
+        note text NOT NULL DEFAULT '',
+        list_subtotal numeric(30,0) NOT NULL DEFAULT 0,
+        discount_percent numeric(10,2) NOT NULL DEFAULT 0,
+        discount_amount numeric(30,0) NOT NULL DEFAULT 0,
+        net_total numeric(30,0) NOT NULL DEFAULT 0,
+        staff_submitted_amount numeric(30,0) NOT NULL DEFAULT 0,
+        staff_payment_method text NOT NULL DEFAULT 'BANK_TRANSFER',
+        staff_reference text NOT NULL DEFAULT '',
+        staff_submitted_by uuid REFERENCES cohamy_crm.users(id),
+        staff_submitted_by_name text NOT NULL DEFAULT '',
+        staff_submitted_at timestamptz,
+        status text NOT NULL DEFAULT 'NEW_ORDER' CHECK (status IN (
+          'NEW_ORDER','STAFF_SUBMITTED','ACCOUNTANT_CLEARED','ACCOUNTANT_REJECTED','PICKED_UP_DELIVERED'
+        )),
+        accountant_id uuid REFERENCES cohamy_crm.users(id),
+        accountant_name text NOT NULL DEFAULT '',
+        accountant_note text NOT NULL DEFAULT '',
+        accountant_cleared_at timestamptz,
+        picked_up_at timestamptz,
+        picked_up_by_name text NOT NULL DEFAULT '',
+        created_at timestamptz NOT NULL DEFAULT now(),
+        updated_at timestamptz NOT NULL DEFAULT now()
+      );
+
+      ALTER TABLE cohamy_crm.accounting_order_clearances
+        ADD COLUMN IF NOT EXISTS orderer_type text NOT NULL DEFAULT 'CUSTOMER',
+        ADD COLUMN IF NOT EXISTS orderer_name text NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS orderer_phone text NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS note text NOT NULL DEFAULT '';
+
+      CREATE TABLE IF NOT EXISTS cohamy_crm.warehouse_handover_invoices (
+        id uuid PRIMARY KEY,
+        code text NOT NULL UNIQUE,
+        warehouse_id uuid NOT NULL REFERENCES cohamy_crm.warehouses(id),
+        clearance_id uuid REFERENCES cohamy_crm.accounting_order_clearances(id),
+        request_id uuid REFERENCES cohamy_crm.commercial_requests(id),
+        order_code text NOT NULL DEFAULT '',
+        recipient_type text NOT NULL DEFAULT 'CUSTOMER' CHECK (recipient_type IN ('STAFF', 'CUSTOMER')),
+        recipient_name text NOT NULL DEFAULT '',
+        recipient_phone text NOT NULL DEFAULT '',
+        organization_name text NOT NULL DEFAULT '',
+        status text NOT NULL DEFAULT 'HANDED_OVER' CHECK (status IN ('HANDED_OVER', 'CONFIRMED')),
+        lines jsonb NOT NULL DEFAULT '[]'::jsonb,
+        total_quantity numeric(30,2) NOT NULL DEFAULT 0,
+        total_amount numeric(30,0) NOT NULL DEFAULT 0,
+        note text NOT NULL DEFAULT '',
+        created_by uuid NOT NULL REFERENCES cohamy_crm.users(id),
+        created_by_name text NOT NULL DEFAULT '',
+        created_by_role text NOT NULL DEFAULT '',
+        created_at timestamptz NOT NULL DEFAULT now()
+      );
+    `);
+  }
 
   // Ensure both KHO-HN (Kho Hà Nội) and KHO-HCM (Kho TP.HCM) exist under Cohamy
   const cohamyOrg = (
     await sql.query<{id: string}>("SELECT id FROM cohamy_crm.organizations WHERE kind='COHAMY' ORDER BY created_at LIMIT 1")
   ).rows[0];
   if (cohamyOrg) {
+    await sql.query("UPDATE cohamy_crm.warehouses SET region='SOUTH' WHERE region IS NULL AND (code ILIKE '%HCM%' OR name ILIKE '%HCM%' OR name ILIKE '%Hồ Chí Minh%' OR name ILIKE '%Miền Nam%')");
+    await sql.query("UPDATE cohamy_crm.warehouses SET region='NORTH' WHERE region IS NULL AND (code ILIKE '%HN%' OR name ILIKE '%Hà Nội%' OR name ILIKE '%Miền Bắc%')");
     const existingWh = (
       await sql.query<{id: string; code: string; region: string | null}>('SELECT id, code, region FROM cohamy_crm.warehouses')
     ).rows;
@@ -248,7 +341,7 @@ export async function notifyRoles(
   input: {
     roles: string[];
     eventKey: string;
-    entityType: 'commercial-request' | 'sales-order' | 'factory-invoice' | 'warehouse-reconciliation' | 'order-clearance';
+    entityType: 'commercial-request' | 'sales-order' | 'factory-invoice' | 'warehouse-reconciliation' | 'order-clearance' | 'delivery';
     entityId: string;
     message: string;
     extraUserIds?: string[];
@@ -270,6 +363,14 @@ export async function notifyRoles(
   for (const userId of userIds) {
     await enqueueNotification(sql, userId, input.eventKey, 'SYSTEM', input.entityType, input.entityId, input.message);
   }
+}
+
+function warehouseNotifyRolesForRegion(region: string | null | undefined, code?: string | null): string[] {
+  const r = (region ?? '').toUpperCase();
+  const c = (code ?? '').toUpperCase();
+  if (r === 'SOUTH' || c.includes('HCM')) return ['WAREHOUSE_HCM', 'WAREHOUSE'];
+  if (r === 'NORTH' || c.includes('HN')) return ['WAREHOUSE_HN', 'WAREHOUSE'];
+  return ['WAREHOUSE_HCM', 'WAREHOUSE_HN', 'WAREHOUSE'];
 }
 
 function extractSnapshotTotals(snapshot: Record<string, unknown> | null | undefined) {
@@ -347,12 +448,17 @@ export async function syncOrderClearanceOnRequestSave(
       code: string;
       organization_id: string;
       organization_name: string;
+      organization_region: string | null;
+      organization_address: string;
       creator_id: string;
+      creator_role: string;
       snapshot: Record<string, unknown>;
       sales_order_id: string | null;
       sales_order_code: string | null;
     }>(
-      `SELECT r.id, r.code, r.organization_id, o.name AS organization_name, r.creator_id,
+      `SELECT r.id, r.code, r.organization_id, o.name AS organization_name,
+              o.region AS organization_region, COALESCE(o.address, '') AS organization_address,
+              r.creator_id, COALESCE(r.creator_role, '') AS creator_role,
               v.snapshot, s.id AS sales_order_id, s.code AS sales_order_code
        FROM cohamy_crm.commercial_requests r
        JOIN cohamy_crm.organizations o ON o.id = r.organization_id
@@ -364,8 +470,17 @@ export async function syncOrderClearanceOnRequestSave(
   ).rows[0];
   if (!row) return;
 
+  const isSouth =
+    row.creator_role === 'WAREHOUSE_HCM' ||
+    row.organization_region === 'SOUTH' ||
+    /hcm|hồ chí minh|miền nam|sài gòn|bình dương|đồng nai/i.test(row.organization_address || row.organization_name);
+
   const defaultWh = (
-    await sql.query<{id: string}>("SELECT id FROM cohamy_crm.warehouses WHERE code LIKE '%HN%' OR region='NORTH' ORDER BY created_at LIMIT 1")
+    await sql.query<{id: string; code: string; region: string | null}>(
+      isSouth
+        ? "SELECT id, code, region FROM cohamy_crm.warehouses WHERE (region='SOUTH' OR code ILIKE '%HCM%') AND active ORDER BY created_at LIMIT 1"
+        : "SELECT id, code, region FROM cohamy_crm.warehouses WHERE (region='NORTH' OR code ILIKE '%HN%') AND active ORDER BY created_at LIMIT 1"
+    )
   ).rows[0];
 
   const totals = extractSnapshotTotals(row.snapshot);
@@ -397,9 +512,10 @@ export async function syncOrderClearanceOnRequestSave(
     ]
   );
 
-  const msg = `[Hóa đơn khách đặt hàng] ${row.sales_order_code ?? row.code} · Khách: ${row.organization_name} · Giá gốc: ${totals.listSubtotal.toLocaleString('vi-VN')} đ · Chiết khấu: ${totals.discountPercent}% · Phải thu: ${totals.netTotal.toLocaleString('vi-VN')} đ (Đã gửi cho Nhân viên & Kế toán).`;
+  const whRoles = warehouseNotifyRolesForRegion(defaultWh?.region, defaultWh?.code);
+  const msg = `[Hóa đơn khách đặt hàng] ${row.sales_order_code ?? row.code} · Khách: ${row.organization_name} · Giá gốc: ${totals.listSubtotal.toLocaleString('vi-VN')} đ · Chiết khấu: ${totals.discountPercent}% · Phải thu: ${totals.netTotal.toLocaleString('vi-VN')} đ (Đã gửi cho Kho, Nhân viên & Kế toán).`;
   await notifyRoles(sql, {
-    roles: ['ACCOUNTANT', 'ADMIN', 'MANAGER', 'SALES'],
+    roles: ['ACCOUNTANT', 'ADMIN', 'MANAGER', 'SALES', ...whRoles],
     eventKey: `cust_order_invoice:${row.id}:${totals.netTotal}:${input.isNew ? 'new' : 'upd'}`,
     entityType: 'commercial-request',
     entityId: row.id,
@@ -432,7 +548,9 @@ export async function getAccountantWorkspaceData(user: Principal) {
   const db = await database();
   await backfillExistingOrders(db);
 
-  const [clearanceRows, factoryRows, warehouses, products, stockRows, notifRows] = await Promise.all([
+  const managedRegion = warehouseRoleRegion(user.role); // 'SOUTH' for WAREHOUSE_HCM, 'NORTH' for WAREHOUSE_HN, null otherwise
+
+  const [clearanceRows, factoryRows, handoverRows, warehouses, products, stockRows, notifRows, partnerRows, staffRows] = await Promise.all([
     db.query<{
       id: string;
       request_id: string;
@@ -444,7 +562,12 @@ export async function getAccountantWorkspaceData(user: Principal) {
       warehouse_id: string | null;
       warehouse_code: string | null;
       warehouse_name: string | null;
+      warehouse_region: string | null;
       creator_name: string;
+      orderer_type: string;
+      orderer_name: string;
+      orderer_phone: string;
+      note: string;
       channel: string;
       request_status: string;
       list_subtotal: string;
@@ -469,8 +592,12 @@ export async function getAccountantWorkspaceData(user: Principal) {
       `SELECT c.id, c.request_id, COALESCE(c.order_id, s.id) AS order_id,
               c.document_code, s.code AS sales_order_code,
               c.organization_id, o.name AS organization_name,
-              c.warehouse_id, w.code AS warehouse_code, w.name AS warehouse_name,
+              c.warehouse_id, w.code AS warehouse_code, w.name AS warehouse_name, w.region AS warehouse_region,
               COALESCE(u.display_name, 'Nhân viên') AS creator_name,
+              COALESCE(c.orderer_type, 'CUSTOMER') AS orderer_type,
+              COALESCE(c.orderer_name, '') AS orderer_name,
+              COALESCE(c.orderer_phone, '') AS orderer_phone,
+              COALESCE(c.note, '') AS note,
               r.channel, r.status AS request_status,
               c.list_subtotal::text, c.discount_percent::text, c.discount_amount::text, c.net_total::text,
               c.staff_submitted_amount::text, c.staff_payment_method, c.staff_reference,
@@ -533,6 +660,39 @@ export async function getAccountantWorkspaceData(user: Principal) {
        ORDER BY f.created_at DESC
        LIMIT 200`
     ),
+    db.query<{
+      id: string;
+      code: string;
+      warehouse_id: string;
+      warehouse_code: string;
+      warehouse_name: string;
+      warehouse_region: string | null;
+      clearance_id: string | null;
+      request_id: string | null;
+      order_code: string;
+      recipient_type: 'STAFF' | 'CUSTOMER';
+      recipient_name: string;
+      recipient_phone: string;
+      organization_name: string;
+      status: 'HANDED_OVER' | 'CONFIRMED';
+      lines: WarehouseHandoverLine[];
+      total_quantity: string;
+      total_amount: string;
+      note: string;
+      created_by_name: string;
+      created_by_role: string;
+      created_at: string;
+    }>(
+      `SELECT h.id, h.code, h.warehouse_id, w.code AS warehouse_code, w.name AS warehouse_name, w.region AS warehouse_region,
+              h.clearance_id, h.request_id, h.order_code, h.recipient_type,
+              h.recipient_name, h.recipient_phone, h.organization_name, h.status, h.lines,
+              h.total_quantity::text, h.total_amount::text, h.note,
+              h.created_by_name, h.created_by_role, h.created_at::text
+       FROM cohamy_crm.warehouse_handover_invoices h
+       JOIN cohamy_crm.warehouses w ON w.id = h.warehouse_id
+       ORDER BY h.created_at DESC
+       LIMIT 200`
+    ),
     db.query<{id: string; code: string; name: string; region: string | null}>(
       'SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE active ORDER BY code'
     ),
@@ -582,9 +742,47 @@ export async function getAccountantWorkspaceData(user: Principal) {
        LIMIT 60`,
       [user.id]
     ),
+    db.query<{
+      id: string;
+      code: string;
+      name: string;
+      kind: string;
+      phone: string;
+      address: string;
+      region: string | null;
+    }>(
+      `SELECT id, code, name, kind, COALESCE(phone, '') AS phone, COALESCE(address, '') AS address, region
+       FROM cohamy_crm.organizations
+       WHERE active AND merged_into_id IS NULL AND kind IN ('CUSTOMER', 'DEALER')
+       ORDER BY name LIMIT 200`
+    ),
+    db.query<{
+      id: string;
+      display_name: string;
+      email: string;
+      role: string;
+    }>(
+      `SELECT DISTINCT u.id, u.display_name, u.email, m.role
+       FROM cohamy_crm.users u
+       JOIN cohamy_crm.memberships m ON m.user_id = u.id
+       WHERE u.active AND m.active AND m.role IN ('SALES', 'MANAGER', 'ADMIN', 'ACCOUNTANT', 'WAREHOUSE_HCM', 'WAREHOUSE_HN', 'WAREHOUSE')
+       ORDER BY u.display_name LIMIT 100`
+    ),
   ]);
 
-  const orderClearances: OrderClearanceRecord[] = clearanceRows.rows.map(r => {
+  const matchesManagedRegion = (region: string | null | undefined, code: string | null | undefined) => {
+    if (!managedRegion) return true;
+    if (region === managedRegion) return true;
+    const c = (code ?? '').toUpperCase();
+    if (managedRegion === 'SOUTH' && c.includes('HCM')) return true;
+    if (managedRegion === 'NORTH' && c.includes('HN')) return true;
+    return false;
+  };
+
+  const visibleWarehouses = warehouses.rows.filter(w => matchesManagedRegion(w.region, w.code));
+  const visibleWarehouseIds = new Set(visibleWarehouses.map(w => w.id));
+
+  const allOrderClearances: OrderClearanceRecord[] = clearanceRows.rows.map(r => {
     const parsed = extractSnapshotTotals(r.snapshot);
     return {
       id: r.id,
@@ -597,7 +795,12 @@ export async function getAccountantWorkspaceData(user: Principal) {
       warehouseId: r.warehouse_id,
       warehouseCode: r.warehouse_code,
       warehouseName: r.warehouse_name,
+      warehouseRegion: r.warehouse_region,
       creatorName: r.creator_name,
+      ordererType: (r.orderer_type === 'STAFF' ? 'STAFF' : 'CUSTOMER') as 'CUSTOMER' | 'STAFF',
+      ordererName: r.orderer_name || r.creator_name,
+      ordererPhone: r.orderer_phone || '',
+      note: r.note || String((r.snapshot as {note?: string})?.note ?? ''),
       channel: r.channel,
       requestStatus: r.request_status,
       listSubtotal: r.list_subtotal,
@@ -621,7 +824,16 @@ export async function getAccountantWorkspaceData(user: Principal) {
     };
   });
 
-  const factoryInvoices: FactoryInvoiceRecord[] = factoryRows.rows.map(f => {
+  const orderClearances = managedRegion
+    ? allOrderClearances.filter(
+        c =>
+          !c.warehouseId ||
+          visibleWarehouseIds.has(c.warehouseId) ||
+          matchesManagedRegion(c.warehouseRegion, c.warehouseCode)
+      )
+    : allOrderClearances;
+
+  const allFactoryInvoices: FactoryInvoiceRecord[] = factoryRows.rows.map(f => {
     const totalAmt = BigInt(f.total_amount || '0');
     const paidAmt = BigInt(f.paid_amount || '0');
     const rem = totalAmt > paidAmt ? totalAmt - paidAmt : 0n;
@@ -657,7 +869,43 @@ export async function getAccountantWorkspaceData(user: Principal) {
     };
   });
 
-  const warehouseStocks: WarehouseStockSummaryRow[] = stockRows.rows.map(s => {
+  const factoryInvoices = managedRegion
+    ? allFactoryInvoices.filter(
+        f => visibleWarehouseIds.has(f.warehouseId) || matchesManagedRegion(f.warehouseRegion, f.warehouseCode)
+      )
+    : allFactoryInvoices;
+
+  const allHandoverInvoices: WarehouseHandoverInvoiceRecord[] = handoverRows.rows.map(h => ({
+    id: h.id,
+    code: h.code,
+    warehouseId: h.warehouse_id,
+    warehouseCode: h.warehouse_code,
+    warehouseName: h.warehouse_name,
+    warehouseRegion: h.warehouse_region,
+    clearanceId: h.clearance_id,
+    requestId: h.request_id,
+    orderCode: h.order_code,
+    recipientType: h.recipient_type,
+    recipientName: h.recipient_name,
+    recipientPhone: h.recipient_phone,
+    organizationName: h.organization_name,
+    status: h.status,
+    lines: Array.isArray(h.lines) ? h.lines : [],
+    totalQuantity: h.total_quantity,
+    totalAmount: h.total_amount,
+    note: h.note,
+    createdByName: h.created_by_name,
+    createdByRole: h.created_by_role,
+    createdAt: h.created_at,
+  }));
+
+  const handoverInvoices = managedRegion
+    ? allHandoverInvoices.filter(
+        h => visibleWarehouseIds.has(h.warehouseId) || matchesManagedRegion(h.warehouseRegion, h.warehouseCode)
+      )
+    : allHandoverInvoices;
+
+  const allWarehouseStocks: WarehouseStockSummaryRow[] = stockRows.rows.map(s => {
     const onHandNum = BigInt(s.on_hand || '0');
     const priceNum = BigInt(s.retail_price || '0');
     return {
@@ -678,7 +926,13 @@ export async function getAccountantWorkspaceData(user: Principal) {
     };
   });
 
-  const warehouseFactoryDebts: WarehouseFactoryDebtRow[] = warehouses.rows.map(w => {
+  const warehouseStocks = managedRegion
+    ? allWarehouseStocks.filter(
+        s => visibleWarehouseIds.has(s.warehouseId) || matchesManagedRegion(s.region, s.warehouseCode)
+      )
+    : allWarehouseStocks;
+
+  const warehouseFactoryDebts: WarehouseFactoryDebtRow[] = visibleWarehouses.map(w => {
     const whInvoices = factoryInvoices.filter(f => f.warehouseId === w.id);
     const orders = whInvoices.filter(f => f.stage === 'FACTORY_ORDER');
     const dispatches = whInvoices.filter(f => f.stage === 'FACTORY_DISPATCH');
@@ -690,7 +944,6 @@ export async function getAccountantWorkspaceData(user: Principal) {
 
     const totalDispatchedAmount = dispatches.reduce((s, x) => s + BigInt(x.totalAmount || '0'), 0n);
     const totalReconciledAmount = reconciliations.reduce((s, x) => s + BigInt(x.totalAmount || '0'), 0n);
-    // Debt to factory is based on reconciled invoices (or dispatched invoices if not yet reconciled)
     const debtSourceInvoices = reconciliations.length > 0 ? reconciliations : dispatches;
     const debtBase = debtSourceInvoices.reduce((s, x) => s + BigInt(x.totalAmount || '0'), 0n);
     const totalPaid = whInvoices.reduce((s, x) => s + BigInt(x.paidAmount || '0'), 0n);
@@ -714,18 +967,46 @@ export async function getAccountantWorkspaceData(user: Principal) {
     };
   });
 
+  const partners: PartnerOptionRecord[] = partnerRows.rows;
+  const staffMembers: StaffOptionRecord[] = staffRows.rows.map(s => ({
+    id: s.id,
+    displayName: s.display_name,
+    email: s.email,
+    role: s.role,
+  }));
+
   return {
+    managedRegion,
     orderClearances,
     factoryInvoices,
+    handoverInvoices,
     warehouseStocks,
     warehouseFactoryDebts,
-    warehouses: warehouses.rows,
+    warehouses: visibleWarehouses,
     products: products.rows,
     notifications: notifRows.rows,
+    partners,
+    staffMembers,
   };
 }
 
 export type AccountantWorkspaceData = Awaited<ReturnType<typeof getAccountantWorkspaceData>>;
+
+function assertUserWarehouseAccess(
+  user: Principal,
+  wh: {id: string; code: string; region: string | null}
+) {
+  const userRegion = warehouseRoleRegion(user.role);
+  if (!userRegion) return;
+  const whCode = (wh.code ?? '').toUpperCase();
+  const isMatch =
+    wh.region === userRegion ||
+    (userRegion === 'SOUTH' && whCode.includes('HCM')) ||
+    (userRegion === 'NORTH' && whCode.includes('HN'));
+  if (!isMatch) {
+    throw new CrmError('FORBIDDEN', 403);
+  }
+}
 
 export async function handleAccountantWorkflowAction(
   user: Principal,
@@ -736,6 +1017,534 @@ export async function handleAccountantWorkflowAction(
   const db = await database();
   return db.transaction(async sql => {
     await ensureAccountantWorkflowSchema(sql);
+
+    if (action === 'register-warehouse-order') {
+      if (!['ADMIN', 'MANAGER', 'SALES', 'ACCOUNTANT', 'WAREHOUSE', 'WAREHOUSE_HCM', 'WAREHOUSE_HN'].includes(user.role)) {
+        throw new CrmError('FORBIDDEN', 403);
+      }
+      const userRegion = warehouseRoleRegion(user.role);
+      const requestedWarehouseId = String(input.warehouseId ?? '').trim();
+      const wh = (
+        await sql.query<{id: string; code: string; name: string; region: string | null}>(
+          requestedWarehouseId
+            ? 'SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE id = $1 AND active LIMIT 1'
+            : userRegion === 'SOUTH'
+              ? "SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE (region = 'SOUTH' OR code ILIKE '%HCM%') AND active ORDER BY created_at LIMIT 1"
+              : "SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE (region = 'NORTH' OR code ILIKE '%HN%') AND active ORDER BY created_at LIMIT 1",
+          requestedWarehouseId ? [requestedWarehouseId] : []
+        )
+      ).rows[0];
+      if (!wh) throw new CrmError('INVALID_FIELDS', 400);
+      assertUserWarehouseAccess(user, wh);
+
+      const ordererType = String(input.ordererType ?? 'CUSTOMER') === 'STAFF' ? 'STAFF' : 'CUSTOMER';
+      const ordererName = String(input.ordererName ?? '').trim() || user.displayName;
+      const ordererPhone = String(input.ordererPhone ?? '').trim() || '0900000000';
+      const customOrgName = String(input.organizationName ?? '').trim();
+      const customAddress = String(input.address ?? '').trim() || `Nhận từ ${wh.name}`;
+      const note = String(input.note ?? '').trim();
+      const discountPercent = Math.max(0, Math.min(90, Number(input.discountPercent ?? 0)));
+      const paymentSubmitted = Boolean(input.paymentSubmitted);
+      const paymentMethod = String(input.paymentMethod ?? 'BANK_TRANSFER');
+      const rawLines = Array.isArray(input.lines) ? (input.lines as Array<Record<string, unknown>>) : [];
+
+      let orgId = String(input.organizationId ?? '').trim();
+      let orgRow: {id: string; code: string; name: string; phone: string; email: string; address: string} | undefined;
+      if (orgId) {
+        orgRow = (
+          await sql.query<{id: string; code: string; name: string; phone: string; email: string; address: string}>(
+            'SELECT id, code, name, COALESCE(phone, \'\') AS phone, COALESCE(email, \'\') AS email, COALESCE(address, \'\') AS address FROM cohamy_crm.organizations WHERE id = $1 LIMIT 1',
+            [orgId]
+          )
+        ).rows[0];
+      }
+      if (!orgRow && customOrgName) {
+        orgRow = (
+          await sql.query<{id: string; code: string; name: string; phone: string; email: string; address: string}>(
+            'SELECT id, code, name, COALESCE(phone, \'\') AS phone, COALESCE(email, \'\') AS email, COALESCE(address, \'\') AS address FROM cohamy_crm.organizations WHERE LOWER(name) = LOWER($1) AND merged_into_id IS NULL LIMIT 1',
+            [customOrgName]
+          )
+        ).rows[0];
+        if (!orgRow) {
+          const newOrgId = randomUUID();
+          const newOrgCode = `KH-${vietnamBusinessDate(new Date())}-${newOrgId.slice(0, 4).toUpperCase()}`;
+          await sql.query(
+            `INSERT INTO cohamy_crm.organizations(id, code, name, kind, phone, email, address, partner_type, stage, region, active)
+             VALUES ($1, $2, $3, 'CUSTOMER', $4, '', $5, 'END_CUSTOMER', 'ACTIVE', $6, true)`,
+            [newOrgId, newOrgCode, customOrgName, ordererPhone, customAddress, wh.region]
+          );
+          orgRow = {
+            id: newOrgId,
+            code: newOrgCode,
+            name: customOrgName,
+            phone: ordererPhone,
+            email: '',
+            address: customAddress,
+          };
+        }
+      }
+      if (!orgRow) {
+        orgRow = (
+          await sql.query<{id: string; code: string; name: string; phone: string; email: string; address: string}>(
+            "SELECT id, code, name, COALESCE(phone, '') AS phone, COALESCE(email, '') AS email, COALESCE(address, '') AS address FROM cohamy_crm.organizations WHERE active AND merged_into_id IS NULL AND kind IN ('CUSTOMER', 'DEALER') ORDER BY created_at LIMIT 1"
+          )
+        ).rows[0];
+      }
+      if (!orgRow) throw new CrmError('INVALID_FIELDS', 400);
+      orgId = orgRow.id;
+
+      const calcLines: Array<{
+        productId: string;
+        sku: string;
+        name: string;
+        unitCode: string;
+        unitLabel: string;
+        quantity: string;
+        baseQuantity: string;
+        listUnitPrice: string;
+        unitPrice: string;
+        discount: string;
+        total: string;
+      }> = [];
+      let listSubtotal = 0;
+      let totalDiscount = 0;
+      let netTotal = 0;
+
+      for (const item of rawLines) {
+        const qty = Math.max(0, Math.round(Number(item.quantity ?? 0)));
+        if (qty <= 0) continue;
+        const prod = (
+          await sql.query<{id: string; sku: string; name: string; stock_unit: string; retail_price: string}>(
+            "SELECT id, sku, name, COALESCE(stock_unit, 'Gói') AS stock_unit, retail_price::text FROM cohamy_crm.products WHERE id::text = $1 OR sku = $1 LIMIT 1",
+            [String(item.productId ?? item.sku ?? '')]
+          )
+        ).rows[0];
+        if (!prod) continue;
+        const listUnitPrice = Math.max(
+          0,
+          Math.round(Number(item.unitPrice ?? prod.retail_price ?? 0))
+        );
+        const lineSubtotal = qty * listUnitPrice;
+        const lineDiscount = Math.round((lineSubtotal * discountPercent) / 100);
+        const lineNet = lineSubtotal - lineDiscount;
+        const netUnit = qty > 0 ? Math.round(lineNet / qty) : listUnitPrice;
+
+        listSubtotal += lineSubtotal;
+        totalDiscount += lineDiscount;
+        netTotal += lineNet;
+
+        calcLines.push({
+          productId: prod.id,
+          sku: prod.sku,
+          name: prod.name,
+          unitCode: 'UNIT',
+          unitLabel: prod.stock_unit,
+          quantity: String(qty),
+          baseQuantity: String(qty),
+          listUnitPrice: String(listUnitPrice),
+          unitPrice: String(netUnit),
+          discount: String(lineDiscount),
+          total: String(lineNet),
+        });
+      }
+
+      if (!calcLines.length) throw new CrmError('INVALID_FIELDS', 400);
+
+      const now = new Date();
+      const requestId = randomUUID();
+      const versionId = randomUUID();
+      const docCode = `HD-${wh.code.replace('KHO-', '')}-${vietnamBusinessDate(now)}-${requestId.slice(0, 5).toUpperCase()}`;
+      const cohamyOrg = (
+        await sql.query<{id: string}>("SELECT id FROM cohamy_crm.organizations WHERE kind='COHAMY' LIMIT 1")
+      ).rows[0];
+
+      const snapshot = {
+        organization: {
+          id: orgRow.id,
+          code: orgRow.code,
+          name: orgRow.name,
+          phone: orgRow.phone || ordererPhone,
+          email: orgRow.email || '',
+          businessId: '',
+          address: orgRow.address || customAddress,
+        },
+        delivery: {
+          recipient: ordererName,
+          phone: ordererPhone,
+          address: orgRow.address || customAddress,
+        },
+        basket: {
+          lines: calcLines.map(l => ({
+            productId: l.productId,
+            unitCode: 'UNIT',
+            quantity: l.quantity,
+          })),
+          discountBasisPoints: Math.round(discountPercent * 100),
+          creditTerms: false,
+        },
+        calculation: {
+          lines: calcLines,
+          subtotal: String(listSubtotal),
+          discount: String(totalDiscount),
+          total: String(netTotal),
+          channel: {
+            listSubtotal: String(listSubtotal),
+          },
+          approvalReasons: [],
+          minimumShortfalls: [],
+        },
+        note,
+        currency: 'VND',
+        issuedAt: now.toISOString(),
+        validUntil: new Date(now.getTime() + 7 * 24 * 3600000).toISOString(),
+      };
+
+      await sql.query(
+        `INSERT INTO cohamy_crm.commercial_requests(
+           id, code, organization_id, creator_id, creator_membership_id,
+           creator_area, creator_role, channel, status, seller_organization_id, assigned_approver_org_id
+         ) VALUES ($1, $2, $3, $4, $5, 'crm', $6, 'VISIT', 'SUBMITTED', $7, $7)`,
+        [
+          requestId,
+          docCode,
+          orgRow.id,
+          user.id,
+          user.membershipId,
+          user.role,
+          cohamyOrg?.id ?? user.organizationId,
+        ]
+      );
+
+      await sql.query(
+        `INSERT INTO cohamy_crm.commercial_request_versions(
+           id, request_id, number, snapshot, checksum, actor_id, idempotency_key, request_hash
+         ) VALUES ($1, $2, 1, $3::jsonb, $4, $5, $6, $4)`,
+        [
+          versionId,
+          requestId,
+          JSON.stringify(snapshot),
+          commercialDigest(snapshot),
+          user.id,
+          randomUUID(),
+        ]
+      );
+
+      await sql.query(
+        'UPDATE cohamy_crm.commercial_requests SET latest_version_id = $1, version = 1 WHERE id = $2',
+        [versionId, requestId]
+      );
+
+      const clearanceId = randomUUID();
+      const initialStatus = paymentSubmitted ? 'STAFF_SUBMITTED' : 'NEW_ORDER';
+      await sql.query(
+        `INSERT INTO cohamy_crm.accounting_order_clearances(
+           id, request_id, document_code, organization_id, warehouse_id,
+           orderer_type, orderer_name, orderer_phone, note,
+           list_subtotal, discount_percent, discount_amount, net_total,
+           staff_submitted_amount, staff_payment_method, staff_reference,
+           staff_submitted_by, staff_submitted_by_name, staff_submitted_at, status
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)`,
+        [
+          clearanceId,
+          requestId,
+          docCode,
+          orgRow.id,
+          wh.id,
+          ordererType,
+          ordererName,
+          ordererPhone,
+          note,
+          String(listSubtotal),
+          String(discountPercent),
+          String(totalDiscount),
+          String(netTotal),
+          paymentSubmitted ? String(netTotal) : '0',
+          paymentMethod,
+          paymentSubmitted ? `Đăng ký tại ${wh.name}` : '',
+          paymentSubmitted ? user.id : null,
+          paymentSubmitted ? user.displayName : '',
+          paymentSubmitted ? now.toISOString() : null,
+          initialStatus,
+        ]
+      );
+
+      const whRoles = warehouseNotifyRolesForRegion(wh.region, wh.code);
+      const whoLabel = ordererType === 'STAFF' ? `Nhân viên ${ordererName}` : `Khách hàng ${orgRow.name} (${ordererName})`;
+      await notifyRoles(sql, {
+        roles: ['ACCOUNTANT', 'ADMIN', 'MANAGER', ...whRoles],
+        eventKey: `wh_reg_order:${clearanceId}`,
+        entityType: 'order-clearance',
+        entityId: clearanceId,
+        message: `[Đăng ký Hóa đơn đặt hàng tại ${wh.name}] Mã HĐ: ${docCode} · Người đặt: ${whoLabel} · Giá gốc: ${listSubtotal.toLocaleString('vi-VN')} đ · Chiết khấu: ${discountPercent}% · Phải thu: ${netTotal.toLocaleString('vi-VN')} đ.`,
+      });
+
+      return {ok: true, id: clearanceId, requestId, documentCode: docCode};
+    }
+
+    if (action === 'create-handover-invoice') {
+      if (!['ADMIN', 'MANAGER', 'WAREHOUSE', 'WAREHOUSE_HCM', 'WAREHOUSE_HN'].includes(user.role)) {
+        throw new CrmError('FORBIDDEN', 403);
+      }
+      const userRegion = warehouseRoleRegion(user.role);
+      const requestedWarehouseId = String(input.warehouseId ?? '').trim();
+      const wh = (
+        await sql.query<{id: string; code: string; name: string; region: string | null}>(
+          requestedWarehouseId
+            ? 'SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE id = $1 AND active LIMIT 1'
+            : userRegion === 'SOUTH'
+              ? "SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE (region = 'SOUTH' OR code ILIKE '%HCM%') AND active ORDER BY created_at LIMIT 1"
+              : "SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE (region = 'NORTH' OR code ILIKE '%HN%') AND active ORDER BY created_at LIMIT 1",
+          requestedWarehouseId ? [requestedWarehouseId] : []
+        )
+      ).rows[0];
+      if (!wh) throw new CrmError('INVALID_FIELDS', 400);
+      assertUserWarehouseAccess(user, wh);
+
+      const clearanceId = input.clearanceId ? String(input.clearanceId).trim() : null;
+      const recipientType = String(input.recipientType ?? 'CUSTOMER') === 'STAFF' ? 'STAFF' : 'CUSTOMER';
+      const recipientName = String(input.recipientName ?? '').trim();
+      const recipientPhone = String(input.recipientPhone ?? '').trim();
+      const organizationName = String(input.organizationName ?? '').trim() || recipientName;
+      const orderCodeInput = String(input.orderCode ?? '').trim();
+      const note = String(input.note ?? '').trim();
+      const rawLines = Array.isArray(input.lines) ? (input.lines as Array<Record<string, unknown>>) : [];
+
+      if (!recipientName) throw new CrmError('INVALID_FIELDS', 400);
+
+      let linkedClearance: {
+        id: string;
+        request_id: string;
+        document_code: string;
+        organization_name: string;
+      } | null = null;
+      if (clearanceId) {
+        linkedClearance =
+          (
+            await sql.query<{
+              id: string;
+              request_id: string;
+              document_code: string;
+              organization_name: string;
+            }>(
+              `SELECT c.id, c.request_id, c.document_code, o.name AS organization_name
+               FROM cohamy_crm.accounting_order_clearances c
+               JOIN cohamy_crm.organizations o ON o.id = c.organization_id
+               WHERE c.id = $1 FOR UPDATE OF c`,
+              [clearanceId]
+            )
+          ).rows[0] ?? null;
+      }
+
+      const handoverLines: WarehouseHandoverLine[] = [];
+      let totalQty = 0;
+      let totalAmount = 0;
+
+      for (const item of rawLines) {
+        const qty = Math.max(0, Math.round(Number(item.quantity ?? 0)));
+        if (qty <= 0) continue;
+        const prod = (
+          await sql.query<{id: string; sku: string; name: string; stock_unit: string; retail_price: string}>(
+            "SELECT id, sku, name, COALESCE(stock_unit, 'Gói') AS stock_unit, retail_price::text FROM cohamy_crm.products WHERE id::text = $1 OR sku = $1 LIMIT 1",
+            [String(item.productId ?? item.sku ?? '')]
+          )
+        ).rows[0];
+        if (!prod) continue;
+        const unitPrice = Math.max(
+          0,
+          Math.round(Number(item.unitPrice ?? prod.retail_price ?? 0))
+        );
+        const lineTotal = qty * unitPrice;
+        totalQty += qty;
+        totalAmount += lineTotal;
+        handoverLines.push({
+          productId: prod.id,
+          sku: prod.sku,
+          name: prod.name,
+          unitLabel: prod.stock_unit,
+          quantity: qty,
+          unitPrice,
+          lineTotal,
+          note: String(item.note ?? ''),
+        });
+      }
+
+      if (!handoverLines.length) throw new CrmError('INVALID_FIELDS', 400);
+
+      // Safely deduct handed-over quantities from warehouse inventory_balances
+      for (const hl of handoverLines) {
+        let remainingToDeduct = BigInt(hl.quantity);
+        const balRows = (
+          await sql.query<{
+            warehouse_id: string;
+            location_id: string;
+            product_id: string;
+            lot_id: string;
+            on_hand: string;
+            reserved: string;
+          }>(
+            `SELECT warehouse_id, location_id, product_id, lot_id, on_hand::numeric(30,0)::text AS on_hand, reserved::numeric(30,0)::text AS reserved
+             FROM cohamy_crm.inventory_balances
+             WHERE warehouse_id = $1 AND product_id = $2 AND on_hand > reserved
+             ORDER BY on_hand DESC
+             FOR UPDATE`,
+            [wh.id, hl.productId]
+          )
+        ).rows;
+
+        for (const b of balRows) {
+          if (remainingToDeduct <= 0n) break;
+          const onHand = BigInt(b.on_hand || '0');
+          const reserved = BigInt(b.reserved || '0');
+          const free = onHand > reserved ? onHand - reserved : 0n;
+          if (free <= 0n) continue;
+          const deduct = free < remainingToDeduct ? free : remainingToDeduct;
+          const nextOnHand = onHand - deduct;
+          await sql.query(
+            `UPDATE cohamy_crm.inventory_balances
+             SET on_hand = $1, version = version + 1, updated_at = now()
+             WHERE warehouse_id = $2 AND location_id = $3 AND product_id = $4 AND lot_id = $5`,
+            [nextOnHand.toString(), b.warehouse_id, b.location_id, b.product_id, b.lot_id]
+          );
+          remainingToDeduct -= deduct;
+        }
+      }
+
+      const id = randomUUID();
+      const shortWh = wh.code.replace('KHO-', '');
+      const code = `BG-${shortWh}-${vietnamBusinessDate(new Date())}-${id.slice(0, 5).toUpperCase()}`;
+      const finalOrderCode = orderCodeInput || linkedClearance?.document_code || '';
+      const finalOrgName = organizationName || linkedClearance?.organization_name || recipientName;
+
+      await sql.query(
+        `INSERT INTO cohamy_crm.warehouse_handover_invoices(
+           id, code, warehouse_id, clearance_id, request_id, order_code,
+           recipient_type, recipient_name, recipient_phone, organization_name,
+           status, lines, total_quantity, total_amount, note,
+           created_by, created_by_name, created_by_role
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,'HANDED_OVER',$11::jsonb,$12,$13,$14,$15,$16,$17)`,
+        [
+          id,
+          code,
+          wh.id,
+          linkedClearance?.id ?? null,
+          linkedClearance?.request_id ?? null,
+          finalOrderCode,
+          recipientType,
+          recipientName,
+          recipientPhone,
+          finalOrgName,
+          JSON.stringify(handoverLines),
+          String(totalQty),
+          String(totalAmount),
+          note,
+          user.id,
+          user.displayName,
+          user.role,
+        ]
+      );
+
+      if (linkedClearance) {
+        await sql.query(
+          `UPDATE cohamy_crm.accounting_order_clearances
+           SET status = 'PICKED_UP_DELIVERED',
+               warehouse_id = $1,
+               picked_up_at = now(),
+               picked_up_by_name = $2,
+               updated_at = now()
+           WHERE id = $3`,
+          [wh.id, recipientName, linkedClearance.id]
+        );
+      }
+
+      const whRoles = warehouseNotifyRolesForRegion(wh.region, wh.code);
+      const targetTypeLabel = recipientType === 'STAFF' ? 'Nhân viên' : 'Khách hàng';
+      await notifyRoles(sql, {
+        roles: ['ACCOUNTANT', 'ADMIN', 'MANAGER', 'SALES', ...whRoles],
+        eventKey: `wh_handover:${id}`,
+        entityType: 'delivery',
+        entityId: id,
+        message: `[Hóa đơn Bàn giao Sản phẩm - ${wh.name}] Mã phiếu: ${code} · Thủ kho ${user.displayName} đã bàn giao ${totalQty.toLocaleString('vi-VN')} gói (${totalAmount.toLocaleString('vi-VN')} đ) cho ${targetTypeLabel}: ${recipientName}${finalOrderCode ? ` (Theo HĐ: ${finalOrderCode})` : ''}.`,
+      });
+
+      return {ok: true, id, code};
+    }
+
+    if (action === 'adjust-warehouse-stock') {
+      if (!['ADMIN', 'MANAGER', 'WAREHOUSE', 'WAREHOUSE_HCM', 'WAREHOUSE_HN'].includes(user.role)) {
+        throw new CrmError('FORBIDDEN', 403);
+      }
+      const warehouseId = String(input.warehouseId ?? '').trim();
+      const productId = String(input.productId ?? '').trim();
+      const newOnHand = Math.max(0, Math.round(Number(input.newOnHand ?? 0)));
+      const wh = (
+        await sql.query<{id: string; code: string; name: string; region: string | null}>(
+          'SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE id = $1 AND active LIMIT 1',
+          [warehouseId]
+        )
+      ).rows[0];
+      if (!wh || !productId) throw new CrmError('INVALID_FIELDS', 400);
+      assertUserWarehouseAccess(user, wh);
+
+      let loc = (
+        await sql.query<{id: string}>(
+          "SELECT id FROM cohamy_crm.warehouse_locations WHERE warehouse_id = $1 AND active AND kind = 'PICK' ORDER BY created_at LIMIT 1",
+          [wh.id]
+        )
+      ).rows[0];
+      if (!loc) {
+        const locId = randomUUID();
+        await sql.query(
+          "INSERT INTO cohamy_crm.warehouse_locations(id, warehouse_id, code, name, kind, active) VALUES ($1, $2, $3, $4, 'PICK', true)",
+          [locId, wh.id, `KE-${wh.code}-01`, `Kệ chính ${wh.name}`]
+        );
+        loc = {id: locId};
+      }
+
+      let lot = (
+        await sql.query<{id: string}>(
+          "SELECT id FROM cohamy_crm.inventory_lots WHERE product_id = $1 AND status = 'AVAILABLE' ORDER BY created_at LIMIT 1",
+          [productId]
+        )
+      ).rows[0];
+      if (!lot) {
+        const lotId = randomUUID();
+        await sql.query(
+          "INSERT INTO cohamy_crm.inventory_lots(id, product_id, code, status) VALUES ($1, $2, $3, 'AVAILABLE')",
+          [lotId, productId, `LOT-INIT-${productId.slice(0, 6).toUpperCase()}`]
+        );
+        lot = {id: lotId};
+      }
+
+      const existingRows = (
+        await sql.query<{location_id: string; lot_id: string; reserved: string}>(
+          'SELECT location_id, lot_id, reserved::numeric(30,0)::text AS reserved FROM cohamy_crm.inventory_balances WHERE warehouse_id = $1 AND product_id = $2 FOR UPDATE',
+          [wh.id, productId]
+        )
+      ).rows;
+
+      if (existingRows.length === 0) {
+        await sql.query(
+          'INSERT INTO cohamy_crm.inventory_balances(warehouse_id, location_id, product_id, lot_id, on_hand, reserved) VALUES ($1, $2, $3, $4, $5, 0)',
+          [wh.id, loc.id, productId, lot.id, String(newOnHand)]
+        );
+      } else {
+        const first = existingRows[0];
+        const minFirst = Math.max(newOnHand, Number(first.reserved || 0));
+        await sql.query(
+          'UPDATE cohamy_crm.inventory_balances SET on_hand = $1, version = version + 1, updated_at = now() WHERE warehouse_id = $2 AND location_id = $3 AND product_id = $4 AND lot_id = $5',
+          [String(minFirst), wh.id, first.location_id, productId, first.lot_id]
+        );
+        for (let i = 1; i < existingRows.length; i++) {
+          const r = existingRows[i];
+          await sql.query(
+            'UPDATE cohamy_crm.inventory_balances SET on_hand = reserved, version = version + 1, updated_at = now() WHERE warehouse_id = $1 AND location_id = $2 AND product_id = $3 AND lot_id = $4',
+            [wh.id, r.location_id, productId, r.lot_id]
+          );
+        }
+      }
+
+      return {ok: true, warehouseId: wh.id, productId, onHand: String(newOnHand)};
+    }
 
     if (action === 'staff-submit-payment') {
       const clearanceId = String(input.clearanceId ?? '');
@@ -928,8 +1737,8 @@ export async function handleAccountantWorkflowAction(
       const rawLines = Array.isArray(input.lines) ? (input.lines as Array<Record<string, unknown>>) : [];
 
       const wh = (
-        await sql.query<{id: string; code: string; name: string}>(
-          'SELECT id, code, name FROM cohamy_crm.warehouses WHERE id = $1',
+        await sql.query<{id: string; code: string; name: string; region: string | null}>(
+          'SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE id = $1',
           [warehouseId]
         )
       ).rows[0];
@@ -1018,13 +1827,14 @@ export async function handleAccountantWorkflowAction(
         );
       }
 
+      const whRoles = warehouseNotifyRolesForRegion(wh.region, wh.code);
       const msg =
         stage === 'FACTORY_ORDER'
           ? `[Hóa đơn Admin đặt hàng Nhà máy] ${code} · Kho nhận: ${wh.name} (${wh.code}) · Số lượng: ${totalOrd.toLocaleString('vi-VN')} gói · Tổng giá trị: ${totalAmt.toLocaleString('vi-VN')} đ (Gửi Kế toán & Kho theo dõi).`
-          : `[Hóa đơn Nhà máy xuất hàng đẩy về Kho] ${code} · Đẩy về: ${wh.name} (${wh.code}) · Số lượng xuất: ${totalDisp.toLocaleString('vi-VN')} gói · Giá trị: ${totalAmt.toLocaleString('vi-VN')} đ (Chờ Quản lý Kho đối chiếu & Kế toán kiểm tra).`;
+          : `[Hóa đơn Nhà máy xuất hàng đẩy về Kho] ${code} · Đẩy về: ${wh.name} (${wh.code}) · Số lượng xuất: ${totalDisp.toLocaleString('vi-VN')} gói · Giá trị: ${totalAmt.toLocaleString('vi-VN')} đ (Chờ Thủ kho đối chiếu & Kế toán kiểm tra).`;
 
       await notifyRoles(sql, {
-        roles: ['ACCOUNTANT', 'ADMIN', 'MANAGER', 'WAREHOUSE', 'WAREHOUSE_HN', 'WAREHOUSE_HCM'],
+        roles: ['ACCOUNTANT', 'ADMIN', 'MANAGER', ...whRoles],
         eventKey: `factory_inv:${id}:${stage}`,
         entityType: 'factory-invoice',
         entityId: id,
@@ -1072,12 +1882,13 @@ export async function handleAccountantWorkflowAction(
 
       const targetWarehouseId = parent?.warehouse_id ?? String(input.warehouseId ?? '');
       const wh = (
-        await sql.query<{id: string; code: string; name: string}>(
-          'SELECT id, code, name FROM cohamy_crm.warehouses WHERE id = $1',
+        await sql.query<{id: string; code: string; name: string; region: string | null}>(
+          'SELECT id, code, name, region FROM cohamy_crm.warehouses WHERE id = $1',
           [targetWarehouseId]
         )
       ).rows[0];
       if (!wh) throw new CrmError('INVALID_FIELDS', 400);
+      assertUserWarehouseAccess(user, wh);
 
       let totalOrd = 0;
       let totalDisp = 0;

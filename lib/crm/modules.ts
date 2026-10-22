@@ -1,4 +1,4 @@
-import { can } from "./permissions";
+import { can, isWarehouseRole } from "./permissions";
 import type { Principal } from "./types";
 export type ModuleIcon =
   | "customer"
@@ -71,6 +71,13 @@ const accountantModules: CrmModule[] = [
   { id: "accounting-warehouses", label: "3. Tồn kho HN-HCM & Công nợ NM", shortLabel: "Tồn & Nợ NM", icon: "warehouse", tone: "orange", permission: "warehouses.read", status: "CONNECTED", bottom: 3 },
   { id: "notifications", label: "4. Thông báo Hóa đơn", shortLabel: "Thông báo HĐ", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED" },
 ];
+const warehouseKeeperModules: CrmModule[] = [
+  { id: "warehouse-stock", label: "1. Kiểm tra Số lượng Hàng trong Kho", shortLabel: "Tồn kho", icon: "warehouse", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 1 },
+  { id: "warehouse-orders", label: "2. Đăng ký & Kiểm tra HĐ Khách / NV đặt", shortLabel: "HĐ Khách / NV", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED", bottom: 2 },
+  { id: "warehouse-factory", label: "3. HĐ Đối chiếu với Nhà máy", shortLabel: "Đối chiếu NM", icon: "procurement", tone: "orange", permission: "warehouses.read", status: "CONNECTED", bottom: 3 },
+  { id: "warehouse-handover", label: "4. HĐ Bàn giao SP cho NV / Khách", shortLabel: "Bàn giao SP", icon: "consignment", tone: "emerald", permission: "warehouses.read", status: "CONNECTED" },
+  { id: "warehouse-notifications", label: "5. Thông báo Hóa đơn về Kho", shortLabel: "Thông báo HĐ", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED" },
+];
 const dealer: CrmModule[] = [
   {id:'requests',label:'Đề nghị mua hàng',shortLabel:'Đề nghị',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   {id:'quotations',label:'Báo giá của tôi',shortLabel:'Báo giá',icon:'quotations',tone:'primary',permission:'orders.read',status:'CONNECTED'},
@@ -95,6 +102,7 @@ const dealer: CrmModule[] = [
 ];
 export const visibleModules = (user: Principal) => {
   if (user.area === "crm" && user.role === "ACCOUNTANT") return accountantModules;
+  if (user.area === "crm" && isWarehouseRole(user.role)) return warehouseKeeperModules;
   return (user.area === "crm" ? internal : dealer).filter(module => can(user, module.permission));
 };
 
@@ -109,6 +117,15 @@ export interface CrmHub {
 }
 
 export const crmHubs: readonly CrmHub[] = [
+  {
+    id: "warehouse-keeper",
+    label: "VẬN HÀNH KHO KHU VỰC (HCM / HN)",
+    description: "Kiểm tra số lượng tồn kho, đăng ký & kiểm tra HĐ đặt hàng, thông báo HĐ xuất Nhà máy, đối chiếu Nhà máy và bàn giao sản phẩm",
+    icon: "warehouse",
+    color: "#2563eb",
+    gradient: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+    moduleIds: ["warehouse-stock", "warehouse-orders", "warehouse-factory", "warehouse-handover", "warehouse-notifications"],
+  },
   {
     id: "accounting",
     label: "KẾ TOÁN & ĐỐI CHIẾU KHO - NHÀ MÁY",
