@@ -13,6 +13,28 @@ import { WorkHeader } from "./WorkPages";
 import { DashboardWorkbench } from "./spreadsheet/DashboardWorkbench";
 
 export async function CrmDashboard({ user }: { user: Principal }) {
+  if (user.area === "crm" && user.role === "ACCOUNTANT") {
+    return (
+      <div className="crm-dashboard-saas crm-spreadsheet-desk">
+        <header className="crm-dash-compact-bar">
+          <div className="crm-dash-compact-bar__left">
+            <span className="crm-dash-header__eyebrow">
+              <SquaresFour size={13} weight="bold" aria-hidden="true" />
+              TÀI KHOẢN KẾ TOÁN COHAMY
+            </span>
+            <h1>Không gian làm việc Kế toán</h1>
+          </div>
+        </header>
+        <section className="work-section" style={{ padding: "36px 24px", textAlign: "center" }}>
+          <h2>Đã xóa toàn bộ chức năng cũ của tài khoản Kế toán</h2>
+          <p className="crm-status-note" style={{ maxWidth: 560, margin: "10px auto 0" }}>
+            Giao diện và các phân hệ cũ của tài khoản Kế toán đã được dọn sạch hoàn toàn, sẵn sàng để xây dựng lại từ đầu theo yêu cầu mới.
+          </p>
+        </section>
+      </div>
+    );
+  }
+
   const internal = user.area === "crm";
   const modules = visibleModules(user);
 

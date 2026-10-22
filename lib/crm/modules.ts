@@ -84,7 +84,10 @@ const dealer: CrmModule[] = [
   { id: "payments", label: "Chứng từ thanh toán", shortLabel: "Chứng từ", icon: "cash", tone: "orange", permission: "finance.read", status: "CONNECTED" },
   { id: "profile", label: "Tài khoản", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "profile.read", status: "CONNECTED" },
 ];
-export const visibleModules = (user: Principal) => (user.area === "crm" ? internal : dealer).filter(module => can(user, module.permission));
+export const visibleModules = (user: Principal) => {
+  if (user.area === "crm" && user.role === "ACCOUNTANT") return [];
+  return (user.area === "crm" ? internal : dealer).filter(module => can(user, module.permission));
+};
 
 export interface CrmHub {
   id: string;

@@ -356,28 +356,32 @@ export function CrmShell({
         </div>
 
         <div className="crm-topbar__actions">
-          <Link
-            href="/crm/search"
-            className="crm-topbar__search-pill"
-            aria-label="Tìm kiếm toàn hệ thống CRM"
-          >
-            <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
-            <span>Tìm chứng từ, đối tác, SKU…</span>
-            <kbd aria-hidden="true">Ctrl K</kbd>
-          </Link>
+          {user.role !== "ACCOUNTANT" && (
+            <>
+              <Link
+                href="/crm/search"
+                className="crm-topbar__search-pill"
+                aria-label="Tìm kiếm toàn hệ thống CRM"
+              >
+                <MagnifyingGlass size={16} weight="bold" aria-hidden="true" />
+                <span>Tìm chứng từ, đối tác, SKU…</span>
+                <kbd aria-hidden="true">Ctrl K</kbd>
+              </Link>
 
-          <Link
-            href="/crm/notifications"
-            className="crm-topbar__icon-btn"
-            aria-label="Thông báo hệ thống"
-            title="Thông báo hệ thống"
-          >
-            <Bell size={18} weight="bold" aria-hidden="true" />
-          </Link>
+              <Link
+                href="/crm/notifications"
+                className="crm-topbar__icon-btn"
+                aria-label="Thông báo hệ thống"
+                title="Thông báo hệ thống"
+              >
+                <Bell size={18} weight="bold" aria-hidden="true" />
+              </Link>
 
-          <div className="crm-topbar__quick-create">
-            <QuickCreate user={user} />
-          </div>
+              <div className="crm-topbar__quick-create">
+                <QuickCreate user={user} />
+              </div>
+            </>
+          )}
 
           <Link
             href={`${root}/profile`}
@@ -421,30 +425,32 @@ export function CrmShell({
           className={`crm-sidebar${mobileMenuOpen ? " is-open" : ""}`}
           aria-label="Điều hướng nghiệp vụ"
         >
-          <div className="crm-sidebar__search">
-            <label htmlFor="crm-nav-filter" className="sr-only">
-              Lọc nhanh phân hệ
-            </label>
-            <MagnifyingGlass size={15} weight="bold" aria-hidden="true" />
-            <input
-              id="crm-nav-filter"
-              type="search"
-              value={navFilter}
-              onChange={(event) => setNavFilter(event.target.value)}
-              placeholder="Lọc nhanh 33 phân hệ…"
-              autoComplete="off"
-            />
-            {navFilter && (
-              <button
-                type="button"
-                className="crm-sidebar__search-clear"
-                aria-label="Xóa từ khóa lọc phân hệ"
-                onClick={() => setNavFilter("")}
-              >
-                <X size={14} weight="bold" aria-hidden="true" />
-              </button>
-            )}
-          </div>
+          {user.role !== "ACCOUNTANT" && (
+            <div className="crm-sidebar__search">
+              <label htmlFor="crm-nav-filter" className="sr-only">
+                Lọc nhanh phân hệ
+              </label>
+              <MagnifyingGlass size={15} weight="bold" aria-hidden="true" />
+              <input
+                id="crm-nav-filter"
+                type="search"
+                value={navFilter}
+                onChange={(event) => setNavFilter(event.target.value)}
+                placeholder="Lọc nhanh 33 phân hệ…"
+                autoComplete="off"
+              />
+              {navFilter && (
+                <button
+                  type="button"
+                  className="crm-sidebar__search-clear"
+                  aria-label="Xóa từ khóa lọc phân hệ"
+                  onClick={() => setNavFilter("")}
+                >
+                  <X size={14} weight="bold" aria-hidden="true" />
+                </button>
+              )}
+            </div>
+          )}
 
           <nav className="crm-nav" aria-label="Danh mục phân hệ CRM">
             <Link

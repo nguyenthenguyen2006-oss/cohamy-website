@@ -41,6 +41,7 @@ function Header({title,description}:{title:string;description:string}) {return <
 export function Profile({user}:{user:Principal}) {return <><Header title="Hồ sơ và phiên đăng nhập" description="Quyền và tổ chức dưới đây lấy từ phiên database, không lấy từ trình duyệt."/><dl className="crm-readonly"><dt>Tài khoản</dt><dd>{user.displayName} · {user.email}</dd><dt>Vai trò</dt><dd>{roleLabels[user.role]}</dd><dt>Tổ chức</dt><dd>{user.organizationName}</dd><dt>Phạm vi truy cập</dt><dd>{user.area==="portal"?"Tổ chức của bạn. Không truy cập dữ liệu đại lý khác.":"Theo vai trò và đối tác/kho được giao."}</dd></dl></>;}
 export async function CrmModulePage({area,segments,query}:{area:Area;segments:string[];query:Record<string,string|string[]|undefined>}) {
   const user=await pageUser(area);const [slug,id]=segments;
+  if(area==="crm"&&user.role==="ACCOUNTANT"&&slug!=="profile")redirect("/crm");
   if(segments.length>2)notFound();
   if(slug==="hub"&&id)return <CrmHubPage hubId={id} user={user}/>;
   if(slug==="hub"&&!id)redirect(`/${area}`);
