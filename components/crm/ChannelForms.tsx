@@ -1,9 +1,11 @@
 'use client';
-import {useMemo,useState} from 'react';
+import {useMemo,useRef,useState} from 'react';
 import {useRouter} from 'next/navigation';
 import Link from 'next/link';
 import {Form} from './CommercialForms';
+import {OrderInvoiceTrigger} from './OrderInvoiceModal';
 import type {PriceCalculation} from '@/lib/crm/pricing-model';
+import type {OrderInvoicePayload} from '@/lib/crm/order-invoice-model';
 import {availabilityLabels,badgeLabels,percentText,promotionScopeLabels,regionLabels,rewardLabels,periodLabels} from '@/lib/crm/channel-labels';
 
 /** Meeting 12/10 — client forms for network, levels, promotions, transfers, KPI, invoices, shortages and the order catalog. */
@@ -128,13 +130,28 @@ export function ShortageForm({orderId,lines}:{orderId:string;lines:{sku:string;n
 // ---------------------------------------------------------------------------
 export interface CatalogItemView {sku:string;name:string;category:string;weightLabel:string;image:string|null;stockUnit:string;listUnitPrice:string;promotion:{percentBp:number;name:string;badge:string|null;minBaseQuantity:string}|null;accountPercentBp:number;estimatedUnitPrice:string;availability:'IN_STOCK'|'LOW'|'OUT'|'UNKNOWN'}
 export function OrderCatalog({organizationId,items,levelName,delivery,legacyHref}:{organizationId:string;items:CatalogItemView[];levelName:string|null;delivery:{recipient:string;phone:string;address:string};legacyHref:string}){
- const router=useRouter();const [qty,setQty]=useState<Record<string,string>>({}),[filter,setFilter]=useState(''),[calc,setCalc]=useState<PriceCalculation|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState(''),[key]=useState(()=>typeof crypto!=='undefined'?crypto.randomUUID():'');
+ const router=useRouter(),formRef=useRef<HTMLFormElement>(null);const [qty,setQty]=useState<Record<string,string>>({}),[filter,setFilter]=useState(''),[calc,setCalc]=useState<PriceCalculation|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState(''),[key]=useState(()=>typeof crypto!=='undefined'?crypto.randomUUID():'');
  const lines=useMemo(()=>Object.entries(qty).filter(([,v])=>/^\d+$/.test(v)&&Number(v)>0).map(([sku,quantity])=>({sku,unitCode:'BASE',quantity})),[qty]);
  const shown=items.filter(i=>!filter||(i.name+' '+i.sku+' '+i.category).toLowerCase().includes(filter.toLowerCase()));
  const set=(sku:string,v:string)=>{setCalc(null);setQty(q=>({...q,[sku]:v.replace(/[^0-9]/g,'').slice(0,9)}));};
  async function post(endpoint:string,body:unknown){const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw Error(j.error==='ORDER_MINIMUM_NOT_MET'?'Chưa đạt mức đặt tối thiểu.':j.error==='PRICE_UNAVAILABLE'?'Chưa có bảng giá hiệu lực.':'Chưa xử lý được ('+(j.error??r.status)+').');return j;}
  async function review(){setError('');setBusy(true);try{const r=await post('/api/crm/pricing/preview',{organizationId,basket:{lines,discountBasisPoints:0,creditTerms:false}});setCalc(r.calculation as PriceCalculation);}catch(e){setError(e instanceof Error?e.message:'Lỗi');}finally{setBusy(false);}}
  async function save(form:HTMLFormElement){setError('');setBusy(true);try{const f=new FormData(form);const r=await post('/api/crm/commerce/save-request',{version:0,organizationId,channel:'PORTAL',basket:{lines,discountBasisPoints:0,creditTerms:false},delivery:{recipient:str(f,'recipient'),phone:str(f,'phone'),address:str(f,'address')},note:str(f,'note'),idempotencyKey:key});router.push('/portal/requests/'+r.id);router.refresh();}catch(e){setError(e instanceof Error?e.message:'Lỗi');setBusy(false);}}
+ async function loadDraftInvoice():Promise<OrderInvoicePayload>{
+  if(!lines.length)throw new Error('Vui lòng chọn ít nhất 1 sản phẩm và nhập số lượng > 0 trước khi xem hóa đơn.');
+  const f=formRef.current?new FormData(formRef.current):null;
+  const r=await post('/api/crm/commerce/invoice-preview',{
+   organizationId,
+   basket:{lines,discountBasisPoints:0,creditTerms:false},
+   delivery:{
+    recipient:f?str(f,'recipient'):delivery.recipient,
+    phone:f?str(f,'phone'):delivery.phone,
+    address:f?str(f,'address'):delivery.address,
+   },
+   note:f?str(f,'note'):'',
+  });
+  return r as OrderInvoicePayload;
+ }
  const badge=(b:string|null)=>b?<span className={'channel-badge channel-badge--'+b.toLowerCase()}>{badgeLabels[b]??b}</span>:null;
  return <section className="channel-catalog">
   <div className="table-toolbar"><div className="field"><label htmlFor="catalog-filter">Tìm sản phẩm</label><input id="catalog-filter" value={filter} onChange={e=>setFilter(e.target.value)} placeholder="Tên, SKU hoặc nhóm"/></div>{levelName&&<p className="work-help">Hạng của bạn: <strong>{levelName}</strong></p>}<Link className="button button--secondary" href={legacyHref}>Nhập theo SKU / Excel</Link></div>
@@ -149,9 +166,9 @@ export function OrderCatalog({organizationId,items,levelName,delivery,legacyHref
    {i.accountPercentBp>0&&<p className="work-help">Chiết khấu tài khoản {percentText(i.accountPercentBp)}</p>}
    <p className={'channel-stock channel-stock--'+i.availability.toLowerCase()}>{availabilityLabels[i.availability]}</p>
    <label className="channel-qty">Số lượng<input inputMode="numeric" value={qty[i.sku]??''} onChange={e=>set(i.sku,e.target.value)} placeholder="0" aria-label={'Số lượng '+i.name} disabled={i.availability==='OUT'}/></label></div></li>)}</ul>}
-  <form className="work-form" onSubmit={e=>{e.preventDefault();void save(e.currentTarget);}}>
+  <form ref={formRef} className="work-form" onSubmit={e=>{e.preventDefault();void save(e.currentTarget);}}>
    <h2>Giỏ đặt hàng ({lines.length} sản phẩm)</h2>
-   <button type="button" className="button button--secondary" disabled={!lines.length||busy} onClick={()=>void review()}>Xem giá chi tiết</button>
+   <div className="crm-inline-actions"><button type="button" className="button button--secondary" disabled={!lines.length||busy} onClick={()=>void review()}>Xem giá chi tiết</button><OrderInvoiceTrigger onLoadDraft={loadDraftInvoice} buttonClassName="button button--secondary" buttonLabel="🧾 Xem trước & Xuất Hóa đơn (PDF)"/></div>
    {calc&&<div className="crm-table-wrap" role="region" aria-label="Bảng giá đơn" tabIndex={0}><table className="data-table"><thead><tr><th scope="col">Sản phẩm</th><th scope="col">SL</th><th scope="col">Giá gốc</th><th scope="col">KM</th><th scope="col">Giá sau KM</th><th scope="col">CK tài khoản</th><th scope="col">Đơn giá cuối</th><th scope="col">Thành tiền</th></tr></thead>
     <tbody>{calc.lines.map((l,n)=><tr key={l.sku+n}><td>{l.name}{l.gift?' (tặng)':''}</td><td>{l.quantity}</td><td>{money(l.listUnitPrice??l.unitPrice)}</td><td>{l.promoPercentBp?percentText(l.promoPercentBp):'—'}</td><td>{money(l.priceAfterPromo??l.unitPrice)}</td><td>{l.accountPercentBp?percentText(l.accountPercentBp):'—'}</td><td>{money(l.unitPrice)}</td><td>{money(l.total)}</td></tr>)}</tbody>
     <tfoot>{calc.channel&&<tr><th scope="row" colSpan={7}>Tổng giá gốc</th><td>{money(calc.channel.listSubtotal)}</td></tr>}<tr><th scope="row" colSpan={7}>Tổng thanh toán</th><td><strong>{money(calc.total)}</strong></td></tr>{calc.channel&&BigInt(calc.channel.listSubtotal)>BigInt(calc.subtotal)&&<tr><th scope="row" colSpan={7}>Tiết kiệm</th><td>{money(BigInt(calc.channel.listSubtotal)-BigInt(calc.subtotal))}</td></tr>}</tfoot></table></div>}

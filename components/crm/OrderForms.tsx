@@ -1,9 +1,11 @@
 'use client';
-import {useId,useState} from 'react';
+import {useId,useRef,useState} from 'react';
 import Link from 'next/link';
 import {percentText} from '@/lib/crm/channel-labels';
 import {Form,resolveProductImage,ProductThumbZoom,defaultUnitForProduct,type ProductChoice} from './CommercialForms';
+import {OrderInvoiceTrigger} from './OrderInvoiceModal';
 import {fixed} from '@/lib/crm/decimal';
+import type {OrderInvoicePayload} from '@/lib/crm/order-invoice-model';
 import type {Basket,PriceCalculation} from '@/lib/crm/pricing-model';
 import type {CommercialRequest,RequestVersion,RequestViewVersion} from '@/lib/crm/order-requests';
 import type {SalesOrder,SalesVersion} from '@/lib/crm/sales-orders';
@@ -158,7 +160,40 @@ function FastBasket({products,lines,setLines,initial}:{products:ProductChoice[];
   </div>
  </>;
 }
-export function RequestForm({products,partners,draftOwner,self,head,latest,source,initialBasket}:{products:ProductChoice[];partners:Choice[];draftOwner:string;self?:string;head?:CommercialRequest;latest?:RequestViewVersion;initialBasket?:Basket;source?:{channel:'WEBSITE'|'QUOTATION'|'REORDER';id:string;basket?:Basket;delivery?:RequestVersion['snapshot']['delivery'];note?:string}}){const initial=latest?.snapshot,[lines,setLines]=useState<Basket['lines']>(initial?.basket.lines??initialBasket?.lines??source?.basket?.lines??[{sku:'',unitCode:'',quantity:''}]);const area=self?'portal':'crm',restore=(snapshot:unknown)=>{const value=snapshot as {lines?:Basket['lines']}|null;if(value?.lines?.length&&value.lines.length<=200&&value.lines.every(line=>typeof line.sku==='string'&&typeof line.unitCode==='string'&&typeof line.quantity==='string'))setLines(value.lines);};return <Form endpoint="/api/crm/commerce/save-request" offlineDraft={{owner:draftOwner,key:'commercial-request-'+(head?.id??source?.id??'new'),snapshot:()=>({lines}),restore}} label="Lưu bản nháp và tính giá" destination={r=>'/'+area+'/requests/'+r.id} payload={f=>{const channel=head?.channel??source?.channel??(self?'PORTAL':value(f,'channel'));return {...(head?{id:head.id}:{}),version:head?.version??0,organizationId:head?.organization_id??self??value(f,'organizationId'),channel,...(channel==='WEBSITE'?{sourceWebsiteId:head?.source_website_id??source?.id}:{}),...(channel==='QUOTATION'?{sourceQuotationId:head?.source_quotation_id??source?.id}:{}),...(channel==='REORDER'?{sourceOrderId:head?.source_order_id??source?.id}:{}),basket:basket(f,lines),delivery:{recipient:value(f,'recipient'),phone:value(f,'phone'),address:value(f,'address')},note:value(f,'note')};}}>{!head&&<PartnerField self={self} partners={partners}/>}<p>Lưu bản nháp sẽ tính giá hiện tại và ghi bản mới. Kiểm tra giá, hàng tặng, địa chỉ và mức tối thiểu trước khi đề nghị.</p>{!self&&!head&&!source&&<label>Kênh tiếp nhận<select name="channel"><option value="PHONE">Điện thoại</option><option value="VISIT">Lần thăm</option><option value="OTHER">Khác</option></select></label>}<FastBasket products={products} lines={lines} setLines={setLines} initial={initial?.basket??initialBasket??source?.basket}/><DeliveryFields initial={initial??(source?.delivery?{delivery:source.delivery,note:source.note??''} as RequestVersion['snapshot']:undefined)}/></Form>;}
+export function RequestForm({products,partners,draftOwner,self,head,latest,source,initialBasket}:{products:ProductChoice[];partners:Choice[];draftOwner:string;self?:string;head?:CommercialRequest;latest?:RequestViewVersion;initialBasket?:Basket;source?:{channel:'WEBSITE'|'QUOTATION'|'REORDER';id:string;basket?:Basket;delivery?:RequestVersion['snapshot']['delivery'];note?:string}}){
+ const initial=latest?.snapshot,wrapRef=useRef<HTMLDivElement>(null),[lines,setLines]=useState<Basket['lines']>(initial?.basket.lines??initialBasket?.lines??source?.basket?.lines??[{sku:'',unitCode:'',quantity:''}]);
+ const area=self?'portal':'crm',restore=(snapshot:unknown)=>{const value=snapshot as {lines?:Basket['lines']}|null;if(value?.lines?.length&&value.lines.length<=200&&value.lines.every(line=>typeof line.sku==='string'&&typeof line.unitCode==='string'&&typeof line.quantity==='string'))setLines(value.lines);};
+ const loadDraftInvoice=async():Promise<OrderInvoicePayload>=>{
+  const formEl=wrapRef.current?.querySelector('form');
+  if(!formEl)throw new Error('Không tìm thấy biểu mẫu yêu cầu đặt hàng.');
+  const f=new FormData(formEl);
+  const organizationId=head?.organization_id??self??value(f,'organizationId');
+  if(!organizationId)throw new Error('Vui lòng chọn Đối tác yêu cầu trước khi xem trước hóa đơn.');
+  const b=basket(f,lines);
+  if(!b.lines.some(l=>l.sku.trim()!==''&&l.unitCode.trim()!==''&&Number(l.quantity)>0)){
+   throw new Error('Vui lòng chọn sản phẩm và nhập số lượng > 0 trước khi xem hóa đơn.');
+  }
+  const res=await fetch('/api/crm/commerce/invoice-preview',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({
+    organizationId,
+    basket:b,
+    delivery:{
+     recipient:value(f,'recipient'),
+     phone:value(f,'phone'),
+     address:value(f,'address'),
+    },
+    note:value(f,'note'),
+    requestCode:head?.code,
+   }),
+  });
+  const data=await res.json();
+  if(!res.ok)throw new Error(data.error||'Chưa tính được dữ liệu hóa đơn cho giỏ hàng này.');
+  return data as OrderInvoicePayload;
+ };
+ return <div ref={wrapRef}><Form endpoint="/api/crm/commerce/save-request" offlineDraft={{owner:draftOwner,key:'commercial-request-'+(head?.id??source?.id??'new'),snapshot:()=>({lines}),restore}} label="Lưu bản nháp và tính giá" destination={r=>'/'+area+'/requests/'+r.id} payload={f=>{const channel=head?.channel??source?.channel??(self?'PORTAL':value(f,'channel'));return {...(head?{id:head.id}:{}),version:head?.version??0,organizationId:head?.organization_id??self??value(f,'organizationId'),channel,...(channel==='WEBSITE'?{sourceWebsiteId:head?.source_website_id??source?.id}:{}),...(channel==='QUOTATION'?{sourceQuotationId:head?.source_quotation_id??source?.id}:{}),...(channel==='REORDER'?{sourceOrderId:head?.source_order_id??source?.id}:{}),basket:basket(f,lines),delivery:{recipient:value(f,'recipient'),phone:value(f,'phone'),address:value(f,'address')},note:value(f,'note')};}}>{!head&&<PartnerField self={self} partners={partners}/>}<p>Lưu bản nháp sẽ tính giá hiện tại và ghi bản mới. Kiểm tra giá, hàng tặng, địa chỉ và mức tối thiểu trước khi đề nghị.</p>{!self&&!head&&!source&&<label>Kênh tiếp nhận<select name="channel"><option value="PHONE">Điện thoại</option><option value="VISIT">Lần thăm</option><option value="OTHER">Khác</option></select></label>}<FastBasket products={products} lines={lines} setLines={setLines} initial={initial?.basket??initialBasket??source?.basket}/><DeliveryFields initial={initial??(source?.delivery?{delivery:source.delivery,note:source.note??''} as RequestVersion['snapshot']:undefined)}/><div className="crm-inline-actions" style={{marginTop:'8px'}}><OrderInvoiceTrigger onLoadDraft={loadDraftInvoice} buttonClassName="button button--secondary" buttonLabel="🧾 Xem trước & Xuất Hóa đơn (PDF)"/></div></Form></div>;
+}
 const actionLabels:Record<string,string>={PROPOSE:'Đề nghị bản này',OWNER_APPROVE:'Chủ đại lý duyệt bản này',OWNER_REJECT:'Chủ đại lý từ chối bản này',APPROVE:'Duyệt ngoại lệ',REJECT:'Từ chối ngoại lệ',CONFIRM:'Xác nhận đơn bán'};
 export function RequestActionForm({head,actions,submit=false,area}:{head:CommercialRequest;actions:string[];submit?:boolean;area:string}){return <Form endpoint={'/api/crm/commerce/'+(submit?'submit-request':'request-action')} label={submit?'Gửi đề nghị đến bên bán':'Xác nhận thao tác đề nghị'} destination={submit?r=>'/'+area+'/'+(area==='portal'?'orders':'sales')+'/'+r.id:undefined} payload={f=>({id:head.id,version:head.version,versionId:head.latest_version_id,...(!submit?{action:value(f,'action')}:{}),reason:value(f,'reason')})}>{!submit&&<label>Thao tác đề nghị<select aria-label="Thao tác đề nghị" name="action">{actions.map(a=><option key={a} value={a}>{actionLabels[a]}</option>)}</select></label>}<label>Lý do thao tác<textarea aria-label="Lý do thao tác" name="reason" required minLength={3} maxLength={submit?1000:2000}/></label>{submit&&<p>Gửi tạo một đơn để bên bán kiểm tra và xác nhận. Đơn này chưa xuất kho hoặc ghi công nợ.</p>}</Form>;}
 export function EscalateRequestForm({requestId,area}:{requestId:string;area:string}){return <Form endpoint="/api/crm/commerce/escalate-request" label="Tạo yêu cầu mua lên cấp trên" destination={r=>'/'+area+'/requests/'+r.id} payload={f=>({requestId,reason:value(f,'reason')})}><label>Lý do chuyển lên cấp trên<textarea name="reason" required minLength={3} maxLength={1000}/></label><p>Yêu cầu mới dùng giá mua của đại lý, lưu thành nháp để kiểm tra trước khi gửi.</p></Form>;}

@@ -8,6 +8,7 @@ import * as previews from '@/lib/crm/order-previews';
 import * as excel from '@/lib/crm/request-excel';
 import * as changes from '@/lib/crm/order-changes';
 import * as routing from '@/lib/crm/order-routing';
+import * as invoicePdf from '@/lib/crm/order-invoice-pdf';
 type Context={params:Promise<{action:string}>};
 export async function GET(request:Request,context:Context){try{
  const user=await apiUser(),{action}=await context.params,p=new URL(request.url).searchParams,id=p.get('id')??'';
@@ -21,6 +22,19 @@ export async function GET(request:Request,context:Context){try{
  if(action==='request-events'||action==='order-events')return json(await requests.commercialTimeline(user,action==='request-events'?'request':'order',id));
  if(action==='policy')return json(await policy.readOrderPolicy(user));
  if(action==='reorder')return json(await previews.reorderPreview(user,id));
+ if(action==='invoice-data'){
+  const orderId=p.get('orderId')??'',requestId=p.get('requestId')??id,versionId=p.get('versionId')??undefined;
+  return json(orderId?await invoicePdf.getOrderInvoicePayloadForSalesOrder(user,orderId,versionId):await invoicePdf.getOrderInvoicePayloadForRequest(user,requestId,versionId));
+ }
+ if(action==='invoice-pdf'){
+  const result=await invoicePdf.downloadOrderInvoicePdf(user,{
+   requestId:p.get('requestId')??(id||undefined),
+   orderId:p.get('orderId')??undefined,
+   versionId:p.get('versionId')??undefined,
+   expectedDeliveryDate:p.get('expectedDeliveryDate')??undefined,
+  });
+  return new Response(new Uint8Array(result.bytes),{headers:{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename="'+result.filename+'"','Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow','Referrer-Policy':'no-referrer'}});
+ }
  if(action==='excel-template')return new Response(new Uint8Array(await excel.excelRequestTemplate(user)),{headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','Content-Disposition':'attachment; filename="cohamy-request.xlsx"','Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow'}});
  throw new CrmError('NOT_FOUND',404);
 }catch(e){return apiError(e);}}
@@ -28,6 +42,11 @@ export async function POST(request:Request,context:Context){try{
  sameOrigin(request);const user=await apiUser(),{action}=await context.params;
  if(action==='excel-preview'){const {bytes,input}=await readCommercialMultipart(request);return json(await excel.previewExcelRequest(user,bytes,input));}
  const input=await readJson(request);
+ if(action==='invoice-preview')return json(await invoicePdf.previewDraftInvoicePayload(user,input));
+ if(action==='invoice-pdf'){
+  const result=await invoicePdf.generateCustomInvoicePdf(user,input);
+  return new Response(new Uint8Array(result.bytes),{headers:{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename="'+result.filename+'"','Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow','Referrer-Policy':'no-referrer'}});
+ }
  if(action==='save-request')return json(await requests.saveCommercialRequest(user,input));
  if(action==='request-action')return json(await requests.requestAction(user,input));
  if(action==='submit-request')return json(await orders.submitSalesRequest(user,input));
