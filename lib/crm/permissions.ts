@@ -13,6 +13,9 @@ const permissions: Record<Role, readonly string[]> = {
   DEALER_STAFF: ["catalog.read", "warehouses.read", "orders.read", "consignment.read", "profile.read"],
 };
 export function can(user: Principal, permission: string): boolean {
+  if(permission==='internal-documents.manage')return user.area==='crm'&&user.role==='ADMIN';
+  if(permission==='internal-documents.read')return user.area==='crm'&&(user.role==='ACCOUNTANT'||isWarehouseRole(user.role));
+  if(permission==='internal-documents.access')return user.area==='crm'&&(user.role==='ADMIN'||user.role==='ACCOUNTANT'||isWarehouseRole(user.role));
   if(permission==="pricing.manage")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
   if(permission==="articles.read"||permission==="articles.write")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
   if(permission==="workspace.use")return true;

@@ -1,0 +1,49 @@
+{
+  "environment": "LOCAL isolated PGlite",
+  "testedAt": "2026-10-23T06:49:07.075Z",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Role matrix: admin uploads/manages; only accountants and all warehouse roles read file bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Retries and concurrent double submits create exactly one document",
+      "status": "PASS"
+    },
+    {
+      "name": "PDF, images and Office containers preserve the original bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Executable, HTML/SVG, spoofed MIME/signatures, broken Office archives and traversal filenames are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Empty and oversized files are rejected before persistence",
+      "status": "PASS"
+    },
+    {
+      "name": "Account revocation and stale membership versions deny access immediately",
+      "status": "PASS"
+    },
+    {
+      "name": "Portal/forged identities cannot use CRM document privileges",
+      "status": "PASS"
+    },
+    {
+      "name": "Search returns metadata only and upload actions are audited",
+      "status": "PASS"
+    },
+    {
+      "name": "Stored file checksums are validated on reads and included in database backup checks",
+      "status": "PASS"
+    },
+    {
+      "name": "Upload rate limit allows thirty files per admin per hour and rejects the next",
+      "status": "PASS"
+    }
+  ],
+  "production": "NOT RUN",
+  "officeScope": "Container validation and byte preservation; no Office application rendering claim"
+}

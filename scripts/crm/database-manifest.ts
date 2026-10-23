@@ -16,6 +16,10 @@ export async function databaseManifest(sql:Sql):Promise<DatabaseManifest>{
   const missing=sources.filter(s=>names.has(s.table)).map(s=>`(d.entity_type='${s.type}' AND NOT EXISTS(SELECT 1 FROM cohamy_crm.${s.table} p WHERE p.id=d.entity_id))`);
   if(missing.length)result.documentSourceErrors=(await sql.query<{count:string}>(`SELECT count(*)::text AS count FROM cohamy_crm.private_documents d WHERE ${missing.join(' OR ')}`)).rows[0].count;
  }
+ if(names.has('internal_documents')){
+  const invalid=(await sql.query<{count:string}>("SELECT count(*)::text AS count FROM cohamy_crm.internal_documents WHERE octet_length(content)<>size OR checksum<>encode(sha256(content),'hex')")).rows[0].count;
+  result.fileIntegrityErrors=String(Number(result.fileIntegrityErrors)+Number(invalid));
+ }
  if(result.fileIntegrityErrors!=='0'||result.documentSourceErrors!=='0')throw new Error('DATABASE_SOURCE_OR_FILE_INTEGRITY_FAILED');
  return result;
 }

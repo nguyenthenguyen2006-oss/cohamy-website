@@ -6,6 +6,7 @@ import type { Principal } from "@/lib/crm/types";
 import { CrmModuleIcon } from "./ModuleIcon";
 
 const moduleDetails: Record<string, { desc: string; action: string }> = {
+  'internal-documents': { desc: 'Tài liệu admin đăng dành cho kế toán và thủ kho', action: 'Mở danh sách tài liệu' },
   requests: { desc: "Tiếp nhận và xử lý các đề xuất mua hàng", action: "Xem yêu cầu" },
   sales: { desc: "Theo dõi đơn bán buôn và trạng thái giao hàng", action: "Xem đơn bán" },
   pricing: { desc: "Chính sách giá bán và chiết khấu cấp đối tác", action: "Quản lý bảng giá" },

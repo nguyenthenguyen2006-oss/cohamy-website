@@ -1,0 +1,44 @@
+{
+  "environment": "LOCAL isolated PGlite and Microsoft Edge",
+  "testedAt": "2026-10-23T07:00:54.825Z",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Anonymous list/file APIs require authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin uploads a real PDF through the browser with Vietnamese metadata",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin desktop/mobile pages use the existing CRM table layout without file-read controls",
+      "status": "PASS"
+    },
+    {
+      "name": "Cross-origin, extra-audience fields and oversize multipart bodies are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Accountant and all three warehouse roles can view, preview and download, and cannot upload",
+      "status": "PASS"
+    },
+    {
+      "name": "Manager, sales and both dealer roles have no menu, page, list, download or upload access",
+      "status": "PASS"
+    },
+    {
+      "name": "New files do not bypass the old private-document endpoint and retired modules remain closed",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "screens": [
+    "docs/crm/test-results/screenshots/internal-documents-admin-1440.png",
+    "docs/crm/test-results/screenshots/internal-documents-admin-390.png",
+    "docs/crm/test-results/screenshots/internal-documents-reader-preview.png",
+    "docs/crm/test-results/screenshots/internal-documents-reader-390.png"
+  ],
+  "fixtureChecksum": "acf8b6382ec3e1c69ca84e2b4a45772c4e8d66f30d981825be852622342fa445",
+  "deployment": "NOT RUN"
+}

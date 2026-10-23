@@ -79,14 +79,12 @@
     "test:crm:security": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-security.ts",
     "test:crm:reports": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-reports.ts",
     "test:crm:pwa": "node scripts/crm/verify-pwa.mjs",
-
     "test:crm:commercial-orders": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-commercial-orders.ts",
     "test:crm:meeting-contract": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-contract.ts",
     "test:crm:meeting-53": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-53-amendments.ts",
     "test:crm:meeting-1012": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-1012.ts",
     "test:crm:request-excel": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-request-excel.ts",
     "test:crm:quotation-pdf": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-quotation-pdf.ts",
-
     "test:crm:browser-140": "node scripts/crm/verify-140-browser-smoke.mjs",
     "crm:demo-verify": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify.ts",
     "crm:demo-browser": "node scripts/crm/demo/browser-smoke.mjs",
@@ -96,7 +94,8 @@
     "crm:demo-verify-db": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/verify-db.ts",
     "crm:demo-target-test": "node --import tsx scripts/crm/demo/test-database-target.ts",
     "test:crm:meeting-migration": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-migration.ts",
-    "test:crm:meeting-runtime-browser": "node scripts/crm/verify-meeting-runtime-browser.mjs"
+    "test:crm:meeting-runtime-browser": "node scripts/crm/verify-meeting-runtime-browser.mjs",
+    "test:crm:internal-documents": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-internal-documents.ts && node scripts/crm/verify-internal-documents-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -114,6 +113,7 @@
     "googleapis": "^173.0.0",
     "jose": "^6.2.4",
     "jsdom": "^28.1.0",
+    "jszip": "3.10.2",
     "lucide-react": "^1.21.0",
     "next": "16.3.5",
     "next-intl": "^4.13.0",
