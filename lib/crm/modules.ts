@@ -32,21 +32,15 @@ const internal: CrmModule[] = [
   {id:'sales',label:'Đơn bán đã tiếp nhận',shortLabel:'Đơn bán',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   {id:'pricing',label:'Bảng giá và cấp đối tác',shortLabel:'Bảng giá',icon:'pricing',tone:'primary',permission:'pricing.manage',status:'CONNECTED'},
   {id:'quotations',label:'Báo giá theo phiên bản',shortLabel:'Báo giá',icon:'quotations',tone:'primary',permission:'orders.read',status:'CONNECTED'},
-  {id:'automation',label:'Lịch và quy tắc công việc',shortLabel:'Lịch công việc',icon:'automation',tone:'primary',permission:'partners.write',status:'CONNECTED'},
   {id:'fields',label:'Trường hồ sơ tùy chỉnh',shortLabel:'Trường dữ liệu',icon:'account',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   {id:'care',label:'Danh mục chăm sóc',shortLabel:'Chăm sóc',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
   {id:'visits',label:'Lần thăm điểm bán',shortLabel:'Lần thăm',icon:'customer',tone:'primary',permission:'partners.read',status:'CONNECTED'},
-  {id:'library',label:'Thư viện đối tác',shortLabel:'Tài liệu',icon:'library',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
-  {id:'support',label:'Phiếu hỗ trợ',shortLabel:'Hỗ trợ',icon:'support',tone:'primary',permission:'partners.read',status:'CONNECTED'},
-  {id:'articles',label:'Bài viết website',shortLabel:'Bài viết',icon:'library',tone:'primary',permission:'articles.read',status:'CONNECTED'},
   {id:'data',label:'Import và export',shortLabel:'Dữ liệu',icon:'data',tone:'primary',permission:'partners.write',status:'CONNECTED'},
   {id:'search',label:'Tìm kiếm',shortLabel:'Tìm kiếm',icon:'search',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
   {id:'notifications',label:'Thông báo',shortLabel:'Thông báo',icon:'notifications',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
   {id:'workspace',label:'Không gian cá nhân',shortLabel:'Cá nhân',icon:'account',tone:'primary',permission:'workspace.use',status:'CONNECTED'},
   {id:'applications',label:'Xét duyệt đối tác',shortLabel:'Xét duyệt',icon:'applications',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
-  {id:'invitations',label:'Link mời đối tác',shortLabel:'Link mời',icon:'invitations',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
   {id:'audit',label:'Lịch sử thao tác',shortLabel:'Lịch sử',icon:'audit',tone:'primary',permission:'accounts.manage',status:'CONNECTED'},
-  {id:'network',label:'Mạng lưới, hạng & khuyến mãi',shortLabel:'Mạng lưới',icon:'dealer',tone:'primary',permission:'channel.manage',status:'CONNECTED'},
   {id:'period-sales',label:'Doanh số tháng / quý / năm',shortLabel:'Doanh số kỳ',icon:'report',tone:'emerald',permission:'reports.period',status:'CONNECTED'},
   {id:'kpi',label:'Chương trình KPI & thưởng',shortLabel:'KPI',icon:'report',tone:'orange',permission:'incentives.manage',status:'CONNECTED'},
   { id: "customers", label: "Khách hàng", shortLabel: "Khách hàng", icon: "customer", tone: "success", permission: "partners.read", status: "CONNECTED", bottom: 1 },
@@ -55,8 +49,6 @@ const internal: CrmModule[] = [
   { id: "orders", label: "Yêu cầu đặt hàng", shortLabel: "Đơn hàng", icon: "order", tone: "info", permission: "orders.read", status: "CONNECTED", bottom: 3 },
   { id: "tasks", label: "Việc cần làm", shortLabel: "Công việc", icon: "tasks", tone: "primary", permission: "partners.write", status: "CONNECTED" },
   { id: "inventory", label: "Danh mục kho", shortLabel: "Kho", icon: "warehouse", tone: "indigo", permission: "warehouses.read", status: "CONNECTED" },
-  { id: "procurement", label: "Mua hàng và nhà cung cấp", shortLabel: "Mua hàng", icon: "procurement", tone: "indigoDark", permission: "procurement.read", status: "CONNECTED" },
-  { id: "consignment", label: "Ký gửi", shortLabel: "Ký gửi", icon: "consignment", tone: "warning", permission: "consignment.read", status: "CONNECTED" },
   { id: "debts", label: "Công nợ", shortLabel: "Công nợ", icon: "debt", tone: "danger", permission: "finance.read", status: "CONNECTED" },
   { id: "cash", label: "Thu chi", shortLabel: "Thu chi", icon: "cash", tone: "orange", permission: "finance.read", status: "CONNECTED" },
   { id: "reports", label: "Báo cáo tiếp nhận", shortLabel: "Báo cáo", icon: "report", tone: "emerald", permission: "reports.read", status: "CONNECTED" },
@@ -247,7 +239,12 @@ export function getVisibleHubs(user: Principal): VisibleHub[] {
   for (const hub of crmHubs) {
     const hubModules = allowed.filter(m => hub.moduleIds.includes(m.id));
     if (hubModules.length > 0) {
-      result.push({ hub, modules: hubModules });
+      const visibleHub = user.area === "crm" && hub.id === "tasks"
+        ? { ...hub, label: "CÔNG VIỆC & THÔNG BÁO", description: "Việc cần làm và thông báo hệ thống" }
+        : user.area === "crm" && hub.id === "dealers"
+          ? { ...hub, description: "Danh bạ đại lý phân phối, hồ sơ đăng ký và xét duyệt đối tác" }
+          : hub;
+      result.push({ hub: visibleHub, modules: hubModules });
     }
   }
   return result;

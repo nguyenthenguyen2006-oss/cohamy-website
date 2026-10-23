@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
-import { crmHubs, visibleModules, type CrmModule } from "@/lib/crm/modules";
+import { getVisibleHubs, type CrmModule } from "@/lib/crm/modules";
 import type { Principal } from "@/lib/crm/types";
 import { CrmModuleIcon } from "./ModuleIcon";
 
@@ -45,11 +45,9 @@ const moduleDetails: Record<string, { desc: string; action: string }> = {
 };
 
 export function CrmHubPage({ hubId, user }: { hubId: string; user: Principal }) {
-  const hub = crmHubs.find((h) => h.id === hubId);
-  if (!hub) notFound();
-
-  const allowed = visibleModules(user);
-  const hubModules = allowed.filter((m) => hub.moduleIds.includes(m.id));
+  const entry = getVisibleHubs(user).find(({ hub }) => hub.id === hubId);
+  if (!entry) notFound();
+  const { hub, modules: hubModules } = entry;
 
   const root = `/${user.area}`;
 

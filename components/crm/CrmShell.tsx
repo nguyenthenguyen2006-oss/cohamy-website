@@ -16,7 +16,7 @@ import {
   UserCircle,
   X,
 } from "@phosphor-icons/react";
-import { crmHubs, getVisibleHubs, visibleModules } from "@/lib/crm/modules";
+import { getVisibleHubs, visibleModules } from "@/lib/crm/modules";
 import { roleLabels, type Principal } from "@/lib/crm/types";
 import { CrmModuleIcon } from "./ModuleIcon";
 import { PwaRegistrar } from "./PwaRegistrar";
@@ -73,10 +73,7 @@ export function CrmShell({
   const isHubRoute = activeSlug === "hub" && Boolean(activeSub);
   const activeModule = modules.find((item) => item.id === activeSlug);
   const activeHubEntry = isHubRoute
-    ? visibleHubs.find((entry) => entry.hub.id === activeSub) ??
-      (crmHubs.find((h) => h.id === activeSub)
-        ? { hub: crmHubs.find((h) => h.id === activeSub)!, modules: [] }
-        : undefined)
+    ? visibleHubs.find((entry) => entry.hub.id === activeSub)
     : activeModule
       ? visibleHubs.find((entry) => entry.modules.some((m) => m.id === activeModule.id))
       : undefined;

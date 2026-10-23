@@ -9,7 +9,7 @@ type Context = { params: Promise<{ action: string }> };
 
 export async function GET(request: Request, context: Context) {
   try {
-    const user = await apiUser();
+    const user = await apiUser('articles');
     const { action } = await context.params;
     const q = new URL(request.url).searchParams;
 
@@ -38,7 +38,7 @@ export async function GET(request: Request, context: Context) {
 export async function POST(request: Request, context: Context) {
   try {
     sameOrigin(request);
-    const user = await apiUser();
+    const user = await apiUser('articles');
     const { action } = await context.params;
     const input = await readJson(request, action==='save'?524288:32768);
 

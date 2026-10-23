@@ -9,10 +9,12 @@ import {getOrder,listOrders,listTasks,getCatalogItem} from './work';
 import {listCommercialRequests} from './order-requests';
 import {listSalesOrders} from './sales-orders';
 import type {Principal} from './types';
+import {assertModuleAvailable} from './module-availability';
 import {sendTransactionalEmail} from './brevo';
 
 export const parse=<T>(schema:z.ZodType<T>,input:unknown):T=>{const result=schema.safeParse(input);if(!result.success)throw new CrmError('INVALID_FIELDS',400);return result.data;};
 export async function entityAccess(user:Principal,type:string,id:string,sql?:Sql){
+  if(type==='library'||type==='ticket')assertModuleAvailable(user,type==='ticket'?'support':'library');
   if(type==='commercial-request'||type==='request')return (await import('./order-requests')).commercialRequestAccess(sql??await database(),user,id);
   if(type==='deal')return (await import('./deals')).getDeal(user,id);
   if(type==='sales-order')return (await import('./sales-orders')).salesOrderAccess(sql??await database(),user,id);

@@ -10,7 +10,7 @@ async function applicant(){const id=await o.applicantIdentity((await cookies()).
 export async function GET(request:Request,context:Context){try{const {action}=await context.params,q=Object.fromEntries(new URL(request.url).searchParams);
  if(action==='application')return json(await o.application(await applicant()));
  if(action==='queue')return json(await o.reviewQueue(await apiUser(),q));
- if(action==='invitations')return json(await o.invitations(await apiUser()));
+ if(action==='invitations')return json(await o.invitations(await apiUser('invitations')));
  throw new CrmError('NOT_FOUND',404);
 }catch(e){return apiError(e);}}
 export async function POST(request:Request,context:Context){try{sameOrigin(request);const {action}=await context.params;
@@ -21,10 +21,10 @@ export async function POST(request:Request,context:Context){try{sameOrigin(reque
  if(action==='verification-confirm')return json(await o.verifyApplication(await applicant(),input));
  if(action==='edit')return json(await o.editApplication(await applicant(),input));
  if(action==='submit')return json(await o.submitApplication(await applicant(),input));
- if(action==='invitation')return json(await o.createInvitation(await apiUser(),input));
+ if(action==='invitation')return json(await o.createInvitation(await apiUser('invitations'),input));
  const d=parse(z.object({id:z.uuid(),data:z.unknown().optional()}).strict(),input);
  if(action==='reviewer')return json(await o.assignReviewer(await apiUser(),d.id,d.data));
  if(action==='review'){const result=await o.reviewApplication(await apiUser(),d.id,d.data);afterCareCommit();return json(result);}
- if(action==='invitation-revoke')return json(await o.revokeInvitation(await apiUser(),d.id));
+ if(action==='invitation-revoke')return json(await o.revokeInvitation(await apiUser('invitations'),d.id));
  throw new CrmError('NOT_FOUND',404);
 }catch(e){return apiError(e);}}

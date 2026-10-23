@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { authenticate, SESSION_COOKIE } from "./auth";
 import { CrmError } from "./permissions";
+import { assertModuleAvailable } from "./module-availability";
 import type { Area, Principal } from "./types";
 
 const privateHeaders = { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "Referrer-Policy": "no-referrer" };
@@ -32,9 +33,10 @@ export async function readJson(request: Request, maximumBytes = 32768) {
     catch { throw new CrmError("INVALID_FIELDS", 400); }
   } finally { reader.releaseLock(); }
 }
-export async function apiUser(): Promise<Principal> {
+export async function apiUser(moduleId?: string): Promise<Principal> {
   const user = await authenticate((await cookies()).get(SESSION_COOKIE)?.value);
   if (!user) throw new CrmError("UNAUTHORIZED", 401);
+  if (moduleId) assertModuleAvailable(user, moduleId);
   return user;
 }
 export async function readCommercialMultipart(request: Request) {

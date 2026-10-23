@@ -1,15 +1,12 @@
 import {RelationshipPanel,VisitPage,CareDictionaryPage,VisitsIndexPage} from './RelationshipPages';
-import {AutomationPage} from './CareAutomationPages';
 import {PricePage,QuotationsPage} from './CommercialPages';
 import {RequestsPage,SalesOrdersPage} from './OrderPages';
 import {InventoryPage} from './InventoryPages';
 import {FinancePage} from './FinancePages';
-import {ProcurementPage} from './ProcurementPages';
 import {ConsignmentPage} from './ConsignmentPages';
 import {OperationalReportsPage} from './ReportPages';
 import {SupportPage} from './PortalServicePages';
 import {LibraryPage,DealerMembersPage} from './PartnerLibraryPages';
-import {ArticlesPage} from './ArticlesPage';
 import {markCatalogSeen} from '@/lib/crm/partner-library';
 import {PartnerTable,SaveFilterForm,RecordActions} from './WorkspaceControls';
 import {CatalogSpreadsheet} from './spreadsheet/CatalogSpreadsheet';
@@ -25,6 +22,7 @@ import { notFound, redirect } from "next/navigation";
 import { pageUser } from "@/lib/crm/http";
 import { can, CrmError, isWarehouseRole } from "@/lib/crm/permissions";
 import { visibleModules } from "@/lib/crm/modules";
+import { isRemovedCrmModule } from "@/lib/crm/module-availability";
 import { getOrganization, listAccounts, listCatalog, listOrganizationOptions, listOrganizations } from "@/lib/crm/repository";
 import { roleLabels, type Area, type Principal } from "@/lib/crm/types";
 import { AccountToggle, RecordForm } from "./RecordForm";
@@ -34,7 +32,7 @@ import {MfaControls} from './SecurityForms';
 import {mfaStatus} from '@/lib/crm/account-security';
 
 import { CrmHubPage } from "./CrmHubPage";
-import {NetworkPage,PortalNetworkPage,PeriodSalesPage,KpiPage,PartnerChannelPanel,PortalOrderCatalogPage} from "./ChannelPages";
+import {PortalNetworkPage,PeriodSalesPage,KpiPage,PortalOrderCatalogPage} from "./ChannelPages";
 import {AccountantWorkspace} from "./AccountantWorkspace";
 import {WarehouseKeeperWorkspace, type WarehouseKeeperTab} from "./WarehouseKeeperWorkspace";
 import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
@@ -44,6 +42,7 @@ function Header({title,description}:{title:string;description:string}) {return <
 export function Profile({user}:{user:Principal}) {return <><Header title="Hồ sơ và phiên đăng nhập" description="Quyền và tổ chức dưới đây lấy từ phiên database, không lấy từ trình duyệt."/><dl className="crm-readonly"><dt>Tài khoản</dt><dd>{user.displayName} · {user.email}</dd><dt>Vai trò</dt><dd>{roleLabels[user.role]}</dd><dt>Tổ chức</dt><dd>{user.organizationName}</dd><dt>Phạm vi truy cập</dt><dd>{user.area==="portal"?"Tổ chức của bạn. Không truy cập dữ liệu đại lý khác.":"Theo vai trò và đối tác/kho được giao."}</dd></dl></>;}
 export async function CrmModulePage({area,segments,query}:{area:Area;segments:string[];query:Record<string,string|string[]|undefined>}) {
   const user=await pageUser(area);const [slug,id]=segments;
+  if(isRemovedCrmModule(area,slug))notFound();
   if(segments.length>2)notFound();
   if(slug==="hub"&&id)return <CrmHubPage hubId={id} user={user}/>;
   if(slug==="hub"&&!id)redirect(`/${area}`);
@@ -54,9 +53,9 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
     const initialTab:WarehouseKeeperTab=
       slug==='warehouse-orders'||slug==='orders'||slug==='requests'||slug==='sales'
         ?'orders'
-        :slug==='warehouse-factory'||slug==='procurement'
+        :slug==='warehouse-factory'
         ?'factory'
-        :slug==='warehouse-handover'||slug==='consignment'
+        :slug==='warehouse-handover'
         ?'handover'
         :slug==='warehouse-notifications'||slug==='notifications'
         ?'notifications'
@@ -76,24 +75,21 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(slug==='requests')return <RequestsPage user={user} id={id} query={workQuery}/>;
   if(slug==='sales'&&area==='crm'||slug==='orders'&&area==='portal')return <SalesOrdersPage user={user} id={id} query={workQuery}/>;
   if(slug==='goods'&&area==='portal'&&!id){await markCatalogSeen(user);return <PortalOrderCatalogPage user={user}/>;}
-  if(slug==='network'&&!id)return area==='crm'?<NetworkPage user={user} query={workQuery}/>:<PortalNetworkPage user={user}/>;
+  if(slug==='network'&&area==='portal'&&!id)return <PortalNetworkPage user={user}/>;
   if(slug==='period-sales'&&!id)return <PeriodSalesPage user={user} query={workQuery}/>;
   if(slug==='kpi'&&area==='crm'&&!id)return <KpiPage user={user} query={workQuery}/>;
   if(slug==='visits')return id?<VisitPage user={user} id={id}/>:<VisitsIndexPage user={user} query={workQuery}/>;
   if(slug==='pricing'&&area==='crm')return <PricePage user={user} id={id} query={workQuery}/>;
   if(slug==='quotations')return <QuotationsPage user={user} id={id} query={workQuery}/>;
   if(slug==='care'&&!id)return <CareDictionaryPage user={user}/>;
-  if(slug==='automation'&&area==='crm'&&!id)return <AutomationPage user={user}/>;
-  if(slug==='library')return <LibraryPage user={user} id={id} query={workQuery}/>;
-  if(slug==='articles'&&area==='crm')return <ArticlesPage user={user} id={id} query={workQuery}/>;
+  if(slug==='library'&&area==='portal')return <LibraryPage user={user} id={id} query={workQuery}/>;
   if(slug==='members'&&area==='portal'&&!id)return <DealerMembersPage user={user}/>;
-  if(slug==='support')return <SupportPage user={user} id={id} query={workQuery}/>;
+  if(slug==='support'&&area==='portal')return <SupportPage user={user} id={id} query={workQuery}/>;
   if(['debts','cash','payments','settlements'].includes(slug)&&!id)return <FinancePage user={user} mode={slug} query={workQuery}/>;
-  if(slug==='procurement'&&area==='crm'&&!id)return <ProcurementPage user={user}/>;
-  if(slug==='consignment'&&!id)return <ConsignmentPage user={user}/>;
+  if(slug==='consignment'&&area==='portal'&&!id)return <ConsignmentPage user={user}/>;
   if(slug==='data'&&area==='crm')return <DataJobsPage user={user} id={id}/>;
   if(slug==='applications'&&area==='crm')return <ApplicationsPage user={user} id={id} query={workQuery}/>;
-  if(slug==='invitations'&&!id)return <InvitationsPage user={user}/>;
+  if(slug==='invitations'&&area==='portal'&&!id)return <InvitationsPage user={user}/>;
   if(slug==='search'&&!id)return <SearchPage user={user} query={workQuery}/>;
   if(slug==='workspace'&&!id)return <WorkspacePage user={user}/>;
   if(slug==='notifications'&&!id)return <NotificationsPage user={user} query={workQuery}/>;
@@ -115,7 +111,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
       const record=await getOrganization(user,id).catch(error=>{if(error instanceof CrmError&&error.status===404)notFound();throw error;});
       if(record.kind!==kind)notFound();
       if(record.merged_into_id)return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={'Mã '+record.code+' · Hồ sơ nguồn lịch sử'}/><p className="crm-status-note">Hồ sơ lịch sử đã được gộp. <Link href={root+'/'+record.merged_into_id}>Mở hồ sơ giữ lại</Link> để cập nhật dữ liệu và xem toàn bộ liên kết.</p><dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||'Chưa ghi nhận'}</dd><dt>Email</dt><dd>{record.email||'Chưa ghi nhận'}</dd><dt>Mã doanh nghiệp</dt><dd>{record.business_id||'Chưa ghi nhận'}</dd><dt>Địa chỉ</dt><dd>{record.address||'Chưa ghi nhận'}</dd></dl><PartnerMergePanel user={user} id={id}/></>;
-      return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={`Mã ${record.code} · phiên bản ${record.version}`}/>{can(user,"partners.write")&&!record.merged_into_id?<RecordForm resource="partners" record={record}/>:<dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||"Chưa ghi nhận"}</dd><dt>Email</dt><dd>{record.email||"Chưa ghi nhận"}</dd><dt>Địa chỉ</dt><dd>{record.address||"Chưa ghi nhận"}</dd></dl>}{record.merged_into_id&&<p className="crm-status-note">Hồ sơ lịch sử đã được gộp. <Link href={root+'/'+record.merged_into_id}>Mở hồ sơ giữ lại</Link> để cập nhật dữ liệu và xem toàn bộ liên kết.</p>}<RecordActions type="partner" id={id} phone={record.phone} address={record.address}/><ContactsPanel user={user} id={id}/><CustomFieldsPanel user={user} id={id}/><PartnerChannelPanel user={user} id={id}/><RelationshipPanel user={user} id={id}/><DocumentsPanel user={user} type="partner" id={id} q={workQuery.documents??''}/><PartnerDuplicates user={user} id={id}/><PartnerMergePanel user={user} id={id}/><EntityWork user={user} type="partner" id={id}/></>;
+      return <><Link className="work-back" href={root}>← Danh sách hồ sơ</Link><Header title={record.name} description={`Mã ${record.code} · phiên bản ${record.version}`}/>{can(user,"partners.write")&&!record.merged_into_id?<RecordForm resource="partners" record={record}/>:<dl className="crm-readonly"><dt>Điện thoại</dt><dd>{record.phone||"Chưa ghi nhận"}</dd><dt>Email</dt><dd>{record.email||"Chưa ghi nhận"}</dd><dt>Địa chỉ</dt><dd>{record.address||"Chưa ghi nhận"}</dd></dl>}{record.merged_into_id&&<p className="crm-status-note">Hồ sơ lịch sử đã được gộp. <Link href={root+'/'+record.merged_into_id}>Mở hồ sơ giữ lại</Link> để cập nhật dữ liệu và xem toàn bộ liên kết.</p>}<RecordActions type="partner" id={id} phone={record.phone} address={record.address}/><ContactsPanel user={user} id={id}/><CustomFieldsPanel user={user} id={id}/><RelationshipPanel user={user} id={id}/><DocumentsPanel user={user} type="partner" id={id} q={workQuery.documents??''}/><PartnerDuplicates user={user} id={id}/><PartnerMergePanel user={user} id={id}/><EntityWork user={user} type="partner" id={id}/></>;
     }
     const collection=await listOrganizations(user,{kind,q,page,tags});const pref=await preferences(user),tagChoices=(await careDictionary(user,'tags')).filter(t=>t.active);
     const href=(next:number)=>`${root}?${new URLSearchParams({q,tags,page:String(next)})}`;

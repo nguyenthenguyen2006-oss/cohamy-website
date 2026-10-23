@@ -1,0 +1,55 @@
+{
+  "environment": "LOCAL",
+  "testedAt": "2026-10-23T06:27:57.700Z",
+  "browser": "Microsoft Edge headless",
+  "fixture": ".local/crm-qa-module-removal-5941b292-f58d-4f8f-b9a7-2fcdf4ed894a",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "All current internal roles lose the retired modules and empty hub groups",
+      "status": "PASS"
+    },
+    {
+      "name": "Enabled legacy schedules, rules and SLA cannot generate tasks",
+      "status": "PASS"
+    },
+    {
+      "name": "Archived support/library entities cannot reappear in CRM documents, pins or notifications",
+      "status": "PASS"
+    },
+    {
+      "name": "Dealer Portal module registration stays available",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop and mobile CRM navigation has no retired features or groups",
+      "status": "PASS"
+    },
+    {
+      "name": "Every retired CRM URL and detail URL returns 404 to an administrator",
+      "status": "PASS"
+    },
+    {
+      "name": "CRM read and write APIs reject all eight retired features",
+      "status": "PASS"
+    },
+    {
+      "name": "Partner details no longer expose network or recurring-work forms",
+      "status": "PASS"
+    },
+    {
+      "name": "Warehouse and accountant routes cannot bypass retired-module checks",
+      "status": "PASS"
+    },
+    {
+      "name": "Remaining CRM orders, inventory, work, pricing and reports stay available",
+      "status": "PASS"
+    },
+    {
+      "name": "Shared Portal pages and APIs still work for a dealer",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "deployment": "NOT RUN"
+}
