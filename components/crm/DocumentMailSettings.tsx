@@ -1,5 +1,5 @@
 'use client';
-import {useState} from 'react';
+import {Fragment,useEffect,useRef,useState,type FormEvent} from 'react';
 import type {mailSettings} from '@/lib/crm/document-mail';
 import type {flowWorkspace} from '@/lib/crm/document-flow';
 import './document-flow.css';
@@ -11,12 +11,27 @@ const providerErrorLabels:Record<string,string>={FORBIDDEN:'Chỉ Admin được
 
 export function DocumentMailSettings({initialSettings,workspace}:{initialSettings:Settings;workspace:Awaited<ReturnType<typeof flowWorkspace>>}){
  const [settings,setSettings]=useState(initialSettings),[rule,setRule]=useState({...blank}),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[testEmail,setTestEmail]=useState(''),[q,setQ]=useState(''),[status,setStatus]=useState(''),[event,setEvent]=useState(''),[previewDocument,setPreviewDocument]=useState(''),[preview,setPreview]=useState<Record<string,unknown>|null>(null);
+ const [openRow,setOpenRow]=useState<string|null>(null),[ruleMessage,setRuleMessage]=useState(''),drafts=useRef(new Map<string,typeof blank>()),activeRow=useRef<HTMLTableRowElement|null>(null);
  const [providerSender,setProviderSender]=useState(initialSettings.provider.sender),[providerKey,setProviderKey]=useState(''),[removeProviderKey,setRemoveProviderKey]=useState(false),[providerVersion,setProviderVersion]=useState(initialSettings.provider.version),[providerMessage,setProviderMessage]=useState('');
  const definition=settings.events.find(e=>e.event===rule.event),scopes=definition?.scopes??{warehouse:false,factory:false};
  const call=async(action:string,input:unknown)=>{const r=await fetch(`/api/crm/document-flow/${action}`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(input)}),data=await r.json();if(!r.ok)throw Error(errorLabels[data.error]??data.error);return data;};
- const act=async(fn:()=>Promise<void>)=>{setBusy(true);setMessage('');try{await fn();const r=await fetch('/api/crm/document-flow/mail-settings');if(!r.ok)throw Error('Không tải được cài đặt đã lưu.');setSettings(await r.json());setMessage('Đã lưu.');}catch(e){setMessage(e instanceof Error?e.message:'Không thể thực hiện.');}finally{setBusy(false);}};
- const edit=(id:string)=>{const r=settings.rules.find(x=>x.id===id);if(r){setRule({id:r.id,event:r.event,warehouseId:r.warehouse_id,factoryMembershipId:r.factory_membership_id,enabled:r.enabled,recipients:r.recipients,subject:r.subject,body:r.body,attachments:r.attachments,version:r.version});setPreviewDocument('');}};
- const selectEvent=(value:string)=>{const next=settings.events.find(e=>e.event===value);setRule({...rule,event:value,warehouseId:next?.scopes.warehouse?rule.warehouseId:null,factoryMembershipId:next?.scopes.factory?rule.factoryMembershipId:null});setPreviewDocument('');};
+ const act=async(fn:()=>Promise<void>,afterRefresh?:()=>void,inline=false)=>{const report=inline?setRuleMessage:setMessage;setBusy(true);report('');try{await fn();const r=await fetch('/api/crm/document-flow/mail-settings');if(!r.ok)throw Error('Không tải được cài đặt đã lưu.');setSettings(await r.json());afterRefresh?.();report('Đã lưu.');}catch(e){report(e instanceof Error?e.message:'Không thể thực hiện.');}finally{setBusy(false);}};
+ const toggleRule=(key:string,event:string,existing?:Settings['rules'][number])=>{
+  if(busy||!settings.events.find(e=>e.event===event)?.available)return;
+  if(openRow)drafts.current.set(openRow,rule);
+  setPreviewDocument('');setPreview(null);setRuleMessage('');
+  if(openRow===key){setOpenRow(null);return;}
+  const initial=existing?{id:existing.id,event:existing.event,warehouseId:existing.warehouse_id,factoryMembershipId:existing.factory_membership_id,enabled:existing.enabled,recipients:existing.recipients,subject:existing.subject,body:existing.body,attachments:existing.attachments,version:existing.version}:{...blank,event};
+  setRule(drafts.current.get(key)??initial);setOpenRow(key);
+ };
+ const closeRule=()=>{if(openRow)drafts.current.set(openRow,rule);setOpenRow(null);setPreviewDocument('');setPreview(null);};
+ useEffect(()=>{if(openRow)activeRow.current?.scrollIntoView({block:'start',inline:'nearest'});},[openRow]);
+ const saveRule=(e:FormEvent)=>{
+  e.preventDefault();const oldKey=openRow;let saved:typeof blank|null=null;
+  void act(async()=>{const result=await call('save-mail-rule',{...rule,recipients:Object.fromEntries(Object.entries(rule.recipients).map(([k,v])=>[k,v.filter(Boolean)]))});saved={...rule,id:result.id,version:result.version};setRule(saved);if(oldKey)drafts.current.set(oldKey,saved);},()=>{
+   if(saved){const key=`rule:${saved.id}`;if(oldKey)drafts.current.delete(oldKey);drafts.current.set(key,saved);setOpenRow(key);}
+  },true);
+ };
  const refreshProvider=async()=>{const r=await fetch('/api/crm/document-flow/mail-settings',{cache:'no-store'});if(!r.ok)throw Error('BREVO_REFRESH_FAILED');const fresh:Settings=await r.json();setSettings(fresh);setProviderSender(fresh.provider.sender);setProviderVersion(fresh.provider.version);return fresh.provider;};
  const saveProvider=async()=>{
   if(busy||!settings.provider.storageReady)return;
@@ -30,6 +45,44 @@ export function DocumentMailSettings({initialSettings,workspace}:{initialSetting
    catch{setProviderMessage('Đã lưu cấu hình Brevo; chưa tải được trạng thái mới. Bấm Tải lại cấu hình để kiểm tra.');}
   }catch(e){setProviderMessage(providerErrorLabels[e instanceof Error?e.message:'']??'Không lưu được cấu hình Brevo. Vui lòng thử lại.');}
   finally{setBusy(false);}
+ };
+ const ruleEditor=openRow?(
+<section className="crm-mail-rule-editor">
+   <h3>Cài đặt email · {definition?.label}</h3>
+   <form onSubmit={saveRule}><fieldset className="crm-mail-rule-fields" disabled={busy}>
+    <div className="work-fields">
+     <label>Kho<select aria-label="Kho áp dụng" disabled={!scopes.warehouse} value={rule.warehouseId??''} onChange={e=>setRule({...rule,warehouseId:e.target.value||null})}><option value="">{scopes.warehouse?'Tất cả kho':'Chưa hỗ trợ lọc kho cho loại này'}</option>{scopes.warehouse&&workspace.warehouses.map(w=><option key={w.id} value={w.id}>{w.name}</option>)}</select></label>
+     <label>Nhà máy<select aria-label="Nhà máy áp dụng" disabled={!scopes.factory} value={rule.factoryMembershipId??''} onChange={e=>setRule({...rule,factoryMembershipId:e.target.value||null})}><option value="">{scopes.factory?'Tất cả nhà máy':'Loại này không có phạm vi nhà máy'}</option>{scopes.factory&&workspace.factories.map(f=><option key={f.id} value={f.id}>{f.name}</option>)}</select></label>
+     <label>Trạng thái<select aria-label="Trạng thái quy tắc" value={String(rule.enabled)} onChange={e=>setRule({...rule,enabled:e.target.value==='true'})}><option value="false">Tắt</option><option value="true">Bật</option></select></label>
+     {(['to','cc','bcc'] as const).map(group=><label key={group}>{group.toUpperCase()} (phân cách bằng dấu phẩy)<input aria-label={group.toUpperCase()} value={rule.recipients[group].join(', ')} onChange={e=>setRule({...rule,recipients:{...rule.recipients,[group]:e.target.value.split(',').map(s=>s.trim())}})}/></label>)}
+     <label>File đính kèm<select aria-label="File đính kèm" value={rule.attachments} onChange={e=>setRule({...rule,attachments:e.target.value as 'EVENT'|'BUNDLE'})}><option value="EVENT">Phiếu của sự kiện</option><option value="BUNDLE">Kèm bộ phiếu liên quan</option></select></label>
+    </div>
+    <label>Tiêu đề<input required maxLength={200} value={rule.subject} onChange={e=>setRule({...rule,subject:e.target.value})}/></label><label>Mẫu nội dung<textarea rows={7} required value={rule.body} onChange={e=>setRule({...rule,body:e.target.value})}/></label><p>{'Biến: {{type}}, {{code}}, {{status}}, {{warehouse}}, {{factory}}, {{source}}, {{request}}, {{date}}, {{revision}}, {{url}}'}</p>
+    <div className="work-actions"><button className="button button--primary" disabled={busy}>Lưu cài đặt</button><button type="button" disabled={busy} onClick={closeRule}>Thu gọn cài đặt</button>
+     <label>Chứng từ dùng xem trước<select aria-label="Chứng từ dùng xem trước" value={previewDocument} onChange={e=>setPreviewDocument(e.target.value)}><option value="">Chọn phiên bản đã lưu</option>
+      <optgroup label="Phiếu đề nghị / nhà máy / kho">{workspace.documents.filter(d=>d.state==='CONFIRMED').map(d=><option key={d.id} value={`FLOW:${d.id}`}>{d.code} · v{d.revision}</option>)}</optgroup>
+      <optgroup label="Chứng từ nghiệp vụ đã chốt">{settings.businessSnapshots.filter(s=>s.event===rule.event).map(s=><option key={s.id} value={`BUSINESS:${s.id}`}>{s.code} · v{s.revision} · {s.label}</option>)}</optgroup>
+     </select></label>
+     <button type="button" disabled={!rule.id||!previewDocument||busy} onClick={()=>void act(async()=>{const [kind,id]=previewDocument.split(':');setPreview(await call('preview-mail-rule',{ruleId:rule.id,...(kind==='BUSINESS'?{businessSnapshotId:id}:{documentId:id})}));})}>Xem trước quy tắc email</button>
+    </div><small>Chứng từ nghiệp vụ chỉ hiện khi đã lưu snapshot của đúng sự kiện. Xem trước không tạo email hoặc thay đổi chứng từ.</small>
+   </fieldset></form>
+   {ruleMessage&&<p role="status">{ruleMessage}</p>}
+  </section>
+ ):null;
+ const renderRuleRow=(e:Settings['events'][number],r?:Settings['rules'][number])=>{
+  const key=r?`rule:${r.id}`:`new:${e.event}`,expanded=openRow===key,id=`mail-rule-${key.replace(/[^a-z0-9_-]/gi,'-')}`;
+  return <Fragment key={key}>
+   <tr ref={expanded?activeRow:undefined} className={`crm-mail-rule-summary${expanded?' is-open':''}`} data-mail-rule={key} aria-disabled={!e.available} onClick={click=>{if(!(click.target as HTMLElement).closest('button,a,input,select,textarea'))toggleRule(key,e.event,r);}}>
+    <td data-label="Luồng / Sự kiện">{e.label}</td><td data-label="Bật / Tắt">{r?.enabled?'Bật':'Tắt'}</td>
+    <td data-label="Phạm vi">{r?(workspace.warehouses.find(w=>w.id===r.warehouse_id)?.name??'Tất cả kho'):(e.scopes.warehouse?'Có thể lọc kho':'Chưa hỗ trợ lọc kho')}<small>{r?(workspace.factories.find(f=>f.id===r.factory_membership_id)?.name??'Tất cả nhà máy'):(e.scopes.factory?'Có thể lọc nhà máy':'Không có phạm vi nhà máy')}</small></td>
+    <td data-label="To / CC / BCC">{r?<>To: {r.recipients.to.join(', ')||'Chưa cấu hình'}<small>CC: {r.recipients.cc.join(', ')||'—'} · BCC: {r.recipients.bcc.join(', ')||'—'}</small></>:'Chưa cấu hình'}</td>
+    <td data-label="Đính kèm">{r?(r.attachments==='BUNDLE'?'Bộ phiếu liên quan':'Phiếu sự kiện'):'Phiếu đã chốt'}</td>
+    <td data-label="Cài đặt" className="crm-mail-rule-actions"><button type="button" id={`${id}-toggle`} aria-label={`${expanded?'Thu gọn':'Cài đặt'} ${e.label}`} aria-expanded={expanded} aria-controls={expanded?id:undefined} disabled={busy||!e.available} onClick={()=>toggleRule(key,e.event,r)}>{expanded?'Thu gọn':'Cài đặt'}<svg width="14" height="14" viewBox="0 0 20 20" aria-hidden="true"><path d={expanded?'m5 12 5-5 5 5':'m5 8 5 5 5-5'} fill="none" stroke="currentColor" strokeWidth="1.6"/></svg></button>
+     {r&&<><button type="button" disabled={busy} onClick={()=>void act(async()=>{await call('remove-mail-rule',{id:r.id,version:r.version});},()=>{drafts.current.delete(key);if(openRow===key)setOpenRow(null);})}>Xóa địa chỉ & Tắt</button>{(e.scopes.warehouse||e.scopes.factory)&&<button type="button" disabled={busy} onClick={()=>toggleRule(`new:${e.event}`,e.event)}>Thêm phạm vi</button>}</>}
+    </td>
+   </tr>
+   {expanded&&<tr className="crm-mail-rule-detail"><td colSpan={6}><div id={id} role="region" aria-labelledby={`${id}-toggle`}>{ruleEditor}</div></td></tr>}
+  </Fragment>;
  };
  const p=settings.provider;
  return <div className="crm-document-flow">
@@ -51,31 +104,13 @@ export function DocumentMailSettings({initialSettings,workspace}:{initialSetting
    <form className="work-actions" onSubmit={e=>{e.preventDefault();void act(async()=>{await call('test-mail',{email:testEmail});});}}><label>Email thử do Admin chọn<input aria-label="Email gửi thử" type="email" required value={testEmail} onChange={e=>setTestEmail(e.target.value)}/></label><button disabled={busy}>Gửi thử</button><small>Email thử được xếp hàng; xem lịch sử để biết kết quả.</small></form>
   </section>
   {message&&<p role="status">{message}</p>}
-  <section className="work-section">
-   <h2>Quy tắc người nhận</h2><div className="crm-document-scroll"><table className="work-table"><thead><tr><th>Luồng / Sự kiện</th><th>Bật / Tắt</th><th>Phạm vi</th><th>To / CC / BCC</th><th>Đính kèm</th><th>Cài đặt</th></tr></thead><tbody>
-    {settings.events.map(e=>{const rules=settings.rules.filter(r=>r.event===e.event);return rules.length?rules.map(r=><tr key={r.id}><td>{e.label}</td><td>{r.enabled?'Bật':'Tắt'}</td><td>{workspace.warehouses.find(w=>w.id===r.warehouse_id)?.name??'Tất cả kho'}<small>{workspace.factories.find(f=>f.id===r.factory_membership_id)?.name??'Tất cả nhà máy'}</small>{!e.scopes.warehouse&&<small>Chưa hỗ trợ lọc kho</small>}{!e.scopes.factory&&<small>Không có phạm vi nhà máy</small>}</td><td>To: {r.recipients.to.join(', ')||'Chưa cấu hình'}<small>CC: {r.recipients.cc.join(', ')||'—'} · BCC: {r.recipients.bcc.join(', ')||'—'}</small></td><td>{r.attachments==='BUNDLE'?'Bộ phiếu liên quan':'Phiếu sự kiện'}</td><td><button onClick={()=>edit(r.id)}>Sửa</button><button disabled={busy} onClick={()=>void act(async()=>{await call('remove-mail-rule',{id:r.id,version:r.version});})}>Xóa địa chỉ & Tắt</button></td></tr>):<tr key={e.event}><td>{e.label}</td><td>Tắt</td><td>{e.scopes.warehouse?'Có thể lọc kho':'Chưa hỗ trợ lọc kho'}<small>{e.scopes.factory?'Có thể lọc nhà máy':'Không có phạm vi nhà máy'}</small></td><td>Chưa cấu hình</td><td>Phiếu đã chốt</td><td><button disabled={!e.available} onClick={()=>{setRule({...blank,event:e.event});setPreviewDocument('');}}>Cài đặt</button></td></tr>;})}
+  <section className="work-section crm-mail-rules">
+   <h2>Quy tắc người nhận</h2><div className="crm-document-scroll"><table className="work-table crm-mail-rules-table"><thead><tr><th>Luồng / Sự kiện</th><th>Bật / Tắt</th><th>Phạm vi</th><th>To / CC / BCC</th><th>Đính kèm</th><th>Cài đặt</th></tr></thead><tbody>
+    {settings.events.map(e=>{
+     const rules=settings.rules.filter(r=>r.event===e.event);
+     return <Fragment key={e.event}>{rules.length?rules.map(r=>renderRuleRow(e,r)):renderRuleRow(e)}{rules.length>0&&openRow===`new:${e.event}`&&renderRuleRow(e)}</Fragment>;
+    })}
    </tbody></table></div>
-  </section>
-  <section className="work-section">
-   <h2>{rule.id?'Sửa quy tắc':'Thêm quy tắc'}</h2>
-   <form onSubmit={e=>{e.preventDefault();void act(async()=>{const result=await call('save-mail-rule',{...rule,recipients:Object.fromEntries(Object.entries(rule.recipients).map(([k,v])=>[k,v.filter(Boolean)]))});setRule({...rule,id:result.id,version:result.version});});}}>
-    <div className="work-fields">
-     <label>Loại chứng từ / thời điểm gửi<select value={rule.event} onChange={e=>selectEvent(e.target.value)}>{settings.events.map(e=><option disabled={!e.available} key={e.event} value={e.event}>{e.label}</option>)}</select></label>
-     <label>Kho<select disabled={!scopes.warehouse} value={rule.warehouseId??''} onChange={e=>setRule({...rule,warehouseId:e.target.value||null})}><option value="">{scopes.warehouse?'Tất cả kho':'Chưa hỗ trợ lọc kho cho loại này'}</option>{scopes.warehouse&&workspace.warehouses.map(w=><option key={w.id} value={w.id}>{w.name}</option>)}</select></label>
-     <label>Nhà máy<select disabled={!scopes.factory} value={rule.factoryMembershipId??''} onChange={e=>setRule({...rule,factoryMembershipId:e.target.value||null})}><option value="">{scopes.factory?'Tất cả nhà máy':'Loại này không có phạm vi nhà máy'}</option>{scopes.factory&&workspace.factories.map(f=><option key={f.id} value={f.id}>{f.name}</option>)}</select></label>
-     <label>Trạng thái<select value={String(rule.enabled)} onChange={e=>setRule({...rule,enabled:e.target.value==='true'})}><option value="false">Tắt</option><option value="true">Bật</option></select></label>
-     {(['to','cc','bcc'] as const).map(group=><label key={group}>{group.toUpperCase()} (phân cách bằng dấu phẩy)<input aria-label={group.toUpperCase()} value={rule.recipients[group].join(', ')} onChange={e=>setRule({...rule,recipients:{...rule.recipients,[group]:e.target.value.split(',').map(s=>s.trim())}})}/></label>)}
-     <label>File đính kèm<select value={rule.attachments} onChange={e=>setRule({...rule,attachments:e.target.value as 'EVENT'|'BUNDLE'})}><option value="EVENT">Phiếu của sự kiện</option><option value="BUNDLE">Kèm bộ phiếu liên quan</option></select></label>
-    </div>
-    <label>Tiêu đề<input required maxLength={200} value={rule.subject} onChange={e=>setRule({...rule,subject:e.target.value})}/></label><label>Mẫu nội dung<textarea rows={7} required value={rule.body} onChange={e=>setRule({...rule,body:e.target.value})}/></label><p>{'Biến: {{type}}, {{code}}, {{status}}, {{warehouse}}, {{factory}}, {{source}}, {{request}}, {{date}}, {{revision}}, {{url}}'}</p>
-    <div className="work-actions"><button className="button button--primary" disabled={busy}>Lưu cài đặt</button><button type="button" onClick={()=>{setRule({...blank});setPreviewDocument('');}}>Thêm quy tắc khác</button>
-     <label>Chứng từ dùng xem trước<select aria-label="Chứng từ dùng xem trước" value={previewDocument} onChange={e=>setPreviewDocument(e.target.value)}><option value="">Chọn phiên bản đã lưu</option>
-      <optgroup label="Phiếu đề nghị / nhà máy / kho">{workspace.documents.filter(d=>d.state==='CONFIRMED').map(d=><option key={d.id} value={`FLOW:${d.id}`}>{d.code} · v{d.revision}</option>)}</optgroup>
-      <optgroup label="Chứng từ nghiệp vụ đã chốt">{settings.businessSnapshots.filter(s=>s.event===rule.event).map(s=><option key={s.id} value={`BUSINESS:${s.id}`}>{s.code} · v{s.revision} · {s.label}</option>)}</optgroup>
-     </select></label>
-     <button type="button" disabled={!rule.id||!previewDocument||busy} onClick={()=>void act(async()=>{const [kind,id]=previewDocument.split(':');setPreview(await call('preview-mail-rule',{ruleId:rule.id,...(kind==='BUSINESS'?{businessSnapshotId:id}:{documentId:id})}));})}>Xem trước quy tắc email</button>
-    </div><small>Chứng từ nghiệp vụ chỉ hiện khi đã lưu snapshot của đúng sự kiện. Xem trước không tạo email hoặc thay đổi chứng từ.</small>
-   </form>
   </section>
   <section className="work-section">
    <h2>Lịch sử gửi</h2><p>Brevo đã nhận yêu cầu chưa phải thư đã giao. Kết quả không rõ được giữ lại để Admin kiểm tra trước khi gửi lại.</p>

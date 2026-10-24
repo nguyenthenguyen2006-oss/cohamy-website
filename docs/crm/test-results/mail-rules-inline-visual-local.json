@@ -1,0 +1,19 @@
+{
+  "environment": "LOCAL Edge / isolated PGlite",
+  "cases": [
+    {
+      "name": "Inline layout at 1440px",
+      "status": "PASS"
+    },
+    {
+      "name": "Inline layout at 390px",
+      "status": "PASS"
+    },
+    {
+      "name": "Inline layout at 320px",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "unexpectedWrites": []
+}

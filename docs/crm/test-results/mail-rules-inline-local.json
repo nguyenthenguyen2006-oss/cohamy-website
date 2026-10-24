@@ -1,0 +1,23 @@
+{
+  "environment": "LOCAL Edge / isolated PGlite",
+  "cases": [
+    {
+      "name": "Clicking an event expands its editor immediately beneath that row; other editors stay closed",
+      "status": "PASS"
+    },
+    {
+      "name": "Switching events retains unsaved fields per row and applies the selected event scopes",
+      "status": "PASS"
+    },
+    {
+      "name": "Saving stays beside the correct row, refreshes its version and retains multiple warehouse scopes",
+      "status": "PASS"
+    },
+    {
+      "name": "Inline editors fit desktop/mobile and keyboard closing works without triggering email or provider writes",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "unexpectedWrites": []
+}

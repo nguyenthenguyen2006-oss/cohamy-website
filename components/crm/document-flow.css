@@ -18,3 +18,42 @@
 
 .crm-document-flow .crm-brevo-remove-key{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin:12px 0}
 .crm-document-flow .crm-brevo-remove-key input[type="checkbox"]{width:18px;height:18px;flex:0 0 auto;margin:0}
+
+.cohamy-crm .crm-document-flow .crm-mail-rules-table{table-layout:fixed}
+.cohamy-crm .crm-document-flow .crm-mail-rules-table th:nth-child(1){width:27%}
+.cohamy-crm .crm-document-flow .crm-mail-rules-table th:nth-child(2){width:7%}
+.cohamy-crm .crm-document-flow .crm-mail-rules-table th:nth-child(3){width:20%}
+.cohamy-crm .crm-document-flow .crm-mail-rules-table th:nth-child(4){width:22%}
+.cohamy-crm .crm-document-flow .crm-mail-rules-table th:nth-child(5){width:10%}
+.cohamy-crm .crm-document-flow .crm-mail-rules-table th:nth-child(6){width:14%}
+.cohamy-crm .crm-document-flow .crm-mail-rule-summary{cursor:pointer;scroll-margin-top:80px}
+.cohamy-crm .crm-document-flow .crm-mail-rule-summary[aria-disabled="true"]{cursor:default}
+.cohamy-crm .crm-document-flow .crm-mail-rule-summary.is-open{background:#fff7e8}
+.cohamy-crm .crm-document-flow .crm-mail-rule-summary td{overflow-wrap:anywhere}
+.cohamy-crm .crm-document-flow .crm-mail-rule-actions>button:first-child{display:inline-flex;align-items:center;gap:6px;font-weight:600;min-height:36px}
+.cohamy-crm .crm-document-flow .crm-mail-rule-detail>td{padding:16px;background:#fffdf9}
+.cohamy-crm .crm-document-flow .crm-mail-rule-editor h3{margin:0 0 12px;font-size:15px}
+.cohamy-crm .crm-document-flow .crm-mail-rule-fields{border:0;margin:0;padding:0;min-width:0}
+.cohamy-crm .crm-document-flow .crm-mail-rule-editor input,.cohamy-crm .crm-document-flow .crm-mail-rule-editor select,.cohamy-crm .crm-document-flow .crm-mail-rule-editor textarea{width:100%;max-width:none;min-width:0}
+.cohamy-crm .crm-document-flow .crm-mail-rule-editor .work-actions{align-items:flex-end}
+.cohamy-crm .crm-document-flow .crm-mail-rule-editor .work-actions>label{flex:1;min-width:180px}
+@media(max-width:960px){
+ .cohamy-crm .crm-document-flow .crm-mail-rules-table{display:block;min-width:0}
+ .cohamy-crm .crm-document-flow .crm-mail-rules-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+ .cohamy-crm .crm-document-flow .crm-mail-rules-table tbody{display:block}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-summary{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding:12px;border-bottom:1px solid #eadbc5}
+ .cohamy-crm .crm-document-flow .crm-mail-rules-table .crm-mail-rule-summary>td{border:0;padding:0}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-summary>td:first-child{grid-column:1;grid-row:1;font-weight:600}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-summary>td:nth-child(2){grid-column:1;grid-row:2}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-summary>td:nth-child(2)::before{content:'Gửi email: ';color:#57534e}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-summary>td:nth-child(3),.cohamy-crm .crm-document-flow .crm-mail-rule-summary>td:nth-child(4),.cohamy-crm .crm-document-flow .crm-mail-rule-summary>td:nth-child(5){display:none}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-summary>.crm-mail-rule-actions{grid-column:2;grid-row:1 / span 2;display:flex;flex-direction:column;align-items:flex-start;max-width:120px}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-detail,.cohamy-crm .crm-document-flow .crm-mail-rule-detail>td{display:block;min-width:0}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-detail>td{padding:12px}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-editor .work-fields{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+}
+@media(max-width:480px){
+ .cohamy-crm .crm-document-flow .crm-mail-rule-editor .work-fields{grid-template-columns:minmax(0,1fr)}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-editor .work-actions>label{min-width:0;width:100%;flex-basis:100%}
+ .cohamy-crm .crm-document-flow .crm-mail-rule-summary{gap:4px 8px;padding:10px}
+}
