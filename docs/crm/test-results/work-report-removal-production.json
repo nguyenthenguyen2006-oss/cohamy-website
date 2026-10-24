@@ -1,0 +1,27 @@
+{
+  "environment": "PRODUCTION",
+  "testedAt": "2026-10-24T21:42:11.542Z",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Desktop and mobile omit removed navigation, header links and dashboard task panels",
+      "status": "PASS"
+    },
+    {
+      "name": "Direct, create, detail and hub URLs return 404 to the administrator",
+      "status": "PASS"
+    },
+    {
+      "name": "Removed read, write, task dependency and download APIs all return 404",
+      "status": "PASS"
+    },
+    {
+      "name": "Orders, stock, finance, documents, audit and profile remain accessible",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "releaseSha": "4c7f658c8a4db1e6eed214d603aaba3bb7f6b98a",
+  "transport": "Microsoft Edge through an SSH SOCKS5 tunnel to production HTTPS",
+  "scope": "Read-only verification and blocked requests; administrator login/logout only; no successful business writes or messages"
+}
