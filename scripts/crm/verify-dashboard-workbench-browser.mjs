@@ -43,7 +43,7 @@ try{
  await test('Inventory overview, document ledger and operational queues remain available without writes',async()=>{
   await choose('Nhập');await expect(total('Tồn cuối kỳ')).toHaveText(stock.totals.closingOnHand+' gói');await expect(pane().getByRole('columnheader',{name:/Tên sản phẩm/})).toBeVisible();await expect(pane().getByRole('columnheader',{name:'Mã SKU'})).toHaveCount(0);await capture('inventory-desktop');
   await pane().getByRole('tab',{name:/Sổ chứng từ/}).click();await expect(pane().locator('.crm-spreadsheet-table')).toBeVisible();await pane().getByRole('tab',{name:/Tổng hợp tồn kho/}).click();
-  await choose('Việc cần xử lý');await expect(pane().getByRole('heading',{name:'Yêu cầu website cần tiếp nhận'})).toBeVisible();await expect(pane().getByRole('heading',{name:'Việc quá hạn & hôm nay'})).toBeVisible();await capture('queues-desktop');assert.deepEqual(writes,[]);
+  await choose('Yêu cầu website');await expect(pane().getByRole('heading',{name:'Yêu cầu website cần tiếp nhận'})).toBeVisible();await expect(pane().getByRole('heading',{name:'Việc quá hạn & hôm nay'})).toHaveCount(0);await expect(page.locator('.crm-workbench a[href^="/crm/tasks"]')).toHaveCount(0);await capture('queues-desktop');assert.deepEqual(writes,[]);
  });
  }
  await test('Desktop and phone layouts stay within the viewport while tables retain horizontal scrolling',async()=>{

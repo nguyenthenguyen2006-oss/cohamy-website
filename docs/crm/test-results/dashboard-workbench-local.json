@@ -31,5 +31,32 @@
     }
   ],
   "errors": [],
-  "writes": []
+  "writes": [],
+  "testedAt": "2026-10-24T21:50:29.9229228Z",
+  "status": "PASS",
+  "scope": "Read-only isolated fixture; final case injects fictitious GET response for long content. Retired task module remains absent. No production browser mutations or live sends.",
+  "build": {
+    "traceCount": 97,
+    "checks": [
+      {
+        "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
+        "status": "PASS"
+      },
+      {
+        "name": "All CRM migration files included in API tracing",
+        "status": "PASS"
+      },
+      {
+        "name": "Full Vietnamese PDF fonts/logo and PDFKit AFM data included",
+        "status": "PASS"
+      }
+    ],
+    "leaks": [],
+    "status": "PASS"
+  },
+  "designScan": {
+    "note": "Intentional local dashboard heading/metric sizes, preserving readable dense workspace hierarchy.",
+    "primaryFindings": 0,
+    "advisories": 5
+  }
 }
