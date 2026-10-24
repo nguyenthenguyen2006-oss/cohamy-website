@@ -1,0 +1,5 @@
+.crm-navigation-progress { position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 3px; pointer-events: none; background: #f5c55c; overflow: hidden; }
+.crm-navigation-progress::after { content: ''; display: block; width: 35%; height: 100%; background: #c45705; animation: crm-load-progress 1s ease-in-out infinite; }
+@keyframes crm-load-progress { from { transform: translateX(-100%); } to { transform: translateX(380%); } }
+.historical-orders-table th:nth-child(2),.historical-orders-table td:nth-child(2),.historical-orders-table th:nth-child(n+5),.historical-orders-table td:nth-child(n+5) { white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .crm-navigation-progress::after { animation: none; width: 100%; } }

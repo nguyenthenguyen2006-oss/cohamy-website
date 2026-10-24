@@ -1,0 +1,27 @@
+{
+  "environment": "LOCAL Microsoft Edge and isolated PGlite; no real provider sends",
+  "status": "PASS",
+  "testedAt": "2026-10-24T21:04:08.708Z",
+  "cases": [
+    {
+      "name": "Changing sidebar routes selects the requested workspace tab instead of retaining the previous tab",
+      "status": "PASS"
+    },
+    {
+      "name": "Workspace sends only required delivery fields while retaining source lines and authoritative prices on the server",
+      "status": "PASS"
+    },
+    {
+      "name": "Saving a bulk product draft makes one write and exactly one workspace refresh, then opens its preview",
+      "status": "PASS"
+    },
+    {
+      "name": "Separate warehouse sessions retain their own stock/document scope after request-scoped identity deduplication",
+      "status": "PASS"
+    },
+    {
+      "name": "Private APIs still require authentication and retired CRM routes retain real HTTP 404 responses",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { CrmNavLink as Link } from './CrmNavLink';
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -19,8 +19,8 @@ import {
 import { getVisibleHubs, visibleModules } from "@/lib/crm/modules";
 import { roleLabels, type Principal } from "@/lib/crm/types";
 import { CrmModuleIcon } from "./ModuleIcon";
-import { PwaRegistrar } from "./PwaRegistrar";
 import { QuickCreate } from "./QuickCreate";
+import './performance.css';
 
 const subLabels: Record<string, string> = {
   new: "Tạo mới",
@@ -140,7 +140,7 @@ export function CrmShell({
   if (isPortal) {
     return (
       <div className="work-shell">
-        <PwaRegistrar />
+        
         <a className="skip-link" href="#portal-content">
           Đến nội dung chính
         </a>
@@ -263,7 +263,7 @@ export function CrmShell({
 
   return (
     <div className={`crm-golden-saas-shell${sidebarCollapsed ? " sidebar-collapsed" : ""}`}>
-      <PwaRegistrar />
+      
       <a className="skip-link" href="#crm-main">
         Chuyển đến nội dung chính
       </a>

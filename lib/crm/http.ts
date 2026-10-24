@@ -1,4 +1,5 @@
 import "server-only";
+import { cache } from 'react';
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { authenticate, SESSION_COOKIE } from "./auth";
@@ -64,12 +65,14 @@ export async function readCommercialMultipart(request: Request) {
     return {bytes:Buffer.from(await file.arrayBuffer()), input:data};
   } finally {reader.releaseLock();}
 }
-export async function pageUser(area: Area): Promise<Principal> {
+// Only deduplicate the layout/page lookup within one React server render.
+// APIs and transactional permission checks always read the current identity.
+export const pageUser = cache(async (area: Area): Promise<Principal> => {
   const user = await authenticate((await cookies()).get(SESSION_COOKIE)?.value);
   if (!user) redirect(`/${area}/login`);
   if (user.area !== area) redirect(`/${user.area}`);
   return user;
-}
+});
 export function apiError(error: unknown) {
   if (error instanceof CrmError) return json({ error: error.code }, error.status);
   if ((error as { code?: string })?.code === "23505") return json({ error: "DUPLICATE_RECORD" }, 409);

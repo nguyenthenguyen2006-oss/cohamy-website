@@ -3,7 +3,7 @@ import {randomUUID,createHash} from 'node:crypto';
 import {z} from 'zod';
 import {database,type Sql} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
-import {CrmError,isWarehouseRole,warehouseRoleRegion} from './permissions';
+import {CrmError,isWarehouseRole} from './permissions';
 import {fixed,fixedText,lineAmount,roundRatio} from './decimal';
 import {commercialDigest,parseCommercial as parse,vietnamBusinessDate} from './commercial-common';
 import {renderFlowPdf} from './document-flow-pdf';
@@ -100,7 +100,7 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
   if(!warehouseId)throw new CrmError('WAREHOUSE_REQUIRED',400);
   const wh=await warehouse(sql,user,warehouseId,user.role==='FACTORY');
   const lines:FlowLine[]=[];
-  let sourceId=source?.id??null,sourceCode=source?.code??'',sourceRevision=source?.revision??null,salesOrderId=old?.salesOrderId??null,requestId=old?.requestId??null;
+  const sourceRevision=source?.revision??null;let sourceId=source?.id??null,sourceCode=source?.code??'',salesOrderId=old?.salesOrderId??null,requestId=old?.requestId??null;
   let totals:Record<string,string>={},delivery:Record<string,string>={};
   if(d.kind==='REQUEST'){
     if(!factoryMembershipId)throw new CrmError('FACTORY_REQUIRED',400);
@@ -276,24 +276,30 @@ export async function acceptFactoryRequest(user:Principal,input:unknown){
 export async function flowWorkspace(user:Principal){
   if(user.area!=='crm'||!['ADMIN','MANAGER','FACTORY','ACCOUNTANT','WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM'].includes(user.role))throw new CrmError('FORBIDDEN',403);
   const db=await database();await assertCurrentPrincipal(db,user);
-  const scope=flowWarehouseScope(user);
-  const params=user.role==='FACTORY'?[user.membershipId]:scope.params;
-  const factoryWhere=user.role==='FACTORY'?"f.factory_membership_id=$1 AND (f.workflow_state<>'DRAFT' OR f.created_by=(SELECT user_id FROM cohamy_crm.memberships WHERE id=$1))":scope.sql;
-  const factory=(await db.query<FlowRow>(`SELECT f.* FROM cohamy_crm.factory_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${factoryWhere}) ORDER BY f.created_at DESC LIMIT 500`,params)).rows;
-  const issues=user.role==='FACTORY'?[]:(await db.query<FlowRow>(`SELECT f.* FROM cohamy_crm.warehouse_handover_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${scope.sql}) ORDER BY f.created_at DESC LIMIT 500`,scope.params)).rows;
+  const scope=flowWarehouseScope(user),isFactory=user.role==='FACTORY';
+  const params=isFactory?[user.membershipId]:scope.params;
+  const factoryWhere=isFactory?"f.factory_membership_id=$1 AND (f.workflow_state<>'DRAFT' OR f.created_by=(SELECT user_id FROM cohamy_crm.memberships WHERE id=$1))":scope.sql;
+  const rows=async<T>(text:string,params:unknown[]=[]) => (await db.query<T>(text,params)).rows;
+  // Independent scoped reads share the bounded connection pool; no cross-request cache.
+  const [factory,issues,warehouses,products,factories,stocks,orders]=await Promise.all([
+    rows<FlowRow>(`SELECT f.* FROM cohamy_crm.factory_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${factoryWhere}) ORDER BY f.created_at DESC LIMIT 500`,params),
+    isFactory?[]:rows<FlowRow>(`SELECT f.* FROM cohamy_crm.warehouse_handover_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${scope.sql}) ORDER BY f.created_at DESC LIMIT 500`,scope.params),
+    isFactory?[]:rows<{id:string;code:string;name:string}>(`SELECT w.id,w.code,w.name FROM cohamy_crm.warehouses w WHERE w.active AND (${scope.sql}) ORDER BY w.code`,scope.params),
+    user.role==='ADMIN'||isWarehouseRole(user.role)?rows<{id:string;sku:string;name:string;stock_unit:string}>('SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE active ORDER BY sku'):[],
+    user.role==='ADMIN'?rows<{id:string;name:string}>("SELECT m.id,u.display_name AS name FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id WHERE m.organization_id=$1 AND m.role='FACTORY' AND m.active AND u.active ORDER BY u.display_name",[user.organizationId]):[],
+    isFactory?[]:rows<{warehouse_id:string;product_id:string;sku:string;name:string;stock_unit:string;on_hand:string;reserved:string;opening:string;received:string;issued:string}>(`SELECT b.warehouse_id,b.product_id,p.sku,p.name,p.stock_unit,sum(b.on_hand)::text AS on_hand,sum(b.reserved)::text AS reserved,(sum(b.on_hand)-COALESCE(m.delta,0))::text AS opening,COALESCE(m.received,0)::text AS received,COALESCE(m.issued,0)::text AS issued FROM cohamy_crm.inventory_balances b JOIN cohamy_crm.warehouses w ON w.id=b.warehouse_id JOIN cohamy_crm.products p ON p.id=b.product_id LEFT JOIN (SELECT i.warehouse_id,i.product_id,sum(i.quantity) AS delta,sum(GREATEST(i.quantity,0)) AS received,sum(GREATEST(-i.quantity,0)) AS issued FROM cohamy_crm.inventory_movements i JOIN cohamy_crm.warehouses w ON w.id=i.warehouse_id WHERE (${scope.sql}) GROUP BY i.warehouse_id,i.product_id) m ON m.warehouse_id=b.warehouse_id AND m.product_id=b.product_id WHERE (${scope.sql}) GROUP BY b.warehouse_id,b.product_id,p.sku,p.name,p.stock_unit,m.delta,m.received,m.issued ORDER BY p.sku`,scope.params),
+    // The client only needs delivery fields. Pricing policies/full quote versions stay server-side.
+    isFactory||user.role==='ACCOUNTANT'?[]:rows<{id:string;document_code:string;warehouse_id:string;immutable_lines:Array<Record<string,unknown>>;snapshot:Record<string,unknown>;orderer_name:string;orderer_phone:string}>(`SELECT c.id,c.document_code,c.warehouse_id,c.immutable_lines,jsonb_build_object('delivery',v.snapshot->'delivery') AS snapshot,c.orderer_name,c.orderer_phone FROM cohamy_crm.accounting_order_clearances c JOIN cohamy_crm.warehouses w ON w.id=c.warehouse_id LEFT JOIN cohamy_crm.commercial_requests r ON r.id=c.request_id LEFT JOIN cohamy_crm.commercial_request_versions v ON v.id=r.latest_version_id WHERE (${scope.sql}) ORDER BY c.created_at DESC LIMIT 200`,scope.params),
+  ]);
   const visible=[...factory,...issues],ids=visible.map(x=>x.id);
-  const vats=user.role==='FACTORY'?[]:(await db.query<{id:string;entity_id:string;version_id:string;revision:number;filename:string;mime:string;checksum:string;created_at:string}>('SELECT l.*,v.filename,v.mime,v.checksum FROM cohamy_crm.document_vat_links l JOIN cohamy_crm.document_versions v ON v.id=l.version_id WHERE l.entity_id=ANY($1::uuid[]) ORDER BY l.revision DESC',[ids])).rows;
-  const warehouses=user.role==='FACTORY'?[]:(await db.query<{id:string;code:string;name:string}>(`SELECT w.id,w.code,w.name FROM cohamy_crm.warehouses w WHERE w.active AND (${scope.sql}) ORDER BY w.code`,scope.params)).rows;
-  const products=user.role==='ADMIN'||isWarehouseRole(user.role)?(await db.query<{id:string;sku:string;name:string;stock_unit:string}>('SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE active ORDER BY sku')).rows:[];
-  const factories=user.role==='ADMIN'?(await db.query<{id:string;name:string}>("SELECT m.id,u.display_name AS name FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id WHERE m.organization_id=$1 AND m.role='FACTORY' AND m.active AND u.active ORDER BY u.display_name",[user.organizationId])).rows:[];
-  const stocks=user.role==='FACTORY'?[]:(await db.query<{warehouse_id:string;product_id:string;sku:string;name:string;stock_unit:string;on_hand:string;reserved:string;opening:string;received:string;issued:string}>(`SELECT b.warehouse_id,b.product_id,p.sku,p.name,p.stock_unit,sum(b.on_hand)::text AS on_hand,sum(b.reserved)::text AS reserved,(sum(b.on_hand)-COALESCE(m.delta,0))::text AS opening,COALESCE(m.received,0)::text AS received,COALESCE(m.issued,0)::text AS issued FROM cohamy_crm.inventory_balances b JOIN cohamy_crm.warehouses w ON w.id=b.warehouse_id JOIN cohamy_crm.products p ON p.id=b.product_id LEFT JOIN (SELECT warehouse_id,product_id,sum(quantity) AS delta,sum(GREATEST(quantity,0)) AS received,sum(GREATEST(-quantity,0)) AS issued FROM cohamy_crm.inventory_movements GROUP BY warehouse_id,product_id) m ON m.warehouse_id=b.warehouse_id AND m.product_id=b.product_id WHERE (${scope.sql}) GROUP BY b.warehouse_id,b.product_id,p.sku,p.name,p.stock_unit,m.delta,m.received,m.issued ORDER BY p.sku`,scope.params)).rows;
-  const orders=user.role==='FACTORY'||user.role==='ACCOUNTANT'?[]:(await db.query<{id:string;document_code:string;warehouse_id:string;immutable_lines:Array<Record<string,unknown>>;snapshot:Record<string,unknown>;orderer_name:string;orderer_phone:string}>(`SELECT c.id,c.document_code,c.warehouse_id,c.immutable_lines,v.snapshot,c.orderer_name,c.orderer_phone FROM cohamy_crm.accounting_order_clearances c JOIN cohamy_crm.warehouses w ON w.id=c.warehouse_id LEFT JOIN cohamy_crm.commercial_requests r ON r.id=c.request_id LEFT JOIN cohamy_crm.commercial_request_versions v ON v.id=r.latest_version_id WHERE (${scope.sql}) ORDER BY c.created_at DESC LIMIT 200`,scope.params)).rows;
-  const accepts=(await db.query<{entity_id:string}>("SELECT DISTINCT a.entity_id FROM cohamy_crm.audit_events a JOIN cohamy_crm.factory_invoices f ON f.id::text=a.entity_id WHERE a.entity_id=ANY($1::text[]) AND a.action='document-flow.accepted' AND a.payload->>'revision'=f.workflow_version::text",[ids])).rows.map(x=>x.entity_id);
-  const notifications=(await db.query<{id:string;message:string;entity_id:string;created_at:string}>("SELECT id,message,entity_id,created_at::text FROM cohamy_crm.notifications WHERE user_id=$1 AND entity_id::text=ANY($2::text[]) ORDER BY created_at DESC LIMIT 100",[user.id,ids])).rows;
-  const revisions=(await db.query<{entity_id:string;revision:number;reason:string;created_at:string;checksum:string}>('SELECT entity_id,revision,reason,created_at::text,checksum FROM cohamy_crm.document_flow_revisions WHERE entity_id=ANY($1::uuid[]) ORDER BY revision DESC',[ids])).rows;
-  // Legacy rows retain their actual stored values and are explicitly labelled.
+  const [vats,accepted,notifications,revisions]=await Promise.all([
+    isFactory||!ids.length?[]:rows<{id:string;entity_id:string;version_id:string;revision:number;filename:string;mime:string;checksum:string;created_at:string}>('SELECT l.*,v.filename,v.mime,v.checksum FROM cohamy_crm.document_vat_links l JOIN cohamy_crm.document_versions v ON v.id=l.version_id WHERE l.entity_id=ANY($1::uuid[]) ORDER BY l.revision DESC',[ids]),
+    !ids.length?[]:rows<{entity_id:string}>("SELECT DISTINCT a.entity_id FROM cohamy_crm.audit_events a JOIN cohamy_crm.factory_invoices f ON f.id::text=a.entity_id WHERE a.entity_id=ANY($1::text[]) AND a.action='document-flow.accepted' AND a.payload->>'revision'=f.workflow_version::text",[ids]),
+    !ids.length?[]:rows<{id:string;message:string;entity_id:string;created_at:string}>("SELECT id,message,entity_id,created_at::text FROM cohamy_crm.notifications WHERE user_id=$1 AND entity_id::text=ANY($2::text[]) ORDER BY created_at DESC LIMIT 100",[user.id,ids]),
+    !ids.length?[]:rows<{entity_id:string;revision:number;reason:string;created_at:string;checksum:string}>('SELECT entity_id,revision,reason,created_at::text,checksum FROM cohamy_crm.document_flow_revisions WHERE entity_id=ANY($1::uuid[]) ORDER BY revision DESC',[ids]),
+  ]);
   const legacy=visible.filter(x=>!x.flow_payload).map(x=>({id:x.id,code:x.code,kind:x.stage??'ISSUE',warehouseId:x.warehouse_id,state:'LEGACY'}));
-  return {documents:visible.flatMap(x=>x.flow_payload?[x.flow_payload]:[]),legacy,vats,warehouses,products,factories,stocks,orders,accepted:accepts,notifications,revisions};
+  return {documents:visible.flatMap(x=>x.flow_payload?[x.flow_payload]:[]),legacy,vats,warehouses,products,factories,stocks,orders,accepted:accepted.map(x=>x.entity_id),notifications,revisions};
 }
 export async function downloadFlowPdf(user:Principal,id:string,revision?:number){
   const db=await database();const row=await flowAccess(db,user,id);const r=(await db.query<{pdf:Uint8Array;filename:string;checksum:string;snapshot:FlowSnapshot}>('SELECT * FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND ($2::integer IS NULL OR revision=$2) ORDER BY revision DESC LIMIT 1',[row.id,revision??null])).rows[0];
