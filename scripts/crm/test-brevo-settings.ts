@@ -20,10 +20,13 @@ const scrub=(message:string)=>secrets.reduce((text,secret)=>text.replaceAll(secr
 const checks:{test:string;status:string;error?:string}[]=[],evidence:Record<string,unknown>={};
 const ciphertexts:string[]=[];
 const originalFetch=globalThis.fetch;let fetchCalls=0,expectedRuntimeKey='',expectedSender='';
+let providerPayload:Record<string,unknown>={};
 globalThis.fetch=async(input,init)=>{
  fetchCalls++;assert.ok(String(input)==='https://api.brevo.com/v3/smtp/email','UNEXPECTED_PROVIDER_URL');
  assert.ok(new Headers(init?.headers).get('api-key')===expectedRuntimeKey,'PROVIDER_MUST_USE_SAVED_DB_KEY');
  const body=JSON.parse(String(init?.body));assert.ok(body.sender.email===expectedSender,'PROVIDER_MUST_USE_SAVED_DB_SENDER');
+ providerPayload=body;
+ if(Array.isArray(body.attachment)&&body.attachment.length===0)return new Response(JSON.stringify({code:'missing_parameter',message:'attachment is missing'}),{status:400,headers:{'content-type':'application/json'}});
  assert.equal(init?.method,'POST');return new Response(JSON.stringify({messageId:'<brevo-settings-qa-'+fetchCalls+'>'}),{status:201,headers:{'content-type':'application/json'}});
 };
 async function test(name:string,fn:()=>Promise<void>){try{await fn();checks.push({test:name,status:'PASS'});console.log('PASS '+name);}catch(error){checks.push({test:name,status:'FAIL',error:scrub(error instanceof Error?error.message:String(error))});throw error;}}
@@ -77,6 +80,12 @@ async function main(){
   await test('Both document and transactional sends use saved database key and sender through fake fetch only',async()=>{
    expectedRuntimeKey=secondKey;expectedSender='replacement@brevo-qa.invalid';const before=fetchCalls;await sendBoth();assert.equal(fetchCalls-before,2);evidence.savedConfigurationSendPaths=['sendDocumentEmail','sendTransactionalEmail'];
   });
+  await test('Brevo contract omits empty attachments and preserves real files with To, CC and BCC',async()=>{
+   await sendDocument();assert.equal(Object.hasOwn(providerPayload,'attachment'),false,'EMPTY_ATTACHMENT_IS_REJECTED_BY_BREVO');
+   const file={name:'qa.pdf',content:Buffer.from('%PDF-1.4\nLOCAL QA attachment').toString('base64')};
+   await brevo.sendDocumentEmail({recipients:{to:['recipient@brevo-qa.invalid'],cc:['copy@brevo-qa.invalid'],bcc:['hidden@brevo-qa.invalid']},subject:'LOCAL QA attachment contract',textContent:'Fictitious QA only',attachments:[file],jobId:randomUUID()});
+   assert.deepEqual(providerPayload.attachment,[file]);assert.deepEqual(providerPayload.to,[{email:'recipient@brevo-qa.invalid'}]);assert.deepEqual(providerPayload.cc,[{email:'copy@brevo-qa.invalid'}]);assert.deepEqual(providerPayload.bcc,[{email:'hidden@brevo-qa.invalid'}]);
+  });
   await test('Email enabled flag still blocks both send paths before fake provider invocation',async()=>{
    const before=fetchCalls;process.env.CRM_EMAIL_ENABLED='false';try{await expectBlocked(()=>brevo.sendDocumentEmail({recipients:{to:['recipient@brevo-qa.invalid'],cc:[],bcc:[]},subject:'QA',textContent:'QA',attachments:[],jobId:randomUUID()}));await expectBlocked(()=>brevo.sendTransactionalEmail('recipient@brevo-qa.invalid','QA','QA'));}finally{process.env.CRM_EMAIL_ENABLED='true';}assert.equal(fetchCalls,before);
   });
@@ -104,7 +113,7 @@ async function main(){
    const audits=(await db.query<{action:string;payload:unknown}>("SELECT action,payload FROM cohamy_crm.audit_events WHERE action ILIKE '%brevo%' OR entity_id='BREVO'")).rows;assert.ok(audits.length>=4,'SETTINGS_CHANGES_REQUIRE_AUDIT');excludesSecrets(audits,'AUDIT');for(const ciphertext of ciphertexts)assert.ok(!JSON.stringify(audits).includes(ciphertext),'AUDIT_CONTAINS_CIPHERTEXT');await safe();evidence.auditRecords=audits.length;evidence.providerFetchCalls=fetchCalls;evidence.finalVersion=version;
   });
  }finally{
-  await fs.mkdir('docs/crm/test-results/document-flow',{recursive:true});await fs.writeFile('docs/crm/test-results/document-flow/brevo-settings-local.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'LOCAL fresh isolated PGlite',dataDir:process.env.CRM_LOCAL_DATA_DIR,provider:'Strict in-process fake fetch only; randomly generated fictitious credentials never logged',status:checks.length===14&&checks.every(c=>c.status==='PASS')?'PASS':'FAIL',checks,evidence},null,2));await db.close();globalThis.fetch=originalFetch;
+  await fs.mkdir('docs/crm/test-results/document-flow',{recursive:true});await fs.writeFile('docs/crm/test-results/document-flow/brevo-settings-local.json',JSON.stringify({testedAt:new Date().toISOString(),environment:'LOCAL fresh isolated PGlite',dataDir:process.env.CRM_LOCAL_DATA_DIR,provider:'Strict in-process fake fetch only; randomly generated fictitious credentials never logged',status:checks.length===15&&checks.every(c=>c.status==='PASS')?'PASS':'FAIL',checks,evidence},null,2));await db.close();globalThis.fetch=originalFetch;
  }
 }
 main().catch(error=>{globalThis.fetch=originalFetch;console.error(scrub(error instanceof Error?error.stack??error.message:String(error)));process.exitCode=1;});
