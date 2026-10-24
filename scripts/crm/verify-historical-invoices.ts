@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import { randomUUID, createHash } from 'node:crypto';
 import sharp from 'sharp';
 import { createQaFixture, qaPassword } from './qa-fixture';
-import { database } from '../../lib/crm/db';
+import { database, type Database } from '../../lib/crm/db';
 import { login } from '../../lib/crm/auth';
 import { createAccount } from '../../lib/crm/repository';
 import { roles, type Principal } from '../../lib/crm/types';
@@ -96,6 +96,24 @@ async function main() {
       await assert.rejects(db.query('UPDATE cohamy_crm.historical_order_invoices SET source_content=$1 WHERE id=$2',[png,imported.results[0].id]),/AUDIT_APPEND_ONLY/);
       await assert.rejects(db.query('DELETE FROM cohamy_crm.historical_order_invoices WHERE id=$1',[imported.results[0].id]),/AUDIT_APPEND_ONLY/);
       assert.equal((await databaseManifest(db)).fileIntegrityErrors,'0');
+    });
+    await check('SELECT/INSERT-only runtime imports and locks without UPDATE/DELETE privilege',async()=>{
+      await db.exec('CREATE ROLE qa_history_insert_only; GRANT USAGE ON SCHEMA cohamy_crm TO qa_history_insert_only; GRANT SELECT,INSERT,UPDATE,DELETE ON ALL TABLES IN SCHEMA cohamy_crm TO qa_history_insert_only; REVOKE UPDATE,DELETE ON cohamy_crm.historical_order_invoices FROM qa_history_insert_only;');
+      const before=await databaseManifest(db),rollback=new Error('ROLLBACK_RUNTIME_IMPORT_TEST');
+      const restricted={...input,invoices:[{...input.invoices[0],snapshot:{...snapshots[0],number:'6'}}]};
+      const preview=await importHistoricalInvoices(admin,restricted);
+      const cache=globalThis as unknown as {cohamyCrmDatabase?:Promise<Database>};
+      try {
+        await db.transaction(async tx=>{
+          await tx.exec('SET LOCAL ROLE qa_history_insert_only');
+          assert.equal((await tx.query<{allowed:boolean}>("SELECT has_table_privilege(current_user,'cohamy_crm.historical_order_invoices','UPDATE') AS allowed")).rows[0].allowed,false);
+          assert.equal((await tx.query<{allowed:boolean}>("SELECT has_table_privilege(current_user,'cohamy_crm.historical_order_invoices','DELETE') AS allowed")).rows[0].allowed,false);
+          cache.cohamyCrmDatabase=Promise.resolve({...tx,transaction:run=>run(tx),close:async()=>{}});
+          try {const result=await importHistoricalInvoices(admin,restricted,preview.checksum);assert.equal(result.results[0].action,'CREATE');assert.ok(result.results[0].id);throw rollback;}
+          finally {cache.cohamyCrmDatabase=Promise.resolve(db);}
+        });
+      } catch(error){if(error!==rollback)throw error;}
+      assert.deepEqual(await databaseManifest(db),before);
     });
     await check('Stale, disabled and forged role principals cannot read or import',async()=>{
       await assert.rejects(listHistoricalInvoices({...admin,role:'MANAGER'}),status(403));

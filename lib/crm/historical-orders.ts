@@ -86,7 +86,9 @@ export async function importHistoricalInvoices(user:Principal,input:unknown,appl
     await assertCurrentPrincipal(tx,user);
     const warehouse=(await tx.query<{id:string;name:string;region:string}>("SELECT id,name,region FROM cohamy_crm.warehouses WHERE id=$1 AND organization_id=$2 AND active AND region IN('NORTH','SOUTH')",[data.warehouseId,user.organizationId])).rows[0];
     if (!warehouse) throw new CrmError('WAREHOUSE_NOT_FOUND',404);
-    if (applyDigest) await tx.exec('LOCK TABLE cohamy_crm.historical_order_invoices IN SHARE ROW EXCLUSIVE MODE');
+    // An advisory transaction lock serializes imports without requiring UPDATE
+    // privilege on this immutable table. Runtime retains SELECT/INSERT only.
+    if (applyDigest) await tx.query('SELECT pg_advisory_xact_lock(431025,hashtext($1))',[user.organizationId]);
     const results:{id:string|null;number:string;action:'CREATE'|'ALREADY_IMPORTED';total:number}[]=[];
     for (const file of entries) {
       const s=file.snapshot;

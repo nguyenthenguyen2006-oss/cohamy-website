@@ -1,7 +1,7 @@
 {
   "environment": "LOCAL isolated PGlite; synthetic invoices only",
   "status": "PASS",
-  "testedAt": "2026-10-24T20:01:44.683Z",
+  "testedAt": "2026-10-24T20:15:45.933Z",
   "cases": [
     {
       "name": "Preview validates original rounded amounts without writing any business or audit rows",
@@ -33,6 +33,10 @@
     },
     {
       "name": "Database prevents rewriting or deleting imported invoices; backup checks actual image hashes",
+      "status": "PASS"
+    },
+    {
+      "name": "SELECT/INSERT-only runtime imports and locks without UPDATE/DELETE privilege",
       "status": "PASS"
     },
     {
