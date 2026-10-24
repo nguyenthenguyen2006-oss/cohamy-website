@@ -1,0 +1,47 @@
+{
+  "environment": "LOCAL isolated PGlite; synthetic invoices only",
+  "status": "PASS",
+  "testedAt": "2026-10-24T20:15:45.933Z",
+  "cases": [
+    {
+      "name": "Preview validates original rounded amounts without writing any business or audit rows",
+      "status": "PASS"
+    },
+    {
+      "name": "Apply requires the exact reviewed source and warehouse digest",
+      "status": "PASS"
+    },
+    {
+      "name": "Repeated and concurrent imports retain exactly four records",
+      "status": "PASS"
+    },
+    {
+      "name": "A changed duplicate rejects and rolls back the whole batch, including preceding new invoices",
+      "status": "PASS"
+    },
+    {
+      "name": "Bad totals, incomplete payments, duplicate invoice keys, traversal and invalid PNG bytes fail before persistence",
+      "status": "PASS"
+    },
+    {
+      "name": "Role matrix and regional warehouse scope protect metadata, private image bytes and imports",
+      "status": "PASS"
+    },
+    {
+      "name": "Search and aggregate totals follow the same access scope and metadata has no raw bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Database prevents rewriting or deleting imported invoices; backup checks actual image hashes",
+      "status": "PASS"
+    },
+    {
+      "name": "SELECT/INSERT-only runtime imports and locks without UPDATE/DELETE privilege",
+      "status": "PASS"
+    },
+    {
+      "name": "Stale, disabled and forged role principals cannot read or import",
+      "status": "PASS"
+    }
+  ]
+}

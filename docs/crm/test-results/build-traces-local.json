@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-10-22T10:17:56.182Z",
+  "testedAt": "2026-10-24T20:03:02.759Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -15,7 +15,7 @@
       "status": "PASS"
     }
   ],
-  "traceCount": 91,
+  "traceCount": 97,
   "includedMigrations": [
     "db/crm/001-access-catalog.sql",
     "db/crm/002-website-order-intake.sql",
@@ -51,11 +51,21 @@
     "db/crm/032-remove-out-of-scope-features.sql",
     "db/crm/033-regional-warehouse-roles.sql",
     "db/crm/034-accountant-factory-workflow.sql",
-    "db/crm/035-warehouse-handover-schema.sql"
+    "db/crm/035-warehouse-handover-schema.sql",
+    "db/crm/036-erp-accounting-warehouse-vat.sql",
+    "db/crm/037-document-flow-notifications.sql",
+    "db/crm/038-document-business-mail.sql",
+    "db/crm/039-document-stock-link-locks.sql",
+    "db/crm/040-document-handover-updated-at.sql",
+    "db/crm/040-internal-documents.sql",
+    "db/crm/041-document-vat-source-revision.sql",
+    "db/crm/042-brevo-server-settings.sql",
+    "db/crm/043-historical-order-invoices.sql"
   ],
   "includedPdfAssets": [
     "assets/crm/fonts/BeVietnamPro-Regular.ttf",
     "assets/crm/fonts/BeVietnamPro-SemiBold.ttf",
+    "assets/crm/fonts/OFL.txt",
     "node_modules/pdfkit/js/data/Courier-Bold.afm",
     "node_modules/pdfkit/js/data/Courier-BoldOblique.afm",
     "node_modules/pdfkit/js/data/Courier-Oblique.afm",
@@ -112,8 +122,7 @@
     "node_modules/pdfkit/js/standard-fonts/chunks/standardGlyphNames-DNHAb7rp.cjs",
     "node_modules/pdfkit/js/standard-fonts/chunks/standardGlyphNames-w3QlG7PW.mjs",
     "node_modules/pdfkit/package.json",
-    "public/images/logo/cohamy-brand-logo.png",
-    "assets/crm/fonts/OFL.txt"
+    "public/images/logo/cohamy-brand-logo.png"
   ],
   "leaks": [],
   "deployment": "NOT RUN",
