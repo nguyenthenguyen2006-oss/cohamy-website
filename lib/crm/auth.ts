@@ -22,6 +22,7 @@ function principal(row: IdentityRow): Principal | null {
 export async function audit(sql: Sql, actorId: string | null, action: string, entityId: string, payload: unknown = {}) {
   await sql.query("INSERT INTO cohamy_crm.audit_events(id,actor_id,action,entity_id,payload) VALUES ($1,$2,$3,$4,$5::jsonb)",
     [randomUUID(), actorId, action, entityId, JSON.stringify(redactAudit(payload))]);
+  if(action.startsWith('quotation.')||action.startsWith('commercial-request.')||action.startsWith('sales-order.'))await (await import('./document-business-events')).businessDocumentEvent(sql,'audit',action,entityId,payload);
 }
 export function redactAudit(value:unknown,depth=0):unknown {
   if(depth>8)return '[omitted]';

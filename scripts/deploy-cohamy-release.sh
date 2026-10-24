@@ -98,6 +98,9 @@ export CRM_ENVIRONMENT=PRODUCTION CRM_PUBLIC_ORIGIN=https://cohamy.vn NODE_ENV=p
 # Preserve a verified pre-migration database including every row and bytea.
 # pg_dump and the row manifests share the same exported PostgreSQL snapshot.
 CRM_BACKUP_ROOT="$BACKUP/pre-migration" CRM_BACKUP_PUBLIC_UPLOAD_DIR="$SHARED/uploads/blog" node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/backup-restore.ts > "$BACKUP/pre-migration-restore.json"
+COHAMY_PREVIOUS_ENV="$BACKUP/previous.env.production" CRM_RELEASE_BACKUP="$BACKUP" node scripts/crm/provision-brevo-master.mjs
+export CRM_SETTINGS_ENCRYPTION_KEY="$(<"$SHARED/crm-settings-encryption.key")"
+node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/migrate-release.ts > "$BACKUP/atomic-migrations.json"
 npm run crm:init -- --catalog
 if [[ "$(docker exec cohamy-crm-postgres psql -U cohamy_owner -d cohamy_crm -Atc 'SELECT count(*) FROM cohamy_crm.users')" = 0 ]]; then
   export CRM_BOOTSTRAP_EMAIL=cohamyvietnam@gmail.com CRM_BOOTSTRAP_NAME='Quản trị Cohamy'
@@ -133,7 +136,7 @@ export BLOG_SOURCE CRM_WEBSITE_ORDER_INTAKE=true
 export CRM_REGISTRATION_MODE=OPEN
 export UPLOAD_DIR="$SHARED/uploads/blog" NEXT_PUBLIC_UPLOAD_BASE_URL=https://cohamy.vn/uploads/blog
 mkdir -p "$UPLOAD_DIR"
-node -e 'const fs=require("fs");const keys=["CRM_DATABASE_MODE","CRM_DATABASE_URL","CRM_ENVIRONMENT","CRM_PUBLIC_ORIGIN","CRM_WEBSITE_ORDER_INTAKE","CRM_REGISTRATION_MODE","BLOG_SOURCE","UPLOAD_DIR","NEXT_PUBLIC_UPLOAD_BASE_URL"];const old=fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8").split(/\r?\n/).filter(l=>!keys.some(k=>l.startsWith(k+"="))&&!l.startsWith("CRM_BOOTSTRAP_")&&!l.startsWith("CRM_LOCAL_DATA_DIR=")).join("\n");fs.writeFileSync(".env.production",old+"\n"+keys.map(k=>k+"="+process.env[k]).join("\n")+"\n",{mode:0o600});'
+node -e 'const fs=require("fs");const keys=["CRM_DATABASE_MODE","CRM_DATABASE_URL","CRM_ENVIRONMENT","CRM_PUBLIC_ORIGIN","CRM_WEBSITE_ORDER_INTAKE","CRM_REGISTRATION_MODE","BLOG_SOURCE","UPLOAD_DIR","NEXT_PUBLIC_UPLOAD_BASE_URL","CRM_SETTINGS_ENCRYPTION_KEY"];const old=fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8").split(/\r?\n/).filter(l=>!keys.some(k=>l.startsWith(k+"="))&&!l.startsWith("CRM_BOOTSTRAP_")&&!l.startsWith("CRM_LOCAL_DATA_DIR=")).join("\n");fs.writeFileSync(".env.production",old+"\n"+keys.map(k=>k+"="+process.env[k]).join("\n")+"\n",{mode:0o600});'
 npm run build
 npm run test:crm:build
 
@@ -152,7 +155,7 @@ test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:4312/api/crm/wor
 node scripts/crm/verify-production-smoke.mjs http://localhost:4312 "$SHARED/initial-admin.json" "$BACKUP/candidate-smoke.json"
 kill "$CANDIDATE_PID" 2>/dev/null || true
 CANDIDATE_PID=
-unset CRM_DATABASE_URL CRM_DATABASE_MODE CRM_ENVIRONMENT CRM_PUBLIC_ORIGIN CRM_WEBSITE_ORDER_INTAKE BLOG_SOURCE UPLOAD_DIR NEXT_PUBLIC_UPLOAD_BASE_URL POSTGRES_PASSWORD POSTGRES_USER POSTGRES_DB
+unset CRM_DATABASE_URL CRM_DATABASE_MODE CRM_ENVIRONMENT CRM_PUBLIC_ORIGIN CRM_WEBSITE_ORDER_INTAKE BLOG_SOURCE UPLOAD_DIR NEXT_PUBLIC_UPLOAD_BASE_URL POSTGRES_PASSWORD POSTGRES_USER POSTGRES_DB CRM_SETTINGS_ENCRYPTION_KEY
 # Reload retains the old npm script/cwd when switching between release directories.
 # Replace only Cohamy's process registration; source/data and other apps are untouched.
 CUTOVER=1

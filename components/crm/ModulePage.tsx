@@ -1,3 +1,7 @@
+import {DocumentFlowWorkspace} from './DocumentFlowWorkspace';
+import {DocumentMailSettings} from './DocumentMailSettings';
+import {flowWorkspace} from '@/lib/crm/document-flow';
+import {mailSettings} from '@/lib/crm/document-mail';
 import {RelationshipPanel,VisitPage,CareDictionaryPage,VisitsIndexPage} from './RelationshipPages';
 import {PricePage,QuotationsPage} from './CommercialPages';
 import {RequestsPage,SalesOrdersPage} from './OrderPages';
@@ -32,11 +36,11 @@ import {MfaControls} from './SecurityForms';
 import {mfaStatus} from '@/lib/crm/account-security';
 
 import { CrmHubPage } from "./CrmHubPage";
+import {InternalDocumentsPage} from "./InternalDocumentsPage";
 import {PortalNetworkPage,PeriodSalesPage,KpiPage,PortalOrderCatalogPage} from "./ChannelPages";
 import {AccountantWorkspace} from "./AccountantWorkspace";
 import {WarehouseKeeperWorkspace, type WarehouseKeeperTab} from "./WarehouseKeeperWorkspace";
 import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
-import {InternalDocumentsPage} from "./InternalDocumentsPage";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
 function Header({title,description}:{title:string;description:string}) {return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
@@ -53,27 +57,19 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(slug==="hub"&&!id)redirect(`/${area}`);
   if(slug==="profile"&&!id){const security=await mfaStatus(user);return <><Profile user={user}/><PermissionPanel user={user}/><SessionsPanel user={user}/><MfaControls enabled={security.enabled} recoveryCodesRemaining={security.recoveryCodesRemaining}/><section className="work-section"><h2>Bảo mật tài khoản</h2><PasswordForm/></section></>;}
   if(slug==='partners'&&id){const partner=await getOrganization(user,id);redirect(`/${area}/${partner.kind==='DEALER'?'dealers':'customers'}/${id}`);}
-  if(area==='crm'&&(isWarehouseRole(user.role)||slug.startsWith('warehouse-'))){
-    const whData=await getAccountantWorkspaceData(user);
-    const initialTab:WarehouseKeeperTab=
-      slug==='warehouse-orders'||slug==='orders'||slug==='requests'||slug==='sales'
-        ?'orders'
-        :slug==='warehouse-factory'
-        ?'factory'
-        :slug==='warehouse-handover'
-        ?'handover'
-        :slug==='warehouse-notifications'||slug==='notifications'
-        ?'notifications'
-        :'stock';
-    return <WarehouseKeeperWorkspace initialData={whData} initialTab={initialTab} userRole={user.role} userName={user.displayName}/>;
+  if(area==='crm'&&slug==='document-notifications'){
+    if(user.role!=='ADMIN')notFound();
+    const [settings,workspace]=await Promise.all([mailSettings(user),flowWorkspace(user)]);
+    return <DocumentMailSettings initialSettings={settings} workspace={workspace}/>;
+  }
+  if(area==='crm'&&(isWarehouseRole(user.role)||user.role==='ACCOUNTANT'||user.role==='FACTORY'||['factory-requests','accounting-orders','accounting-factory','accounting-vat','accounting-warehouses'].includes(slug))){
+    const allowed=visibleModules(user).some(m=>m.id===slug);
+    if(!allowed)notFound();
+    const initialTab=slug==='notifications'||slug==='warehouse-notifications'?'notifications':slug==='accounting-orders'||slug==='warehouse-orders'||slug==='warehouse-handover'?'issues':slug==='warehouse-stock'||slug==='accounting-warehouses'?'stock':slug==='accounting-factory'||slug==='warehouse-factory'||slug==='accounting-vat'?'receipts':'requests';
+    return <DocumentFlowWorkspace initialData={await flowWorkspace(user)} user={user} initialTab={initialTab}/>;
   }
   const selectedModule=visibleModules(user).find(item=>item.id===slug);
   if(!selectedModule)return <><Header title="Không có quyền truy cập" description="Tài khoản của bạn không được cấp quyền mở phân hệ này."/><Link className="button button--secondary" href={`/${area}`}>Về trang chủ</Link></>;
-  if(slug==='accounting-orders'||slug==='accounting-factory'||slug==='accounting-warehouses'||(user.role==='ACCOUNTANT'&&slug==='notifications')){
-    const accData=await getAccountantWorkspaceData(user);
-    const initialTab=slug==='accounting-factory'?'factory':slug==='accounting-warehouses'?'warehouses':slug==='notifications'?'notifications':'orders';
-    return <AccountantWorkspace initialData={accData} initialTab={initialTab} userRole={user.role}/>;
-  }
   let q=typeof query.q==="string"?query.q:"";const page=typeof query.page==="string"?Math.min(100000,Math.max(1,Math.floor(Number(query.page)||1))):1;
   const root=`/${area}/${slug}`;let tags=Array.isArray(query.tags)?query.tags.join(','):typeof query.tags==='string'?query.tags:'';
   const workQuery=Object.fromEntries(Object.entries(query).filter((entry):entry is [string,string]=>typeof entry[1]==='string'));

@@ -25,5 +25,6 @@ export async function createQaFixture() {
     await tx.query("INSERT INTO cohamy_crm.partner_assignments(membership_id,organization_id) VALUES ($1,$2)",[ids.sales,ids.dealerA]);
     await tx.query("INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) VALUES ($1,$2)",[ids.warehouse,ids.warehouseA]);
   });
+  await (await import('./qa-document-mail')).instrumentDocumentMailQa(db,admin.userId);
   return ids;
 }

@@ -5,8 +5,11 @@ import Link from 'next/link';
 import {ProductThumbZoom, resolveProductImage} from './CommercialForms';
 import type {
   AccountantWorkspaceData,
+  CustomerTaxProfileRecord,
   FactoryInvoiceRecord,
   OrderClearanceRecord,
+  VatInvoiceRecord,
+  WarehouseHandoverInvoiceRecord,
 } from '@/lib/crm/accountant-workflow';
 
 function vnd(v: string | number | bigint | null | undefined) {
@@ -32,35 +35,35 @@ function clearanceBadge(status: OrderClearanceRecord['status']) {
   switch (status) {
     case 'NEW_ORDER':
       return {
-        label: '1. Mới đặt — Chờ NV hoàn thiện tiền',
+        label: 'Chưa thanh toán · Sẵn sàng xuất kho',
         bg: '#FEF3C7',
         color: '#92400E',
         border: '#F59E0B',
       };
     case 'STAFF_SUBMITTED':
       return {
-        label: '2. NV đã nộp tiền — Chờ KT kiểm tra giá gốc & % giảm',
+        label: 'Chờ Kế toán xác nhận thanh toán',
         bg: '#DBEAFE',
         color: '#1E40AF',
         border: '#3B82F6',
       };
     case 'ACCOUNTANT_CLEARED':
       return {
-        label: '3. KT đã duyệt đủ tiền — Được lấy hàng khỏi kho',
+        label: 'Đã xác nhận thanh toán đủ',
         bg: '#D1FAE5',
         color: '#065F46',
         border: '#10B981',
       };
     case 'ACCOUNTANT_REJECTED':
       return {
-        label: 'Cần bổ sung tiền — Chưa được xuất kho',
+        label: 'Còn công nợ / Cần bổ sung thanh toán',
         bg: '#FEE2E2',
         color: '#991B1B',
         border: '#EF4444',
       };
     case 'PICKED_UP_DELIVERED':
       return {
-        label: '4. Đã lấy hàng khỏi kho & Giao khách',
+        label: 'Đã xuất kho giao khách',
         bg: '#E0E7FF',
         color: '#3730A3',
         border: '#6366F1',
@@ -68,23 +71,57 @@ function clearanceBadge(status: OrderClearanceRecord['status']) {
   }
 }
 
+function reconciliationBadge(status?: FactoryInvoiceRecord['reconciliationStatus']) {
+  switch (status) {
+    case 'MATCHED':
+      return {label: 'Đã khớp', bg: '#D1FAE5', color: '#065F46'};
+    case 'DISCREPANCY':
+      return {label: 'Có chênh lệch', bg: '#FEE2E2', color: '#991B1B'};
+    case 'RESOLVING_DISCREPANCY':
+      return {label: 'Đang xử lý chênh lệch', bg: '#FEF3C7', color: '#92400E'};
+    case 'COMPLETED':
+      return {label: 'Hoàn tất', bg: '#E0E7FF', color: '#3730A3'};
+    case 'PENDING_RECEIPT':
+    default:
+      return {label: 'Chờ kho nhận', bg: '#DBEAFE', color: '#1E40AF'};
+  }
+}
+
+function vatBadge(status?: VatInvoiceRecord['status'] | OrderClearanceRecord['vatInvoiceStatus']) {
+  switch (status) {
+    case 'ISSUED':
+      return {label: 'Đã phát hành (Đủ PDF/XML)', bg: '#D1FAE5', color: '#065F46'};
+    case 'ISSUED_MISSING_FILES':
+      return {label: 'Thiếu tài liệu hóa đơn (PDF/XML)', bg: '#FEF3C7', color: '#92400E'};
+    case 'ADJUSTMENT_REQUESTED':
+      return {label: 'Chờ điều chỉnh / thay thế', bg: '#FEE2E2', color: '#991B1B'};
+    case 'ADJUSTED':
+      return {label: 'Hóa đơn điều chỉnh', bg: '#E0E7FF', color: '#3730A3'};
+    case 'REPLACED':
+      return {label: 'Hóa đơn thay thế', bg: '#EDE9FE', color: '#5B21B6'};
+    case 'UNISSUED':
+    default:
+      return {label: 'Chưa phát hành', bg: '#F1F5F9', color: '#475569'};
+  }
+}
+
 function factoryStageBadge(stage: FactoryInvoiceRecord['stage']) {
   switch (stage) {
     case 'FACTORY_ORDER':
       return {
-        label: 'Bước 1 · HĐ Đặt hàng Nhà máy (Admin)',
+        label: 'Lệnh Đặt hàng Nhà máy (Admin)',
         bg: '#FEF3C7',
         color: '#92400E',
       };
     case 'FACTORY_DISPATCH':
       return {
-        label: 'Bước 2 · HĐ Xuất Nhà máy đẩy về Kho',
+        label: 'Phiếu xuất Nhà máy → Kho',
         bg: '#DBEAFE',
         color: '#1E40AF',
       };
     case 'WAREHOUSE_RECONCILIATION':
       return {
-        label: 'Bước 3 · HĐ Đối chiếu của Quản lý Kho',
+        label: 'Phiếu nhập kho (Thủ kho xác nhận)',
         bg: '#D1FAE5',
         color: '#065F46',
       };
@@ -97,12 +134,12 @@ export function AccountantWorkspace({
   userRole,
 }: {
   initialData?: AccountantWorkspaceData | null;
-  initialTab?: 'orders' | 'factory' | 'warehouses' | 'notifications';
+  initialTab?: 'orders' | 'factory' | 'vat' | 'warehouses' | 'notifications';
   userRole?: string;
 }) {
   const [data, setData] = useState<AccountantWorkspaceData | null>(initialData ?? null);
   const [loading, setLoading] = useState(!initialData);
-  const [tab, setTab] = useState<'orders' | 'factory' | 'warehouses' | 'notifications'>(initialTab);
+  const [tab, setTab] = useState<'orders' | 'factory' | 'vat' | 'warehouses' | 'notifications'>(initialTab);
   const [prevInitialTab, setPrevInitialTab] = useState(initialTab);
   if (initialTab !== prevInitialTab) {
     setPrevInitialTab(initialTab);
@@ -112,7 +149,12 @@ export function AccountantWorkspace({
   const [search, setSearch] = useState('');
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('ALL');
   const [factoryStageFilter, setFactoryStageFilter] = useState<string>('ALL');
+  const [reconcileStatusFilter, setReconcileStatusFilter] = useState<string>('ALL');
+  const [voucherTypeFilter, setVoucherTypeFilter] = useState<string>('ALL');
   const [warehouseFilter, setWarehouseFilter] = useState<string>('ALL');
+  const [factorySubView, setFactorySubView] = useState<'COMPARE' | 'VOUCHERS' | 'STOCK_MOVEMENTS'>('COMPARE');
+  const [ordersSubView, setOrdersSubView] = useState<'ORDERS' | 'ISSUE_VOUCHERS' | 'PAYMENTS'>('ORDERS');
+  const [vatSubView, setVatSubView] = useState<'INVOICES' | 'UNINVOICED' | 'TAX_PROFILES'>('INVOICES');
   const [busy, setBusy] = useState(false);
   const [banner, setBanner] = useState<{type: 'ok' | 'err'; text: string} | null>(null);
 
@@ -121,6 +163,48 @@ export function AccountantWorkspace({
   const [clearanceModalMode, setClearanceModalMode] = useState<
     'VIEW' | 'STAFF_SUBMIT' | 'ACCOUNTANT_VERIFY' | 'PICKUP' | null
   >(null);
+  const [previewHandover, setPreviewHandover] = useState<WarehouseHandoverInvoiceRecord | null>(null);
+
+  // Multi-payment modal state
+  const [paymentModalOrder, setPaymentModalOrder] = useState<OrderClearanceRecord | null>(null);
+  const [payAmount, setPayAmount] = useState('');
+  const [payBankAccount, setPayBankAccount] = useState('VCB - 0011009998888 - COHAMY VN');
+  const [payRef, setPayRef] = useState('');
+  const [payMethod, setPayMethod] = useState<'BANK_TRANSFER' | 'CASH' | 'COMBINED'>('BANK_TRANSFER');
+  const [payTransferContent, setPayTransferContent] = useState('');
+
+  // VAT Invoice modal state
+  const [vatModalTarget, setVatModalTarget] = useState<{
+    clearance?: OrderClearanceRecord;
+    existingVat?: VatInvoiceRecord;
+  } | null>(null);
+  const [vatNumber, setVatNumber] = useState('');
+  const [vatSymbol, setVatSymbol] = useState('1C26TAA');
+  const [vatIssuedDate, setVatIssuedDate] = useState('');
+  const [vatType, setVatType] = useState<'ORIGINAL' | 'ADJUSTMENT' | 'REPLACEMENT'>('ORIGINAL');
+  const [vatBuyerName, setVatBuyerName] = useState('');
+  const [vatBuyerTaxCode, setVatBuyerTaxCode] = useState('');
+  const [vatBuyerAddress, setVatBuyerAddress] = useState('');
+  const [vatBuyerEmail, setVatBuyerEmail] = useState('');
+  const [vatAdjustmentReason, setVatAdjustmentReason] = useState('');
+  const [vatNote, setVatNote] = useState('');
+  const [vatPdfDocId, setVatPdfDocId] = useState<string | null>(null);
+  const [vatPdfFilename, setVatPdfFilename] = useState<string | null>(null);
+  const [vatXmlDocId, setVatXmlDocId] = useState<string | null>(null);
+  const [vatXmlFilename, setVatXmlFilename] = useState<string | null>(null);
+
+  // Customer Legal/Tax Profile modal state
+  const [editingTaxProfile, setEditingTaxProfile] = useState<CustomerTaxProfileRecord | null>(null);
+  const [taxBuyerType, setTaxBuyerType] = useState<'COMPANY' | 'INDIVIDUAL'>('COMPANY');
+  const [taxLegalName, setTaxLegalName] = useState('');
+  const [taxCodeInput, setTaxCodeInput] = useState('');
+  const [taxAddressInput, setTaxAddressInput] = useState('');
+  const [taxEmailInput, setTaxEmailInput] = useState('');
+  const [taxRepInput, setTaxRepInput] = useState('');
+  const [taxPersonalIdInput, setTaxPersonalIdInput] = useState('');
+  const [taxConsentInput, setTaxConsentInput] = useState('');
+  const [taxContractInput, setTaxContractInput] = useState('');
+  const [taxNoteInput, setTaxNoteInput] = useState('');
 
   // Staff submit payment form state
   const [submitAmount, setSubmitAmount] = useState('');
@@ -140,6 +224,7 @@ export function AccountantWorkspace({
     }
   >(null);
   const [factoryWarehouseId, setFactoryWarehouseId] = useState('');
+  const [factoryVoucherType, setFactoryVoucherType] = useState<'INTERNAL_TRANSFER' | 'SUPPLIER_PURCHASE'>('INTERNAL_TRANSFER');
   const [factoryNote, setFactoryNote] = useState('');
   const [factoryLines, setFactoryLines] = useState<
     Array<{
@@ -186,7 +271,7 @@ export function AccountantWorkspace({
   const role = userRole ?? 'ACCOUNTANT';
   const canAccountantApprove = ['ACCOUNTANT', 'ADMIN', 'MANAGER'].includes(role);
   const canCreateFactoryOrder = ['ADMIN', 'MANAGER'].includes(role);
-  const canCreateFactoryDispatch = ['ADMIN', 'MANAGER', 'ACCOUNTANT'].includes(role);
+  const canCreateFactoryDispatch = ['FACTORY', 'ADMIN', 'MANAGER'].includes(role);
   const canCreateWarehouseReconcile = [
     'ADMIN',
     'MANAGER',
@@ -204,6 +289,8 @@ export function AccountantWorkspace({
       if (!q) return true;
       return (
         c.documentCode.toLowerCase().includes(q) ||
+        (c.salesOrderCode ?? '').toLowerCase().includes(q) ||
+        (c.contractCode ?? '').toLowerCase().includes(q) ||
         c.organizationName.toLowerCase().includes(q) ||
         c.creatorName.toLowerCase().includes(q)
       );
@@ -215,6 +302,8 @@ export function AccountantWorkspace({
     const q = search.trim().toLowerCase();
     return data.factoryInvoices.filter((f: FactoryInvoiceRecord) => {
       if (factoryStageFilter !== 'ALL' && f.stage !== factoryStageFilter) return false;
+      if (reconcileStatusFilter !== 'ALL' && f.reconciliationStatus !== reconcileStatusFilter) return false;
+      if (voucherTypeFilter !== 'ALL' && (f.voucherType ?? 'INTERNAL_TRANSFER') !== voucherTypeFilter) return false;
       if (warehouseFilter !== 'ALL' && f.warehouseCode !== warehouseFilter) return false;
       if (!q) return true;
       return (
@@ -224,7 +313,83 @@ export function AccountantWorkspace({
         (f.parentCode ?? '').toLowerCase().includes(q)
       );
     });
-  }, [data, search, factoryStageFilter, warehouseFilter]);
+  }, [data, search, factoryStageFilter, reconcileStatusFilter, voucherTypeFilter, warehouseFilter]);
+
+  // Side-by-Side Comparison Pairs: Factory Dispatch <-> Warehouse Receipt (Section 4.3)
+  const dispatchReceiptPairs = useMemo(() => {
+    if (!data) return [];
+    const q = search.trim().toLowerCase();
+    const dispatches = data.factoryInvoices.filter(f => f.stage === 'FACTORY_DISPATCH');
+    const receiptsByParent = new Map<string, FactoryInvoiceRecord>();
+    for (const r of data.factoryInvoices) {
+      if (r.stage === 'WAREHOUSE_RECONCILIATION' && r.parentId) {
+        receiptsByParent.set(r.parentId, r);
+      }
+    }
+    return dispatches
+      .map(d => ({
+        dispatch: d,
+        receipt: receiptsByParent.get(d.id) ?? null,
+      }))
+      .filter(({dispatch, receipt}) => {
+        if (warehouseFilter !== 'ALL' && dispatch.warehouseCode !== warehouseFilter) return false;
+        const recStatus = receipt?.reconciliationStatus ?? dispatch.reconciliationStatus ?? 'PENDING_RECEIPT';
+        if (reconcileStatusFilter !== 'ALL' && recStatus !== reconcileStatusFilter) return false;
+        const vType = dispatch.voucherType ?? 'INTERNAL_TRANSFER';
+        if (voucherTypeFilter !== 'ALL' && vType !== voucherTypeFilter) return false;
+        if (!q) return true;
+        return (
+          dispatch.code.toLowerCase().includes(q) ||
+          (receipt?.code ?? '').toLowerCase().includes(q) ||
+          dispatch.warehouseName.toLowerCase().includes(q) ||
+          dispatch.lines.some(l => l.sku.toLowerCase().includes(q) || l.name.toLowerCase().includes(q))
+        );
+      });
+  }, [data, search, warehouseFilter, reconcileStatusFilter, voucherTypeFilter]);
+
+  const filteredVatInvoices = useMemo(() => {
+    if (!data?.vatInvoices) return [];
+    const q = search.trim().toLowerCase();
+    return data.vatInvoices.filter(v => {
+      if (warehouseFilter !== 'ALL' && v.warehouseCode !== warehouseFilter) return false;
+      if (!q) return true;
+      return (
+        v.code.toLowerCase().includes(q) ||
+        (v.invoiceNumber ?? '').toLowerCase().includes(q) ||
+        (v.orderCode ?? '').toLowerCase().includes(q) ||
+        v.organizationName.toLowerCase().includes(q) ||
+        (v.buyerTaxCode ?? '').toLowerCase().includes(q)
+      );
+    });
+  }, [data, search, warehouseFilter]);
+
+  const uninvoicedOrders = useMemo(() => {
+    if (!data) return [];
+    const q = search.trim().toLowerCase();
+    return data.orderClearances.filter(c => {
+      if (c.vatInvoiceStatus === 'ISSUED') return false;
+      if (warehouseFilter !== 'ALL' && c.warehouseCode !== warehouseFilter) return false;
+      if (!q) return true;
+      return (
+        c.documentCode.toLowerCase().includes(q) ||
+        c.organizationName.toLowerCase().includes(q)
+      );
+    });
+  }, [data, search, warehouseFilter]);
+
+  const filteredTaxProfiles = useMemo(() => {
+    if (!data?.customerTaxProfiles) return [];
+    const q = search.trim().toLowerCase();
+    return data.customerTaxProfiles.filter(tp => {
+      if (!q) return true;
+      return (
+        tp.organizationName.toLowerCase().includes(q) ||
+        tp.organizationCode.toLowerCase().includes(q) ||
+        tp.taxCode.toLowerCase().includes(q) ||
+        tp.legalName.toLowerCase().includes(q)
+      );
+    });
+  }, [data, search]);
 
   // Stock comparison matrix across Kho HN and Kho HCM per product
   const productWarehouseMatrix = useMemo(() => {
@@ -242,23 +407,132 @@ export function AccountantWorkspace({
         const hnOnHand = Number(hn?.onHand ?? 0);
         const hnReserved = Number(hn?.reserved ?? 0);
         const hnAvail = Number(hn?.available ?? 0);
+        const hnInTransit = Number(hn?.inTransit ?? 0);
+        const hnInbound = Number(hn?.totalInbound ?? 0);
+        const hnOutbound = Number(hn?.totalOutbound ?? 0);
         const hcmOnHand = Number(hcm?.onHand ?? 0);
         const hcmReserved = Number(hcm?.reserved ?? 0);
         const hcmAvail = Number(hcm?.available ?? 0);
+        const hcmInTransit = Number(hcm?.inTransit ?? 0);
+        const hcmInbound = Number(hcm?.totalInbound ?? 0);
+        const hcmOutbound = Number(hcm?.totalOutbound ?? 0);
         return {
           ...p,
           imageUrl: resolveProductImage(p.sku),
           hnOnHand,
           hnReserved,
           hnAvail,
+          hnInTransit,
+          hnInbound,
+          hnOutbound,
           hcmOnHand,
           hcmReserved,
           hcmAvail,
+          hcmInTransit,
+          hcmInbound,
+          hcmOutbound,
           totalOnHand: hnOnHand + hcmOnHand,
           totalAvailable: hnAvail + hcmAvail,
         };
       });
   }, [data, search]);
+
+  function openPaymentModal(c: OrderClearanceRecord) {
+    setPaymentModalOrder(c);
+    const remaining = Math.max(
+      0,
+      Number(c.grossTotal || c.netTotal || 0) - Number(c.paidAmount || c.staffSubmittedAmount || 0)
+    );
+    setPayAmount(String(remaining > 0 ? remaining : c.netTotal));
+    setPayBankAccount('VCB - 0011009998888 - COHAMY VN');
+    setPayRef(`UNC-${c.documentCode}`);
+    setPayMethod('BANK_TRANSFER');
+    setPayTransferContent(`Thanh toán đơn hàng ${c.documentCode} - ${c.organizationName}`);
+  }
+
+  function openVatModal(clearance?: OrderClearanceRecord, existingVat?: VatInvoiceRecord) {
+    setVatModalTarget({clearance, existingVat});
+    if (existingVat) {
+      setVatNumber(existingVat.invoiceNumber || '');
+      setVatSymbol(existingVat.invoiceSymbol || '1C26TAA');
+      setVatIssuedDate(existingVat.issuedDate ? existingVat.issuedDate.slice(0, 10) : new Date().toISOString().slice(0, 10));
+      setVatType(existingVat.invoiceType || 'ORIGINAL');
+      setVatBuyerName(existingVat.buyerName || existingVat.organizationName);
+      setVatBuyerTaxCode(existingVat.buyerTaxCode || '');
+      setVatBuyerAddress(existingVat.buyerAddress || '');
+      setVatBuyerEmail(existingVat.buyerEmail || '');
+      setVatAdjustmentReason(existingVat.adjustmentReason || '');
+      setVatNote(existingVat.note || '');
+      setVatPdfDocId(existingVat.pdfDocumentId);
+      setVatPdfFilename(existingVat.pdfFilename);
+      setVatXmlDocId(existingVat.xmlDocumentId);
+      setVatXmlFilename(existingVat.xmlFilename);
+    } else if (clearance) {
+      const profile = data?.customerTaxProfiles?.find(tp => tp.organizationId === clearance.organizationId);
+      setVatNumber(clearance.vatInvoiceNumber || '');
+      setVatSymbol(clearance.vatInvoiceSymbol || '1C26TAA');
+      setVatIssuedDate(new Date().toISOString().slice(0, 10));
+      setVatType('ORIGINAL');
+      setVatBuyerName(profile?.legalName || clearance.organizationName);
+      setVatBuyerTaxCode(profile?.taxCode || clearance.organizationTaxCode || '');
+      setVatBuyerAddress(profile?.invoiceAddress || clearance.organizationAddress || '');
+      setVatBuyerEmail(profile?.invoiceEmail || '');
+      setVatAdjustmentReason('');
+      setVatNote(`Hóa đơn GTGT cho đơn hàng ${clearance.documentCode}`);
+      setVatPdfDocId(null);
+      setVatPdfFilename(null);
+      setVatXmlDocId(null);
+      setVatXmlFilename(null);
+    }
+  }
+
+  function openTaxProfileModal(tp: CustomerTaxProfileRecord) {
+    setEditingTaxProfile(tp);
+    setTaxBuyerType(tp.buyerType || 'COMPANY');
+    setTaxLegalName(tp.legalName || tp.organizationName);
+    setTaxCodeInput(tp.taxCode || '');
+    setTaxAddressInput(tp.invoiceAddress || '');
+    setTaxEmailInput(tp.invoiceEmail || tp.email || '');
+    setTaxRepInput(tp.representativeName || '');
+    setTaxPersonalIdInput(tp.personalIdNumber || '');
+    setTaxConsentInput(tp.personalIdConsentBasis || '');
+    setTaxContractInput(tp.contractCode || '');
+    setTaxNoteInput(tp.note || '');
+  }
+
+  async function uploadDocumentFile(
+    entityType: string,
+    entityId: string,
+    title: string,
+    docCategory: string,
+    file: File
+  ): Promise<{id: string; filename: string} | null> {
+    setBusy(true);
+    try {
+      const fd = new FormData();
+      fd.set('entityType', entityType);
+      fd.set('entityId', entityId);
+      fd.set('title', title);
+      fd.set('docCategory', docCategory);
+      fd.set('file', file);
+      const res = await fetch('/api/crm/documents', {
+        method: 'POST',
+        body: fd,
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setBanner({type: 'err', text: json?.error?.message || 'Không thể tải tệp lên.'});
+        return null;
+      }
+      await reloadWorkspace();
+      return {id: json.id, filename: file.name};
+    } catch {
+      setBanner({type: 'err', text: 'Lỗi tải tệp lên máy chủ.'});
+      return null;
+    } finally {
+      setBusy(false);
+    }
+  }
 
   function openClearanceModal(
     c: OrderClearanceRecord,
@@ -411,14 +685,34 @@ export function AccountantWorkspace({
           border: '1px solid #DBE2E8',
           padding: '10px 14px',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: 10,
         }}
       >
         <div
+          onClick={() => setTab('factory')}
+          style={{
+            cursor: 'pointer',
+            padding: '8px 12px',
+            borderLeft: '4px solid #2563EB',
+            background: '#EFF6FF',
+          }}
+        >
+          <div style={{fontSize: 11, fontWeight: 700, color: '#1E40AF', textTransform: 'uppercase'}}>
+            MỤC 1 · NHÀ MÁY → KHO (HN & HCM)
+          </div>
+          <div style={{fontSize: 20, fontWeight: 800, color: '#142338', marginTop: 2}}>
+            {dispatchReceiptPairs.length} cặp phiếu đối chiếu
+          </div>
+          <div style={{fontSize: 11, color: '#1E3A8A'}}>
+            So sánh Phiếu xuất Nhà máy & Phiếu nhập Kho thực nhận
+          </div>
+        </div>
+
+        <div
           onClick={() => {
             setTab('orders');
-            setOrderStatusFilter('NEW_ORDER');
+            setOrderStatusFilter('ALL');
           }}
           style={{
             cursor: 'pointer',
@@ -428,44 +722,18 @@ export function AccountantWorkspace({
           }}
         >
           <div style={{fontSize: 11, fontWeight: 700, color: '#92400E', textTransform: 'uppercase'}}>
-            1. HĐ Khách đặt · Chờ NV hoàn thiện tiền
+            MỤC 2 · KHO → KHÁCH HÀNG & CÔNG NỢ
           </div>
           <div style={{fontSize: 20, fontWeight: 800, color: '#142338', marginTop: 2}}>
-            {pendingStaffCount} hóa đơn
+            {data.orderClearances.length} đơn · {(data.handoverInvoices ?? []).length} phiếu xuất
           </div>
           <div style={{fontSize: 11, color: '#78350F'}}>
-            Gửi đồng thời cho Nhân viên & Kế toán
+            Thủ kho xuất hàng độc lập · Kế toán đối chiếu công nợ
           </div>
         </div>
 
         <div
-          onClick={() => {
-            setTab('orders');
-            setOrderStatusFilter('STAFF_SUBMITTED');
-          }}
-          style={{
-            cursor: 'pointer',
-            padding: '8px 12px',
-            borderLeft: '4px solid #2563EB',
-            background: '#EFF6FF',
-          }}
-        >
-          <div style={{fontSize: 11, fontWeight: 700, color: '#1E40AF', textTransform: 'uppercase'}}>
-            2. Chờ KT kiểm tra Giá gốc & % Giảm
-          </div>
-          <div style={{fontSize: 20, fontWeight: 800, color: '#142338', marginTop: 2}}>
-            {waitingAccountantCount} hóa đơn
-          </div>
-          <div style={{fontSize: 11, color: '#1E3A8A'}}>
-            Kiểm tra NV đã hoàn thiện đủ tiền chưa
-          </div>
-        </div>
-
-        <div
-          onClick={() => {
-            setTab('orders');
-            setOrderStatusFilter('ACCOUNTANT_CLEARED');
-          }}
+          onClick={() => setTab('vat')}
           style={{
             cursor: 'pointer',
             padding: '8px 12px',
@@ -474,13 +742,13 @@ export function AccountantWorkspace({
           }}
         >
           <div style={{fontSize: 11, fontWeight: 700, color: '#065F46', textTransform: 'uppercase'}}>
-            3. KT Đã duyệt · Cho phép lấy hàng khỏi kho
+            MỤC 3 · HÓA ĐƠN VAT & CHỨNG TỪ PHÁP LÝ
           </div>
           <div style={{fontSize: 20, fontWeight: 800, color: '#142338', marginTop: 2}}>
-            {clearedForPickupCount} đơn sẵn sàng giao
+            {(data.vatInvoices ?? []).length} HĐ VAT · {uninvoicedOrders.length} đơn chờ xuất HĐ
           </div>
           <div style={{fontSize: 11, color: '#047857'}}>
-            NV nhận hàng từ kho đi giao khách
+            Lấy dữ liệu từ đơn đã khóa · Lưu PDF/XML & điều chỉnh
           </div>
         </div>
 
@@ -494,7 +762,7 @@ export function AccountantWorkspace({
           }}
         >
           <div style={{fontSize: 11, fontWeight: 700, color: '#9A3412', textTransform: 'uppercase'}}>
-            4. Công nợ Kho (HN & HCM) với Nhà máy
+            TỒN KHO HN & HCM · CÔNG NỢ NHÀ MÁY
           </div>
           <div
             style={{
@@ -508,7 +776,7 @@ export function AccountantWorkspace({
             {vnd(totalFactoryDebt)}
           </div>
           <div style={{fontSize: 11, color: '#9A3412'}}>
-            Đối chiếu HĐ xuất Nhà máy & tồn 2 kho
+            Theo dõi tồn thực tế, đang giữ, đang vận chuyển & lịch sử
           </div>
         </div>
       </div>
@@ -562,22 +830,6 @@ export function AccountantWorkspace({
           <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
             <button
               type="button"
-              onClick={() => setTab('orders')}
-              style={{
-                padding: '7px 12px',
-                fontWeight: 700,
-                fontSize: 12.5,
-                border: '1px solid',
-                borderColor: tab === 'orders' ? '#C84B11' : '#CBD5E1',
-                background: tab === 'orders' ? '#C84B11' : '#FFFFFF',
-                color: tab === 'orders' ? '#FFFFFF' : '#1E293B',
-                cursor: 'pointer',
-              }}
-            >
-              📋 1. Hóa đơn Khách đặt & NV Bàn giao ({data.orderClearances.length})
-            </button>
-            <button
-              type="button"
               onClick={() => setTab('factory')}
               style={{
                 padding: '7px 12px',
@@ -590,7 +842,39 @@ export function AccountantWorkspace({
                 cursor: 'pointer',
               }}
             >
-              🏭 2. HĐ Nhà máy & Đối chiếu Kho ({data.factoryInvoices.length})
+              🏭 1. NHÀ MÁY → KHO ({data.factoryInvoices.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab('orders')}
+              style={{
+                padding: '7px 12px',
+                fontWeight: 700,
+                fontSize: 12.5,
+                border: '1px solid',
+                borderColor: tab === 'orders' ? '#C84B11' : '#CBD5E1',
+                background: tab === 'orders' ? '#C84B11' : '#FFFFFF',
+                color: tab === 'orders' ? '#FFFFFF' : '#1E293B',
+                cursor: 'pointer',
+              }}
+            >
+              📦 2. KHO → KHÁCH HÀNG ({data.orderClearances.length})
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab('vat')}
+              style={{
+                padding: '7px 12px',
+                fontWeight: 700,
+                fontSize: 12.5,
+                border: '1px solid',
+                borderColor: tab === 'vat' ? '#C84B11' : '#CBD5E1',
+                background: tab === 'vat' ? '#C84B11' : '#FFFFFF',
+                color: tab === 'vat' ? '#FFFFFF' : '#1E293B',
+                cursor: 'pointer',
+              }}
+            >
+              🧾 3. HÓA ĐƠN VAT ({(data.vatInvoices ?? []).length})
             </button>
             <button
               type="button"
@@ -606,7 +890,7 @@ export function AccountantWorkspace({
                 cursor: 'pointer',
               }}
             >
-              📦 3. Tồn kho HN & HCM + Công nợ Nhà máy
+              📊 Tồn kho HN & HCM + Lịch sử
             </button>
             <button
               type="button"
@@ -622,7 +906,7 @@ export function AccountantWorkspace({
                 cursor: 'pointer',
               }}
             >
-              🔔 4. Thông báo Hóa đơn ({data.notifications.length})
+              🔔 Thông báo ({data.notifications.length})
             </button>
           </div>
 
@@ -650,7 +934,7 @@ export function AccountantWorkspace({
               type="search"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="Tìm mã HĐ, khách hàng, nhân viên, SKU..."
+              placeholder="Tìm mã HĐ, khách hàng, MST, nhân viên, SKU..."
               style={{
                 height: 32,
                 width: 240,
@@ -678,7 +962,7 @@ export function AccountantWorkspace({
           </div>
         </div>
 
-        {/* TAB 1: CUSTOMER ORDER INVOICES & STAFF HANDOVER CLEARANCE */}
+        {/* MỤC 2: KHO → KHÁCH HÀNG (ĐƠN HÀNG, PHIẾU XUẤT KHO, ĐỐI CHIẾU THANH TOÁN & CÔNG NỢ) */}
         {tab === 'orders' && (
           <div>
             <div
@@ -694,322 +978,563 @@ export function AccountantWorkspace({
               }}
             >
               <div style={{display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center'}}>
-                <span style={{fontSize: 12, fontWeight: 700, color: '#475569'}}>Lọc trạng thái:</span>
                 {[
-                  {id: 'ALL', label: `Tất cả (${data.orderClearances.length})`},
-                  {id: 'NEW_ORDER', label: `Chờ NV hoàn thiện tiền (${pendingStaffCount})`},
-                  {id: 'STAFF_SUBMITTED', label: `Chờ KT kiểm tra (${waitingAccountantCount})`},
-                  {id: 'ACCOUNTANT_CLEARED', label: `KT đã duyệt xuất kho (${clearedForPickupCount})`},
+                  {id: 'ORDERS' as const, label: `Danh sách Đơn hàng & Công nợ (${data.orderClearances.length})`},
                   {
-                    id: 'PICKED_UP_DELIVERED',
-                    label: `Đã lấy hàng & giao khách (${
-                      data.orderClearances.filter(c => c.status === 'PICKED_UP_DELIVERED').length
-                    })`,
+                    id: 'ISSUE_VOUCHERS' as const,
+                    label: `Phiếu xuất kho cho Khách / Đại lý (${(data.handoverInvoices ?? []).length})`,
                   },
-                ].map(f => (
+                  {
+                    id: 'PAYMENTS' as const,
+                    label: `Sổ giao dịch thanh toán (${(data.paymentTransactions ?? []).length})`,
+                  },
+                ].map(sv => (
                   <button
-                    key={f.id}
+                    key={sv.id}
                     type="button"
-                    onClick={() => setOrderStatusFilter(f.id)}
+                    onClick={() => setOrdersSubView(sv.id)}
                     style={{
-                      padding: '4px 10px',
+                      padding: '5px 12px',
                       fontSize: 12,
-                      fontWeight: orderStatusFilter === f.id ? 700 : 500,
+                      fontWeight: 700,
                       border: '1px solid',
-                      borderColor: orderStatusFilter === f.id ? '#142338' : '#CBD5E1',
-                      background: orderStatusFilter === f.id ? '#142338' : '#FFFFFF',
-                      color: orderStatusFilter === f.id ? '#FFFFFF' : '#334155',
+                      borderColor: ordersSubView === sv.id ? '#C84B11' : '#CBD5E1',
+                      background: ordersSubView === sv.id ? '#FFF7ED' : '#FFFFFF',
+                      color: ordersSubView === sv.id ? '#C84B11' : '#334155',
                       cursor: 'pointer',
                     }}
                   >
-                    {f.label}
+                    {sv.label}
                   </button>
                 ))}
               </div>
               <div style={{fontSize: 12, color: '#475569'}}>
-                Quy tắc: <strong>Khách đặt hàng → Hóa đơn gửi NV & Kế toán → NV hoàn thiện tiền cho KT → KT kiểm tra Giá gốc & % Giảm → Lấy hàng khỏi kho giao khách</strong>
+                Quy trình chuẩn:{' '}
+                <strong>
+                  Đối tác tạo đơn → Quản lý duyệt → Thủ kho xác nhận xuất hàng (trừ tồn kho 1 lần, không cần Kế toán duyệt lệnh xuất) → Kế toán đối chiếu công nợ & lập Hóa đơn VAT
+                </strong>
               </div>
             </div>
 
-            <div style={{overflowX: 'auto'}}>
-              <table
-                style={{
-                  width: '100%',
-                  borderCollapse: 'collapse',
-                  fontSize: 12.5,
-                }}
-              >
-                <thead>
-                  <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
-                    <th style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>Mã HĐ / Ngày</th>
-                    <th style={{padding: '8px 10px'}}>Khách hàng / Đại lý</th>
-                    <th style={{padding: '8px 10px'}}>Nhân viên phụ trách</th>
-                    <th style={{padding: '8px 10px'}}>Kho bàn giao</th>
-                    <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
-                      Giá gốc (100%)
-                    </th>
-                    <th style={{padding: '8px 10px', textAlign: 'center', whiteSpace: 'nowrap'}}>
-                      % Giảm CK
-                    </th>
-                    <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
-                      Tiền giảm
-                    </th>
-                    <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
-                      Phải thu (Sau giảm)
-                    </th>
-                    <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
-                      NV Đã hoàn thiện
-                    </th>
-                    <th style={{padding: '8px 10px'}}>Trạng thái KT Kiểm tra & Xuất kho</th>
-                    <th style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>Thao tác nghiệp vụ</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredOrders.length === 0 ? (
-                    <tr>
-                      <td colSpan={11} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
-                        Chưa có hóa đơn đặt hàng nào khớp bộ lọc.
-                      </td>
+            {ordersSubView === 'ORDERS' && (
+              <>
+                <div
+                  style={{
+                    padding: '6px 12px',
+                    borderBottom: '1px solid #E2E8F0',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 6,
+                    alignItems: 'center',
+                  }}
+                >
+                  <span style={{fontSize: 12, fontWeight: 700, color: '#475569'}}>Lọc trạng thái:</span>
+                  {[
+                    {id: 'ALL', label: `Tất cả (${data.orderClearances.length})`},
+                    {id: 'NEW_ORDER', label: `Chưa thanh toán (${pendingStaffCount})`},
+                    {id: 'STAFF_SUBMITTED', label: `Chờ KT đối soát (${waitingAccountantCount})`},
+                    {id: 'ACCOUNTANT_CLEARED', label: `Đã thanh toán đủ (${clearedForPickupCount})`},
+                    {
+                      id: 'PICKED_UP_DELIVERED',
+                      label: `Đã xuất kho giao hàng (${
+                        data.orderClearances.filter(c => c.status === 'PICKED_UP_DELIVERED').length
+                      })`,
+                    },
+                  ].map(f => (
+                    <button
+                      key={f.id}
+                      type="button"
+                      onClick={() => setOrderStatusFilter(f.id)}
+                      style={{
+                        padding: '4px 10px',
+                        fontSize: 12,
+                        fontWeight: orderStatusFilter === f.id ? 700 : 500,
+                        border: '1px solid',
+                        borderColor: orderStatusFilter === f.id ? '#142338' : '#CBD5E1',
+                        background: orderStatusFilter === f.id ? '#142338' : '#FFFFFF',
+                        color: orderStatusFilter === f.id ? '#FFFFFF' : '#334155',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div style={{overflowX: 'auto'}}>
+                  <table
+                    style={{
+                      width: '100%',
+                      borderCollapse: 'collapse',
+                      fontSize: 12.5,
+                    }}
+                  >
+                    <thead>
+                      <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                        <th style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>Mã Đơn / HĐ</th>
+                        <th style={{padding: '8px 10px'}}>Khách hàng / Đối tác</th>
+                        <th style={{padding: '8px 10px'}}>Kho xuất</th>
+                        <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
+                          Giá niêm yết
+                        </th>
+                        <th style={{padding: '8px 10px', textAlign: 'center', whiteSpace: 'nowrap'}}>
+                          % CK
+                        </th>
+                        <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
+                          Phải thu (Sau CK)
+                        </th>
+                        <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
+                          Đã thanh toán
+                        </th>
+                        <th style={{padding: '8px 10px', textAlign: 'right', whiteSpace: 'nowrap'}}>
+                          Công nợ còn lại
+                        </th>
+                        <th style={{padding: '8px 10px'}}>Trạng thái Xuất kho & Công nợ</th>
+                        <th style={{padding: '8px 10px'}}>Trạng thái Hóa đơn VAT</th>
+                        <th style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>Thao tác Kế toán</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredOrders.length === 0 ? (
+                        <tr>
+                          <td colSpan={11} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
+                            Chưa có đơn hàng nào khớp bộ lọc.
+                          </td>
+                        </tr>
+                      ) : (
+                        filteredOrders.map(c => {
+                          const badge = clearanceBadge(c.status);
+                          const vBadge = vatBadge(c.vatInvoiceStatus);
+                          const paidVal = Number(c.paidAmount ?? c.staffSubmittedAmount ?? 0);
+                          const receivableVal = Number(c.grossTotal || c.netTotal || 0);
+                          const debtVal = Math.max(0, receivableVal - paidVal);
+                          return (
+                            <tr
+                              key={c.id}
+                              style={{
+                                borderBottom: '1px solid #E2E8F0',
+                                background:
+                                  selectedClearance?.id === c.id ? '#FFFBEB' : '#FFFFFF',
+                              }}
+                            >
+                              <td style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>
+                                <div style={{fontWeight: 700, color: '#142338'}}>{c.documentCode}</div>
+                                {c.contractCode && (
+                                  <div style={{fontSize: 11, color: '#0369A1'}}>HĐ: {c.contractCode}</div>
+                                )}
+                                <div style={{fontSize: 11, color: '#64748B'}}>{dt(c.updatedAt)}</div>
+                              </td>
+                              <td style={{padding: '8px 10px'}}>
+                                <div style={{fontWeight: 600, color: '#0F172A'}}>{c.organizationName}</div>
+                                <div style={{fontSize: 11, color: '#64748B'}}>
+                                  {c.lines.length} mặt hàng · NV: {c.creatorName}
+                                </div>
+                              </td>
+                              <td style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>
+                                <span
+                                  style={{
+                                    padding: '2px 6px',
+                                    background: '#F1F5F9',
+                                    border: '1px solid #CBD5E1',
+                                    fontSize: 11.5,
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {c.warehouseName || 'Chưa chọn kho'}
+                                </span>
+                                <div style={{fontSize: 11, color: '#475569', marginTop: 2}}>
+                                  {c.warehouseIssueStatus === 'DELIVERED' || c.warehouseIssueStatus === 'ISSUED'
+                                    ? '✓ Đã xuất kho'
+                                    : c.warehouseIssueStatus === 'PARTIAL_ISSUED'
+                                    ? 'Xuất một phần'
+                                    : 'Chờ xuất kho'}
+                                </div>
+                              </td>
+                              <td
+                                style={{
+                                  padding: '8px 10px',
+                                  textAlign: 'right',
+                                  fontVariantNumeric: 'tabular-nums',
+                                  fontWeight: 600,
+                                  color: '#334155',
+                                }}
+                              >
+                                {vnd(c.listSubtotal)}
+                              </td>
+                              <td style={{padding: '8px 10px', textAlign: 'center'}}>
+                                <span
+                                  style={{
+                                    display: 'inline-block',
+                                    padding: '2px 8px',
+                                    background: '#FEF3C7',
+                                    color: '#B45309',
+                                    border: '1px solid #F59E0B',
+                                    fontWeight: 800,
+                                    fontSize: 12,
+                                  }}
+                                >
+                                  -{Number(c.discountPercent).toFixed(2).replace(/\.00$/, '')}%
+                                </span>
+                              </td>
+                              <td
+                                style={{
+                                  padding: '8px 10px',
+                                  textAlign: 'right',
+                                  fontVariantNumeric: 'tabular-nums',
+                                  fontWeight: 800,
+                                  color: '#142338',
+                                }}
+                              >
+                                {vnd(c.netTotal)}
+                              </td>
+                              <td
+                                style={{
+                                  padding: '8px 10px',
+                                  textAlign: 'right',
+                                  fontVariantNumeric: 'tabular-nums',
+                                  fontWeight: 800,
+                                  color: paidVal >= receivableVal ? '#047857' : paidVal > 0 ? '#B45309' : '#64748B',
+                                }}
+                              >
+                                {vnd(paidVal)}
+                              </td>
+                              <td
+                                style={{
+                                  padding: '8px 10px',
+                                  textAlign: 'right',
+                                  fontVariantNumeric: 'tabular-nums',
+                                  fontWeight: 800,
+                                  color: debtVal > 0 ? '#DC2626' : '#047857',
+                                }}
+                              >
+                                {vnd(debtVal)}
+                              </td>
+                              <td style={{padding: '8px 10px'}}>
+                                <span
+                                  style={{
+                                    display: 'inline-block',
+                                    padding: '3px 8px',
+                                    fontSize: 11.5,
+                                    fontWeight: 700,
+                                    background: badge.bg,
+                                    color: badge.color,
+                                    border: `1px solid ${badge.border}`,
+                                  }}
+                                >
+                                  {badge.label}
+                                </span>
+                              </td>
+                              <td style={{padding: '8px 10px'}}>
+                                <span
+                                  style={{
+                                    display: 'inline-block',
+                                    padding: '3px 8px',
+                                    fontSize: 11.5,
+                                    fontWeight: 700,
+                                    background: vBadge.bg,
+                                    color: vBadge.color,
+                                  }}
+                                >
+                                  {vBadge.label}
+                                </span>
+                                {c.vatInvoiceNumber && (
+                                  <div style={{fontSize: 11, color: '#0F172A', fontWeight: 600, marginTop: 2}}>
+                                    Số HĐ: {c.vatInvoiceNumber} ({c.vatInvoiceSymbol})
+                                  </div>
+                                )}
+                              </td>
+                              <td style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>
+                                <div style={{display: 'flex', flexWrap: 'wrap', gap: 4}}>
+                                  <button
+                                    type="button"
+                                    onClick={() => openClearanceModal(c, 'VIEW')}
+                                    style={{
+                                      padding: '4px 8px',
+                                      fontSize: 11.5,
+                                      fontWeight: 600,
+                                      border: '1px solid #CBD5E1',
+                                      background: '#FFFFFF',
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    👁️ Chi tiết đơn
+                                  </button>
+
+                                  <button
+                                    type="button"
+                                    onClick={() => openPaymentModal(c)}
+                                    style={{
+                                      padding: '4px 8px',
+                                      fontSize: 11.5,
+                                      fontWeight: 700,
+                                      border: '1px solid #2563EB',
+                                      background: '#EFF6FF',
+                                      color: '#1D4ED8',
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    💵 Thanh toán / Công nợ
+                                  </button>
+
+                                  {canAccountantApprove && (
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        const existing = (data.vatInvoices ?? []).find(
+                                          v => v.clearanceId === c.id
+                                        );
+                                        openVatModal(c, existing);
+                                      }}
+                                      style={{
+                                        padding: '4px 8px',
+                                        fontSize: 11.5,
+                                        fontWeight: 700,
+                                        border: '1px solid #059669',
+                                        background: '#ECFDF5',
+                                        color: '#065F46',
+                                        cursor: 'pointer',
+                                      }}
+                                    >
+                                      🧾 Hóa đơn VAT
+                                    </button>
+                                  )}
+
+                                  <Link
+                                    href={`/crm/invoice-print?${
+                                      c.orderId ? `orderId=${c.orderId}` : `requestId=${c.requestId}`
+                                    }`}
+                                    target="_blank"
+                                    style={{
+                                      padding: '4px 8px',
+                                      fontSize: 11.5,
+                                      fontWeight: 600,
+                                      border: '1px solid #CBD5E1',
+                                      background: '#F8FAFC',
+                                      color: '#1E293B',
+                                      textDecoration: 'none',
+                                    }}
+                                  >
+                                    🖨️ In
+                                  </Link>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            )}
+
+            {ordersSubView === 'ISSUE_VOUCHERS' && (
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
+                  <thead>
+                    <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                      <th style={{padding: '8px 10px'}}>Mã Phiếu xuất kho</th>
+                      <th style={{padding: '8px 10px'}}>Mã đơn hàng</th>
+                      <th style={{padding: '8px 10px'}}>Khách hàng / Đối tác</th>
+                      <th style={{padding: '8px 10px'}}>Kho xuất</th>
+                      <th style={{padding: '8px 10px'}}>Thủ kho thực hiện</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Tổng SL xuất</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Giá niêm yết</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Chiết khấu</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Thuế VAT</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Tổng phải thu</th>
+                      <th style={{padding: '8px 10px'}}>Thao tác</th>
                     </tr>
-                  ) : (
-                    filteredOrders.map(c => {
-                      const badge = clearanceBadge(c.status);
-                      const diff = Number(c.netTotal) - Number(c.staffSubmittedAmount);
-                      return (
-                        <tr
-                          key={c.id}
-                          style={{
-                            borderBottom: '1px solid #E2E8F0',
-                            background:
-                              selectedClearance?.id === c.id ? '#FFFBEB' : '#FFFFFF',
-                          }}
-                        >
-                          <td style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>
-                            <div style={{fontWeight: 700, color: '#142338'}}>{c.documentCode}</div>
-                            <div style={{fontSize: 11, color: '#64748B'}}>{dt(c.updatedAt)}</div>
+                  </thead>
+                  <tbody>
+                    {(data.handoverInvoices ?? []).length === 0 ? (
+                      <tr>
+                        <td colSpan={11} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
+                          Chưa có phiếu xuất kho nào.
+                        </td>
+                      </tr>
+                    ) : (
+                      (data.handoverInvoices ?? []).map(h => (
+                        <tr key={h.id} style={{borderBottom: '1px solid #E2E8F0'}}>
+                          <td style={{padding: '8px 10px', fontWeight: 700, fontFamily: 'monospace'}}>
+                            {h.code}
+                            <div style={{fontSize: 11, color: '#64748B'}}>{dt(h.createdAt)}</div>
+                          </td>
+                          <td style={{padding: '8px 10px', fontWeight: 700, color: '#2563EB'}}>
+                            {h.orderCode || '—'}
+                          </td>
+                          <td style={{padding: '8px 10px', fontWeight: 600}}>{h.organizationName}</td>
+                          <td style={{padding: '8px 10px'}}>{h.warehouseName} ({h.warehouseCode})</td>
+                          <td style={{padding: '8px 10px'}}>{h.createdByName}</td>
+                          <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 700}}>
+                            {Number(h.totalQuantity).toLocaleString('vi-VN')} gói
+                          </td>
+                          <td style={{padding: '8px 10px', textAlign: 'right'}}>
+                            {vnd(h.listSubtotal || h.totalAmount)}
+                          </td>
+                          <td style={{padding: '8px 10px', textAlign: 'right', color: '#DC2626'}}>
+                            -{vnd(h.discountAmount || 0)} ({h.discountPercent || 0}%)
+                          </td>
+                          <td style={{padding: '8px 10px', textAlign: 'right'}}>
+                            {vnd(h.vatAmount || 0)}
+                          </td>
+                          <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 800}}>
+                            {vnd(h.totalAmount)}
                           </td>
                           <td style={{padding: '8px 10px'}}>
-                            <div style={{fontWeight: 600, color: '#0F172A'}}>{c.organizationName}</div>
-                            <div style={{fontSize: 11, color: '#64748B'}}>
-                              {c.lines.length} mặt hàng · Kênh {c.channel}
-                            </div>
-                          </td>
-                          <td style={{padding: '8px 10px'}}>
-                            <div style={{fontWeight: 600}}>{c.creatorName}</div>
-                            {c.staffSubmittedByName && (
-                              <div style={{fontSize: 11, color: '#0369A1'}}>
-                                Nộp: {c.staffSubmittedByName}
-                              </div>
-                            )}
-                          </td>
-                          <td style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>
-                            <span
+                            <button
+                              type="button"
+                              onClick={() => setPreviewHandover(h)}
                               style={{
-                                padding: '2px 6px',
-                                background: '#F1F5F9',
-                                border: '1px solid #CBD5E1',
+                                padding: '4px 8px',
                                 fontSize: 11.5,
-                                fontWeight: 600,
+                                fontWeight: 700,
+                                border: '1px solid #CBD5E1',
+                                background: '#FFFFFF',
+                                cursor: 'pointer',
                               }}
                             >
-                              {c.warehouseName || 'Chưa chọn kho'}
-                            </span>
+                              👁️ Xem Phiếu xuất kho
+                            </button>
                           </td>
-                          <td
-                            style={{
-                              padding: '8px 10px',
-                              textAlign: 'right',
-                              fontVariantNumeric: 'tabular-nums',
-                              fontWeight: 600,
-                              color: '#334155',
-                            }}
-                          >
-                            {vnd(c.listSubtotal)}
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {ordersSubView === 'PAYMENTS' && (
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
+                  <thead>
+                    <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                      <th style={{padding: '8px 10px'}}>Mã GD / Ngày</th>
+                      <th style={{padding: '8px 10px'}}>Đơn hàng</th>
+                      <th style={{padding: '8px 10px'}}>Khách hàng</th>
+                      <th style={{padding: '8px 10px'}}>Tài khoản nhận / Hình thức</th>
+                      <th style={{padding: '8px 10px'}}>Mã tham chiếu / Nội dung CK</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Số tiền thanh toán</th>
+                      <th style={{padding: '8px 10px'}}>Trạng thái xác nhận</th>
+                      <th style={{padding: '8px 10px'}}>Thao tác Kế toán</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(data.paymentTransactions ?? []).length === 0 ? (
+                      <tr>
+                        <td colSpan={8} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
+                          Chưa có giao dịch thanh toán nào.
+                        </td>
+                      </tr>
+                    ) : (
+                      (data.paymentTransactions ?? []).map(p => (
+                        <tr key={p.id} style={{borderBottom: '1px solid #E2E8F0'}}>
+                          <td style={{padding: '8px 10px', fontWeight: 700}}>
+                            {p.code}
+                            <div style={{fontSize: 11, color: '#64748B'}}>{p.paymentDate}</div>
                           </td>
-                          <td style={{padding: '8px 10px', textAlign: 'center'}}>
-                            <span
-                              style={{
-                                display: 'inline-block',
-                                padding: '2px 8px',
-                                background: '#FEF3C7',
-                                color: '#B45309',
-                                border: '1px solid #F59E0B',
-                                fontWeight: 800,
-                                fontSize: 12,
-                              }}
-                            >
-                              -{Number(c.discountPercent).toFixed(2).replace(/\.00$/, '')}%
-                            </span>
+                          <td style={{padding: '8px 10px', fontWeight: 700, color: '#2563EB'}}>
+                            {p.documentCode}
                           </td>
-                          <td
-                            style={{
-                              padding: '8px 10px',
-                              textAlign: 'right',
-                              fontVariantNumeric: 'tabular-nums',
-                              color: '#B45309',
-                              fontWeight: 600,
-                            }}
-                          >
-                            -{vnd(c.discountAmount)}
+                          <td style={{padding: '8px 10px', fontWeight: 600}}>{p.organizationName}</td>
+                          <td style={{padding: '8px 10px'}}>
+                            <div>{p.paymentMethod}</div>
+                            <div style={{fontSize: 11, color: '#64748B'}}>{p.bankAccount}</div>
                           </td>
-                          <td
-                            style={{
-                              padding: '8px 10px',
-                              textAlign: 'right',
-                              fontVariantNumeric: 'tabular-nums',
-                              fontWeight: 800,
-                              color: '#142338',
-                            }}
-                          >
-                            {vnd(c.netTotal)}
+                          <td style={{padding: '8px 10px'}}>
+                            <div style={{fontWeight: 600}}>{p.referenceCode}</div>
+                            <div style={{fontSize: 11, color: '#64748B'}}>{p.transferContent}</div>
                           </td>
-                          <td
-                            style={{
-                              padding: '8px 10px',
-                              textAlign: 'right',
-                              fontVariantNumeric: 'tabular-nums',
-                            }}
-                          >
-                            <div
-                              style={{
-                                fontWeight: 800,
-                                color:
-                                  Number(c.staffSubmittedAmount) >= Number(c.netTotal)
-                                    ? '#047857'
-                                    : Number(c.staffSubmittedAmount) > 0
-                                    ? '#B45309'
-                                    : '#64748B',
-                              }}
-                            >
-                              {vnd(c.staffSubmittedAmount)}
-                            </div>
-                            {diff > 0 && (
-                              <div style={{fontSize: 11, color: '#DC2626', fontWeight: 600}}>
-                                Còn thiếu: {vnd(diff)}
-                              </div>
-                            )}
+                          <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 800, color: '#047857'}}>
+                            {vnd(p.amount)}
                           </td>
                           <td style={{padding: '8px 10px'}}>
                             <span
                               style={{
-                                display: 'inline-block',
                                 padding: '3px 8px',
                                 fontSize: 11.5,
                                 fontWeight: 700,
-                                background: badge.bg,
-                                color: badge.color,
-                                border: `1px solid ${badge.border}`,
+                                background:
+                                  p.status === 'CONFIRMED'
+                                    ? '#D1FAE5'
+                                    : p.status === 'REJECTED'
+                                    ? '#FEE2E2'
+                                    : '#FEF3C7',
+                                color:
+                                  p.status === 'CONFIRMED'
+                                    ? '#065F46'
+                                    : p.status === 'REJECTED'
+                                    ? '#991B1B'
+                                    : '#92400E',
                               }}
                             >
-                              {badge.label}
+                              {p.status === 'CONFIRMED'
+                                ? `Đã xác nhận (${p.confirmedByName})`
+                                : p.status === 'REJECTED'
+                                ? 'Đã từ chối'
+                                : 'Chờ KT xác nhận'}
                             </span>
-                            {c.accountantName && (
-                              <div style={{fontSize: 11, color: '#475569', marginTop: 2}}>
-                                KT: {c.accountantName} ({dt(c.accountantClearedAt)})
+                          </td>
+                          <td style={{padding: '8px 10px'}}>
+                            {canAccountantApprove && p.status === 'PENDING' && (
+                              <div style={{display: 'flex', gap: 4}}>
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() =>
+                                    void submitAction('confirm-order-payment', {
+                                      paymentId: p.id,
+                                      decision: 'CONFIRM',
+                                    })
+                                  }
+                                  style={{
+                                    padding: '4px 8px',
+                                    fontSize: 11.5,
+                                    fontWeight: 700,
+                                    background: '#059669',
+                                    color: '#FFFFFF',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  ✓ Xác nhận
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() =>
+                                    void submitAction('confirm-order-payment', {
+                                      paymentId: p.id,
+                                      decision: 'REJECT',
+                                    })
+                                  }
+                                  style={{
+                                    padding: '4px 8px',
+                                    fontSize: 11.5,
+                                    fontWeight: 700,
+                                    background: '#DC2626',
+                                    color: '#FFFFFF',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                  }}
+                                >
+                                  ✕ Từ chối
+                                </button>
                               </div>
                             )}
                           </td>
-                          <td style={{padding: '8px 10px', whiteSpace: 'nowrap'}}>
-                            <div style={{display: 'flex', flexWrap: 'wrap', gap: 4}}>
-                              <button
-                                type="button"
-                                onClick={() => openClearanceModal(c, 'VIEW')}
-                                style={{
-                                  padding: '4px 8px',
-                                  fontSize: 11.5,
-                                  fontWeight: 600,
-                                  border: '1px solid #CBD5E1',
-                                  background: '#FFFFFF',
-                                  cursor: 'pointer',
-                                }}
-                              >
-                                👁️ Xem HĐ gốc
-                              </button>
-
-                              {c.status !== 'PICKED_UP_DELIVERED' && (
-                                <button
-                                  type="button"
-                                  onClick={() => openClearanceModal(c, 'STAFF_SUBMIT')}
-                                  style={{
-                                    padding: '4px 8px',
-                                    fontSize: 11.5,
-                                    fontWeight: 700,
-                                    border: '1px solid #2563EB',
-                                    background: '#EFF6FF',
-                                    color: '#1D4ED8',
-                                    cursor: 'pointer',
-                                  }}
-                                >
-                                  💵 NV Hoàn thiện tiền
-                                </button>
-                              )}
-
-                              {canAccountantApprove && c.status !== 'PICKED_UP_DELIVERED' && (
-                                <button
-                                  type="button"
-                                  onClick={() => openClearanceModal(c, 'ACCOUNTANT_VERIFY')}
-                                  style={{
-                                    padding: '4px 8px',
-                                    fontSize: 11.5,
-                                    fontWeight: 700,
-                                    border: '1px solid #C84B11',
-                                    background: '#C84B11',
-                                    color: '#FFFFFF',
-                                    cursor: 'pointer',
-                                  }}
-                                >
-                                  ✅ KT Kiểm tra & Duyệt
-                                </button>
-                              )}
-
-                              {c.status === 'ACCOUNTANT_CLEARED' && (
-                                <button
-                                  type="button"
-                                  onClick={() => openClearanceModal(c, 'PICKUP')}
-                                  style={{
-                                    padding: '4px 8px',
-                                    fontSize: 11.5,
-                                    fontWeight: 700,
-                                    border: '1px solid #059669',
-                                    background: '#059669',
-                                    color: '#FFFFFF',
-                                    cursor: 'pointer',
-                                  }}
-                                >
-                                  🚚 Lấy hàng & Giao khách
-                                </button>
-                              )}
-
-                              <Link
-                                href={`/crm/invoice-print?${
-                                  c.orderId ? `orderId=${c.orderId}` : `requestId=${c.requestId}`
-                                }`}
-                                target="_blank"
-                                style={{
-                                  padding: '4px 8px',
-                                  fontSize: 11.5,
-                                  fontWeight: 600,
-                                  border: '1px solid #CBD5E1',
-                                  background: '#F8FAFC',
-                                  color: '#1E293B',
-                                  textDecoration: 'none',
-                                }}
-                              >
-                                🖨️ Xuất HĐ
-                              </Link>
-                            </div>
-                          </td>
                         </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-              </table>
-            </div>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
 
-        {/* TAB 2: FACTORY ORDERS, FACTORY DISPATCH & WAREHOUSE RECONCILIATION */}
+        {/* MỤC 1: NHÀ MÁY → KHO (SO SÁNH SONG SONG PHIẾU XUẤT NHÀ MÁY & PHIẾU NHẬP KHO + THEO DÕI CHÊNH LỆCH) */}
         {tab === 'factory' && (
           <div>
             <div
@@ -1024,48 +1549,53 @@ export function AccountantWorkspace({
                 gap: 8,
               }}
             >
-              <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
+              <div style={{display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center'}}>
                 {[
-                  {id: 'ALL', label: `Tất cả (${data.factoryInvoices.length})`},
-                  {
-                    id: 'FACTORY_ORDER',
-                    label: `1. HĐ Đặt Nhà máy (${
-                      data.factoryInvoices.filter(f => f.stage === 'FACTORY_ORDER').length
-                    })`,
-                  },
-                  {
-                    id: 'FACTORY_DISPATCH',
-                    label: `2. HĐ Xuất Nhà máy về Kho (${
-                      data.factoryInvoices.filter(f => f.stage === 'FACTORY_DISPATCH').length
-                    })`,
-                  },
-                  {
-                    id: 'WAREHOUSE_RECONCILIATION',
-                    label: `3. HĐ Đối chiếu Quản lý Kho (${
-                      data.factoryInvoices.filter(
-                        f => f.stage === 'WAREHOUSE_RECONCILIATION'
-                      ).length
-                    })`,
-                  },
-                ].map(f => (
+                  {id: 'COMPARE' as const, label: `🔄 Đối chiếu Song song Xuất NM ↔ Nhập Kho (${dispatchReceiptPairs.length})`},
+                  {id: 'VOUCHERS' as const, label: `📋 Toàn bộ Chứng từ NM & Kho (${data.factoryInvoices.length})`},
+                  {id: 'STOCK_MOVEMENTS' as const, label: `📦 Lịch sử Biến động Tồn kho (${(data.movementHistory ?? []).length})`},
+                ].map(sv => (
                   <button
-                    key={f.id}
+                    key={sv.id}
                     type="button"
-                    onClick={() => setFactoryStageFilter(f.id)}
+                    onClick={() => setFactorySubView(sv.id)}
                     style={{
-                      padding: '4px 10px',
+                      padding: '5px 12px',
                       fontSize: 12,
-                      fontWeight: factoryStageFilter === f.id ? 700 : 500,
+                      fontWeight: 700,
                       border: '1px solid',
-                      borderColor: factoryStageFilter === f.id ? '#142338' : '#CBD5E1',
-                      background: factoryStageFilter === f.id ? '#142338' : '#FFFFFF',
-                      color: factoryStageFilter === f.id ? '#FFFFFF' : '#334155',
+                      borderColor: factorySubView === sv.id ? '#C84B11' : '#CBD5E1',
+                      background: factorySubView === sv.id ? '#FFF7ED' : '#FFFFFF',
+                      color: factorySubView === sv.id ? '#C84B11' : '#334155',
                       cursor: 'pointer',
                     }}
                   >
-                    {f.label}
+                    {sv.label}
                   </button>
                 ))}
+
+                <select
+                  value={reconcileStatusFilter}
+                  onChange={e => setReconcileStatusFilter(e.target.value)}
+                  style={{height: 30, padding: '0 8px', border: '1px solid #CBD5E1', fontSize: 12}}
+                >
+                  <option value="ALL">Mọi trạng thái đối chiếu</option>
+                  <option value="PENDING_RECEIPT">1. Chờ kho nhận</option>
+                  <option value="MATCHED">2. Đã khớp</option>
+                  <option value="DISCREPANCY">3. Có chênh lệch</option>
+                  <option value="RESOLVING_DISCREPANCY">4. Đang xử lý chênh lệch</option>
+                  <option value="COMPLETED">5. Hoàn tất</option>
+                </select>
+
+                <select
+                  value={voucherTypeFilter}
+                  onChange={e => setVoucherTypeFilter(e.target.value)}
+                  style={{height: 30, padding: '0 8px', border: '1px solid #CBD5E1', fontSize: 12}}
+                >
+                  <option value="ALL">Mọi loại giao dịch</option>
+                  <option value="INTERNAL_TRANSFER">Điều chuyển nội bộ (NM → Kho)</option>
+                  <option value="SUPPLIER_PURCHASE">Mua hàng từ NCC độc lập</option>
+                </select>
               </div>
 
               <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
@@ -1083,7 +1613,7 @@ export function AccountantWorkspace({
                       cursor: 'pointer',
                     }}
                   >
-                    + 1. Admin Tạo HĐ Đặt hàng Nhà máy
+                    + Lệnh Đặt hàng Nhà máy
                   </button>
                 )}
                 {canCreateFactoryDispatch && (
@@ -1100,7 +1630,7 @@ export function AccountantWorkspace({
                       cursor: 'pointer',
                     }}
                   >
-                    + 2. Nhà máy Xuất HĐ đẩy về Kho
+                    + Nhà máy lập Phiếu xuất đẩy về Kho
                   </button>
                 )}
                 {canCreateWarehouseReconcile && (
@@ -1117,12 +1647,310 @@ export function AccountantWorkspace({
                       cursor: 'pointer',
                     }}
                   >
-                    + 3. Quản lý Kho lập HĐ Đối chiếu Nhà máy
+                    + Thủ kho xác nhận Phiếu nhập kho
                   </button>
                 )}
               </div>
             </div>
 
+            {factorySubView === 'COMPARE' && (
+              <div style={{padding: 12}}>
+                <div style={{fontSize: 12, color: '#475569', marginBottom: 10}}>
+                  Quy trình chuẩn:{' '}
+                  <strong>
+                    Nhà máy lập phiếu xuất hàng (KHÔNG tự động cộng tồn kho) → Kho nhận thông báo → Thủ kho kiểm tra thực tế & xác nhận phiếu nhập → Hệ thống cộng tồn kho theo số lượng thực nhận → Kế toán đối chiếu song song.
+                  </strong>
+                </div>
+                <div style={{overflowX: 'auto', border: '1px solid #CBD5E1'}}>
+                  <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
+                    <thead>
+                      <tr style={{background: '#142338', color: '#FFFFFF', textAlign: 'left'}}>
+                        <th colSpan={5} style={{padding: '8px 10px', borderRight: '2px solid #94A3B8', background: '#1E3A8A'}}>
+                          🏭 PHIẾU XUẤT NHÀ MÁY (NHÀ MÁY LẬP)
+                        </th>
+                        <th colSpan={5} style={{padding: '8px 10px', borderRight: '2px solid #94A3B8', background: '#065F46'}}>
+                          📦 PHIẾU NHẬP KHO (THỦ KHO XÁC NHẬN THỰC NHẬN)
+                        </th>
+                        <th colSpan={3} style={{padding: '8px 10px'}}>
+                          ⚖️ ĐỐI CHIẾU & XỬ LÝ CHÊNH LỆCH
+                        </th>
+                      </tr>
+                      <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                        <th style={{padding: '6px 8px'}}>Mã phiếu xuất</th>
+                        <th style={{padding: '6px 8px'}}>Ngày xuất</th>
+                        <th style={{padding: '6px 8px'}}>Kho nhận</th>
+                        <th style={{padding: '6px 8px', textAlign: 'right'}}>SL xuất</th>
+                        <th style={{padding: '6px 8px', textAlign: 'right', borderRight: '2px solid #CBD5E1'}}>Thành tiền xuất</th>
+                        <th style={{padding: '6px 8px'}}>Mã phiếu nhập</th>
+                        <th style={{padding: '6px 8px'}}>Ngày nhập</th>
+                        <th style={{padding: '6px 8px'}}>Kho thực nhận</th>
+                        <th style={{padding: '6px 8px', textAlign: 'right'}}>SL thực nhận</th>
+                        <th style={{padding: '6px 8px', textAlign: 'right', borderRight: '2px solid #CBD5E1'}}>Giá trị nhập</th>
+                        <th style={{padding: '6px 8px', textAlign: 'right'}}>Chênh lệch SL</th>
+                        <th style={{padding: '6px 8px'}}>Trạng thái đối chiếu</th>
+                        <th style={{padding: '6px 8px'}}>Thao tác</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dispatchReceiptPairs.length === 0 ? (
+                        <tr>
+                          <td colSpan={13} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
+                            Chưa có cặp Phiếu xuất Nhà máy ↔ Phiếu nhập Kho nào khớp bộ lọc.
+                          </td>
+                        </tr>
+                      ) : (
+                        dispatchReceiptPairs.map(({dispatch, receipt}) => {
+                          const dispQty = Number(dispatch.totalDispatchedQty || 0);
+                          const recQty = receipt ? Number(receipt.totalReceivedQty || 0) : 0;
+                          const diffQty = receipt ? recQty - dispQty : 0;
+                          const recState = receipt?.reconciliationStatus ?? dispatch.reconciliationStatus ?? 'PENDING_RECEIPT';
+                          const rBadge = reconciliationBadge(recState);
+                          const isExpanded = expandedFactoryId === dispatch.id;
+                          return (
+                            <React.Fragment key={dispatch.id}>
+                              <tr style={{borderBottom: '1px solid #E2E8F0', background: '#FFFFFF'}}>
+                                <td style={{padding: '8px', fontWeight: 700, fontFamily: 'monospace', color: '#1E40AF'}}>
+                                  {dispatch.code}
+                                  <div style={{fontSize: 10.5, color: '#64748B'}}>
+                                    {dispatch.voucherType === 'SUPPLIER_PURCHASE' ? 'Mua NCC độc lập' : 'Điều chuyển nội bộ'}
+                                  </div>
+                                </td>
+                                <td style={{padding: '8px', fontSize: 12}}>{dispatch.dispatchedDate || dt(dispatch.createdAt)}</td>
+                                <td style={{padding: '8px', fontWeight: 600}}>{dispatch.warehouseName} ({dispatch.warehouseCode})</td>
+                                <td style={{padding: '8px', textAlign: 'right', fontWeight: 800, color: '#1D4ED8'}}>
+                                  {dispQty.toLocaleString('vi-VN')} gói
+                                </td>
+                                <td style={{padding: '8px', textAlign: 'right', fontWeight: 700, borderRight: '2px solid #CBD5E1'}}>
+                                  {vnd(dispatch.totalAmount)}
+                                </td>
+
+                                <td style={{padding: '8px', fontWeight: 700, fontFamily: 'monospace', color: '#065F46'}}>
+                                  {receipt ? receipt.code : '— Chưa lập phiếu nhập'}
+                                </td>
+                                <td style={{padding: '8px', fontSize: 12}}>
+                                  {receipt ? receipt.receivedDate || dt(receipt.createdAt) : '—'}
+                                </td>
+                                <td style={{padding: '8px', fontWeight: 600}}>
+                                  {receipt ? `${receipt.warehouseName} (${receipt.warehouseCode})` : '—'}
+                                </td>
+                                <td style={{padding: '8px', textAlign: 'right', fontWeight: 800, color: '#047857'}}>
+                                  {receipt ? `${recQty.toLocaleString('vi-VN')} gói` : 'Chờ nhận'}
+                                </td>
+                                <td style={{padding: '8px', textAlign: 'right', fontWeight: 700, borderRight: '2px solid #CBD5E1'}}>
+                                  {receipt ? vnd(receipt.totalAmount) : '—'}
+                                </td>
+
+                                <td
+                                  style={{
+                                    padding: '8px',
+                                    textAlign: 'right',
+                                    fontWeight: 800,
+                                    color: !receipt ? '#64748B' : diffQty === 0 ? '#047857' : '#DC2626',
+                                  }}
+                                >
+                                  {!receipt ? '—' : diffQty === 0 ? '0 (Khớp)' : diffQty > 0 ? `+${diffQty}` : `${diffQty}`}
+                                </td>
+                                <td style={{padding: '8px'}}>
+                                  <span
+                                    style={{
+                                      display: 'inline-block',
+                                      padding: '3px 8px',
+                                      fontSize: 11.5,
+                                      fontWeight: 700,
+                                      background: rBadge.bg,
+                                      color: rBadge.color,
+                                    }}
+                                  >
+                                    {rBadge.label}
+                                  </span>
+                                </td>
+                                <td style={{padding: '8px', whiteSpace: 'nowrap'}}>
+                                  <div style={{display: 'flex', gap: 4, flexWrap: 'wrap'}}>
+                                    <button
+                                      type="button"
+                                      onClick={() => setExpandedFactoryId(isExpanded ? null : dispatch.id)}
+                                      style={{
+                                        padding: '4px 8px',
+                                        fontSize: 11.5,
+                                        border: '1px solid #CBD5E1',
+                                        background: '#FFFFFF',
+                                        cursor: 'pointer',
+                                      }}
+                                    >
+                                      {isExpanded ? '▲ Ẩn SKU' : '▼ So sánh SKU'}
+                                    </button>
+                                    {!receipt && canCreateWarehouseReconcile && (
+                                      <button
+                                        type="button"
+                                        onClick={() => openFactoryModal('CREATE_RECONCILIATION', dispatch)}
+                                        style={{
+                                          padding: '4px 8px',
+                                          fontSize: 11.5,
+                                          fontWeight: 700,
+                                          background: '#059669',
+                                          color: '#FFFFFF',
+                                          border: 'none',
+                                          cursor: 'pointer',
+                                        }}
+                                      >
+                                        + Nhập kho
+                                      </button>
+                                    )}
+                                    {canAccountantApprove && (
+                                      <select
+                                        value={recState}
+                                        disabled={busy}
+                                        onChange={e =>
+                                          void submitAction('update-reconciliation-status', {
+                                            invoiceId: (receipt ?? dispatch).id,
+                                            reconciliationStatus: e.target.value,
+                                          })
+                                        }
+                                        style={{height: 26, fontSize: 11, border: '1px solid #CBD5E1'}}
+                                      >
+                                        <option value="PENDING_RECEIPT">Chờ kho nhận</option>
+                                        <option value="MATCHED">Đã khớp</option>
+                                        <option value="DISCREPANCY">Có chênh lệch</option>
+                                        <option value="RESOLVING_DISCREPANCY">Đang xử lý CL</option>
+                                        <option value="COMPLETED">Hoàn tất</option>
+                                      </select>
+                                    )}
+                                  </div>
+                                </td>
+                              </tr>
+                              {isExpanded && (
+                                <tr style={{background: '#F8FAFC', borderBottom: '1px solid #CBD5E1'}}>
+                                  <td colSpan={13} style={{padding: 12}}>
+                                    <div style={{fontWeight: 700, marginBottom: 6, color: '#142338'}}>
+                                      So sánh chi tiết từng SKU giữa Phiếu xuất {dispatch.code} và Phiếu nhập {receipt?.code ?? '(Chưa nhập)'}
+                                    </div>
+                                    <table style={{width: '100%', borderCollapse: 'collapse', background: '#FFF', border: '1px solid #CBD5E1', fontSize: 12}}>
+                                      <thead>
+                                        <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                                          <th style={{padding: 6}}>Mã SKU</th>
+                                          <th style={{padding: 6}}>Tên sản phẩm</th>
+                                          <th style={{padding: 6}}>Quy cách / ĐVT</th>
+                                          <th style={{padding: 6, textAlign: 'right'}}>SL Nhà máy xuất</th>
+                                          <th style={{padding: 6, textAlign: 'right'}}>Thành tiền xuất</th>
+                                          <th style={{padding: 6, textAlign: 'right'}}>SL Kho thực nhận</th>
+                                          <th style={{padding: 6, textAlign: 'right'}}>Giá trị nhập</th>
+                                          <th style={{padding: 6, textAlign: 'right'}}>Chênh lệch</th>
+                                          <th style={{padding: 6, textAlign: 'right'}}>SL Hư hỏng</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {dispatch.lines.map((dl, idx) => {
+                                          const rl = receipt?.lines.find(x => x.productId === dl.productId || x.sku === dl.sku);
+                                          const dQty = Number(dl.dispatchedQty || 0);
+                                          const rQty = rl ? Number(rl.receivedQty || 0) : 0;
+                                          const diff = rl ? rQty - dQty : 0;
+                                          return (
+                                            <tr key={idx} style={{borderBottom: '1px solid #E2E8F0'}}>
+                                              <td style={{padding: 6, fontWeight: 700, fontFamily: 'monospace'}}>{dl.sku}</td>
+                                              <td style={{padding: 6}}>{dl.name}</td>
+                                              <td style={{padding: 6}}>{dl.weightLabel || dl.unitLabel}</td>
+                                              <td style={{padding: 6, textAlign: 'right', fontWeight: 700, color: '#1D4ED8'}}>
+                                                {dQty.toLocaleString('vi-VN')}
+                                              </td>
+                                              <td style={{padding: 6, textAlign: 'right'}}>{vnd(dl.lineTotal)}</td>
+                                              <td style={{padding: 6, textAlign: 'right', fontWeight: 700, color: '#047857'}}>
+                                                {rl ? rQty.toLocaleString('vi-VN') : 'Chờ nhận'}
+                                              </td>
+                                              <td style={{padding: 6, textAlign: 'right'}}>
+                                                {rl ? vnd(rl.receivedTotal || rl.lineTotal) : '—'}
+                                              </td>
+                                              <td style={{padding: 6, textAlign: 'right', fontWeight: 800, color: diff === 0 ? '#047857' : '#DC2626'}}>
+                                                {rl ? diff : '—'}
+                                              </td>
+                                              <td style={{padding: 6, textAlign: 'right', color: '#B45309'}}>
+                                                {rl ? Number(rl.damagedQty ?? 0) : 0}
+                                              </td>
+                                            </tr>
+                                          );
+                                        })}
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              )}
+                            </React.Fragment>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {factorySubView === 'STOCK_MOVEMENTS' && (
+              <div style={{padding: 12}}>
+                <div style={{fontWeight: 700, fontSize: 13, marginBottom: 8, color: '#142338'}}>
+                  Lịch sử biến động tồn kho Hà Nội (KHO-HN) & TP.HCM (KHO-HCM) theo từng chứng từ nhập/xuất
+                </div>
+                <div style={{overflowX: 'auto', border: '1px solid #CBD5E1'}}>
+                  <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
+                    <thead>
+                      <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                        <th style={{padding: '8px 10px'}}>Thời gian</th>
+                        <th style={{padding: '8px 10px'}}>Mã chứng từ</th>
+                        <th style={{padding: '8px 10px'}}>Loại nghiệp vụ</th>
+                        <th style={{padding: '8px 10px'}}>Kho</th>
+                        <th style={{padding: '8px 10px'}}>Mã SKU / Sản phẩm</th>
+                        <th style={{padding: '8px 10px', textAlign: 'right'}}>Biến động SL</th>
+                        <th style={{padding: '8px 10px', textAlign: 'right'}}>Giá trị</th>
+                        <th style={{padding: '8px 10px'}}>Người thực hiện</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(data.movementHistory ?? []).length === 0 ? (
+                        <tr>
+                          <td colSpan={8} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
+                            Chưa có lịch sử biến động tồn kho.
+                          </td>
+                        </tr>
+                      ) : (
+                        (data.movementHistory ?? []).map(m => (
+                          <tr key={m.id} style={{borderBottom: '1px solid #E2E8F0'}}>
+                            <td style={{padding: '8px 10px', fontSize: 12}}>{dt(m.createdAt)}</td>
+                            <td style={{padding: '8px 10px', fontWeight: 700, fontFamily: 'monospace'}}>{m.documentCode}</td>
+                            <td style={{padding: '8px 10px'}}>
+                              <span
+                                style={{
+                                  padding: '2px 8px',
+                                  fontSize: 11.5,
+                                  fontWeight: 700,
+                                  background: m.documentKind === 'FACTORY_RECEIPT' ? '#D1FAE5' : '#FEE2E2',
+                                  color: m.documentKind === 'FACTORY_RECEIPT' ? '#065F46' : '#991B1B',
+                                }}
+                              >
+                                {m.documentKind === 'FACTORY_RECEIPT' ? 'Nhập kho từ Nhà máy' : 'Xuất kho giao Khách'}
+                              </span>
+                            </td>
+                            <td style={{padding: '8px 10px', fontWeight: 600}}>{m.warehouseName} ({m.warehouseCode})</td>
+                            <td style={{padding: '8px 10px'}}>{m.sku} — {m.productName}</td>
+                            <td
+                              style={{
+                                padding: '8px 10px',
+                                textAlign: 'right',
+                                fontWeight: 800,
+                                color: m.quantityDelta.startsWith('+') ? '#047857' : '#DC2626',
+                              }}
+                            >
+                              {m.quantityDelta} {m.unitLabel}
+                            </td>
+                            <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 700}}>{vnd(m.totalAmount)}</td>
+                            <td style={{padding: '8px 10px'}}>{m.actorName}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {factorySubView === 'VOUCHERS' && (
             <div style={{overflowX: 'auto'}}>
               <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
                 <thead>
@@ -1400,6 +2228,310 @@ export function AccountantWorkspace({
                 </tbody>
               </table>
             </div>
+            )}
+          </div>
+        )}
+
+        {/* MỤC 3: HÓA ĐƠN VAT & HỒ SƠ PHÁP LÝ KHÁCH HÀNG */}
+        {tab === 'vat' && (
+          <div>
+            <div
+              style={{
+                padding: '10px 12px',
+                borderBottom: '1px solid #E2E8F0',
+                background: '#FFFDF9',
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              <div style={{display: 'flex', flexWrap: 'wrap', gap: 6}}>
+                {[
+                  {id: 'INVOICES' as const, label: `🧾 Danh sách Hóa đơn VAT (${filteredVatInvoices.length})`},
+                  {id: 'UNINVOICED' as const, label: `⏳ Đơn hàng chờ xuất Hóa đơn VAT (${uninvoicedOrders.length})`},
+                  {id: 'TAX_PROFILES' as const, label: `🏛️ Hồ sơ Pháp lý & MST Khách hàng (${filteredTaxProfiles.length})`},
+                ].map(sv => (
+                  <button
+                    key={sv.id}
+                    type="button"
+                    onClick={() => setVatSubView(sv.id)}
+                    style={{
+                      padding: '5px 12px',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      border: '1px solid',
+                      borderColor: vatSubView === sv.id ? '#C84B11' : '#CBD5E1',
+                      background: vatSubView === sv.id ? '#FFF7ED' : '#FFFFFF',
+                      color: vatSubView === sv.id ? '#C84B11' : '#334155',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {sv.label}
+                  </button>
+                ))}
+              </div>
+              <div style={{fontSize: 12, color: '#475569'}}>
+                Lưu ý: Hóa đơn VAT lấy dữ liệu trực tiếp từ đơn hàng đã khóa giá, độc lập với trạng thái thanh toán (có thể phát hành cho đơn mua trả chậm/công nợ). Chỉ ghi nhận <strong>&ldquo;Đã phát hành&rdquo;</strong> khi có đủ Số HĐ, Ngày phát hành và file PDF/XML.
+              </div>
+            </div>
+
+            {vatSubView === 'INVOICES' && (
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
+                  <thead>
+                    <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                      <th style={{padding: '8px 10px'}}>Số HĐ / Ký hiệu</th>
+                      <th style={{padding: '8px 10px'}}>Ngày phát hành</th>
+                      <th style={{padding: '8px 10px'}}>Mã đơn / Phiếu xuất</th>
+                      <th style={{padding: '8px 10px'}}>Khách hàng & Mã số thuế</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Tiền trước thuế</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Tiền thuế VAT</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Tổng thanh toán</th>
+                      <th style={{padding: '8px 10px'}}>Trạng thái Hóa đơn</th>
+                      <th style={{padding: '8px 10px'}}>Tài liệu PDF / XML</th>
+                      <th style={{padding: '8px 10px'}}>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredVatInvoices.length === 0 ? (
+                      <tr>
+                        <td colSpan={10} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
+                          Chưa có hóa đơn VAT nào. Chuyển sang mục &ldquo;Đơn hàng chờ xuất Hóa đơn VAT&rdquo; để lập hóa đơn từ đơn hàng.
+                        </td>
+                      </tr>
+                    ) : (
+                      filteredVatInvoices.map(v => {
+                        const vb = vatBadge(v.status);
+                        const linkedOrder = data.orderClearances.find(c => c.id === v.clearanceId);
+                        return (
+                          <tr key={v.id} style={{borderBottom: '1px solid #E2E8F0'}}>
+                            <td style={{padding: '8px 10px', fontWeight: 800, fontFamily: 'monospace'}}>
+                              {v.invoiceNumber || '(Chưa cấp số)'}
+                              <div style={{fontSize: 11, color: '#64748B'}}>
+                                KH: {v.invoiceSymbol || '—'} · {v.invoiceType}
+                              </div>
+                            </td>
+                            <td style={{padding: '8px 10px'}}>{v.issuedDate || '—'}</td>
+                            <td style={{padding: '8px 10px'}}>
+                              <div style={{fontWeight: 700, color: '#2563EB'}}>{v.orderCode}</div>
+                              {v.handoverCode && (
+                                <div style={{fontSize: 11, color: '#047857'}}>PXK: {v.handoverCode}</div>
+                              )}
+                            </td>
+                            <td style={{padding: '8px 10px'}}>
+                              <div style={{fontWeight: 700}}>{v.buyerName || v.organizationName}</div>
+                              <div style={{fontSize: 11, color: '#475569'}}>MST: {v.buyerTaxCode || 'Chưa có'}</div>
+                            </td>
+                            <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 600}}>{vnd(v.netAmount)}</td>
+                            <td style={{padding: '8px 10px', textAlign: 'right', color: '#B45309'}}>{vnd(v.vatAmount)}</td>
+                            <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 800}}>{vnd(v.totalAmount)}</td>
+                            <td style={{padding: '8px 10px'}}>
+                              <span
+                                style={{
+                                  display: 'inline-block',
+                                  padding: '3px 8px',
+                                  fontSize: 11.5,
+                                  fontWeight: 700,
+                                  background: vb.bg,
+                                  color: vb.color,
+                                }}
+                              >
+                                {vb.label}
+                              </span>
+                            </td>
+                            <td style={{padding: '8px 10px', fontSize: 11.5}}>
+                              {v.pdfVersionId ? (
+                                <a
+                                  href={`/api/crm/documents/${v.pdfVersionId}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  style={{color: '#2563EB', fontWeight: 700, marginRight: 8}}
+                                >
+                                  📄 PDF ({v.pdfFilename})
+                                </a>
+                              ) : (
+                                <span style={{color: '#DC2626', marginRight: 8}}>Thiếu PDF</span>
+                              )}
+                              {v.xmlVersionId ? (
+                                <a
+                                  href={`/api/crm/documents/${v.xmlVersionId}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  style={{color: '#059669', fontWeight: 700}}
+                                >
+                                  🧾 XML ({v.xmlFilename})
+                                </a>
+                              ) : (
+                                <span style={{color: '#DC2626'}}>Thiếu XML</span>
+                              )}
+                            </td>
+                            <td style={{padding: '8px 10px'}}>
+                              <button
+                                type="button"
+                                onClick={() => openVatModal(linkedOrder, v)}
+                                style={{
+                                  padding: '4px 8px',
+                                  fontSize: 11.5,
+                                  fontWeight: 700,
+                                  border: '1px solid #C84B11',
+                                  background: '#FFF7ED',
+                                  color: '#C84B11',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                ✏️ Cập nhật / Upload PDF-XML
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {vatSubView === 'UNINVOICED' && (
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
+                  <thead>
+                    <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                      <th style={{padding: '8px 10px'}}>Mã đơn hàng</th>
+                      <th style={{padding: '8px 10px'}}>Khách hàng / Đối tác</th>
+                      <th style={{padding: '8px 10px'}}>Kho xuất</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Tiền sau chiết khấu</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Thuế VAT dự kiến</th>
+                      <th style={{padding: '8px 10px', textAlign: 'right'}}>Tổng cộng</th>
+                      <th style={{padding: '8px 10px'}}>Trạng thái hiện tại</th>
+                      <th style={{padding: '8px 10px'}}>Thao tác Kế toán</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {uninvoicedOrders.length === 0 ? (
+                      <tr>
+                        <td colSpan={8} style={{padding: 24, textAlign: 'center', color: '#64748B'}}>
+                          Tất cả đơn hàng đều đã phát hành đủ Hóa đơn VAT.
+                        </td>
+                      </tr>
+                    ) : (
+                      uninvoicedOrders.map(c => {
+                        const vb = vatBadge(c.vatInvoiceStatus);
+                        const existing = (data.vatInvoices ?? []).find(v => v.clearanceId === c.id);
+                        return (
+                          <tr key={c.id} style={{borderBottom: '1px solid #E2E8F0'}}>
+                            <td style={{padding: '8px 10px', fontWeight: 700}}>{c.documentCode}</td>
+                            <td style={{padding: '8px 10px', fontWeight: 600}}>{c.organizationName}</td>
+                            <td style={{padding: '8px 10px'}}>{c.warehouseName || '—'}</td>
+                            <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 700}}>{vnd(c.netTotal)}</td>
+                            <td style={{padding: '8px 10px', textAlign: 'right'}}>{vnd(c.vatAmount || 0)}</td>
+                            <td style={{padding: '8px 10px', textAlign: 'right', fontWeight: 800}}>
+                              {vnd(c.grossTotal || c.netTotal)}
+                            </td>
+                            <td style={{padding: '8px 10px'}}>
+                              <span style={{padding: '3px 8px', fontSize: 11.5, fontWeight: 700, background: vb.bg, color: vb.color}}>
+                                {vb.label}
+                              </span>
+                            </td>
+                            <td style={{padding: '8px 10px'}}>
+                              <button
+                                type="button"
+                                onClick={() => openVatModal(c, existing)}
+                                style={{
+                                  padding: '5px 10px',
+                                  fontSize: 12,
+                                  fontWeight: 700,
+                                  background: '#C84B11',
+                                  color: '#FFFFFF',
+                                  border: 'none',
+                                  cursor: 'pointer',
+                                }}
+                              >
+                                + Chuẩn bị & Ghi nhận Hóa đơn VAT
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {vatSubView === 'TAX_PROFILES' && (
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12.5}}>
+                  <thead>
+                    <tr style={{background: '#F1F5F9', borderBottom: '1px solid #CBD5E1', textAlign: 'left'}}>
+                      <th style={{padding: '8px 10px'}}>Mã KH / ĐL</th>
+                      <th style={{padding: '8px 10px'}}>Tên Pháp lý xuất Hóa đơn</th>
+                      <th style={{padding: '8px 10px'}}>Loại</th>
+                      <th style={{padding: '8px 10px'}}>Mã số thuế</th>
+                      <th style={{padding: '8px 10px'}}>Địa chỉ xuất HĐ & Email nhận HĐ</th>
+                      <th style={{padding: '8px 10px'}}>Mã Hợp đồng</th>
+                      <th style={{padding: '8px 10px'}}>Hồ sơ pháp lý đính kèm</th>
+                      <th style={{padding: '8px 10px'}}>Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredTaxProfiles.map(tp => (
+                      <tr key={tp.organizationId} style={{borderBottom: '1px solid #E2E8F0'}}>
+                        <td style={{padding: '8px 10px', fontWeight: 700, fontFamily: 'monospace'}}>
+                          {tp.organizationCode}
+                        </td>
+                        <td style={{padding: '8px 10px', fontWeight: 700}}>{tp.legalName}</td>
+                        <td style={{padding: '8px 10px'}}>
+                          {tp.buyerType === 'INDIVIDUAL' ? 'Cá nhân' : 'Doanh nghiệp'}
+                        </td>
+                        <td style={{padding: '8px 10px', fontWeight: 700, color: '#1E40AF'}}>
+                          {tp.taxCode || 'Chưa cập nhật'}
+                        </td>
+                        <td style={{padding: '8px 10px', fontSize: 12}}>
+                          <div>{tp.invoiceAddress || '—'}</div>
+                          <div style={{color: '#64748B'}}>{tp.invoiceEmail || '—'}</div>
+                        </td>
+                        <td style={{padding: '8px 10px', fontWeight: 600}}>{tp.contractCode || '—'}</td>
+                        <td style={{padding: '8px 10px', fontSize: 11.5}}>
+                          {tp.documents.length === 0 ? (
+                            <span style={{color: '#64748B'}}>Chưa có tài liệu</span>
+                          ) : (
+                            tp.documents.map(d => (
+                              <a
+                                key={d.versionId}
+                                href={`/api/crm/documents/${d.versionId}`}
+                                target="_blank"
+                                rel="noreferrer"
+                                style={{display: 'block', color: '#2563EB', fontWeight: 600}}
+                              >
+                                📎 {d.title} ({d.filename})
+                              </a>
+                            ))
+                          )}
+                        </td>
+                        <td style={{padding: '8px 10px'}}>
+                          <button
+                            type="button"
+                            onClick={() => openTaxProfileModal(tp)}
+                            style={{
+                              padding: '4px 8px',
+                              fontSize: 11.5,
+                              fontWeight: 700,
+                              border: '1px solid #CBD5E1',
+                              background: '#FFFFFF',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            ✏️ Cập nhật MST & Tài liệu pháp lý
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         )}
 
@@ -2291,7 +3423,7 @@ export function AccountantWorkspace({
               </div>
             ) : (
               <div style={{display: 'flex', flexDirection: 'column', gap: 12}}>
-                <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 10}}>
+                <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1.5fr', gap: 10}}>
                   <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
                     <span style={{fontWeight: 700}}>Kho nhận hàng (Kho Hà Nội / Kho TP.HCM):</span>
                     <select
@@ -2305,6 +3437,21 @@ export function AccountantWorkspace({
                           {w.name} ({w.code})
                         </option>
                       ))}
+                    </select>
+                  </label>
+                  <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                    <span style={{fontWeight: 700}}>Loại chứng từ (Điều chuyển / Mua NCC):</span>
+                    <select
+                      value={factoryVoucherType}
+                      onChange={e =>
+                        setFactoryVoucherType(
+                          e.target.value as 'INTERNAL_TRANSFER' | 'SUPPLIER_PURCHASE'
+                        )
+                      }
+                      style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                    >
+                      <option value="INTERNAL_TRANSFER">Điều chuyển nội bộ (Phiếu xuất kho kiêm vận chuyển nội bộ)</option>
+                      <option value="SUPPLIER_PURCHASE">Mua từ Nhà cung cấp độc lập (Hóa đơn GTGT đầu vào)</option>
                     </select>
                   </label>
                   <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
@@ -2450,6 +3597,7 @@ export function AccountantWorkspace({
                           : 'create-warehouse-reconciliation';
                       const ok = await submitAction(actionName, {
                         warehouseId: factoryWarehouseId,
+                        voucherType: factoryVoucherType,
                         parentInvoiceId: factoryModal.sourceInvoice?.id,
                         dispatchInvoiceId: factoryModal.sourceInvoice?.id,
                         note: factoryNote,
@@ -2471,6 +3619,938 @@ export function AccountantWorkspace({
                 </div>
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================= */}
+      {/* MODAL 3: PREVIEW WAREHOUSE HANDOVER / ISSUE VOUCHER               */}
+      {/* ================================================================= */}
+      {previewHandover && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1050,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '2px solid #142338',
+              maxWidth: 980,
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: 20,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 14,
+            }}
+          >
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div>
+                <div style={{fontSize: 11, fontWeight: 800, color: '#C84B11', textTransform: 'uppercase'}}>
+                  CHI TIẾT PHIẾU XUẤT KHO GIAO KHÁCH HÀNG / ĐỐI TÁC
+                </div>
+                <h3 style={{margin: '2px 0 0', fontSize: 17, fontWeight: 800, color: '#142338'}}>
+                  {previewHandover.code} · Đơn hàng: {previewHandover.orderCode}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPreviewHandover(null)}
+                style={{
+                  padding: '5px 12px',
+                  background: '#F1F5F9',
+                  border: '1px solid #CBD5E1',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                ✕ Đóng
+              </button>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+                gap: 8,
+                background: '#F8FAFC',
+                padding: 12,
+                border: '1px solid #CBD5E1',
+                fontSize: 12,
+              }}
+            >
+              <div>
+                <div style={{color: '#64748B', fontSize: 11}}>Kho xuất hàng</div>
+                <div style={{fontWeight: 800, color: '#142338'}}>
+                  {previewHandover.warehouseName} ({previewHandover.warehouseCode})
+                </div>
+              </div>
+              <div>
+                <div style={{color: '#64748B', fontSize: 11}}>Khách hàng / Đối tác</div>
+                <div style={{fontWeight: 800, color: '#142338'}}>{previewHandover.organizationName}</div>
+              </div>
+              <div>
+                <div style={{color: '#64748B', fontSize: 11}}>Thủ kho xuất / Người nhận</div>
+                <div style={{fontWeight: 700}}>
+                  {previewHandover.createdByName || 'Thủ kho'} → {previewHandover.recipientName || 'NV Giao hàng'}
+                </div>
+              </div>
+              <div>
+                <div style={{color: '#64748B', fontSize: 11}}>Thời gian xác nhận xuất</div>
+                <div style={{fontWeight: 700}}>{dt(previewHandover.issuedDate || previewHandover.createdAt)}</div>
+              </div>
+            </div>
+
+            <div style={{overflowX: 'auto', border: '1px solid #CBD5E1'}}>
+              <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 12}}>
+                <thead>
+                  <tr style={{background: '#142338', color: '#FFFFFF', textAlign: 'left'}}>
+                    <th style={{padding: 8}}>Mã SKU</th>
+                    <th style={{padding: 8}}>Sản phẩm / Quy cách</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>SL Đặt</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>SL Xuất</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>Còn lại</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>Đơn giá gốc</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>CK (%)</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>Đơn giá sau CK</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>VAT</th>
+                    <th style={{padding: 8, textAlign: 'right'}}>Tổng cộng</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {previewHandover.lines.map((line, i) => (
+                    <tr key={i} style={{borderBottom: '1px solid #E2E8F0'}}>
+                      <td style={{padding: 8, fontWeight: 800, color: '#142338'}}>{line.sku}</td>
+                      <td style={{padding: 8}}>
+                        <div style={{fontWeight: 700}}>{line.name}</div>
+                        <div style={{fontSize: 11, color: '#64748B'}}>
+                          {line.weightLabel || '—'} · ĐVT: {line.unitLabel}
+                        </div>
+                      </td>
+                      <td style={{padding: 8, textAlign: 'right'}}>
+                        {Number(line.orderedQuantity ?? line.quantity).toLocaleString('vi-VN')}
+                      </td>
+                      <td style={{padding: 8, textAlign: 'right', fontWeight: 800, color: '#047857'}}>
+                        {Number(line.quantity).toLocaleString('vi-VN')}
+                      </td>
+                      <td style={{padding: 8, textAlign: 'right', color: '#64748B'}}>
+                        {Number(line.remainingQuantity ?? 0).toLocaleString('vi-VN')}
+                      </td>
+                      <td style={{padding: 8, textAlign: 'right'}}>{vnd(line.listUnitPrice ?? line.unitPrice)}</td>
+                      <td style={{padding: 8, textAlign: 'right', color: '#B45309', fontWeight: 700}}>
+                        {Number(line.discountPercent ?? 0) > 0 ? `-${line.discountPercent}%` : '0%'}
+                      </td>
+                      <td style={{padding: 8, textAlign: 'right', fontWeight: 700}}>{vnd(line.unitPrice)}</td>
+                      <td style={{padding: 8, textAlign: 'right'}}>
+                        {line.vatRate ?? 8}% ({vnd(line.vatAmount ?? 0)})
+                      </td>
+                      <td style={{padding: 8, textAlign: 'right', fontWeight: 800, color: '#142338'}}>
+                        {vnd(line.lineTotal)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+                gap: 8,
+                background: '#FFFDF9',
+                border: '1px solid #FDE68A',
+                padding: 12,
+                fontSize: 12,
+              }}
+            >
+              <div>
+                <div style={{fontSize: 11, color: '#64748B'}}>Tổng tiền hàng niêm yết</div>
+                <div style={{fontWeight: 800, fontSize: 14}}>
+                  {vnd(previewHandover.listSubtotal || previewHandover.totalAmount)}
+                </div>
+              </div>
+              <div>
+                <div style={{fontSize: 11, color: '#64748B'}}>Tổng chiết khấu</div>
+                <div style={{fontWeight: 800, fontSize: 14, color: '#B45309'}}>
+                  -{vnd(previewHandover.discountAmount || 0)}
+                </div>
+              </div>
+              <div>
+                <div style={{fontSize: 11, color: '#64748B'}}>Tổng tiền trước thuế</div>
+                <div style={{fontWeight: 800, fontSize: 14}}>
+                  {vnd(previewHandover.netSubtotal || previewHandover.totalAmount)}
+                </div>
+              </div>
+              <div>
+                <div style={{fontSize: 11, color: '#64748B'}}>Tổng thuế GTGT (VAT)</div>
+                <div style={{fontWeight: 800, fontSize: 14, color: '#1D4ED8'}}>
+                  +{vnd(previewHandover.vatAmount || 0)}
+                </div>
+              </div>
+              <div>
+                <div style={{fontSize: 11, color: '#64748B'}}>Tổng phải thu (Sau thuế)</div>
+                <div style={{fontWeight: 800, fontSize: 15, color: '#C84B11'}}>
+                  {vnd(previewHandover.totalAmount)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================= */}
+      {/* MODAL 4: MULTI-PAYMENT RECONCILIATION MODAL                       */}
+      {/* ================================================================= */}
+      {paymentModalOrder && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1050,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '2px solid #142338',
+              maxWidth: 680,
+              width: '100%',
+              padding: 20,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+            }}
+          >
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div>
+                <div style={{fontSize: 11, fontWeight: 800, color: '#059669', textTransform: 'uppercase'}}>
+                  GHI NHẬN & ĐỐI CHIẾU GIAO DỊCH THANH TOÁN ĐƠN HÀNG
+                </div>
+                <h3 style={{margin: '2px 0 0', fontSize: 16, fontWeight: 800, color: '#142338'}}>
+                  Đơn hàng {paymentModalOrder.documentCode} — {paymentModalOrder.organizationName}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setPaymentModalOrder(null)}
+                style={{
+                  padding: '5px 12px',
+                  background: '#F1F5F9',
+                  border: '1px solid #CBD5E1',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                ✕ Đóng
+              </button>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr 1fr',
+                gap: 8,
+                background: '#F8FAFC',
+                padding: 10,
+                border: '1px solid #CBD5E1',
+                fontSize: 12,
+              }}
+            >
+              <div>
+                <div style={{color: '#64748B', fontSize: 11}}>Tổng phải thu</div>
+                <div style={{fontWeight: 800, fontSize: 14, color: '#142338'}}>
+                  {vnd(
+                    Number(paymentModalOrder.grossTotal || 0) > 0
+                      ? paymentModalOrder.grossTotal
+                      : paymentModalOrder.netTotal
+                  )}
+                </div>
+              </div>
+              <div>
+                <div style={{color: '#64748B', fontSize: 11}}>Đã thanh toán</div>
+                <div style={{fontWeight: 800, fontSize: 14, color: '#047857'}}>
+                  {vnd(paymentModalOrder.paidAmount || paymentModalOrder.staffSubmittedAmount)}
+                </div>
+              </div>
+              <div>
+                <div style={{color: '#64748B', fontSize: 11}}>Công nợ còn lại</div>
+                <div style={{fontWeight: 800, fontSize: 14, color: '#B91C1C'}}>
+                  {vnd(paymentModalOrder.remainingDebt || 0)}
+                </div>
+              </div>
+            </div>
+
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10}}>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Số tiền thanh toán đợt này (VND):</span>
+                <input
+                  type="number"
+                  value={payAmount}
+                  onChange={e => setPayAmount(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 800}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Hình thức thanh toán:</span>
+                <select
+                  value={payMethod}
+                  onChange={e =>
+                    setPayMethod(e.target.value as 'BANK_TRANSFER' | 'CASH' | 'COMBINED')
+                  }
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                >
+                  <option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option>
+                  <option value="CASH">Tiền mặt</option>
+                  <option value="COMBINED">Kết hợp</option>
+                </select>
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Tài khoản nhận tiền:</span>
+                <input
+                  type="text"
+                  value={payBankAccount}
+                  onChange={e => setPayBankAccount(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Mã giao dịch ngân hàng (Ref):</span>
+                <input
+                  type="text"
+                  value={payRef}
+                  onChange={e => setPayRef(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+            </div>
+
+            <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+              <span style={{fontWeight: 700}}>Nội dung chuyển khoản / Ghi chú đối soát:</span>
+              <input
+                type="text"
+                value={payTransferContent}
+                onChange={e => setPayTransferContent(e.target.value)}
+                style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+              />
+            </label>
+
+            <div style={{display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4}}>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={async () => {
+                  const ok = await submitAction('record-order-payment', {
+                    clearanceId: paymentModalOrder.id,
+                    orderId: paymentModalOrder.orderId,
+                    requestId: paymentModalOrder.requestId,
+                    amount: Number(payAmount || 0),
+                    paymentMethod: payMethod,
+                    bankAccount: payBankAccount,
+                    referenceCode: payRef,
+                    transferContent: payTransferContent,
+                    autoConfirm: canAccountantApprove,
+                  });
+                  if (ok) setPaymentModalOrder(null);
+                }}
+                style={{
+                  padding: '8px 16px',
+                  background: '#059669',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                }}
+              >
+                {busy
+                  ? 'Đang lưu giao dịch...'
+                  : canAccountantApprove
+                  ? '✅ Ghi nhận & Xác nhận Đã thu tiền'
+                  : '💵 Gửi thông tin thanh toán cho Kế toán'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================= */}
+      {/* MODAL 5: VAT INVOICE PREPARATION, STORAGE & ADJUSTMENT MODAL      */}
+      {/* ================================================================= */}
+      {vatModalTarget && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1050,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '2px solid #142338',
+              maxWidth: 820,
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: 20,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+            }}
+          >
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div>
+                <div style={{fontSize: 11, fontWeight: 800, color: '#C84B11', textTransform: 'uppercase'}}>
+                  CHUẨN BỊ DỮ LIỆU, GHI NHẬN & LƯU TRỮ HÓA ĐƠN VAT (GTGT)
+                </div>
+                <h3 style={{margin: '2px 0 0', fontSize: 16, fontWeight: 800, color: '#142338'}}>
+                  Đơn hàng:{' '}
+                  {vatModalTarget.clearance?.documentCode ||
+                    vatModalTarget.existingVat?.orderCode ||
+                    '—'}{' '}
+                  · Khách hàng:{' '}
+                  {vatModalTarget.clearance?.organizationName ||
+                    vatModalTarget.existingVat?.buyerName ||
+                    vatModalTarget.existingVat?.organizationName ||
+                    '—'}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setVatModalTarget(null)}
+                style={{
+                  padding: '5px 12px',
+                  background: '#F1F5F9',
+                  border: '1px solid #CBD5E1',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                ✕ Đóng
+              </button>
+            </div>
+
+            <div
+              style={{
+                padding: 10,
+                background: '#EFF6FF',
+                border: '1px solid #93C5FD',
+                fontSize: 12,
+                color: '#1E3A8A',
+              }}
+            >
+              <strong>Lưu ý pháp lý:</strong> Hệ thống tự động lấy dữ liệu sản phẩm, số lượng, đơn giá,
+              chiết khấu và thuế VAT từ đơn hàng đã khóa (không phải nhập lại thủ công). Hóa đơn chỉ được
+              xác nhận trạng thái <strong>Đã phát hành</strong> khi Kế toán nhập đầy đủ{' '}
+              <strong>Số hóa đơn + Ký hiệu + Ngày phát hành</strong> và đính kèm file{' '}
+              <strong>PDF/XML</strong> từ nhà cung cấp hóa đơn điện tử.
+            </div>
+
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 10}}>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Số hóa đơn VAT:</span>
+                <input
+                  type="text"
+                  placeholder="VD: 00001258"
+                  value={vatNumber}
+                  onChange={e => setVatNumber(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 800}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Ký hiệu hóa đơn:</span>
+                <input
+                  type="text"
+                  placeholder="VD: 1C26TAA"
+                  value={vatSymbol}
+                  onChange={e => setVatSymbol(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Ngày phát hành:</span>
+                <input
+                  type="date"
+                  value={vatIssuedDate}
+                  onChange={e => setVatIssuedDate(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Loại hóa đơn:</span>
+                <select
+                  value={vatType}
+                  onChange={e =>
+                    setVatType(e.target.value as 'ORIGINAL' | 'ADJUSTMENT' | 'REPLACEMENT')
+                  }
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                >
+                  <option value="ORIGINAL">Hóa đơn gốc</option>
+                  <option value="ADJUSTMENT">Hóa đơn điều chỉnh</option>
+                  <option value="REPLACEMENT">Hóa đơn thay thế</option>
+                </select>
+              </label>
+            </div>
+
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10}}>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Tên đơn vị / Người mua trên HĐ:</span>
+                <input
+                  type="text"
+                  value={vatBuyerName}
+                  onChange={e => setVatBuyerName(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Mã số thuế / CCCD:</span>
+                <input
+                  type="text"
+                  value={vatBuyerTaxCode}
+                  onChange={e => setVatBuyerTaxCode(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Địa chỉ xuất hóa đơn:</span>
+                <input
+                  type="text"
+                  value={vatBuyerAddress}
+                  onChange={e => setVatBuyerAddress(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Email nhận hóa đơn điện tử:</span>
+                <input
+                  type="email"
+                  value={vatBuyerEmail}
+                  onChange={e => setVatBuyerEmail(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+            </div>
+
+            {/* Upload PDF & XML */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 10,
+                background: '#F8FAFC',
+                padding: 12,
+                border: '1px solid #CBD5E1',
+              }}
+            >
+              <div>
+                <div style={{fontSize: 12, fontWeight: 800, color: '#142338', marginBottom: 4}}>
+                  📄 File Hóa đơn bản thể hiện (PDF):
+                </div>
+                <input
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  onChange={async e => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const entityId =
+                      vatModalTarget.existingVat?.id ||
+                      vatModalTarget.clearance?.orderId ||
+                      vatModalTarget.clearance?.id ||
+                      'vat-draft';
+                    const uploaded = await uploadDocumentFile(
+                      'vat-invoice',
+                      entityId,
+                      `Hóa đơn VAT PDF ${vatNumber || ''}`.trim(),
+                      'VAT_INVOICE_PDF',
+                      file
+                    );
+                    if (uploaded) {
+                      setVatPdfDocId(uploaded.id);
+                      setVatPdfFilename(uploaded.filename);
+                    }
+                  }}
+                  style={{fontSize: 11.5}}
+                />
+                {vatPdfFilename && (
+                  <div style={{fontSize: 11.5, color: '#047857', fontWeight: 700, marginTop: 4}}>
+                    ✓ Đã đính kèm: {vatPdfFilename}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <div style={{fontSize: 12, fontWeight: 800, color: '#142338', marginBottom: 4}}>
+                  🧾 File Dữ liệu gốc Hóa đơn điện tử (XML):
+                </div>
+                <input
+                  type="file"
+                  accept=".xml,application/xml,text/xml"
+                  onChange={async e => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const entityId =
+                      vatModalTarget.existingVat?.id ||
+                      vatModalTarget.clearance?.orderId ||
+                      vatModalTarget.clearance?.id ||
+                      'vat-draft';
+                    const uploaded = await uploadDocumentFile(
+                      'vat-invoice',
+                      entityId,
+                      `Hóa đơn VAT XML ${vatNumber || ''}`.trim(),
+                      'VAT_INVOICE_XML',
+                      file
+                    );
+                    if (uploaded) {
+                      setVatXmlDocId(uploaded.id);
+                      setVatXmlFilename(uploaded.filename);
+                    }
+                  }}
+                  style={{fontSize: 11.5}}
+                />
+                {vatXmlFilename && (
+                  <div style={{fontSize: 11.5, color: '#047857', fontWeight: 700, marginTop: 4}}>
+                    ✓ Đã đính kèm: {vatXmlFilename}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {(vatType !== 'ORIGINAL' || vatModalTarget.existingVat) && (
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Lý do điều chỉnh / thay thế hóa đơn (nếu có):</span>
+                <input
+                  type="text"
+                  value={vatAdjustmentReason}
+                  placeholder="Nhập lý do biên bản điều chỉnh / thay thế hóa đơn..."
+                  onChange={e => setVatAdjustmentReason(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+            )}
+
+            <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+              <span style={{fontWeight: 700}}>Ghi chú kế toán thuế:</span>
+              <input
+                type="text"
+                value={vatNote}
+                onChange={e => setVatNote(e.target.value)}
+                style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+              />
+            </label>
+
+            <div style={{display: 'flex', justifyContent: 'space-between', gap: 8, marginTop: 4}}>
+              {vatModalTarget.existingVat ? (
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={async () => {
+                    const ok = await submitAction('request-vat-adjustment', {
+                      vatInvoiceId: vatModalTarget.existingVat!.id,
+                      reason: vatAdjustmentReason || 'Yêu cầu kiểm tra điều chỉnh thông tin hóa đơn VAT',
+                    });
+                    if (ok) setVatModalTarget(null);
+                  }}
+                  style={{
+                    padding: '8px 14px',
+                    background: '#FFFBEB',
+                    color: '#B45309',
+                    border: '1px solid #F59E0B',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                  }}
+                >
+                  ⚠️ Đánh dấu Cần điều chỉnh / Thay thế
+                </button>
+              ) : (
+                <div />
+              )}
+
+              <button
+                type="button"
+                disabled={busy}
+                onClick={async () => {
+                  const ok = await submitAction('save-vat-invoice', {
+                    vatInvoiceId: vatModalTarget.existingVat?.id,
+                    clearanceId: vatModalTarget.clearance?.id,
+                    orderId:
+                      vatModalTarget.clearance?.orderId || vatModalTarget.existingVat?.orderId,
+                    requestId:
+                      vatModalTarget.clearance?.requestId || vatModalTarget.existingVat?.requestId,
+                    invoiceNumber: vatNumber,
+                    invoiceSymbol: vatSymbol,
+                    issuedDate: vatIssuedDate,
+                    invoiceType: vatType,
+                    buyerName: vatBuyerName,
+                    buyerLegalName: vatBuyerName,
+                    buyerTaxCode: vatBuyerTaxCode,
+                    buyerAddress: vatBuyerAddress,
+                    buyerEmail: vatBuyerEmail,
+                    adjustmentReason: vatAdjustmentReason,
+                    note: vatNote,
+                    pdfDocumentId: vatPdfDocId,
+                    pdfFilename: vatPdfFilename,
+                    xmlDocumentId: vatXmlDocId,
+                    xmlFilename: vatXmlFilename,
+                  });
+                  if (ok) setVatModalTarget(null);
+                }}
+                style={{
+                  padding: '8px 18px',
+                  background: '#C84B11',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                }}
+              >
+                {busy ? 'Đang lưu hóa đơn VAT...' : '💾 Lưu thông tin & Chứng từ Hóa đơn VAT'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ================================================================= */}
+      {/* MODAL 6: CUSTOMER LEGAL & TAX PROFILE MODAL                       */}
+      {/* ================================================================= */}
+      {editingTaxProfile && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1050,
+            padding: 16,
+          }}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '2px solid #142338',
+              maxWidth: 720,
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              padding: 20,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+            }}
+          >
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+              <div>
+                <div style={{fontSize: 11, fontWeight: 800, color: '#142338', textTransform: 'uppercase'}}>
+                  HỒ SƠ PHÁP LÝ, MÃ SỐ THUẾ & TÀI LIỆU KHÁCH HÀNG / ĐỐI TÁC
+                </div>
+                <h3 style={{margin: '2px 0 0', fontSize: 16, fontWeight: 800, color: '#142338'}}>
+                  {editingTaxProfile.legalName || editingTaxProfile.organizationName || 'Thêm mới Hồ sơ Pháp lý & Thuế'}
+                </h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingTaxProfile(null)}
+                style={{
+                  padding: '5px 12px',
+                  background: '#F1F5F9',
+                  border: '1px solid #CBD5E1',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                ✕ Đóng
+              </button>
+            </div>
+
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 10}}>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Phân loại đối tượng:</span>
+                <select
+                  value={taxBuyerType}
+                  onChange={e => setTaxBuyerType(e.target.value as 'COMPANY' | 'INDIVIDUAL')}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                >
+                  <option value="COMPANY">Doanh nghiệp / Công ty / Siêu thị</option>
+                  <option value="INDIVIDUAL">Khách hàng Cá nhân / Hộ kinh doanh</option>
+                </select>
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>
+                  {taxBuyerType === 'COMPANY'
+                    ? 'Tên pháp lý công ty trên GPKD:'
+                    : 'Họ và tên khách hàng cá nhân:'}
+                </span>
+                <input
+                  type="text"
+                  value={taxLegalName}
+                  onChange={e => setTaxLegalName(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                />
+              </label>
+            </div>
+
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10}}>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Mã số thuế (MST):</span>
+                <input
+                  type="text"
+                  value={taxCodeInput}
+                  onChange={e => setTaxCodeInput(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8', fontWeight: 700}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>
+                  {taxBuyerType === 'COMPANY' ? 'Người đại diện pháp luật:' : 'Số CCCD / Định danh cá nhân:'}
+                </span>
+                <input
+                  type="text"
+                  value={taxBuyerType === 'COMPANY' ? taxRepInput : taxPersonalIdInput}
+                  onChange={e =>
+                    taxBuyerType === 'COMPANY'
+                      ? setTaxRepInput(e.target.value)
+                      : setTaxPersonalIdInput(e.target.value)
+                  }
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Địa chỉ xuất hóa đơn VAT:</span>
+                <input
+                  type="text"
+                  value={taxAddressInput}
+                  onChange={e => setTaxAddressInput(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Email nhận hóa đơn điện tử:</span>
+                <input
+                  type="email"
+                  value={taxEmailInput}
+                  onChange={e => setTaxEmailInput(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Hợp đồng nguyên tắc / Mua bán:</span>
+                <input
+                  type="text"
+                  value={taxContractInput}
+                  placeholder="Số hợp đồng / Phụ lục thương mại..."
+                  onChange={e => setTaxContractInput(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+              <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+                <span style={{fontWeight: 700}}>Biên bản đồng thuận cung cấp thông tin (Cá nhân):</span>
+                <input
+                  type="text"
+                  value={taxConsentInput}
+                  placeholder="Mã biên bản đồng thuận sử dụng thông tin xuất HĐ..."
+                  onChange={e => setTaxConsentInput(e.target.value)}
+                  style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+                />
+              </label>
+            </div>
+
+            <div
+              style={{
+                background: '#F8FAFC',
+                padding: 10,
+                border: '1px solid #CBD5E1',
+                fontSize: 12,
+              }}
+            >
+              <div style={{fontWeight: 800, color: '#142338', marginBottom: 4}}>
+                📎 Tải lên Giấy phép kinh doanh / Hợp đồng / Biên bản đồng thuận (PDF/Ảnh):
+              </div>
+              <input
+                type="file"
+                accept=".pdf,.png,.jpg,.jpeg"
+                onChange={async e => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  const uploaded = await uploadDocumentFile(
+                    'partner',
+                    editingTaxProfile.organizationId || 'tax-profile',
+                    `Tài liệu pháp lý ${taxLegalName || editingTaxProfile.organizationName}`,
+                    'LEGAL_CONTRACT',
+                    file
+                  );
+                  if (uploaded) {
+                    setTaxContractInput(prev =>
+                      prev ? `${prev} (${uploaded.filename})` : uploaded.filename
+                    );
+                  }
+                }}
+                style={{fontSize: 11.5}}
+              />
+            </div>
+
+            <label style={{display: 'flex', flexDirection: 'column', gap: 4, fontSize: 12}}>
+              <span style={{fontWeight: 700}}>Ghi chú hồ sơ pháp lý:</span>
+              <input
+                type="text"
+                value={taxNoteInput}
+                onChange={e => setTaxNoteInput(e.target.value)}
+                style={{height: 34, padding: '0 8px', border: '1px solid #94A3B8'}}
+              />
+            </label>
+
+            <div style={{display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 4}}>
+              <button
+                type="button"
+                disabled={busy}
+                onClick={async () => {
+                  const ok = await submitAction('save-customer-tax-profile', {
+                    organizationId: editingTaxProfile.organizationId,
+                    buyerType: taxBuyerType,
+                    legalName: taxLegalName,
+                    taxCode: taxCodeInput,
+                    invoiceAddress: taxAddressInput,
+                    invoiceEmail: taxEmailInput,
+                    representativeName: taxRepInput,
+                    personalIdNumber: taxPersonalIdInput,
+                    personalIdConsentBasis: taxConsentInput,
+                    contractCode: taxContractInput,
+                    note: taxNoteInput,
+                  });
+                  if (ok) setEditingTaxProfile(null);
+                }}
+                style={{
+                  padding: '8px 18px',
+                  background: '#142338',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                }}
+              >
+                {busy ? 'Đang lưu hồ sơ...' : '💾 Lưu Hồ sơ Pháp lý & Mã số thuế'}
+              </button>
+            </div>
           </div>
         </div>
       )}

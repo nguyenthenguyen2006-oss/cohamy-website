@@ -30,6 +30,8 @@ export interface CrmModule { id: string; label: string; shortLabel: string; icon
 const internalDocumentsModule: CrmModule = { id: 'internal-documents', label: 'Tài liệu nội bộ', shortLabel: 'Tài liệu', icon: 'library', tone: 'primary', permission: 'internal-documents.access', status: 'CONNECTED' };
 const internal: CrmModule[] = [
   internalDocumentsModule,
+  {id:'factory-requests',label:'Phiếu đề nghị sản xuất/cấp hàng',shortLabel:'Đề nghị nhà máy',icon:'procurement',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
+  {id:'document-notifications',label:'Cài đặt → Thông báo hóa đơn & chứng từ',shortLabel:'Thông báo chứng từ',icon:'notifications',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
   {id:'requests',label:'Yêu cầu mua hàng',shortLabel:'Yêu cầu',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   {id:'sales',label:'Đơn bán đã tiếp nhận',shortLabel:'Đơn bán',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   {id:'pricing',label:'Bảng giá và cấp đối tác',shortLabel:'Bảng giá',icon:'pricing',tone:'primary',permission:'pricing.manage',status:'CONNECTED'},
@@ -55,24 +57,28 @@ const internal: CrmModule[] = [
   { id: "cash", label: "Thu chi", shortLabel: "Thu chi", icon: "cash", tone: "orange", permission: "finance.read", status: "CONNECTED" },
   { id: "reports", label: "Báo cáo tiếp nhận", shortLabel: "Báo cáo", icon: "report", tone: "emerald", permission: "reports.read", status: "CONNECTED" },
   { id: "accounts", label: "Tài khoản và quyền", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "accounts.manage", status: "CONNECTED" },
-  { id: "accounting-orders", label: "HĐ Khách đặt & NV bàn giao", shortLabel: "HĐ Khách & NV", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED" },
-  { id: "accounting-factory", label: "HĐ Nhà máy & Đối chiếu Kho", shortLabel: "HĐ Nhà máy & Kho", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED" },
+  { id: "accounting-factory", label: "1. NHÀ MÁY → KHO", shortLabel: "Nhà máy → Kho", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED" },
+  { id: "accounting-orders", label: "2. KHO → KHÁCH HÀNG", shortLabel: "Kho → Khách", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED" },
+  { id: "accounting-vat", label: "3. HÓA ĐƠN VAT", shortLabel: "Hóa đơn VAT", icon: "debt", tone: "orange", permission: "finance.read", status: "CONNECTED" },
   { id: "accounting-warehouses", label: "Tồn kho HN-HCM & Công nợ NM", shortLabel: "Tồn HN-HCM & Nợ NM", icon: "warehouse", tone: "orange", permission: "warehouses.read", status: "CONNECTED" },
 ];
 const accountantModules: CrmModule[] = [
   internalDocumentsModule,
-  { id: "accounting-orders", label: "1. HĐ Khách đặt & NV bàn giao", shortLabel: "HĐ Khách & NV", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED", bottom: 1 },
-  { id: "accounting-factory", label: "2. HĐ Nhà máy & Đối chiếu Kho", shortLabel: "HĐ Nhà máy & Kho", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 2 },
-  { id: "accounting-warehouses", label: "3. Tồn kho HN-HCM & Công nợ NM", shortLabel: "Tồn & Nợ NM", icon: "warehouse", tone: "orange", permission: "warehouses.read", status: "CONNECTED", bottom: 3 },
-  { id: "notifications", label: "4. Thông báo Hóa đơn", shortLabel: "Thông báo HĐ", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED" },
+  { id: "accounting-factory", label: "1. NHÀ MÁY → KHO", shortLabel: "Nhà máy → Kho", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 1 },
+  { id: "accounting-orders", label: "2. KHO → KHÁCH HÀNG", shortLabel: "Kho → Khách", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED", bottom: 2 },
+  { id: "accounting-vat", label: "3. HÓA ĐƠN VAT", shortLabel: "Hóa đơn VAT", icon: "debt", tone: "orange", permission: "finance.read", status: "CONNECTED", bottom: 3 },
+];
+const factoryModules: CrmModule[] = [
+  { id: "accounting-factory", label: "Phiếu đề nghị & chuyển hàng nhà máy", shortLabel: "Phiếu xuất NM", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 1 },
+  { id: "notifications", label: "2. Thông báo Kho tiếp nhận", shortLabel: "Thông báo", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED", bottom: 2 },
 ];
 const warehouseKeeperModules: CrmModule[] = [
   internalDocumentsModule,
   { id: "warehouse-stock", label: "1. Kiểm tra Số lượng Hàng trong Kho", shortLabel: "Tồn kho", icon: "warehouse", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 1 },
-  { id: "warehouse-orders", label: "2. Đăng ký & Kiểm tra HĐ Khách / NV đặt", shortLabel: "HĐ Khách / NV", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED", bottom: 2 },
-  { id: "warehouse-factory", label: "3. HĐ Đối chiếu với Nhà máy", shortLabel: "Đối chiếu NM", icon: "procurement", tone: "orange", permission: "warehouses.read", status: "CONNECTED", bottom: 3 },
-  { id: "warehouse-handover", label: "4. HĐ Bàn giao SP cho NV / Khách", shortLabel: "Bàn giao SP", icon: "consignment", tone: "emerald", permission: "warehouses.read", status: "CONNECTED" },
-  { id: "warehouse-notifications", label: "5. Thông báo Hóa đơn về Kho", shortLabel: "Thông báo HĐ", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED" },
+  { id: "warehouse-orders", label: "2. Đơn hàng & Xuất kho Khách hàng", shortLabel: "Đơn & Xuất kho", icon: "order", tone: "primary", permission: "orders.read", status: "CONNECTED", bottom: 2 },
+  { id: "warehouse-factory", label: "3. Nhận hàng Nhà máy & Phiếu nhập kho", shortLabel: "Nhập từ NM", icon: "procurement", tone: "orange", permission: "warehouses.read", status: "CONNECTED", bottom: 3 },
+  { id: "warehouse-handover", label: "4. Phiếu xuất kho (Có giá trị tiền)", shortLabel: "Phiếu xuất kho", icon: "consignment", tone: "emerald", permission: "warehouses.read", status: "CONNECTED" },
+  { id: "warehouse-notifications", label: "5. Thông báo Kho", shortLabel: "Thông báo", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED" },
 ];
 const dealer: CrmModule[] = [
   {id:'requests',label:'Đề nghị mua hàng',shortLabel:'Đề nghị',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
@@ -98,6 +104,7 @@ const dealer: CrmModule[] = [
 ];
 export const visibleModules = (user: Principal) => {
   if (user.area === "crm" && user.role === "ACCOUNTANT") return accountantModules;
+  if (user.area === "crm" && user.role === "FACTORY") return factoryModules;
   if (user.area === "crm" && isWarehouseRole(user.role)) return warehouseKeeperModules;
   return (user.area === "crm" ? internal : dealer).filter(module => can(user, module.permission));
 };
@@ -133,12 +140,12 @@ export const crmHubs: readonly CrmHub[] = [
   },
   {
     id: "accounting",
-    label: "KẾ TOÁN & ĐỐI CHIẾU KHO - NHÀ MÁY",
-    description: "Hóa đơn khách đặt & NV bàn giao, hóa đơn đặt/xuất Nhà máy, đối chiếu kho HN/HCM và công nợ Nhà máy",
+    label: "KẾ TOÁN",
+    description: "Đối chiếu phiếu nhà máy, phiếu nhập, chứng từ giao hàng và lưu tài liệu VAT",
     icon: "debt",
     color: "#c84b11",
     gradient: "linear-gradient(135deg, #ea580c, #c2410c)",
-    moduleIds: ["accounting-orders", "accounting-factory", "accounting-warehouses"],
+    moduleIds: ["accounting-factory", "accounting-orders", "accounting-vat"],
   },
   {
     id: "orders",
@@ -237,7 +244,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "account",
     color: "#64748b",
     gradient: "linear-gradient(135deg, #64748b, #334155)",
-    moduleIds: ["accounts", "fields", "audit", "workspace", "profile"],
+    moduleIds: ["accounts", "fields", "audit", "workspace", "profile", "document-notifications", "factory-requests"],
   },
 ];
 

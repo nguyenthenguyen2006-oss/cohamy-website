@@ -1,0 +1,20 @@
+.cohamy-crm .crm-document-flow small{display:block;color:var(--muted-ink,#78716c);font-size:11px;margin-top:4px}
+.cohamy-crm .crm-document-flow .work-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.cohamy-crm .crm-document-flow .work-table th,.cohamy-crm .crm-document-flow .work-table td{padding:9px 10px;border:1px solid #eadbc5;vertical-align:top;text-align:left}
+.cohamy-crm .crm-document-flow .work-table th{background:#faf3e6;color:#44403c;white-space:nowrap}
+.cohamy-crm .crm-document-flow .work-table td button{margin:2px 4px 2px 0;font-size:12px}
+.cohamy-crm .crm-document-flow .work-table input{max-width:180px;min-width:80px}
+.cohamy-crm .crm-document-scroll{overflow:auto;max-width:100%;margin-top:12px}
+.cohamy-crm .crm-document-flow .work-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0}
+.cohamy-crm .crm-document-flow .work-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.cohamy-crm .crm-document-flow label{display:flex;flex-direction:column;gap:6px;font-size:12px;margin:8px 0}
+.cohamy-crm .crm-document-flow input,.cohamy-crm .crm-document-flow select,.cohamy-crm .crm-document-flow textarea{max-width:100%;min-width:0;padding:8px;border:1px solid #d6c5ad;border-radius:6px;color:#292524;background:#fff}
+.cohamy-crm .crm-document-modal{position:fixed;inset:0;background:rgb(23 43 67 / .4);z-index:110;display:flex;align-items:center;justify-content:center;padding:20px}
+.cohamy-crm .crm-document-modal>.work-section{width:min(1100px,100%);max-height:94dvh;overflow:auto;background:#fffdf9;padding:22px;border-radius:8px;margin:0}
+.cohamy-crm .crm-document-modal iframe{width:100%;height:65dvh;border:1px solid #eadbc5;background:#f5f5f4}
+@media(max-width:640px){.cohamy-crm .crm-document-modal{padding:8px}.cohamy-crm .crm-document-modal>.work-section{padding:14px}.cohamy-crm .crm-document-flow .work-table{min-width:720px}.cohamy-crm .crm-document-flow .work-fields{grid-template-columns:1fr}.cohamy-crm .crm-document-flow h1{font-size:21px}}
+
+.cohamy-crm .crm-document-flow .crm-document-open{background:transparent;border:0;padding:0;min-height:0;text-align:left;color:#b45309;cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px}
+
+.crm-document-flow .crm-brevo-remove-key{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin:12px 0}
+.crm-document-flow .crm-brevo-remove-key input[type="checkbox"]{width:18px;height:18px;flex:0 0 auto;margin:0}

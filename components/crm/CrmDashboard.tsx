@@ -1,3 +1,5 @@
+import {DocumentFlowWorkspace} from './DocumentFlowWorkspace';
+import {flowWorkspace} from '@/lib/crm/document-flow';
 import Link from "next/link";
 import { SquaresFour } from "@phosphor-icons/react/dist/ssr";
 import { visibleModules } from "@/lib/crm/modules";
@@ -16,38 +18,9 @@ import { WarehouseKeeperWorkspace } from "./WarehouseKeeperWorkspace";
 import { getAccountantWorkspaceData } from "@/lib/crm/accountant-workflow";
 
 export async function CrmDashboard({ user }: { user: Principal }) {
-  if (user.area === "crm" && user.role === "ACCOUNTANT") {
-    const accountantData = await getAccountantWorkspaceData(user);
-    return (
-      <div className="crm-dashboard-saas crm-spreadsheet-desk">
-        <header className="crm-dash-compact-bar">
-          <div className="crm-dash-compact-bar__left">
-            <span className="crm-dash-header__eyebrow">
-              <SquaresFour size={13} weight="bold" aria-hidden="true" />
-              BÀN ĐIỀU HÀNH KẾ TOÁN COHAMY
-            </span>
-            <h1>Đối soát Hóa đơn Khách đặt · Bàn giao Nhân viên · Hóa đơn Nhà máy & Tồn kho HN/HCM</h1>
-          </div>
-        </header>
-        <AccountantWorkspace initialData={accountantData} initialTab="orders" userRole={user.role} />
-      </div>
-    );
+  if(user.area==='crm'&&(user.role==='ACCOUNTANT'||user.role==='FACTORY'||isWarehouseRole(user.role))){
+    return <DocumentFlowWorkspace initialData={await flowWorkspace(user)} user={user} initialTab={user.role==='ACCOUNTANT'?'receipts':isWarehouseRole(user.role)?'stock':'requests'}/>;
   }
-
-  if (user.area === "crm" && isWarehouseRole(user.role)) {
-    const warehouseData = await getAccountantWorkspaceData(user);
-    return (
-      <div className="crm-dashboard-saas crm-spreadsheet-desk">
-        <WarehouseKeeperWorkspace
-          initialData={warehouseData}
-          initialTab="stock"
-          userRole={user.role}
-          userName={user.displayName}
-        />
-      </div>
-    );
-  }
-
   const internal = user.area === "crm";
   const modules = visibleModules(user);
 

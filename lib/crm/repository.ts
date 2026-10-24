@@ -4,6 +4,7 @@ import { z } from "zod";
 import { database, type Sql } from "./db";
 import { audit, assertCurrentPrincipal } from "./auth";
 import { allPartners, assertPermission, CrmError, warehouseRoleRegion } from "./permissions";
+import { warehouseScope } from "./warehouse-scope";
 import { roles, type CatalogProduct, type Organization, type Principal, type Role, type Warehouse } from "./types";
 import bcrypt from "bcryptjs";
 
@@ -153,23 +154,13 @@ export async function ensureRegionalWarehouseAssignments(tx: Sql, organizationId
       }
     }
   }
-  await tx.query("DELETE FROM cohamy_crm.warehouse_assignments wa USING cohamy_crm.warehouses w WHERE wa.membership_id=$1 AND wa.warehouse_id=w.id AND w.region IS DISTINCT FROM $2", [membershipId, targetRegion]);
-  await tx.query("INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) SELECT $1,id FROM cohamy_crm.warehouses WHERE organization_id=$2 AND region=$3 AND active ON CONFLICT DO NOTHING", [membershipId, organizationId, targetRegion]);
+  await tx.query("INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) SELECT $1,id FROM cohamy_crm.warehouses WHERE organization_id=$2 AND region=$3 AND active AND NOT EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments WHERE membership_id=$1) ON CONFLICT DO NOTHING", [membershipId, organizationId, targetRegion]);
 }
 export async function listWarehouses(user: Principal) {
   assertPermission(user, "warehouses.read");
   const db = await database();
-  const region = warehouseRoleRegion(user.role);
-  if (user.area === "crm" && region) {
-    await db.transaction(tx => ensureRegionalWarehouseAssignments(tx, user.organizationId, user.membershipId, user.role));
-  }
-  let where = "false";
-  const params: unknown[] = [];
-  if (["ADMIN", "MANAGER", "ACCOUNTANT"].includes(user.role)) where = "true";
-  else if (user.area === "portal") { where = "w.organization_id=$1"; params.push(user.organizationId); }
-  else if (region) { where = "w.region=$1 AND (w.organization_id=$2 OR EXISTS (SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$3))"; params.push(region, user.organizationId, user.membershipId); }
-  else { where = "EXISTS (SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$1)"; params.push(user.membershipId); }
-  return (await db.query<Warehouse>(`SELECT w.id,w.code,w.name,w.organization_id,o.name AS organization_name,w.active,w.region FROM cohamy_crm.warehouses w JOIN cohamy_crm.organizations o ON o.id=w.organization_id WHERE ${where} ORDER BY w.code`, params)).rows;
+  const scope = warehouseScope(user);
+  return (await db.query<Warehouse>(`SELECT w.id,w.code,w.name,w.organization_id,o.name AS organization_name,w.active,w.region FROM cohamy_crm.warehouses w JOIN cohamy_crm.organizations o ON o.id=w.organization_id WHERE ${scope.sql} ORDER BY w.code`, scope.params)).rows;
 }
 export async function createWarehouse(user: Principal, input: unknown) {
   assertPermission(user, "warehouses.write");
@@ -180,10 +171,6 @@ export async function createWarehouse(user: Principal, input: unknown) {
     if (!org.active || !["COHAMY", "DEALER"].includes(org.kind)) throw new CrmError("INVALID_WAREHOUSE_OWNER", 400);
     const id = randomUUID();
     await tx.query("INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id,region) VALUES ($1,$2,$3,$4,$5)", [id, data.code, data.name, data.organizationId, data.region ?? null]);
-    if (data.region === "SOUTH" || data.region === "NORTH") {
-      const regionalRole = data.region === "SOUTH" ? "WAREHOUSE_HCM" : "WAREHOUSE_HN";
-      await tx.query("INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) SELECT id,$1 FROM cohamy_crm.memberships WHERE organization_id=$2 AND role=$3 AND active ON CONFLICT DO NOTHING", [id, data.organizationId, regionalRole]);
-    }
     await audit(tx, user.id, "warehouse.created", id, { organizationId: data.organizationId, region: data.region ?? null });
     return { id };
   });

@@ -40,35 +40,35 @@ function orderStatusBadge(status: OrderClearanceRecord['status']) {
   switch (status) {
     case 'NEW_ORDER':
       return {
-        label: 'Mới đăng ký — Chờ nộp tiền',
+        label: 'Đã duyệt đơn — Sẵn sàng xuất kho',
         bg: '#FEF3C7',
         color: '#92400E',
         border: '#F59E0B',
       };
     case 'STAFF_SUBMITTED':
       return {
-        label: 'Đã nộp tiền — Chờ Kế toán duyệt',
+        label: 'Đã ghi nhận thanh toán — Sẵn sàng xuất kho',
         bg: '#DBEAFE',
         color: '#1E40AF',
         border: '#3B82F6',
       };
     case 'ACCOUNTANT_CLEARED':
       return {
-        label: 'KT đã duyệt — Sẵn sàng bàn giao',
+        label: 'Đã đối soát thanh toán — Sẵn sàng xuất kho',
         bg: '#D1FAE5',
         color: '#065F46',
         border: '#10B981',
       };
     case 'ACCOUNTANT_REJECTED':
       return {
-        label: 'KT yêu cầu bổ sung tiền',
+        label: 'Cần bổ sung thanh toán',
         bg: '#FEE2E2',
         color: '#991B1B',
         border: '#EF4444',
       };
     case 'PICKED_UP_DELIVERED':
       return {
-        label: 'Đã bàn giao sản phẩm',
+        label: 'Đã xuất kho giao hàng',
         bg: '#E0E7FF',
         color: '#3730A3',
         border: '#6366F1',
@@ -138,6 +138,7 @@ export function WarehouseKeeperWorkspace({
       orderedQty: number;
       dispatchedQty: number;
       receivedQty: number;
+      damagedQty?: number;
       unitCost: number;
       note: string;
     }>
@@ -2069,6 +2070,7 @@ export function WarehouseKeeperWorkspace({
                     <th>Mã SKU / Sản phẩm</th>
                     <th style={{textAlign: 'right'}}>SL Nhà máy xuất</th>
                     <th style={{textAlign: 'right'}}>SL Kho thực nhận</th>
+                    <th style={{textAlign: 'right'}}>SL Hư hỏng</th>
                     <th style={{textAlign: 'right'}}>Chênh lệch</th>
                     <th>Ghi chú dòng</th>
                   </tr>
@@ -2081,7 +2083,7 @@ export function WarehouseKeeperWorkspace({
                         <td style={{fontWeight: 700}}>
                           {line.sku} — {line.name}
                         </td>
-                        <td style={{textAlign: 'right', width: 140}}>
+                        <td style={{textAlign: 'right', width: 130}}>
                           <input
                             type="number"
                             min={0}
@@ -2097,7 +2099,7 @@ export function WarehouseKeeperWorkspace({
                             }}
                           />
                         </td>
-                        <td style={{textAlign: 'right', width: 140}}>
+                        <td style={{textAlign: 'right', width: 130}}>
                           <input
                             type="number"
                             min={0}
@@ -2108,6 +2110,21 @@ export function WarehouseKeeperWorkspace({
                               const v = Math.max(0, Number(e.target.value || 0));
                               setReconcileLines(prev =>
                                 prev.map((x, i) => (i === idx ? {...x, receivedQty: v} : x))
+                              );
+                            }}
+                          />
+                        </td>
+                        <td style={{textAlign: 'right', width: 110}}>
+                          <input
+                            type="number"
+                            min={0}
+                            className="crm-input"
+                            style={{textAlign: 'right'}}
+                            value={line.damagedQty ?? 0}
+                            onChange={e => {
+                              const v = Math.max(0, Number(e.target.value || 0));
+                              setReconcileLines(prev =>
+                                prev.map((x, i) => (i === idx ? {...x, damagedQty: v} : x))
                               );
                             }}
                           />
@@ -2770,53 +2787,95 @@ export function WarehouseKeeperWorkspace({
               </div>
             </div>
 
-            <table className="crm-table" style={{marginBottom: 20}}>
-              <thead>
-                <tr>
-                  <th>STT</th>
-                  <th>Mã SKU</th>
-                  <th>Tên sản phẩm</th>
-                  <th style={{textAlign: 'right'}}>Số lượng bàn giao</th>
-                  <th style={{textAlign: 'right'}}>Đơn giá</th>
-                  <th style={{textAlign: 'right'}}>Thành tiền</th>
-                </tr>
-              </thead>
-              <tbody>
-                {previewHandoverInvoice.lines.map((l, idx) => (
-                  <tr key={idx}>
-                    <td>{idx + 1}</td>
-                    <td style={{fontFamily: 'monospace', fontWeight: 700}}>{l.sku}</td>
-                    <td>{l.name}</td>
-                    <td style={{textAlign: 'right', fontWeight: 800}}>
-                      {Number(l.quantity).toLocaleString('vi-VN')} {l.unitLabel}
-                    </td>
-                    <td style={{textAlign: 'right'}}>{vnd(l.unitPrice)}</td>
-                    <td style={{textAlign: 'right', fontWeight: 700}}>{vnd(l.lineTotal)}</td>
+            <div className="crm-table-wrap" style={{marginBottom: 20}}>
+              <table className="crm-table">
+                <thead>
+                  <tr>
+                    <th>STT</th>
+                    <th>Mã SKU</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Quy cách</th>
+                    <th style={{textAlign: 'right'}}>SL đặt</th>
+                    <th style={{textAlign: 'right'}}>Đã xuất trước</th>
+                    <th style={{textAlign: 'right'}}>SL xuất lần này</th>
+                    <th style={{textAlign: 'right'}}>Còn lại</th>
+                    <th style={{textAlign: 'right'}}>Giá niêm yết</th>
+                    <th style={{textAlign: 'right'}}>% CK</th>
+                    <th style={{textAlign: 'right'}}>Đơn giá sau CK</th>
+                    <th style={{textAlign: 'right'}}>Thuế VAT</th>
+                    <th style={{textAlign: 'right'}}>Thành tiền</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {previewHandoverInvoice.lines.map((l, idx) => (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td style={{fontFamily: 'monospace', fontWeight: 700}}>{l.sku}</td>
+                      <td>{l.name}</td>
+                      <td>{l.weightLabel || l.unitLabel}</td>
+                      <td style={{textAlign: 'right'}}>
+                        {Number(l.orderedQuantity ?? l.quantity).toLocaleString('vi-VN')}
+                      </td>
+                      <td style={{textAlign: 'right'}}>
+                        {Number(l.previouslyIssuedQuantity ?? 0).toLocaleString('vi-VN')}
+                      </td>
+                      <td style={{textAlign: 'right', fontWeight: 800, color: '#047857'}}>
+                        {Number(l.quantity).toLocaleString('vi-VN')} {l.unitLabel}
+                      </td>
+                      <td style={{textAlign: 'right'}}>
+                        {Number(l.remainingQuantity ?? 0).toLocaleString('vi-VN')}
+                      </td>
+                      <td style={{textAlign: 'right'}}>{vnd(l.listUnitPrice ?? l.unitPrice)}</td>
+                      <td style={{textAlign: 'right', color: '#B45309'}}>
+                        {Number(l.discountPercent ?? 0)}%
+                      </td>
+                      <td style={{textAlign: 'right', fontWeight: 600}}>{vnd(l.unitPrice)}</td>
+                      <td style={{textAlign: 'right'}}>
+                        {Number(l.vatRate ?? 0)}% ({vnd(l.vatAmount ?? 0)})
+                      </td>
+                      <td style={{textAlign: 'right', fontWeight: 700}}>{vnd(l.lineTotal)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
             <div
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center',
+                alignItems: 'flex-start',
                 paddingTop: 12,
                 borderTop: '1px solid #E2E8F0',
                 marginBottom: 28,
               }}
             >
               <div style={{fontSize: 13, color: '#475569'}}>
-                Ghi chú: {previewHandoverInvoice.note || 'Đã kiểm đếm đủ số lượng và tình trạng nguyên vẹn.'}
+                <div>Mã đơn hàng liên kết: <strong>{previewHandoverInvoice.orderCode || '—'}</strong></div>
+                <div>Ghi chú: {previewHandoverInvoice.note || 'Đã kiểm đếm đủ số lượng và tình trạng nguyên vẹn.'}</div>
               </div>
-              <div style={{textAlign: 'right'}}>
-                <div style={{fontSize: 14}}>
-                  Tổng số lượng bàn giao:{' '}
+              <div style={{textAlign: 'right', fontSize: 13.5, lineHeight: 1.7}}>
+                <div>
+                  Tổng số lượng xuất:{' '}
                   <strong>{Number(previewHandoverInvoice.totalQuantity).toLocaleString('vi-VN')} gói</strong>
                 </div>
-                <div style={{fontSize: 17, fontWeight: 800, color: '#0F172A'}}>
-                  Tổng giá trị bàn giao: {vnd(previewHandoverInvoice.totalAmount)}
+                <div>
+                  Tổng tiền hàng theo giá niêm yết:{' '}
+                  <strong>{vnd(previewHandoverInvoice.listSubtotal || previewHandoverInvoice.totalAmount)}</strong>
+                </div>
+                <div>
+                  Tổng chiết khấu ({previewHandoverInvoice.discountPercent ?? 0}%):{' '}
+                  <strong style={{color: '#DC2626'}}>-{vnd(previewHandoverInvoice.discountAmount || 0)}</strong>
+                </div>
+                <div>
+                  Thành tiền sau chiết khấu:{' '}
+                  <strong>{vnd(previewHandoverInvoice.netSubtotal || previewHandoverInvoice.totalAmount)}</strong>
+                </div>
+                <div>
+                  Thuế VAT: <strong>{vnd(previewHandoverInvoice.vatAmount || 0)}</strong>
+                </div>
+                <div style={{fontSize: 17, fontWeight: 800, color: '#0F172A', marginTop: 4}}>
+                  Tổng phải thu: {vnd(previewHandoverInvoice.totalAmount)}
                 </div>
               </div>
             </div>

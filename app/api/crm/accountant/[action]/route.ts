@@ -10,6 +10,7 @@ type Context = {params: Promise<{action: string}>};
 export async function GET(request: Request, context: Context) {
   try {
     const user = await apiUser();
+    if (['ACCOUNTANT','FACTORY','WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM'].includes(user.role)) throw new CrmError('LEGACY_WORKSPACE_DISABLED',403);
     const {action} = await context.params;
     const p = new URL(request.url).searchParams;
     if (action === 'workspace') {

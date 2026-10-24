@@ -40,7 +40,9 @@
     ".local/next-crm-work/types/**/*.ts",
     ".local/next-crm-work/dev/types/**/*.ts",
     ".local/next-crm-upgrade/types/**/*.ts",
-    ".local/next-crm-upgrade/dev/types/**/*.ts"
+    ".local/next-crm-upgrade/dev/types/**/*.ts",
+    ".local/next-crm-documents/types/**/*.ts",
+    ".local/next-crm-documents/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

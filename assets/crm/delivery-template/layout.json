@@ -1,0 +1,2905 @@
+{
+  "source": "Hoa_Don_Giao_Hang_COHAMY.docx",
+  "sha256": "6aa3889e7c1b772e436b754080beaaa02aa150176991f7498690fab53627ac3e",
+  "page": {
+    "width": 595.3,
+    "height": 841.9,
+    "left": 35.45,
+    "right": 35.45,
+    "top": 34.6,
+    "bottom": 28.35
+  },
+  "blocks": [
+    {
+      "type": "table",
+      "index": 0,
+      "grid": [
+        157.3,
+        367.1
+      ],
+      "rows": [
+        {
+          "height": 0.0,
+          "cells": [
+            {
+              "width": 157.3,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 8.0,
+                "left": 8.75,
+                "bottom": 8.25,
+                "right": 7.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": true
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 367.1,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 8.0,
+                "left": 8.75,
+                "bottom": 8.25,
+                "right": 7.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "CÔNG TY TNHH COHAMY",
+                      "size": 11.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Hà Nội: ",
+                      "size": 7.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    },
+                    {
+                      "text": "Tầng 3, tháp A, Tòa T608, Phường Nghĩa Đô, TP. Hà Nội",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "TP.HCM: ",
+                      "size": 7.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    },
+                    {
+                      "text": "Tổ 7, Cầu Mới, P. Tân Thành, TP. Hồ Chí Minh",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "0981 956 111  •  Cohamyvietnam@gmail.com",
+                      "size": 7.5,
+                      "bold": false,
+                      "italic": false,
+                      "color": "E9EDF1",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "index": 1,
+      "grid": [
+        328.8,
+        195.6
+      ],
+      "rows": [
+        {
+          "height": 0.0,
+          "cells": [
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 9.0,
+                "left": 0.75,
+                "bottom": 4.0,
+                "right": 0.75
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "HÓA ĐƠN GIAO HÀNG",
+                      "size": 17.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Kiêm phiếu xác nhận bàn giao hàng hóa",
+                      "size": 8.5,
+                      "bold": false,
+                      "italic": true,
+                      "color": "6B7681",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 9.0,
+                "left": 0.75,
+                "bottom": 4.0,
+                "right": 0.75
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Mã phiếu:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{MA_PHIEU_GIAO}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Mã đơn hàng:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{MA_DON_HANG}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Ngày lập:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{NGAY_LAP}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "01  THÔNG TIN KHÁCH HÀNG & GIAO NHẬN",
+          "size": 9.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 9.0,
+      "after": 4.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    },
+    {
+      "type": "table",
+      "index": 2,
+      "grid": [
+        262.2,
+        262.2
+      ],
+      "rows": [
+        {
+          "height": 0.0,
+          "cells": [
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": "244764",
+              "margins": {
+                "top": 5.0,
+                "left": 5.0,
+                "bottom": 5.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "BÊN GIAO / ĐƠN VỊ BÁN",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": "244764",
+              "margins": {
+                "top": 5.0,
+                "left": 5.0,
+                "bottom": 5.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "BÊN NHẬN / KHÁCH HÀNG",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "height": 0.0,
+          "cells": [
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 3.75,
+                "left": 6.25,
+                "bottom": 3.75,
+                "right": 4.75
+              },
+              "borders": {
+                "left": {
+                  "color": "D5DEE6",
+                  "size": 0.625
+                },
+                "bottom": {
+                  "color": "D5DEE6",
+                  "size": 0.625
+                },
+                "right": {
+                  "color": "D5DEE6",
+                  "size": 0.625
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Đơn vị:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "Công ty TNHH Cohamy",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Người giao:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{NGUOI_GIAO}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "SĐT:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{SDT_NGUOI_GIAO}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Kho xuất:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{KHO_XUAT}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 3.75,
+                "left": 6.25,
+                "bottom": 3.75,
+                "right": 4.75
+              },
+              "borders": {
+                "left": {
+                  "color": "D5DEE6",
+                  "size": 0.625
+                },
+                "bottom": {
+                  "color": "D5DEE6",
+                  "size": 0.625
+                },
+                "right": {
+                  "color": "D5DEE6",
+                  "size": 0.625
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Khách hàng:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{TEN_DOI_TAC}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Người nhận:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{NGUOI_NHAN_HANG}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "SĐT:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{SDT_NHAN_HANG}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Địa chỉ:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{DIA_CHI_GIAO_HANG}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.1208333333333333,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "Thời gian giao: ",
+          "size": 8.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        },
+        {
+          "text": "{{NGAY_GIAO}} – {{GIO_GIAO}}",
+          "size": 8.0,
+          "bold": false,
+          "italic": false,
+          "color": "394C60",
+          "image": false
+        },
+        {
+          "text": "     Hình thức giao: ",
+          "size": 8.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        },
+        {
+          "text": "{{DON_VI_VAN_CHUYEN}}",
+          "size": 8.0,
+          "bold": false,
+          "italic": false,
+          "color": "394C60",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 5.0,
+      "after": 1.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "02  DANH SÁCH HÀNG HÓA BÀN GIAO",
+          "size": 9.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 9.0,
+      "after": 4.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    },
+    {
+      "type": "table",
+      "index": 3,
+      "grid": [
+        28.9,
+        193.05,
+        38.25,
+        46.75,
+        46.75,
+        76.55,
+        94.1
+      ],
+      "rows": [
+        {
+          "height": 0.0,
+          "cells": [
+            {
+              "width": 28.9,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 6.0,
+                "left": 5.0,
+                "bottom": 6.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "STT",
+                      "size": 7.5,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 193.05,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 6.0,
+                "left": 5.0,
+                "bottom": 6.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Tên hàng hóa / Quy cách / Mã SP",
+                      "size": 7.5,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 38.25,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 6.0,
+                "left": 5.0,
+                "bottom": 6.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "ĐVT",
+                      "size": 7.5,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 6.0,
+                "left": 5.0,
+                "bottom": 6.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "SL đặt",
+                      "size": 7.5,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 6.0,
+                "left": 5.0,
+                "bottom": 6.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "SL giao",
+                      "size": 7.5,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 76.55,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 6.0,
+                "left": 5.0,
+                "bottom": 6.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Đơn giá (VND)",
+                      "size": 7.5,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 94.1,
+              "span": 1,
+              "shade": "182C43",
+              "margins": {
+                "top": 6.0,
+                "left": 5.0,
+                "bottom": 6.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Thành tiền (VND)",
+                      "size": 7.5,
+                      "bold": true,
+                      "italic": false,
+                      "color": "FFFFFF",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "height": 25.5,
+          "cells": [
+            {
+              "width": 28.9,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "1",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 193.05,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 38.25,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 76.55,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 94.1,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "height": 25.5,
+          "cells": [
+            {
+              "width": 28.9,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "2",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 193.05,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 38.25,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 76.55,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 94.1,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "height": 25.5,
+          "cells": [
+            {
+              "width": 28.9,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "3",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 193.05,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 38.25,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 76.55,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 94.1,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "height": 25.5,
+          "cells": [
+            {
+              "width": 28.9,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "4",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 193.05,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 38.25,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 76.55,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 94.1,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "height": 25.5,
+          "cells": [
+            {
+              "width": 28.9,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "5",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 193.05,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 38.25,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 76.55,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 94.1,
+              "span": 1,
+              "shade": null,
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "height": 25.5,
+          "cells": [
+            {
+              "width": 28.9,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "6",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 193.05,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 38.25,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 46.75,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 76.55,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 94.1,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 6.0,
+                "left": 4.5,
+                "bottom": 6.0,
+                "right": 4.5
+              },
+              "borders": {
+                "bottom": {
+                  "color": "D9E2E9",
+                  "size": 0.5
+                }
+              },
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [],
+                  "align": "right",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "03  ĐỐI CHIẾU SỐ LƯỢNG & THANH TOÁN",
+          "size": 9.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 9.0,
+      "after": 4.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    },
+    {
+      "type": "table",
+      "index": 4,
+      "grid": [
+        262.2,
+        262.2
+      ],
+      "rows": [
+        {
+          "height": 0.0,
+          "cells": [
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 5.5,
+                "left": 6.5,
+                "bottom": 5.5,
+                "right": 6.25
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Tổng số lượng đã giao:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{TONG_SL_GIAO}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 4.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Số kiện / thùng:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{TONG_SO_THUNG}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 4.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Hàng giao thiếu / hoàn trả:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{SL_CHENH_LECH}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 4.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Tình trạng hàng:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{TINH_TRANG_HANG}}",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 4.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 262.2,
+              "span": 1,
+              "shade": "F7F9FB",
+              "margins": {
+                "top": 5.5,
+                "left": 6.5,
+                "bottom": 5.5,
+                "right": 6.25
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Tiền hàng:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{TIEN_HANG}} VND",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Chiết khấu / Giảm giá:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{CHIET_KHAU}} VND",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Phí vận chuyển:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{PHI_VAN_CHUYEN}} VND",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "TỔNG THANH TOÁN:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{TONG_THANH_TOAN}} VND",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "244764",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Đã thanh toán:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{DA_THANH_TOAN}} VND",
+                      "size": 8.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "Còn phải thu:  ",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    },
+                    {
+                      "text": "{{CON_PHAI_THU}} VND",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "244764",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "Ghi chú giao nhận: ",
+          "size": 8.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        },
+        {
+          "text": "{{GHI_CHU_GIAO_NHAN}}",
+          "size": 8.0,
+          "bold": false,
+          "italic": false,
+          "color": "394C60",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 6.0,
+      "after": 2.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "Bằng chữ: ",
+          "size": 8.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        },
+        {
+          "text": "{{SO_TIEN_BANG_CHU}}",
+          "size": 8.0,
+          "bold": false,
+          "italic": false,
+          "color": "394C60",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 0.0,
+      "after": 0.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "04  XÁC NHẬN BÀN GIAO",
+          "size": 9.0,
+          "bold": true,
+          "italic": false,
+          "color": "182C43",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 9.0,
+      "after": 4.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    },
+    {
+      "type": "table",
+      "index": 5,
+      "grid": [
+        174.8,
+        174.8,
+        174.8
+      ],
+      "rows": [
+        {
+          "height": 0.0,
+          "cells": [
+            {
+              "width": 174.6,
+              "span": 1,
+              "shade": "F0F4F7",
+              "margins": {
+                "top": 5.5,
+                "left": 5.0,
+                "bottom": 5.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "NGƯỜI GIAO HÀNG",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "(Ký, ghi rõ họ tên)",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": true,
+                      "color": "6B7681",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "\n\n",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 174.6,
+              "span": 1,
+              "shade": "F0F4F7",
+              "margins": {
+                "top": 5.5,
+                "left": 5.0,
+                "bottom": 5.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "NGƯỜI NHẬN HÀNG",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "(Ký, ghi rõ họ tên, xác nhận đủ hàng)",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": true,
+                      "color": "6B7681",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "\n\n",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            },
+            {
+              "width": 175.2,
+              "span": 1,
+              "shade": "F0F4F7",
+              "margins": {
+                "top": 5.5,
+                "left": 5.0,
+                "bottom": 5.0,
+                "right": 5.0
+              },
+              "borders": {},
+              "paragraphs": [
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "ĐẠI DIỆN / THỦ KHO",
+                      "size": 8.0,
+                      "bold": true,
+                      "italic": false,
+                      "color": "182C43",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 2.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "(Ký, ghi rõ họ tên)",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": true,
+                      "color": "6B7681",
+                      "image": false
+                    }
+                  ],
+                  "align": "center",
+                  "before": 0.0,
+                  "after": 3.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                },
+                {
+                  "type": "p",
+                  "runs": [
+                    {
+                      "text": "\n\n",
+                      "size": 7.0,
+                      "bold": false,
+                      "italic": false,
+                      "color": "394C60",
+                      "image": false
+                    }
+                  ],
+                  "align": "left",
+                  "before": 0.0,
+                  "after": 0.0,
+                  "line": 1.0791666666666666,
+                  "shade": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "Lưu ý: ",
+          "size": 7.0,
+          "bold": true,
+          "italic": false,
+          "color": "6B7681",
+          "image": false
+        },
+        {
+          "text": "Chứng từ này dùng để xác nhận việc giao nhận hàng hóa và đối chiếu công nợ; không thay thế hóa đơn điện tử theo quy định.",
+          "size": 7.0,
+          "bold": false,
+          "italic": false,
+          "color": "6B7681",
+          "image": false
+        }
+      ],
+      "align": "left",
+      "before": 6.0,
+      "after": 0.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    }
+  ],
+  "footer": [
+    {
+      "type": "p",
+      "runs": [
+        {
+          "text": "COHAMY  •  Biên bản giao nhận hàng hóa  •  Lưu hành nội bộ / đối tác",
+          "size": 7.0,
+          "bold": false,
+          "italic": false,
+          "color": "6B7681",
+          "image": false
+        }
+      ],
+      "align": "center",
+      "before": 0.0,
+      "after": 0.0,
+      "line": 1.0791666666666666,
+      "shade": null
+    }
+  ]
+}

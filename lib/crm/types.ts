@@ -1,5 +1,5 @@
-export const roles = ["ADMIN", "MANAGER", "SALES", "WAREHOUSE_HCM", "WAREHOUSE_HN", "WAREHOUSE", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
-export const accountAssignableRoles = ["ADMIN", "MANAGER", "SALES", "WAREHOUSE_HCM", "WAREHOUSE_HN", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
+export const roles = ["ADMIN", "MANAGER", "SALES", "FACTORY", "WAREHOUSE_HCM", "WAREHOUSE_HN", "WAREHOUSE", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
+export const accountAssignableRoles = ["ADMIN", "MANAGER", "SALES", "FACTORY", "WAREHOUSE_HCM", "WAREHOUSE_HN", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
 export type Role = typeof roles[number];
 export function isWarehouseRole(role: string): role is "WAREHOUSE" | "WAREHOUSE_HCM" | "WAREHOUSE_HN" {
   return role === "WAREHOUSE" || role === "WAREHOUSE_HCM" || role === "WAREHOUSE_HN";
@@ -24,6 +24,7 @@ export const roleLabels: Record<Role, string> = {
   ADMIN: "Quản trị hệ thống",
   MANAGER: "Quản lý",
   SALES: "Sales",
+  FACTORY: "Nhà máy sản xuất",
   WAREHOUSE_HCM: "Thủ kho HCM (Kho miền Nam)",
   WAREHOUSE_HN: "Thủ kho HN (Kho miền Bắc)",
   WAREHOUSE: "Thủ kho",

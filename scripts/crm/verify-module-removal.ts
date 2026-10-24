@@ -26,15 +26,14 @@ async function main() {
   process.env.CRM_DATABASE_MODE = "pglite";
   process.env.CRM_ENVIRONMENT = "LOCAL";
   process.env.CRM_LOCAL_DATA_DIR = ".local/crm-qa-module-removal-" + randomUUID();
-  await fs.mkdir(".local", { recursive: true });
   const ids = await createQaFixture();
   const db = await database();
   try {
     const { user } = await login("admin@crm-qa.invalid", qaPassword);
-    for (const role of ["MANAGER", "WAREHOUSE_HCM", "WAREHOUSE_HN"] as const) {
+    for (const role of ["MANAGER", "FACTORY", "WAREHOUSE_HCM", "WAREHOUSE_HN"] as const) {
       await createAccount(user, { email: role.toLowerCase() + "@crm-qa.invalid", displayName: "LOCAL QA " + role, password: qaPassword, role, organizationId: user.organizationId });
     }
-    await check("All current internal roles lose the retired modules and empty hub groups", () => {
+    await check("All eight internal roles lose the retired modules and empty hub groups", () => {
       for (const role of roles.filter(r => !r.startsWith("DEALER_"))) {
         const principal = { ...user, role };
         assert.equal(visibleModules(principal).some(m => removed.includes(m.id)), false, role);
@@ -119,8 +118,8 @@ async function main() {
       assert.equal(await page.getByRole("heading", { name: "Hồ sơ kênh phân phối", exact: true }).count(), 0);
       assert.equal(await page.getByRole("heading", { name: "Lịch chăm sóc định kỳ", exact: true }).count(), 0);
     });
-    await check("Warehouse and accountant routes cannot bypass retired-module checks", async () => {
-      for (const email of ["warehouse@crm-qa.invalid", "warehouse_hcm@crm-qa.invalid", "warehouse_hn@crm-qa.invalid", "accountant@crm-qa.invalid"]) {
+    await check("Warehouse, accountant and factory routes cannot bypass retired-module checks", async () => {
+      for (const email of ["warehouse@crm-qa.invalid", "warehouse_hcm@crm-qa.invalid", "warehouse_hn@crm-qa.invalid", "accountant@crm-qa.invalid", "factory@crm-qa.invalid"]) {
         const context = await browser!.newContext(); await signIn(context, email);
         assert.equal((await context.request.get(base + "/crm")).status(), 200, email);
         for (const id of removed) assert.equal((await context.request.get(base + "/crm/" + id)).status(), 404, email + ":" + id);

@@ -5,6 +5,7 @@ const permissions: Record<Role, readonly string[]> = {
   ADMIN: ["*"],
   MANAGER: ["partners.read", "partners.write", "catalog.read", "warehouses.read", "warehouses.write", "orders.read", "consignment.read", "finance.read", "procurement.read", "reports.read"],
   SALES: ["partners.read", "partners.write", "catalog.read", "orders.read", "procurement.read", "reports.read"],
+  FACTORY: ["catalog.read", "warehouses.read", "procurement.read", "reports.read"],
   WAREHOUSE: ["catalog.read", "warehouses.read", "orders.read", "consignment.read", "procurement.read", "reports.read"],
   WAREHOUSE_HCM: ["catalog.read", "warehouses.read", "orders.read", "consignment.read", "procurement.read", "reports.read"],
   WAREHOUSE_HN: ["catalog.read", "warehouses.read", "orders.read", "consignment.read", "procurement.read", "reports.read"],
@@ -16,6 +17,7 @@ export function can(user: Principal, permission: string): boolean {
   if(permission==='internal-documents.manage')return user.area==='crm'&&user.role==='ADMIN';
   if(permission==='internal-documents.read')return user.area==='crm'&&(user.role==='ACCOUNTANT'||isWarehouseRole(user.role));
   if(permission==='internal-documents.access')return user.area==='crm'&&(user.role==='ADMIN'||user.role==='ACCOUNTANT'||isWarehouseRole(user.role));
+  if(permission==="document-flow.admin")return user.area==="crm"&&user.role==="ADMIN";
   if(permission==="pricing.manage")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
   if(permission==="articles.read"||permission==="articles.write")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);
   if(permission==="workspace.use")return true;
