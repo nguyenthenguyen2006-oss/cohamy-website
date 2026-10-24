@@ -25,3 +25,25 @@ Verification covers Next build/TypeScript and trace checks, document-flow and re
 The existing warehouse-transfer-scope suite fails its destination-location assertion before reaching the changed workspace code. The transfer destination implementation is unchanged in this work. That suite is not counted as a pass; the relevant document/stock read boundaries are independently checked by the service and browser suites.
 
 No production stock, payments, customer records, document confirmations or mail settings are modified by these optimizations. Deployment and production benchmark writes are limited to release/configuration files, verified backups, and authentication sessions.
+
+## Production measurements
+
+Measured performance source: `afa6cef8de795b7f53f408a96d3927ebc764cc1b`. Production was subsequently verified at the coordinated successor `4c7f658c8a4db1e6eed214d603aaba3bb7f6b98a`, which contains both optimization commits alongside the other chat's additional module removals and inline email settings. The measurements below precede those additional UI changes. Both sources retain the bulk product grids from `2e7d1f1`; the primary checkout's independent drafts are preserved. The preceding application-only release `59b7529` inherited the 512 MB heap limit and restarted once after a confirmed V8 out-of-memory failure. The final source includes the runtime and shared replay-directory corrections.
+
+| Same measured operation | Before | After | Reduction |
+| --- | ---: | ---: | ---: |
+| Document workspace JSON, decoded | 36,655 B | 5,286 B | 85.6% |
+| Document workspace JSON over HTTPS, best negotiated encoding | 36,655 B, identity | 1,306 B, gzip | 96.4% |
+| Workspace database reads with no visible workflow documents | 12 | 8 | 33.3% |
+| React server requests across five sidebar clicks | 35 | 9 | 74.3% |
+| Font bytes on a cold CRM page | 301,168 B | 233,352 B | 22.5% |
+| Resource requests on a cold CRM page | 48 | 38 | 20.8% |
+| Draft save workspace refreshes, isolated browser fixture | 3 | 1 | 66.7% |
+
+The final loopback sample records median factory/accounting page responses of 26/23 ms, against 42/39 ms before. Dashboard median is 71 ms against 94 ms before. Other routes do not uniformly improve: the workspace API median is 30 ms against 22 ms before, and cold browser load is 1,788 ms against 1,378 ms before through the tunnel. These are five loopback samples per route and one browser sequence per release, with variable network and warm-up effects. Do not report the byte savings as an equivalent reduction in every page's load time.
+
+The gzip proof verifies identical decoded response bodies, `private, no-store`, and `Vary: Accept-Encoding`. Nginx configuration validation and backup hashes pass. Production browser checks pass 7/7, including correct tab selection, the private document catalogue, actual 404s for the eight retired modules, mobile overflow, logout, and all four fully paid HCM historical invoices with each original image checksum verified.
+
+The bounded production stability run completed 150 read requests in 431 seconds, concurrency 2, with no failed requests, no new heap/replay errors and no web/worker restart or PID change. Sampled web RSS stayed below 615 MiB. This validates that workload and time window; it does not establish unlimited-load or long-term leak freedom. The subsequent coordinated release is healthy, retains the 1,536 MB heap, private delivery projection, and all four paid historical invoices; its source ancestry and live processes were independently checked after cutover. The temporary browser SOCKS tunnel and local QA server have been stopped.
+
+Release backups are `/root/cohamy-backups/20261024T212547Z-afa6cef8de79` and `/root/cohamy-backups/20261024T210500Z-crm-transfer` (nginx). Both database backup restores and source hash verification passed. No new migration was applied; the existing 44 migrations are retained. See `test-results/performance/production.json` for the bounded runtime stability run and detailed measurements; `.ecc/benchmarks/cohamy-crm-before.json` and `cohamy-crm-after.json` preserve browser evidence.

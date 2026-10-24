@@ -1,0 +1,799 @@
+{
+  "status": "PASS",
+  "sha": "afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+  "baselineSha": "2e7d1f16db39d92d5eab2ddf3a48d200f9898fcf",
+  "testedAt": "2026-10-24T21:41:37.453Z",
+  "scope": "Production actual Admin reads; no business record mutations",
+  "deployment": {
+    "status": "PASS",
+    "environment": "PRODUCTION",
+    "testedAt": "2026-10-24T21:31:39.335Z",
+    "sha": "afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+    "release": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+    "backup": "/root/cohamy-backups/20261024T212547Z-afa6cef8de79",
+    "previousSha": "59b7529ca40569fc839cfa83a6ffd3badd31d009",
+    "sourceBackupHashVerified": true,
+    "databaseSnapshots": [
+      {
+        "file": "pre-migration-restore.json",
+        "status": "PASS",
+        "snapshotConsistent": true,
+        "sha256": "4ddb857f9cf23af69bac85e59d39add02682813bdc14378e68cdb1e1093b8089"
+      },
+      {
+        "file": "before-cutover-restore.json",
+        "status": "PASS",
+        "snapshotConsistent": true,
+        "sha256": "18f9f5d078b48b8f0031bf70847456793761abcf0cfe02fa75694a6a652b4c3c"
+      }
+    ],
+    "candidateSmokePassed": 12,
+    "migrations": {
+      "status": "PASS",
+      "total": 44,
+      "applied": []
+    },
+    "processes": [
+      {
+        "name": "cohamy",
+        "status": "online",
+        "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+        "restarts": 0
+      },
+      {
+        "name": "cohamy-crm-worker",
+        "status": "online",
+        "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+        "restarts": 0
+      }
+    ],
+    "health": {
+      "ok": true,
+      "app": "cohamy",
+      "blogSource": "wordpress",
+      "blogReady": true,
+      "sheetsConfigured": false,
+      "uploadDirectoryWritable": true,
+      "timestamp": "2026-10-24T21:31:38.825Z"
+    },
+    "nginx": {
+      "backup": "/root/cohamy-backups/20261024T210500Z-crm-transfer",
+      "backupHashesVerified": true,
+      "configTest": "PASS",
+      "privateTransfer": {
+        "status": "PASS",
+        "identityBytes": 5286,
+        "gzipBytes": 1306,
+        "decodedBodiesEqual": true,
+        "cacheControl": "private, no-store",
+        "vary": "Accept-Encoding, rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch"
+      }
+    }
+  },
+  "currentProduction": {
+    "status": "PASS",
+    "testedAt": "2026-10-24T21:41:10.718Z",
+    "currentSha": "4c7f658c8a4db1e6eed214d603aaba3bb7f6b98a",
+    "release": "/root/cohamy-releases/4c7f658c8a4db1e6eed214d603aaba3bb7f6b98a",
+    "containsPerformanceSource": true,
+    "measuredPerformanceSha": "afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+    "boundedHeapMiB": 1536,
+    "processes": [
+      {
+        "name": "cohamy",
+        "status": "online",
+        "cwd": "/root/cohamy-releases/4c7f658c8a4db1e6eed214d603aaba3bb7f6b98a",
+        "restarts": 0
+      },
+      {
+        "name": "cohamy-crm-worker",
+        "status": "online",
+        "cwd": "/root/cohamy-releases/4c7f658c8a4db1e6eed214d603aaba3bb7f6b98a",
+        "restarts": 0
+      }
+    ],
+    "health": {
+      "ok": true,
+      "app": "cohamy",
+      "blogSource": "wordpress",
+      "blogReady": true,
+      "sheetsConfigured": false,
+      "uploadDirectoryWritable": true,
+      "timestamp": "2026-10-24T21:41:09.574Z"
+    },
+    "invoices": {
+      "count": 4,
+      "total": 31163000,
+      "fullyPaid": true
+    }
+  },
+  "browserVerification": {
+    "status": "PASS",
+    "environment": "PRODUCTION Microsoft Edge; actual HTTPS via temporary SSH SOCKS tunnel",
+    "sha": "afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+    "testedAt": "2026-10-24T21:31:39.482Z",
+    "scope": "Read-only business data; authentication login/logout only",
+    "cases": [
+      {
+        "name": "Production route changes select the requested document tab",
+        "status": "PASS"
+      },
+      {
+        "name": "Production workspace remains private with delivery projection and source lines",
+        "status": "PASS"
+      },
+      {
+        "name": "All four HCM historical invoices remain fully paid with verified original image bytes",
+        "status": "PASS"
+      },
+      {
+        "name": "Eight retired CRM routes return actual 404 responses",
+        "status": "PASS"
+      },
+      {
+        "name": "Administrator catalogue remains private and file bytes remain restricted to readers",
+        "status": "PASS"
+      },
+      {
+        "name": "Mobile historical invoice page renders without horizontal page overflow",
+        "status": "PASS"
+      },
+      {
+        "name": "Logout revokes private workspace access",
+        "status": "PASS"
+      }
+    ],
+    "errors": []
+  },
+  "runtime": {
+    "status": "PASS",
+    "environment": "PRODUCTION; bounded read-only route cycles, concurrency 2",
+    "sha": "afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+    "startedAt": "2026-10-24T21:31:03.904Z",
+    "finishedAt": "2026-10-24T21:38:15.342Z",
+    "durationSeconds": 431,
+    "requestCount": 150,
+    "failedRequests": 0,
+    "restarts": 0,
+    "latencyMs": {
+      "min": 15,
+      "p50": 50,
+      "p95": 190,
+      "max": 611
+    },
+    "newHeapOrReplayErrors": 0,
+    "sharedReplayDirectoryReady": true,
+    "samples": [
+      {
+        "elapsedSeconds": 1,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 618991616,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 124477440,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 32,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 627548160,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 125001728,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 62,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 591458304,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 125263872,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 93,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 596586496,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 125394944,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 124,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 599982080,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 125526016,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 154,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 603127808,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 125788160,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 185,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 608792576,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 126050304,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 216,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 613785600,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 126181376,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 247,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 617074688,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 126574592,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 277,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 617168896,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 126574592,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 308,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 624611328,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 127098880,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 339,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 638750720,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 127098880,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 370,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 639176704,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 127229952,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 400,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 639807488,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 127492096,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      },
+      {
+        "elapsedSeconds": 431,
+        "processes": [
+          {
+            "name": "cohamy",
+            "pid": 2428759,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 644329472,
+            "nodeArgs": [
+              "--max-old-space-size=1536"
+            ],
+            "startedAt": 1792877403643
+          },
+          {
+            "name": "cohamy-crm-worker",
+            "pid": 2428760,
+            "status": "online",
+            "cwd": "/root/cohamy-releases/afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+            "restarts": 0,
+            "rssBytes": 127623168,
+            "nodeArgs": [
+              "--env-file=.env.production",
+              "--require",
+              "./scripts/register-server-only.cjs",
+              "--import",
+              "tsx"
+            ],
+            "startedAt": 1792877403645
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "workspaceDecoded": {
+      "before": 36655,
+      "after": 5286,
+      "unit": "bytes",
+      "reductionPercent": 85.6
+    },
+    "workspaceWire": {
+      "before": 36655,
+      "after": 1306,
+      "unit": "bytes",
+      "reductionPercent": 96.4
+    },
+    "workspaceQueries": {
+      "before": 12,
+      "after": 8,
+      "unit": "queries",
+      "reductionPercent": 33.3
+    },
+    "navigationRequests": {
+      "before": 35,
+      "after": 9,
+      "unit": "RSC requests across five sidebar clicks",
+      "reductionPercent": 74.3
+    },
+    "fontTransfer": {
+      "before": 301168,
+      "after": 233352,
+      "unit": "encoded bytes on cold CRM load",
+      "reductionPercent": 22.5
+    },
+    "initialResourceRequests": {
+      "before": 48,
+      "after": 38,
+      "unit": "requests",
+      "reductionPercent": 20.8
+    },
+    "coldPageLoadMs": {
+      "before": 1378.199999999255,
+      "after": 1787.7999999970198
+    },
+    "navigationTimings": [
+      {
+        "route": "/crm/historical-orders",
+        "beforeMs": 400,
+        "afterMs": 469
+      },
+      {
+        "route": "/crm/accounting-factory",
+        "beforeMs": 251,
+        "afterMs": 310
+      },
+      {
+        "route": "/crm/accounting-orders",
+        "beforeMs": 305,
+        "afterMs": 282
+      },
+      {
+        "route": "/crm/customers",
+        "beforeMs": 344,
+        "afterMs": 240
+      },
+      {
+        "route": "/crm/goods",
+        "beforeMs": 211,
+        "afterMs": 250
+      }
+    ],
+    "loopbackTimings": [
+      {
+        "route": "/api/health",
+        "beforeP50Ms": 59,
+        "afterP50Ms": 50
+      },
+      {
+        "route": "/crm",
+        "beforeP50Ms": 94,
+        "afterP50Ms": 71
+      },
+      {
+        "route": "/crm/historical-orders",
+        "beforeP50Ms": 31,
+        "afterP50Ms": 32
+      },
+      {
+        "route": "/crm/internal-documents",
+        "beforeP50Ms": 30,
+        "afterP50Ms": 27
+      },
+      {
+        "route": "/crm/accounting-factory",
+        "beforeP50Ms": 42,
+        "afterP50Ms": 26
+      },
+      {
+        "route": "/crm/accounting-orders",
+        "beforeP50Ms": 39,
+        "afterP50Ms": 23
+      },
+      {
+        "route": "/crm/document-notifications",
+        "beforeP50Ms": 52,
+        "afterP50Ms": 33
+      },
+      {
+        "route": "/crm/customers",
+        "beforeP50Ms": 35,
+        "afterP50Ms": 37
+      },
+      {
+        "route": "/crm/goods",
+        "beforeP50Ms": 25,
+        "afterP50Ms": 32
+      },
+      {
+        "route": "/api/crm/document-flow/workspace",
+        "beforeP50Ms": 22,
+        "afterP50Ms": 30
+      }
+    ]
+  },
+  "limits": [
+    "HTTPS browser timings include a temporary SSH SOCKS tunnel; this workstation direct HTTPS still times out at TCP connection.",
+    "Single before/after browser sequence: do not infer uniform latency improvement. Loopback and browser timings vary; use byte/request counts as the stronger comparisons.",
+    "Initial application-only release 59b7529 exhausted its inherited 512 MB V8 heap after about five minutes and restarted once. Runtime capacity and missing shared webhook replay configuration were corrected in this release.",
+    "Existing warehouse-transfer destination scope test fails before the changed workspace code; not counted as a pass. Independent document/stock boundary and browser checks passed.",
+    "Production verification reads business data; local draft/stock/provider tests use an isolated fixture and disabled/fake email provider."
+  ],
+  "backupRoot": "/root/cohamy-backups",
+  "rawFiles": [
+    ".ecc/benchmarks/cohamy-crm-before.json",
+    ".ecc/benchmarks/cohamy-crm-after.json",
+    "docs/crm/test-results/performance/browser-local.json",
+    "docs/crm/test-results/performance/browser-production.json"
+  ]
+}

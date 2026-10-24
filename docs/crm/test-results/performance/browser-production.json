@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION Microsoft Edge; actual HTTPS via temporary SSH SOCKS tunnel",
+  "sha": "afa6cef8de795b7f53f408a96d3927ebc764cc1b",
+  "testedAt": "2026-10-24T21:31:39.482Z",
+  "scope": "Read-only business data; authentication login/logout only",
+  "cases": [
+    {
+      "name": "Production route changes select the requested document tab",
+      "status": "PASS"
+    },
+    {
+      "name": "Production workspace remains private with delivery projection and source lines",
+      "status": "PASS"
+    },
+    {
+      "name": "All four HCM historical invoices remain fully paid with verified original image bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Eight retired CRM routes return actual 404 responses",
+      "status": "PASS"
+    },
+    {
+      "name": "Administrator catalogue remains private and file bytes remain restricted to readers",
+      "status": "PASS"
+    },
+    {
+      "name": "Mobile historical invoice page renders without horizontal page overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "Logout revokes private workspace access",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}
