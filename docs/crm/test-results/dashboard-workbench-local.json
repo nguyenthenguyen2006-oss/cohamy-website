@@ -1,0 +1,35 @@
+{
+  "environment": "LOCAL Edge / isolated PGlite",
+  "cases": [
+    {
+      "name": "Readable dashboard totals match the server and important order columns open by default",
+      "status": "PASS"
+    },
+    {
+      "name": "Switching workbooks retains quick search and date-filter controls; keyboard navigation follows tabs",
+      "status": "PASS"
+    },
+    {
+      "name": "All columns remain available, display preferences survive refresh, and summaries/detail views keep distinct columns",
+      "status": "PASS"
+    },
+    {
+      "name": "Server filter errors are visible and retry replaces totals with the selected server result",
+      "status": "PASS"
+    },
+    {
+      "name": "Inventory overview, document ledger and operational queues remain available without writes",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop and phone layouts stay within the viewport while tables retain horizontal scrolling",
+      "status": "PASS"
+    },
+    {
+      "name": "Long fictitious read responses remain readable on desktop and phone without database writes",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "writes": []
+}

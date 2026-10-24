@@ -77,6 +77,8 @@ export interface CrmSpreadsheetProps<T> {
  /** Optional bulk action bar when rows are checked */
  renderBulkActions?: (selectedRows: T[], clearSelection: () => void) => React.ReactNode;
  /** Optional default density */
+ presentation?: 'standard' | 'workbench';
+ defaultVisibleKeys?: string[];
  defaultDensity?: 'compact' | 'comfortable';
  /** Optional controlled column keys/widths for compatibility with server-saved partner preferences */
  controlledVisibleKeys?: string[];
@@ -154,6 +156,8 @@ export function CrmSpreadsheet<T>({
  toolbarActions,
  renderBulkActions,
  defaultDensity = 'compact',
+ presentation = 'standard',
+ defaultVisibleKeys,
  controlledVisibleKeys,
  controlledColumnWidths,
  emptyMessage = 'Không có bản ghi nào khớp điều kiện lọc hiện tại.',
@@ -161,7 +165,7 @@ export function CrmSpreadsheet<T>({
  hideToolbar = false,
  hideFooterSums = false,
 }: CrmSpreadsheetProps<T>) {
- const storageKey = `cohamy_crm_sheet_v1_${sheetKey}`;
+ const storageKey = presentation==='workbench'?`cohamy_crm_workbench_v1_${sheetKey}`:`cohamy_crm_sheet_v1_${sheetKey}`;
 
  // Column order, visibility, widths, density
  const [colOrder, setColOrder] = useState<string[]>(() => {
@@ -172,7 +176,7 @@ export function CrmSpreadsheet<T>({
   }
   return defaultOrder;
  });
- const [visibleKeys, setVisibleKeys] = useState<string[]>(() => controlledVisibleKeys ?? columns.map(c => c.key));
+ const [visibleKeys, setVisibleKeys] = useState<string[]>(() => controlledVisibleKeys ?? defaultVisibleKeys ?? columns.map(c => c.key));
  const [colWidths, setColWidths] = useState<Record<string, number>>(() => {
   const initial: Record<string, number> = {};
   for (const c of columns) {
@@ -191,6 +195,24 @@ export function CrmSpreadsheet<T>({
  const [newViewName, setNewViewName] = useState('');
  const [newViewShared, setNewViewShared] = useState(false);
  const [showColManager, setShowColManager] = useState(false);
+ const [showExtraTools,setShowExtraTools]=useState(false);
+ const restoredStorage=useRef('');
+ useEffect(()=>{
+  if(presentation!=='workbench'||restoredStorage.current===storageKey)return;
+  const frame=requestAnimationFrame(()=>{
+   restoredStorage.current=storageKey;
+   try{
+    const saved=JSON.parse(localStorage.getItem(storageKey)??'null');if(!saved||typeof saved!=='object')return;
+    const keys=new Set(columns.map(c=>c.key)),validKeys=(value:unknown)=>Array.isArray(value)?[...new Set(value.filter((k):k is string=>typeof k==='string'&&keys.has(k)))]:[];
+    const widths=(value:unknown)=>Object.fromEntries(Object.entries(value&&typeof value==='object'?value:{}).filter(([k,v])=>keys.has(k)&&typeof v==='number'&&Number.isFinite(v)).map(([k,v])=>[k,Math.max(76,Math.min(640,Number(v)))]));
+    const visible=validKeys(saved.visibleKeys),order=validKeys(saved.colOrder);if(visible.length&&!controlledVisibleKeys)setVisibleKeys(visible);if(order.length)setColOrder([...order,...columns.map(c=>c.key).filter(k=>!order.includes(k))]);
+    if(!controlledColumnWidths)setColWidths(current=>({...current,...widths(saved.colWidths)}));
+    if(saved.density==='compact'||saved.density==='comfortable')setDensity(saved.density);
+    if(Array.isArray(saved.savedViews))setSavedViews(saved.savedViews.filter((v:SavedLocalView)=>v&&typeof v.id==='string'&&typeof v.name==='string'&&validKeys(v.visibleKeys).length&&Array.isArray(v.sorts)&&typeof v.groupBy==='string'&&(v.density==='compact'||v.density==='comfortable')).slice(0,30).map((v:SavedLocalView)=>({...v,name:v.name.slice(0,80),shared:false,visibleKeys:validKeys(v.visibleKeys),widths:widths(v.widths),sorts:v.sorts.filter((sort:SortSpec)=>keys.has(sort.key)&&(sort.dir==='asc'||sort.dir==='desc')),groupBy:keys.has(v.groupBy)?v.groupBy:''})));
+   }catch{/* Invalid local display preferences do not block the table. */}
+  });
+  return()=>cancelAnimationFrame(frame);
+ },[columns,controlledColumnWidths,controlledVisibleKeys,presentation,storageKey]);
 
  const persistPrefs = useCallback(
   (next: {
@@ -954,10 +976,53 @@ export function CrmSpreadsheet<T>({
   persistPrefs({visibleKeys: v.visibleKeys, colWidths: v.widths, density: v.density});
  };
 
+ const viewOptions=(<>
+      {columns.some(c => c.groupable !== false) && (
+       <label className="crm-sheet-inline-select">
+        <span>Nhóm:</span>
+        <select value={groupBy} onChange={e => setGroupBy(e.target.value)} aria-label="Nhóm hàng theo cột">
+         <option value="">Không nhóm</option>
+         {columns
+          .filter(c => c.groupable !== false && c.type !== 'money' && c.type !== 'number')
+          .map(c => (
+           <option key={c.key} value={c.key}>
+            {c.label}
+           </option>
+          ))}
+        </select>
+       </label>
+      )}
+
+      <div className="crm-sheet-density-switch" role="group" aria-label="Mật độ dòng bảng tính">
+       <button
+        type="button"
+        className={`crm-sheet-tool-btn ${density === 'compact' ? 'active' : ''}`}
+        onClick={() => {
+         setDensity('compact');
+         persistPrefs({density: 'compact'});
+        }}
+        title="Chế độ gọn (32px/dòng)"
+       >
+        Gọn
+       </button>
+       <button
+        type="button"
+        className={`crm-sheet-tool-btn ${density === 'comfortable' ? 'active' : ''}`}
+        onClick={() => {
+         setDensity('comfortable');
+         persistPrefs({density: 'comfortable'});
+        }}
+        title="Chế độ thoải mái (38px/dòng)"
+       >
+        Thoải mái
+       </button>
+      </div>
+
+ </>);
  return (
-  <div className={`crm-spreadsheet-shell density-${density}`}>
+  <div className={`crm-spreadsheet-shell density-${density}${presentation==='workbench'?' crm-sheet-workbench':''}`}>
    {/* Sheet Tabs & Saved Views Strip */}
-   {title || subtitle || savedViews.length > 0 || (hideToolbar && tabs && tabs.length > 0) ? (
+   {title || subtitle || savedViews.length > 0 || ((hideToolbar||presentation==='workbench') && tabs && tabs.length > 0) ? (
     <div className="crm-sheet-header-bar">
      {(title || subtitle) && (
       <div className="crm-sheet-title-group">
@@ -966,7 +1031,7 @@ export function CrmSpreadsheet<T>({
       </div>
      )}
 
-     {(title || subtitle || hideToolbar) && tabs && tabs.length > 0 && (
+     {(title || subtitle || hideToolbar || presentation==='workbench') && tabs && tabs.length > 0 && (
       <div className="crm-sheet-tabs" role="tablist" aria-label="Các trang bảng tính">
        {tabs.map(t => (
         <button
@@ -1032,46 +1097,7 @@ export function CrmSpreadsheet<T>({
        Lọc cột {Object.keys(colFilters).length > 0 ? `(${Object.keys(colFilters).length})` : ''}
       </button>
 
-      {columns.some(c => c.groupable !== false) && (
-       <label className="crm-sheet-inline-select">
-        <span>Nhóm:</span>
-        <select value={groupBy} onChange={e => setGroupBy(e.target.value)} aria-label="Nhóm hàng theo cột">
-         <option value="">Không nhóm</option>
-         {columns
-          .filter(c => c.groupable !== false && c.type !== 'money' && c.type !== 'number')
-          .map(c => (
-           <option key={c.key} value={c.key}>
-            {c.label}
-           </option>
-          ))}
-        </select>
-       </label>
-      )}
-
-      <div className="crm-sheet-density-switch" role="group" aria-label="Mật độ dòng bảng tính">
-       <button
-        type="button"
-        className={`crm-sheet-tool-btn ${density === 'compact' ? 'active' : ''}`}
-        onClick={() => {
-         setDensity('compact');
-         persistPrefs({density: 'compact'});
-        }}
-        title="Chế độ gọn (32px/dòng)"
-       >
-        Gọn
-       </button>
-       <button
-        type="button"
-        className={`crm-sheet-tool-btn ${density === 'comfortable' ? 'active' : ''}`}
-        onClick={() => {
-         setDensity('comfortable');
-         persistPrefs({density: 'comfortable'});
-        }}
-        title="Chế độ thoải mái (38px/dòng)"
-       >
-        Thoải mái
-       </button>
-      </div>
+      {presentation!=='workbench'&&viewOptions}
 
       <button
        type="button"
@@ -1079,12 +1105,13 @@ export function CrmSpreadsheet<T>({
        onClick={() => setShowColManager(v => !v)}
        aria-expanded={showColManager}
       >
-       Cột & View ({activeColumns.length}/{columns.length})
+       {presentation==='workbench'?'Hiển thị':'Cột & View'} ({activeColumns.length}/{columns.length})
       </button>
 
       <button type="button" className="crm-sheet-tool-btn" onClick={() => void copySelectionToClipboard()} title="Sao chép vùng ô hoặc dòng đang chọn sang Excel (Ctrl+C)">
-       Sao chép TSV
+       {presentation==='workbench'?'Sao chép Excel':'Sao chép TSV'}
       </button>
+      {presentation==='workbench'&&<button type="button" className={`crm-sheet-tool-btn ${showExtraTools?'active':''}`} aria-expanded={showExtraTools} onClick={()=>setShowExtraTools(!showExtraTools)}>Tùy chọn</button>}
      </div>
 
      <div className="crm-sheet-toolbar-right">
@@ -1119,7 +1146,7 @@ export function CrmSpreadsheet<T>({
         )}
        </div>
       )}
-      {!title && !subtitle && tabs && tabs.length > 0 && (
+      {presentation!=='workbench' && !title && !subtitle && tabs && tabs.length > 0 && (
        <div className="crm-sheet-tabs" role="tablist" aria-label="Các trang bảng tính">
         {tabs.map(t => (
          <button
@@ -1141,6 +1168,7 @@ export function CrmSpreadsheet<T>({
     </div>
    )}
 
+   {presentation==='workbench'&&showExtraTools&&<div className="crm-sheet-extra-panel" role="group" aria-label="Tùy chọn bảng">{viewOptions}</div>}
    {saveMessage && (
     <div className={`crm-sheet-Banner status-${saveStatus.toLowerCase()}`} role="status">
      <span>{saveMessage}</span>
@@ -1167,6 +1195,7 @@ export function CrmSpreadsheet<T>({
    {/* Column Manager & View Saver Popover Panel */}
    {showColManager && (
     <div className="crm-sheet-col-manager">
+     {presentation==='workbench'&&defaultVisibleKeys?.length&&<div className="crm-sheet-column-presets"><span>Cột hiển thị</span><button type="button" className="crm-sheet-tool-btn" onClick={()=>{setVisibleKeys(defaultVisibleKeys);persistPrefs({visibleKeys:defaultVisibleKeys});}}>Cột chính</button><button type="button" className="crm-sheet-tool-btn" onClick={()=>{const all=columns.map(c=>c.key);setVisibleKeys(all);persistPrefs({visibleKeys:all});}}>Tất cả cột</button></div>}
      <div className="crm-sheet-col-manager-grid">
       {colOrder.map((key, idx) => {
        const col = columns.find(c => c.key === key);
@@ -1240,10 +1269,10 @@ export function CrmSpreadsheet<T>({
        placeholder="Đặt tên View bảng tính (VD: Đối soát nhanh Hà Nội)..."
        aria-label="Tên View bảng tính"
       />
-      <label className="crm-sheet-col-check">
+      {presentation!=='workbench'&&<label className="crm-sheet-col-check">
        <input type="checkbox" checked={newViewShared} onChange={e => setNewViewShared(e.target.checked)} />
        <span>View chia sẻ theo quyền</span>
-      </label>
+      </label>}
       <button type="button" className="crm-sheet-tool-btn active" onClick={saveCurrentView}>
        Lưu View hiện tại
       </button>

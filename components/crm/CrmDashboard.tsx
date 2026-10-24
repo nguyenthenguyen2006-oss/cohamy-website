@@ -1,7 +1,6 @@
 import {DocumentFlowWorkspace} from './DocumentFlowWorkspace';
 import {flowWorkspace} from '@/lib/crm/document-flow';
 import Link from "next/link";
-import { SquaresFour } from "@phosphor-icons/react/dist/ssr";
 import { visibleModules } from "@/lib/crm/modules";
 import { reviewQueue } from "@/lib/crm/onboarding";
 import { can, isWarehouseRole } from "@/lib/crm/permissions";
@@ -135,15 +134,11 @@ export async function CrmDashboard({ user }: { user: Principal }) {
   const pendingAppCount = applications?.total ?? 0;
 
   return (
-    <div className="crm-dashboard-saas crm-spreadsheet-desk">
+    <div className="crm-dashboard-saas crm-spreadsheet-desk crm-workbench">
       {/* Compact Operational Header + KPI Strip */}
       <header className="crm-dash-compact-bar">
         <div className="crm-dash-compact-bar__left">
-          <span className="crm-dash-header__eyebrow">
-            <SquaresFour size={13} weight="bold" aria-hidden="true" />
-            BẢNG TÍNH VẬN HÀNH COHAMY
-          </span>
-          <h1>Bàn làm việc</h1>
+          <h1>Bàn làm việc</h1><p>Theo dõi đơn bán, tồn kho và việc cần xử lý.</p>
         </div>
 
         <div className="crm-dash-compact-kpis" aria-label="Dải số liệu hàng đợi">

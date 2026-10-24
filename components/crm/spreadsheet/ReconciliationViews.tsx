@@ -1,5 +1,5 @@
 'use client';
-import React, {useState, useMemo} from 'react';
+import React, {useState,useMemo,useRef,useEffect} from 'react';
 import Link from 'next/link';
 import {CrmSpreadsheet, type SpreadsheetColumn} from './CrmSpreadsheet';
 import type {
@@ -47,14 +47,21 @@ function statusVi(status: string): string {
  return map[status] ?? status;
 }
 
+type SummaryValue={label:string;value:string;detail?:string;accent?:boolean};
+function WorkbenchSummary({primary,secondary}:{primary:SummaryValue[];secondary:SummaryValue[]}){
+ return <div className="crm-workbench-summary"><dl className="crm-workbench-primary">{primary.map(item=><div key={item.label}><dt>{item.label}</dt><dd className={item.accent?'is-accent':''}>{item.value}</dd>{item.detail&&<small>{item.detail}</small>}</div>)}</dl><dl className="crm-workbench-secondary">{secondary.map(item=><div key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}</dl></div>;
+}
+
 export function SalesReconciliationSheet({
  initialData,
  basePath = '/crm',
  defaultMode = 'orders',
+ workbench = false,
 }: {
  initialData: SalesReconciliationResult;
  basePath?: string;
  defaultMode?: 'orders' | 'lines';
+ workbench?: boolean;
 }) {
  const [data, setData] = useState<SalesReconciliationResult>(initialData);
  const [mode, setMode] = useState<'orders' | 'lines'>(defaultMode);
@@ -64,10 +71,12 @@ export function SalesReconciliationSheet({
  const [statusFilter, setStatusFilter] = useState('');
  const [fromDate, setFromDate] = useState('');
  const [toDate, setToDate] = useState('');
- const [loading, setLoading] = useState(false);
+ const [loading,setLoading]=useState(false),[loadError,setLoadError]=useState(''),[advancedFilters,setAdvancedFilters]=useState(false);
+ const pendingRequest=useRef<AbortController|null>(null);
+ useEffect(()=>()=>pendingRequest.current?.abort(),[]);
 
  const reloadFromServer = async (overrides?: Record<string, string>) => {
-  setLoading(true);
+  pendingRequest.current?.abort();const controller=new AbortController();pendingRequest.current=controller;setLoading(true);setLoadError('');
   try {
    const params = new URLSearchParams();
    const nextOrg = overrides?.organizationId ?? orgFilter;
@@ -82,12 +91,12 @@ export function SalesReconciliationSheet({
    if (nextStatus) params.set('orderStatus', nextStatus);
    if (nextFrom) params.set('from', nextFrom);
    if (nextTo) params.set('to', nextTo);
-   const res = await fetch(`/api/crm/spreadsheet/reconciliation?${params.toString()}`);
-   if (res.ok) {
-    setData((await res.json()) as SalesReconciliationResult);
-   }
+   const res = await fetch(`/api/crm/spreadsheet/reconciliation?${params.toString()}`,{signal:controller.signal});
+   if(!res.ok)throw Error('LOAD_FAILED');
+   const next=await res.json() as SalesReconciliationResult;if(!controller.signal.aborted)setData(next);
+  }catch{if(!controller.signal.aborted)setLoadError('Chưa tải được dữ liệu theo bộ lọc. Số liệu đang hiển thị chưa được cập nhật.');
   } finally {
-   setLoading(false);
+   if(pendingRequest.current===controller)setLoading(false);
   }
  };
 
@@ -105,7 +114,7 @@ export function SalesReconciliationSheet({
       <button type="button" className="crm-cell-link-btn" onClick={openDrawer}>
        {r.orderCode}
       </button>
-      <span className="crm-mini-tag">V{r.versionNumber}</span>
+      <span className="crm-mini-tag">V{r.versionNumber}</span>{workbench&&<span className="crm-cell-sub crm-workbench-order-date">{r.orderDate}</span>}
      </div>
     ),
    },
@@ -142,7 +151,7 @@ export function SalesReconciliationSheet({
     getValue: r => r.skuSummary,
     renderCell: (r, {openDrawer}) => (
      <div className="crm-cell-multiline" onClick={openDrawer}>
-      <strong>{r.lineCount} SKU</strong> · {r.skuSummary}
+      <strong>{r.lineCount} {workbench?'mặt hàng':'SKU'}</strong> · {r.skuSummary}
      </div>
     ),
    },
@@ -306,7 +315,7 @@ export function SalesReconciliationSheet({
     ),
    },
   ],
-  [basePath]
+  [basePath,workbench]
  );
 
  const lineColumns = useMemo<SpreadsheetColumn<ReconciliationLineRow>[]>(
@@ -455,6 +464,9 @@ export function SalesReconciliationSheet({
   []
  );
 
+ const orderMainKeys=['orderCode','organizationName','skuSummary','totalBaseQty','netTotal','remainingDebt','receivableStatus'];
+ const lineMainKeys=['orderCode','organizationName','productName','unitLabel','baseQuantity','discountPercent','lineTotal'];
+ const compactOrders=useMemo(()=>workbench?orderColumns.map(c=>({...c,width:({orderCode:150,organizationName:160,skuSummary:205,totalBaseQty:82,netTotal:130,remainingDebt:130,receivableStatus:125} as Record<string,number>)[c.key]??c.width})):orderColumns,[orderColumns,workbench]);
  const renderOrderDrawer = (order: ReconciliationOrderRow) => (
   <div className="crm-drawer-stack">
    <div className="crm-drawer-kv-grid">
@@ -549,103 +561,10 @@ export function SalesReconciliationSheet({
   </div>
  );
 
- return (
-  <section className="crm-reconciliation-container" aria-label="Bảng tính đối chiếu bán hàng - giao hàng - công nợ">
-   {/* Compact KPI Strip */}
-   <div className="crm-compact-kpi-strip">
-    <div className="crm-compact-kpi">
-     <span>Số đơn / Dòng SKU</span>
-     <strong>
-      {data.totals.orderCount} đơn · {data.totals.lineCount} dòng
-     </strong>
-    </div>
-    <div className="crm-compact-kpi">
-     <span>Tổng SL xuất bán</span>
-     <strong>{data.totals.totalBaseQty} gói</strong>
-    </div>
-    <div className="crm-compact-kpi">
-     <span>Tiền hàng niêm yết</span>
-     <strong>{money(data.totals.listSubtotal)}</strong>
-    </div>
-    <div className="crm-compact-kpi">
-     <span>Tổng chiết khấu</span>
-     <strong className="crm-text-discount">-{money(data.totals.discountAmount)}</strong>
-    </div>
-    <div className="crm-compact-kpi">
-     <span>Thành tiền sau CK</span>
-     <strong className="crm-text-net">{money(data.totals.netTotal)}</strong>
-    </div>
-    <div className="crm-compact-kpi">
-     <span>Đã thanh toán</span>
-     <strong className="crm-text-positive">{money(data.totals.paidAmount)}</strong>
-    </div>
-    <div className="crm-compact-kpi accent">
-     <span>Còn nợ phải thu</span>
-     <strong className="crm-text-debt">{money(data.totals.remainingDebt)}</strong>
-    </div>
-   </div>
-
-   {/* Server Filter Bar */}
-   <div className="crm-sheet-server-filters">
+ const advancedFilterFields=(<>
     <label>
-     <span>Đối tác:</span>
-     <select
-      value={orgFilter}
-      onChange={e => {
-       setOrgFilter(e.target.value);
-       void reloadFromServer({organizationId: e.target.value});
-      }}
-     >
-      <option value="">Tất cả Khách hàng / Đại lý</option>
-      {data.filterOptions.organizations.map(o => (
-       <option key={o.id} value={o.id}>
-        {o.name} ({o.code})
-       </option>
-      ))}
-     </select>
-    </label>
-
-    {data.filterOptions.warehouses.length > 0 && (
-     <label>
-      <span>Kho xuất:</span>
-      <select
-       value={whFilter}
-       onChange={e => {
-        setWhFilter(e.target.value);
-        void reloadFromServer({warehouseId: e.target.value});
-       }}
-      >
-       <option value="">Tất cả kho</option>
-       {data.filterOptions.warehouses.map(w => (
-        <option key={w.id} value={w.id}>
-         {w.name} ({w.code})
-        </option>
-       ))}
-      </select>
-     </label>
-    )}
-
-    <label>
-     <span>Mặt hàng:</span>
-     <select
-      value={skuFilter}
-      onChange={e => {
-       setSkuFilter(e.target.value);
-       void reloadFromServer({sku: e.target.value});
-      }}
-     >
-      <option value="">Tất cả SKU</option>
-      {data.filterOptions.skus.map(s => (
-       <option key={s.sku} value={s.sku}>
-        {s.name} ({s.sku})
-       </option>
-      ))}
-     </select>
-    </label>
-
-    <label>
-     <span>Trạng thái đơn:</span>
-     <select
+     <span>Trạng thái đơn</span>
+     <select aria-label="Trạng thái đơn"
       value={statusFilter}
       onChange={e => {
        setStatusFilter(e.target.value);
@@ -683,6 +602,113 @@ export function SalesReconciliationSheet({
      />
     </label>
 
+ </>);
+ return (
+  <section aria-busy={loading} className="crm-reconciliation-container" aria-label="Bảng tính đối chiếu bán hàng - giao hàng - công nợ">
+   {/* Compact KPI Strip */}
+   {workbench?<WorkbenchSummary primary={[
+    {label:'Đơn bán',value:`${data.totals.orderCount} đơn`,detail:`${data.totals.lineCount} dòng hàng`},
+    {label:'Thành tiền sau CK',value:money(data.totals.netTotal)},
+    {label:'Đã thanh toán',value:money(data.totals.paidAmount)},
+    {label:'Còn nợ phải thu',value:money(data.totals.remainingDebt),accent:true},
+   ]} secondary={[
+    {label:'Số lượng',value:`${data.totals.totalBaseQty} gói`},
+    {label:'Giá niêm yết',value:money(data.totals.listSubtotal)},
+    {label:'Chiết khấu',value:`-${money(data.totals.discountAmount)}`},
+   ]}/>:(   <div className="crm-compact-kpi-strip">
+    <div className="crm-compact-kpi">
+     <span>Số đơn / Dòng SKU</span>
+     <strong>
+      {data.totals.orderCount} đơn · {data.totals.lineCount} dòng
+     </strong>
+    </div>
+    <div className="crm-compact-kpi">
+     <span>Tổng SL xuất bán</span>
+     <strong>{data.totals.totalBaseQty} gói</strong>
+    </div>
+    <div className="crm-compact-kpi">
+     <span>Tiền hàng niêm yết</span>
+     <strong>{money(data.totals.listSubtotal)}</strong>
+    </div>
+    <div className="crm-compact-kpi">
+     <span>Tổng chiết khấu</span>
+     <strong className="crm-text-discount">-{money(data.totals.discountAmount)}</strong>
+    </div>
+    <div className="crm-compact-kpi">
+     <span>Thành tiền sau CK</span>
+     <strong className="crm-text-net">{money(data.totals.netTotal)}</strong>
+    </div>
+    <div className="crm-compact-kpi">
+     <span>Đã thanh toán</span>
+     <strong className="crm-text-positive">{money(data.totals.paidAmount)}</strong>
+    </div>
+    <div className="crm-compact-kpi accent">
+     <span>Còn nợ phải thu</span>
+     <strong className="crm-text-debt">{money(data.totals.remainingDebt)}</strong>
+    </div>
+   </div>
+)}
+
+   {/* Server Filter Bar */}
+   <div className="crm-sheet-server-filters">
+    <label>
+     <span>Đối tác</span>
+     <select aria-label="Đối tác"
+      value={orgFilter}
+      onChange={e => {
+       setOrgFilter(e.target.value);
+       void reloadFromServer({organizationId: e.target.value});
+      }}
+     >
+      <option value="">Tất cả Khách hàng / Đại lý</option>
+      {data.filterOptions.organizations.map(o => (
+       <option key={o.id} value={o.id}>
+        {o.name} ({o.code})
+       </option>
+      ))}
+     </select>
+    </label>
+
+    {data.filterOptions.warehouses.length > 0 && (
+     <label>
+      <span>Kho xuất</span>
+      <select aria-label="Kho xuất"
+       value={whFilter}
+       onChange={e => {
+        setWhFilter(e.target.value);
+        void reloadFromServer({warehouseId: e.target.value});
+       }}
+      >
+       <option value="">Tất cả kho</option>
+       {data.filterOptions.warehouses.map(w => (
+        <option key={w.id} value={w.id}>
+         {w.name} ({w.code})
+        </option>
+       ))}
+      </select>
+     </label>
+    )}
+
+    <label>
+     <span>Sản phẩm</span>
+     <select aria-label="Sản phẩm"
+      value={skuFilter}
+      onChange={e => {
+       setSkuFilter(e.target.value);
+       void reloadFromServer({sku: e.target.value});
+      }}
+     >
+      <option value="">Tất cả sản phẩm</option>
+      {data.filterOptions.skus.map(s => (
+       <option key={s.sku} value={s.sku}>
+        {s.name}
+       </option>
+      ))}
+     </select>
+    </label>
+
+    {!workbench&&advancedFilterFields}
+    {workbench&&<button type="button" className={`crm-sheet-tool-btn ${advancedFilters?'active':''}`} aria-expanded={advancedFilters} onClick={()=>setAdvancedFilters(!advancedFilters)}>Lọc thêm{statusFilter||fromDate||toDate?' · đang dùng':''}</button>}
     {(orgFilter || whFilter || skuFilter || statusFilter || fromDate || toDate) && (
      <button
       type="button"
@@ -700,19 +726,26 @@ export function SalesReconciliationSheet({
       Xóa bộ lọc
      </button>
     )}
-    {loading && <span className="muted">Đang tải...</span>}
+    {loading&&<span role="status" className="crm-workbench-loading">Đang cập nhật…</span>}
    </div>
+   {workbench&&advancedFilters&&<div className="crm-sheet-server-filters crm-sheet-advanced-filters">{advancedFilterFields}</div>}
+   {loadError&&<div className="crm-workbench-load-error" role="alert">{loadError}<button type="button" className="crm-sheet-tool-btn" disabled={loading} onClick={()=>void reloadFromServer()}>Thử lại</button></div>}
 
    {mode === 'orders' ? (
     <CrmSpreadsheet
+     key="reconciliation_orders"
      sheetKey="reconciliation_orders"
+     presentation={workbench?'workbench':'standard'}
+     defaultDensity={workbench?'comfortable':'compact'}
+     defaultVisibleKeys={workbench?orderMainKeys:undefined}
+     searchPlaceholder={workbench?'Tìm mã đơn, đối tác, tên hàng…':undefined}
      tabs={[
-      {key: 'orders', label: '1. Tổng hợp theo Đơn bán & Công nợ', count: data.orders.length},
-      {key: 'lines', label: '2. Bảng kê chi tiết từng dòng SKU & Chiết khấu', count: data.lineItems.length},
+      {key: 'orders', label: workbench?'Theo đơn bán':'1. Tổng hợp theo Đơn bán & Công nợ', count: data.orders.length},
+      {key: 'lines', label: workbench?'Từng mặt hàng':'2. Bảng kê chi tiết từng dòng SKU & Chiết khấu', count: data.lineItems.length},
      ]}
      activeTab={mode}
      onTabChange={k => setMode(k as 'orders' | 'lines')}
-     columns={orderColumns}
+     columns={compactOrders}
      rows={data.orders}
      getRowKey={r => r.orderId}
      renderDrawer={order => renderOrderDrawer(order)}
@@ -723,10 +756,14 @@ export function SalesReconciliationSheet({
     />
    ) : (
     <CrmSpreadsheet
+     key="reconciliation_lines"
      sheetKey="reconciliation_lines"
+     presentation={workbench?'workbench':'standard'}
+     defaultDensity={workbench?'comfortable':'compact'}
+     defaultVisibleKeys={workbench?lineMainKeys:undefined}
      tabs={[
-      {key: 'orders', label: '1. Tổng hợp theo Đơn bán & Công nợ', count: data.orders.length},
-      {key: 'lines', label: '2. Bảng kê chi tiết từng dòng SKU & Chiết khấu', count: data.lineItems.length},
+      {key: 'orders', label: workbench?'Theo đơn bán':'1. Tổng hợp theo Đơn bán & Công nợ', count: data.orders.length},
+      {key: 'lines', label: workbench?'Từng mặt hàng':'2. Bảng kê chi tiết từng dòng SKU & Chiết khấu', count: data.lineItems.length},
      ]}
      activeTab={mode}
      onTabChange={k => setMode(k as 'orders' | 'lines')}
@@ -751,10 +788,12 @@ export function InventoryMatrixSheet({
  initialData,
  basePath = '/crm',
  defaultTab = 'matrix',
+ workbench = false,
 }: {
  initialData: InventoryMatrixResult;
  basePath?: string;
  defaultTab?: 'matrix' | 'movements';
+ workbench?: boolean;
 }) {
  const [data, setData] = useState<InventoryMatrixResult>(initialData);
  const [tab, setTab] = useState<'matrix' | 'movements'>(defaultTab);
@@ -762,11 +801,13 @@ export function InventoryMatrixSheet({
  const [partnerFilter, setPartnerFilter] = useState('');
  const [fromDate, setFromDate] = useState('');
  const [toDate, setToDate] = useState('');
- const [loading, setLoading] = useState(false);
+ const [loading,setLoading]=useState(false),[loadError,setLoadError]=useState(''),[advancedFilters,setAdvancedFilters]=useState(false);
+ const pendingRequest=useRef<AbortController|null>(null);
+ useEffect(()=>()=>pendingRequest.current?.abort(),[]);
  const [focusedColKey, setFocusedColKey] = useState<string | null>(null);
 
  const reloadMatrix = async (overrides?: Record<string, string>) => {
-  setLoading(true);
+  pendingRequest.current?.abort();const controller=new AbortController();pendingRequest.current=controller;setLoading(true);setLoadError('');
   try {
    const params = new URLSearchParams();
    const nextWh = overrides?.warehouseId ?? whFilter;
@@ -777,12 +818,12 @@ export function InventoryMatrixSheet({
    if (nextPartner) params.set('partnerId', nextPartner);
    if (nextFrom) params.set('from', nextFrom);
    if (nextTo) params.set('to', nextTo);
-   const res = await fetch(`/api/crm/spreadsheet/inventory-matrix?${params.toString()}`);
-   if (res.ok) {
-    setData((await res.json()) as InventoryMatrixResult);
-   }
+   const res = await fetch(`/api/crm/spreadsheet/inventory-matrix?${params.toString()}`,{signal:controller.signal});
+   if(!res.ok)throw Error('LOAD_FAILED');
+   const next=await res.json() as InventoryMatrixResult;if(!controller.signal.aborted)setData(next);
+  }catch{if(!controller.signal.aborted)setLoadError('Chưa tải được dữ liệu theo bộ lọc. Số liệu đang hiển thị chưa được cập nhật.');
   } finally {
-   setLoading(false);
+   if(pendingRequest.current===controller)setLoading(false);
   }
  };
 
@@ -1084,10 +1125,45 @@ export function InventoryMatrixSheet({
   [basePath]
  );
 
+ const advancedFilterFields=(<>
+    <label>
+     <span>Từ ngày:</span>
+     <input
+      type="date"
+      value={fromDate}
+      onChange={e => {
+       setFromDate(e.target.value);
+       void reloadMatrix({from: e.target.value});
+      }}
+     />
+    </label>
+
+    <label>
+     <span>Đến ngày:</span>
+     <input
+      type="date"
+      value={toDate}
+      onChange={e => {
+       setToDate(e.target.value);
+       void reloadMatrix({to: e.target.value});
+      }}
+     />
+    </label>
+
+ </>);
  return (
-  <section className="crm-reconciliation-container" aria-label="Bảng tính Nhập - Xuất - Tồn dạng ma trận">
+  <section aria-busy={loading} className="crm-reconciliation-container" aria-label="Bảng tính Nhập - Xuất - Tồn dạng ma trận">
    {/* Compact KPI Strip */}
-   <div className="crm-compact-kpi-strip">
+   {workbench?<WorkbenchSummary primary={[
+    {label:'Sản phẩm',value:`${data.totals.skuCount} mặt hàng`},
+    {label:'Tồn cuối kỳ',value:`${data.totals.closingOnHand} gói`},
+    {label:'Khả dụng xuất',value:`${data.totals.availableQty} gói`,accent:true},
+    {label:'Giá trị tồn niêm yết',value:money(data.totals.retailStockValue)},
+   ]} secondary={[
+    {label:'Tồn đầu kỳ',value:`${data.totals.openingQty} gói`},
+    {label:'Nhập trong kỳ',value:`+${data.totals.receiptQty} gói`},
+    {label:'Xuất trong kỳ',value:`-${data.totals.totalOutboundQty} gói`},
+   ]}/>:(   <div className="crm-compact-kpi-strip">
     <div className="crm-compact-kpi">
      <span>Số mặt hàng SKU</span>
      <strong>{data.totals.skuCount} SKU</strong>
@@ -1117,12 +1193,13 @@ export function InventoryMatrixSheet({
      <strong>{money(data.totals.retailStockValue)}</strong>
     </div>
    </div>
+)}
 
    {/* Server Filter Bar */}
    <div className="crm-sheet-server-filters">
     <label>
-     <span>Kho:</span>
-     <select
+     <span>Kho</span>
+     <select aria-label="Kho"
       value={whFilter}
       onChange={e => {
        setWhFilter(e.target.value);
@@ -1139,8 +1216,8 @@ export function InventoryMatrixSheet({
     </label>
 
     <label>
-     <span>Đối tác nhận hàng:</span>
-     <select
+     <span>Đối tác nhận hàng</span>
+     <select aria-label="Đối tác nhận hàng"
       value={partnerFilter}
       onChange={e => {
        setPartnerFilter(e.target.value);
@@ -1156,30 +1233,8 @@ export function InventoryMatrixSheet({
      </select>
     </label>
 
-    <label>
-     <span>Từ ngày:</span>
-     <input
-      type="date"
-      value={fromDate}
-      onChange={e => {
-       setFromDate(e.target.value);
-       void reloadMatrix({from: e.target.value});
-      }}
-     />
-    </label>
-
-    <label>
-     <span>Đến ngày:</span>
-     <input
-      type="date"
-      value={toDate}
-      onChange={e => {
-       setToDate(e.target.value);
-       void reloadMatrix({to: e.target.value});
-      }}
-     />
-    </label>
-
+    {!workbench&&advancedFilterFields}
+    {workbench&&<button type="button" className={`crm-sheet-tool-btn ${advancedFilters?'active':''}`} aria-expanded={advancedFilters} onClick={()=>setAdvancedFilters(!advancedFilters)}>Lọc thêm{fromDate||toDate?' · đang dùng':''}</button>}
     {(whFilter || partnerFilter || fromDate || toDate) && (
      <button
       type="button"
@@ -1195,15 +1250,22 @@ export function InventoryMatrixSheet({
       Xóa bộ lọc
      </button>
     )}
-    {loading && <span className="muted">Đang tải...</span>}
+    {loading&&<span role="status" className="crm-workbench-loading">Đang cập nhật…</span>}
    </div>
+   {workbench&&advancedFilters&&<div className="crm-sheet-server-filters crm-sheet-advanced-filters">{advancedFilterFields}</div>}
+   {loadError&&<div className="crm-workbench-load-error" role="alert">{loadError}<button type="button" className="crm-sheet-tool-btn" disabled={loading} onClick={()=>void reloadMatrix()}>Thử lại</button></div>}
 
    {tab === 'matrix' ? (
     <CrmSpreadsheet
+     key="inventory_matrix_sheet"
      sheetKey="inventory_matrix_sheet"
+     presentation={workbench?'workbench':'standard'}
+     defaultDensity={workbench?'comfortable':'compact'}
+     defaultVisibleKeys={workbench?['productName','caseRuleLabel','openingQty','receiptQty','totalOutboundQty','closingOnHand','reservedQty','availableQty']:undefined}
+     searchPlaceholder={workbench?'Tìm theo tên sản phẩm…':undefined}
      tabs={[
-      {key: 'matrix', label: '1. Ma trận Nhập – Xuất – Tồn (Theo SKU & Cột xuất động)', count: data.rows.length},
-      {key: 'movements', label: '2. Sổ chi tiết phiếu kho & Biến động lô', count: data.movements.length},
+      {key: 'matrix', label: workbench?'Tổng hợp tồn kho':'1. Ma trận Nhập – Xuất – Tồn (Theo SKU & Cột xuất động)', count: data.rows.length},
+      {key: 'movements', label: workbench?'Sổ chứng từ':'2. Sổ chi tiết phiếu kho & Biến động lô', count: data.movements.length},
      ]}
      activeTab={tab}
      onTabChange={k => setTab(k as 'matrix' | 'movements')}
@@ -1310,10 +1372,13 @@ export function InventoryMatrixSheet({
     />
    ) : (
     <CrmSpreadsheet
+     key="inventory_movements_ledger"
      sheetKey="inventory_movements_ledger"
+     presentation={workbench?'workbench':'standard'}
+     defaultDensity={workbench?'comfortable':'compact'}
      tabs={[
-      {key: 'matrix', label: '1. Ma trận Nhập – Xuất – Tồn (Theo SKU & Cột xuất động)', count: data.rows.length},
-      {key: 'movements', label: '2. Sổ chi tiết phiếu kho & Biến động lô', count: data.movements.length},
+      {key: 'matrix', label: workbench?'Tổng hợp tồn kho':'1. Ma trận Nhập – Xuất – Tồn (Theo SKU & Cột xuất động)', count: data.rows.length},
+      {key: 'movements', label: workbench?'Sổ chứng từ':'2. Sổ chi tiết phiếu kho & Biến động lô', count: data.movements.length},
      ]}
      activeTab={tab}
      onTabChange={k => setTab(k as 'matrix' | 'movements')}
