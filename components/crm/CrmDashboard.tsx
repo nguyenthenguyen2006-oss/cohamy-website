@@ -13,9 +13,6 @@ import { CrmModuleIcon } from "./ModuleIcon";
 import { OnboardingChecklist } from "./PartnerLibraryPages";
 import { WorkHeader } from "./WorkPages";
 import { DashboardWorkbench } from "./spreadsheet/DashboardWorkbench";
-import { AccountantWorkspace } from "./AccountantWorkspace";
-import { WarehouseKeeperWorkspace } from "./WarehouseKeeperWorkspace";
-import { getAccountantWorkspaceData } from "@/lib/crm/accountant-workflow";
 
 export async function CrmDashboard({ user }: { user: Principal }) {
   if(user.area==='crm'&&(user.role==='ACCOUNTANT'||user.role==='FACTORY'||isWarehouseRole(user.role))){
@@ -23,6 +20,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
   }
   const internal = user.area === "crm";
   const modules = visibleModules(user);
+  const tasksAvailable = modules.some(module => module.id === "tasks");
 
   let pendingOrders: Awaited<ReturnType<typeof listOrders>> | null = null;
   let inProgressOrders: Awaited<ReturnType<typeof listOrders>> | null = null;
@@ -67,7 +65,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
     }
 
     try {
-      if (canManageWork(user)) {
+      if (tasksAvailable && canManageWork(user)) {
         [tasks, overdue] = await Promise.all([
           listTasks(user, { today: "true", pageSize: "20" }),
           listTasks(user, { overdue: "true", pageSize: "20" }),
@@ -152,7 +150,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
             <strong>{newOrdersCount}</strong>
             <small>(Đang xử lý: {inProgressCount} · Chốt: {readyCount})</small>
           </Link>
-          <Link
+          {tasksAvailable && <><Link
             href="/crm/tasks?overdue=true"
             className={`crm-mini-kpi-pill ${overdueCount > 0 ? "is-danger" : ""}`}
           >
@@ -162,7 +160,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
           <Link href="/crm/tasks?today=true" className="crm-mini-kpi-pill">
             <span>Hạn hôm nay:</span>
             <strong>{todayCount}</strong>
-          </Link>
+          </Link></>}
           {user.role === "ADMIN" && (
             <Link href="/crm/applications" className="crm-mini-kpi-pill">
               <span>Chờ duyệt đại lý:</span>
@@ -179,6 +177,7 @@ export async function CrmDashboard({ user }: { user: Principal }) {
         pendingOrders={pendingOrders?.items ?? []}
         tasks={tasks}
         overdueTasks={overdue}
+        showTasks={tasksAvailable}
       />
     </div>
   );

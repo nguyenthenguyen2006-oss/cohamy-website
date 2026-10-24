@@ -38,9 +38,6 @@ import {mfaStatus} from '@/lib/crm/account-security';
 import { CrmHubPage } from "./CrmHubPage";
 import {InternalDocumentsPage} from "./InternalDocumentsPage";
 import {PortalNetworkPage,PeriodSalesPage,KpiPage,PortalOrderCatalogPage} from "./ChannelPages";
-import {AccountantWorkspace} from "./AccountantWorkspace";
-import {WarehouseKeeperWorkspace, type WarehouseKeeperTab} from "./WarehouseKeeperWorkspace";
-import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
 import {HistoricalOrdersPage} from "./HistoricalOrdersPage";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
@@ -123,7 +120,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
     const href=(next:number)=>`${root}?${new URLSearchParams({q,tags,page:String(next)})}`;
     return <><Header title={`Quản lý ${kind==="CUSTOMER"?"khách hàng":"đại lý"}`} description={`Tổng số: ${collection.total} hồ sơ trong phạm vi quyền.`}/>
       <form className="table-toolbar" method="get" key={q+"|"+tags}><div className="field"><label htmlFor="partner-search">Tên, mã, điện thoại hoặc email</label><input id="partner-search" name="q" defaultValue={q} maxLength={120}/></div><details className="work-disclosure"><summary>Lọc theo tổ hợp nhãn</summary><fieldset className="upgrade-columns"><legend>Hồ sơ phải có đủ các nhãn đã chọn</legend>{tagChoices.map(t=><label key={t.id}><input type="checkbox" name="tags" value={t.id} defaultChecked={tags.split(',').includes(t.id)}/>{t.name}</label>)}</fieldset></details><button className="button button--primary">Tìm kiếm</button>{can(user,"partners.write")&&<Link className="button button--secondary" href={`${root}/new`}>Thêm mới</Link>}</form>
-      <AdvancedColumns key={String(pref.version)} initial={pref}/><SaveFilterForm kind={kind} q={q} tags={tags}/><Link className="work-back" href={root+'?filter=none'}>Bỏ bộ lọc</Link><details className="work-disclosure"><summary>Xuất danh sách đang lọc</summary><ExportForm q={q} kind={kind} tags={tags}/></details>{!collection.items.length?<Empty>Không có hồ sơ phù hợp. Hệ thống không tạo dữ liệu kinh doanh mẫu.</Empty>:<><PartnerTable items={collection.items} root={root} columns={pref.columns} widths={pref.columnWidths} canWrite={can(user,'partners.write')} totalCount={collection.total}/>{can(user,'partners.write')&&<BulkPartnerForm items={collection.items}/>}</>}
+      <AdvancedColumns key={String(pref.version)} initial={pref}/><SaveFilterForm kind={kind} q={q} tags={tags}/><Link className="work-back" href={root+'?filter=none'}>Bỏ bộ lọc</Link>{!isRemovedCrmModule(area,'data')&&<details className="work-disclosure"><summary>Xuất danh sách đang lọc</summary><ExportForm q={q} kind={kind} tags={tags}/></details>}{!collection.items.length?<Empty>Không có hồ sơ phù hợp. Hệ thống không tạo dữ liệu kinh doanh mẫu.</Empty>:<><PartnerTable items={collection.items} root={root} columns={pref.columns} widths={pref.columnWidths} canWrite={can(user,'partners.write')} totalCount={collection.total}/>{can(user,'partners.write')&&<BulkPartnerForm items={collection.items}/>}</>}
       <footer className="table-footer"><span>Trang {collection.page} · {collection.total} hồ sơ</span><nav aria-label="Phân trang">{page>1&&<Link className="button button--secondary" href={href(page-1)}>Trang trước</Link>}{page*20<collection.total&&<Link className="button button--secondary" href={href(page+1)}>Trang sau</Link>}</nav></footer></>;
   }
   if(slug==="goods"&&!id) {

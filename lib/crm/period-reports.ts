@@ -1,3 +1,4 @@
+import {assertModuleAvailable} from '@/lib/crm/module-availability';
 import 'server-only';
 import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
@@ -45,7 +46,7 @@ const localMonth=(iso:string)=>new Date(new Date(iso).getTime()+7*3600000).toISO
 
 const reportSchema=z.object({periodType:z.enum(['MONTH','QUARTER','YEAR']).default('MONTH'),periodKey:periodKeySchema.optional(),view:z.enum(['DIRECT','NETWORK','PURCHASES','SALES']).optional()}).strict();
 export type PeriodView='DIRECT'|'NETWORK'|'PURCHASES'|'SALES';
-export async function periodSalesReport(user:Principal,input:unknown){
+export async function periodSalesReport(user:Principal,input:unknown){assertModuleAvailable(user,'period-sales');
  const d=parse(reportSchema,input);
  if(user.area==='crm'&&!['ADMIN','MANAGER','ACCOUNTANT','SALES'].includes(user.role))throw new CrmError('FORBIDDEN',403);
  if(user.area==='portal'&&user.role!=='DEALER_OWNER')throw new CrmError('FORBIDDEN',403);
@@ -98,7 +99,7 @@ const programSchema=z.object({id:z.uuid().optional(),version:z.number().int().mi
  .superRefine((d,c)=>{const issue=(m:string)=>c.addIssue({code:'custom',message:m});if(fixed(d.target)<=0n)issue('Target must be positive');if(d.metric==='QUANTITY'&&!d.sku)issue('Quantity needs SKU');if(d.audience!=='ALL'&&!d.audienceRef)issue('Audience needs reference');if(d.rewardType==='UPGRADE_LEVEL'&&!d.rewardLevelId)issue('Level required');if(d.rewardType==='DISCOUNT_PERCENT'&&d.rewardPercent===null)issue('Percent required');if(d.rewardType==='GIFT_AMOUNT'&&!d.rewardAmount)issue('Amount required');});
 export interface IncentiveProgram {id:string;name:string;description:string;period_type:PeriodType;period_key:string;metric:'REVENUE'|'QUANTITY';target:string;sku:string|null;audience:'ALL'|'SHAREHOLDER_BRANCH'|'LEVEL';audience_ref:string|null;reward_type:'UPGRADE_LEVEL'|'DISCOUNT_PERCENT'|'GIFT_AMOUNT';reward_level_id:string|null;reward_percent_bp:number|null;reward_amount:string|null;status:'DRAFT'|'ACTIVE'|'CLOSED';version:number;created_at:string}
 const programColumns='id,name,description,period_type,period_key,metric,target::text,sku,audience,audience_ref,reward_type,reward_level_id,reward_percent_bp,reward_amount::text,status,version,created_at';
-export async function saveIncentiveProgram(user:Principal,input:unknown){
+export async function saveIncentiveProgram(user:Principal,input:unknown){assertModuleAvailable(user,'kpi');
  manager(user);const d=parse(programSchema,input);if(Boolean(d.id)!==(d.version>0))throw new CrmError('INVALID_FIELDS',400);periodRange(d.periodType,d.periodKey);
  return(await database()).transaction(async tx=>{await assertCurrentPrincipal(tx,user);
   if(d.sku&&!(await tx.query('SELECT 1 FROM cohamy_crm.products WHERE sku=$1',[d.sku])).rows.length)throw new CrmError('SKU_UNCONFIGURED',404);
@@ -123,7 +124,7 @@ async function achievements(sql:Sql,program:IncentiveProgram,organizationIds:str
  for(const f of facts){const v=program.metric==='REVENUE'?fixed(f.total.toString()):f.lines.filter(l=>l.sku===program.sku).reduce((s,l)=>s+l.baseQuantity,0n);achieved.set(f.buyerId,(achieved.get(f.buyerId)??0n)+v);}
  return achieved;
 }
-export async function listIncentivePrograms(user:Principal){
+export async function listIncentivePrograms(user:Principal){assertModuleAvailable(user,'kpi');
  const db=await database();
  if(user.area==='crm'){if(!['ADMIN','MANAGER','ACCOUNTANT','SALES'].includes(user.role))throw new CrmError('FORBIDDEN',403);return {programs:(await db.query<IncentiveProgram>(`SELECT ${programColumns} FROM cohamy_crm.incentive_programs ORDER BY (status='ACTIVE') DESC,created_at DESC LIMIT 200`)).rows,own:[] as {programId:string;achieved:string;reached:boolean;awarded:boolean}[]};}
  if(user.role!=='DEALER_OWNER')throw new CrmError('FORBIDDEN',403);
@@ -132,7 +133,7 @@ export async function listIncentivePrograms(user:Principal){
  for(const p of programs){if(!(await eligiblePartners(db,p)).some(r=>r.id===user.organizationId))continue;visible.push(p);const a=(await achievements(db,p,[user.organizationId])).get(user.organizationId)??0n;const awarded=(await db.query('SELECT 1 FROM cohamy_crm.incentive_awards WHERE program_id=$1 AND organization_id=$2',[p.id,user.organizationId])).rows.length>0;own.push({programId:p.id,achieved:fixedText(a),reached:a>=fixed(p.target),awarded});}
  return {programs:visible,own};
 }
-export async function incentiveProgress(user:Principal,programId:string){
+export async function incentiveProgress(user:Principal,programId:string){assertModuleAvailable(user,'kpi');
  manager(user);parse(z.uuid(),programId);const db=await database();
  const program=(await db.query<IncentiveProgram>(`SELECT ${programColumns} FROM cohamy_crm.incentive_programs WHERE id=$1`,[programId])).rows[0];if(!program)throw new CrmError('NOT_FOUND',404);
  const partners=await eligiblePartners(db,program),achieved=await achievements(db,program,partners.map(p=>p.id)),target=fixed(program.target);
@@ -140,7 +141,7 @@ export async function incentiveProgress(user:Principal,programId:string){
  const rows=partners.map(p=>{const a=achieved.get(p.id)??0n;return {organizationId:p.id,name:p.name,code:p.code,achieved:fixedText(a),percent:Number(a*10000n/target)/100,reached:a>=target,awardedAt:awards.get(p.id)??null};}).sort((x,y)=>y.percent-x.percent);
  return {program,rows};
 }
-export async function awardIncentive(user:Principal,input:unknown){
+export async function awardIncentive(user:Principal,input:unknown){assertModuleAvailable(user,'kpi');
  manager(user);const d=parse(z.object({programId:z.uuid(),organizationId:z.uuid(),reason,idempotencyKey:z.uuid().optional()}).strict(),input);
  return(await database()).transaction(async tx=>{await assertCurrentPrincipal(tx,user);
   const program=(await tx.query<IncentiveProgram>(`SELECT ${programColumns} FROM cohamy_crm.incentive_programs WHERE id=$1 FOR UPDATE`,[d.programId])).rows[0];if(!program)throw new CrmError('NOT_FOUND',404);

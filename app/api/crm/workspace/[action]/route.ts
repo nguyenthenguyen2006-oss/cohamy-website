@@ -5,7 +5,7 @@ import {z} from 'zod';
 import {cookies} from 'next/headers';
 import {SESSION_COOKIE} from '@/lib/crm/auth';
 type Context={params:Promise<{action:string}>};
-export async function GET(request:Request,context:Context){try{const user=await apiUser(),{action}=await context.params,q=Object.fromEntries(new URL(request.url).searchParams);
+export async function GET(request:Request,context:Context){try{const {action}=await context.params,user=await apiUser(action==='search'?'search':['notifications','notification-read'].includes(action)?'notifications':undefined),q=Object.fromEntries(new URL(request.url).searchParams);
  if(action==='search')return json(await w.search(user,q.q??'',Math.max(1,Math.min(10000,Number(q.page)||1))));
  if(action==='preferences')return json(await w.preferences(user));
  if(action==='draft')return json(await w.getDraft(user,q.key??''));
@@ -17,7 +17,7 @@ export async function GET(request:Request,context:Context){try{const user=await 
  if(action==='documents')return json(await w.documents(user,q.entityType,q.entityId,q.q));
  throw new CrmError('NOT_FOUND',404);
 }catch(e){return apiError(e);}}
-export async function POST(request:Request,context:Context){try{sameOrigin(request);const user=await apiUser(),{action}=await context.params,input=await readJson(request);
+export async function POST(request:Request,context:Context){try{sameOrigin(request);const {action}=await context.params,user=await apiUser(action==='search'?'search':['notifications','notification-read'].includes(action)?'notifications':undefined),input=await readJson(request);
  if(action==='preferences')return json(await w.savePreferences(user,input));
  if(action==='draft')return json(await w.saveDraft(user,input));
  if(action==='filter')return json(await w.saveFilter(user,input));

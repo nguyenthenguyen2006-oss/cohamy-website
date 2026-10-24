@@ -26,12 +26,14 @@ export function DashboardWorkbench({
  pendingOrders,
  tasks,
  overdueTasks,
+ showTasks = true,
 }: {
  reconciliation: SalesReconciliationResult | null;
  inventoryMatrix: InventoryMatrixResult | null;
  pendingOrders: OrderRecord[];
  tasks: TaskRecord[];
  overdueTasks: TaskRecord[];
+ showTasks?: boolean;
 }) {
  const defaultSheet =
   reconciliation && reconciliation.orders.length > 0
@@ -216,7 +218,7 @@ export function DashboardWorkbench({
      className={`crm-sheet-tab ${activeSheet === 'queues' ? 'active' : ''}`}
      onClick={() => setActiveSheet('queues')}
     >
-     <span>⚡ Sheet 3: Hàng đợi Yêu cầu Website & Việc cần xử lý</span>
+      <span>{showTasks ? '⚡ Sheet 3: Hàng đợi Yêu cầu Website & Việc cần xử lý' : '⚡ Sheet 3: Yêu cầu Website'}</span>
      <span className="crm-sheet-tab-badge tone-default">{pendingOrders.length + allTasks.length} mục</span>
     </button>
    </div>
@@ -278,7 +280,7 @@ export function DashboardWorkbench({
       }
      />
 
-     <CrmSpreadsheet
+     {showTasks&&<CrmSpreadsheet
       sheetKey="dashboard_tasks_queue"
       title="Việc Quá Hạn & Đến Hạn Hôm Nay"
       columns={taskCols}
@@ -289,7 +291,7 @@ export function DashboardWorkbench({
         Mở bảng Công việc →
        </Link>
       }
-     />
+     />}
     </div>
    )}
   </div>

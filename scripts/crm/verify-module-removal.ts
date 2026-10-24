@@ -46,7 +46,7 @@ async function main() {
       await saveCareRule(user, { version: 0, name: "LOCAL QA retired rule", eventAction: "partner.created", title: "LOCAL QA retired task", kind: "GENERAL", assigneeId: user.membershipId, dueMinutes: 1, enabled: true });
       await createOrganization(user, { code: "QA_RETIRED_RULE", name: "LOCAL QA trigger", kind: "CUSTOMER" });
       await saveSlaPolicy(user, { version: 0, name: "LOCAL QA retired SLA", kind: "GENERAL", delayMinutes: 0, recipientId: user.membershipId, enabled: true });
-      await createTask(user, { entityType: "partner", entityId: ids.dealerA, title: "LOCAL QA manual overdue", assigneeId: user.membershipId, dueAt: new Date(Date.now() - 3600000).toISOString(), kind: "GENERAL" });
+      await assert.rejects(createTask(user, { entityType: "partner", entityId: ids.dealerA, title: "LOCAL QA manual overdue", assigneeId: user.membershipId, dueAt: new Date(Date.now() - 3600000).toISOString(), kind: "GENERAL" }), e => (e as { status: number }).status === 404);
       const counts = async () => (await db.query("SELECT (SELECT count(*) FROM cohamy_crm.tasks) AS tasks,(SELECT count(*) FROM cohamy_crm.care_schedule_runs) AS schedules,(SELECT count(*) FROM cohamy_crm.care_rule_runs) AS rules,(SELECT count(*) FROM cohamy_crm.care_escalations) AS escalations")).rows[0];
       const before = await counts();
       assert.equal(await runCareAutomation(), 0); assert.deepEqual(await counts(), before);
@@ -126,9 +126,10 @@ async function main() {
         await context.close();
       }
     });
-    await check("Remaining CRM orders, inventory, work, pricing and reports stay available", async () => {
-      for (const route of ["requests", "inventory", "tasks", "pricing", "period-sales", "kpi", "hub/dealers", "hub/tasks"]) assert.equal((await adminContext.request.get(base + "/crm/" + route)).status(), 200, route);
-      for (const route of ["channel/report", "channel/catalog?organizationId=" + ids.dealerA]) assert.equal((await adminContext.request.get(base + "/api/crm/" + route)).status(), 200, route);
+    await check("Remaining CRM orders, inventory, pricing and dealer directory stay available", async () => {
+      for (const route of ["requests", "inventory", "pricing", "hub/dealers"]) assert.equal((await adminContext.request.get(base + "/crm/" + route)).status(), 200, route);
+      assert.equal((await adminContext.request.get(base + "/api/crm/channel/report")).status(), 404);
+      for (const route of ["channel/catalog?organizationId=" + ids.dealerA]) assert.equal((await adminContext.request.get(base + "/api/crm/" + route)).status(), 200, route);
     });
     await check("Shared Portal pages and APIs still work for a dealer", async () => {
       const context = await browser!.newContext(); await signIn(context, "a@crm-qa.invalid");

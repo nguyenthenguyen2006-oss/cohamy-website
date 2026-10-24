@@ -3,6 +3,7 @@ import {Plus} from '@phosphor-icons/react';
 import {usePathname,useRouter} from 'next/navigation';
 import {useRef,useState} from 'react';
 import {can} from '@/lib/crm/permissions';
+import {isRemovedCrmModule} from '@/lib/crm/module-availability';
 import type {Principal} from '@/lib/crm/types';
 import {send} from './UpgradeForms';
 export function QuickCreate({user}:{user:Principal}){
@@ -33,7 +34,7 @@ export function QuickCreate({user}:{user:Principal}){
           <button className="button button--secondary" disabled={busy} onClick={()=>{setIsOpen(false);dialog.current?.close();}} type="button">Đóng</button>
           <h2 id="quick-create-title">Tạo nhanh</h2>
           <form className="work-form" onSubmit={async e=>{e.preventDefault();if(busy)return;setBusy(true);setError('');setSuccess('');const form=e.currentTarget,fd=new FormData(form);try{if(mode==='partner')await send('/api/crm/partners',{code:fd.get('code'),name:fd.get('name'),kind:fd.get('kind'),phone:fd.get('phone'),email:fd.get('email')});else if(mode==='note')await send('/api/crm/work/activity',{entityType,entityId,body:fd.get('body')});else await send('/api/crm/work/task',{entityType,entityId,title:fd.get('title'),assigneeId:user.membershipId,dueAt:new Date(String(fd.get('dueAt'))).toISOString()});setSuccess('Đã lưu. Bạn vẫn ở màn làm việc hiện tại.');form.reset();router.refresh();}catch(err){setError((err as Error).message);}finally{setBusy(false);}}}>
-            <label>Thao tác<select aria-label="Thao tác" value={mode} onChange={e=>{setMode(e.target.value);setError('');setSuccess('');}}><option value="partner">Thêm khách / đại lý</option>{context&&<><option value="note">Ghi chú trên hồ sơ đang xem</option><option value="task">Việc trên hồ sơ đang xem</option></>}</select></label>
+            <label>Thao tác<select aria-label="Thao tác" value={mode} onChange={e=>{setMode(e.target.value);setError('');setSuccess('');}}><option value="partner">Thêm khách / đại lý</option>{context&&<><option value="note">Ghi chú trên hồ sơ đang xem</option>{!isRemovedCrmModule(user.area,'tasks')&&<option value="task">Việc trên hồ sơ đang xem</option>}</>}</select></label>
             {mode==='partner'?<div className="work-fields"><label>Mã hồ sơ<input name="code" required minLength={2} maxLength={40} pattern="[A-Za-z0-9_-]+"/></label><label>Tên hồ sơ<input name="name" required minLength={2} maxLength={200}/></label><label>Loại hồ sơ<select aria-label="Loại hồ sơ" name="kind"><option value="CUSTOMER">Khách hàng</option><option value="DEALER">Đại lý</option></select></label><label>Điện thoại<input name="phone" maxLength={40}/></label><label>Email<input name="email" type="email"/></label></div>:mode==='note'?<label>Nội dung ghi chú<textarea name="body" required maxLength={4000}/></label>:<div className="work-fields"><label>Việc cần làm<input name="title" required minLength={2} maxLength={240}/></label><label>Hẹn hoàn thành<input name="dueAt" type="datetime-local" required/></label></div>}
             <button className="button button--primary" disabled={busy}>{busy?'Đang lưu…':'Lưu tạo nhanh'}</button>
             {error&&<p role="alert" className="form-error">{error}</p>}

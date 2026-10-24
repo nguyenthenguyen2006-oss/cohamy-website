@@ -1,4 +1,5 @@
 import { can, isWarehouseRole } from "./permissions";
+import { isRemovedCrmModule } from "./module-availability";
 import type { Principal } from "./types";
 export type ModuleIcon =
   | "customer"
@@ -107,10 +108,11 @@ const dealer: CrmModule[] = [
   { id: "profile", label: "Tài khoản", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "profile.read", status: "CONNECTED" },
 ];
 export const visibleModules = (user: Principal) => {
-  if (user.area === "crm" && user.role === "ACCOUNTANT") return accountantModules;
-  if (user.area === "crm" && user.role === "FACTORY") return factoryModules;
-  if (user.area === "crm" && isWarehouseRole(user.role)) return warehouseKeeperModules;
-  return (user.area === "crm" ? internal : dealer).filter(module => can(user, module.permission));
+  const modules = user.area !== "crm" ? dealer
+    : user.role === "ACCOUNTANT" ? accountantModules
+    : user.role === "FACTORY" ? factoryModules
+    : isWarehouseRole(user.role) ? warehouseKeeperModules : internal;
+  return modules.filter(module => !isRemovedCrmModule(user.area, module.id) && can(user, module.permission));
 };
 
 export interface CrmHub {

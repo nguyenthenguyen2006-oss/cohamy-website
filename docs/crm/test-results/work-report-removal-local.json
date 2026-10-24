@@ -1,0 +1,48 @@
+{
+  "environment": "LOCAL",
+  "testedAt": "2026-10-24T21:10:42.565Z",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "All internal roles lose the seven modules and both empty navigation groups",
+      "status": "PASS"
+    },
+    {
+      "name": "Retired workers do not process historical jobs or send scheduled reports",
+      "status": "PASS"
+    },
+    {
+      "name": "Dealer Portal keeps its search, notifications and period-sales modules",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop and mobile omit removed navigation, header links and dashboard task panels",
+      "status": "PASS"
+    },
+    {
+      "name": "Direct, create, detail and hub URLs return 404 to the administrator",
+      "status": "PASS"
+    },
+    {
+      "name": "Removed read, write, task dependency and download APIs all return 404",
+      "status": "PASS"
+    },
+    {
+      "name": "Orders, stock, finance, documents, audit and profile remain accessible",
+      "status": "PASS"
+    },
+    {
+      "name": "Partner details and quick-create no longer offer tasks or general export",
+      "status": "PASS"
+    },
+    {
+      "name": "Warehouse, accountant and factory routes cannot restore removed features",
+      "status": "PASS"
+    },
+    {
+      "name": "Dealer Portal pages and shared APIs remain available",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": []
+}

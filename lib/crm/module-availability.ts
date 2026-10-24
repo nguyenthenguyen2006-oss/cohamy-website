@@ -11,6 +11,14 @@ const removedCrmModules: ReadonlySet<string> = new Set([
   "procurement",
   "invitations",
   "network",
+  "notifications",
+  "warehouse-notifications",
+  "tasks",
+  "data",
+  "search",
+  "period-sales",
+  "kpi",
+  "reports",
 ]);
 
 export function isRemovedCrmModule(area: Area, moduleId: string): boolean {
