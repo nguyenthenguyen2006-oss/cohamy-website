@@ -1,0 +1,36 @@
+{
+  "environment": "LOCAL isolated PGlite and Microsoft Edge, synthetic records",
+  "testedAt": "2026-10-24T20:03:29.545Z",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Anonymous archive and source-image requests require authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "Administrator sees structured historical invoices and mobile layout contains table scrolling",
+      "status": "PASS"
+    },
+    {
+      "name": "Detail displays source lines, original rounded VAT and a real private image; downloads preserve bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Accountant, HCM warehouse and explicitly assigned generic warehouse can read; HN cannot read South records",
+      "status": "PASS"
+    },
+    {
+      "name": "Sales, factory and dealer roles cannot access archive APIs or a direct source URL",
+      "status": "PASS"
+    },
+    {
+      "name": "Archive has no public mutation endpoint; retired modules remain removed",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "screens": [
+    "docs/crm/test-results/screenshots/historical-orders-1440.png",
+    "docs/crm/test-results/screenshots/historical-orders-390.png"
+  ]
+}

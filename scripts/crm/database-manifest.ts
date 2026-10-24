@@ -23,6 +23,10 @@ export async function databaseManifest(sql:Sql):Promise<DatabaseManifest>{
   const invalid=(await sql.query<{count:string}>("SELECT count(*)::text AS count FROM cohamy_crm.internal_documents WHERE octet_length(content)<>size OR checksum<>encode(sha256(content),'hex')")).rows[0].count;
   result.fileIntegrityErrors=String(Number(result.fileIntegrityErrors)+Number(invalid));
  }
+ if(names.has('historical_order_invoices')){
+  const invalid=(await sql.query<{count:string}>("SELECT count(*)::text AS count FROM cohamy_crm.historical_order_invoices WHERE octet_length(source_content)<>source_size OR source_checksum<>encode(sha256(source_content),'hex')")).rows[0].count;
+  result.fileIntegrityErrors=String(Number(result.fileIntegrityErrors)+Number(invalid));
+ }
  if(result.fileIntegrityErrors!=='0'||result.documentSourceErrors!=='0')throw new Error('DATABASE_SOURCE_OR_FILE_INTEGRITY_FAILED');
  return result;
 }

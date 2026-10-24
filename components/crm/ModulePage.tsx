@@ -41,6 +41,7 @@ import {PortalNetworkPage,PeriodSalesPage,KpiPage,PortalOrderCatalogPage} from "
 import {AccountantWorkspace} from "./AccountantWorkspace";
 import {WarehouseKeeperWorkspace, type WarehouseKeeperTab} from "./WarehouseKeeperWorkspace";
 import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
+import {HistoricalOrdersPage} from "./HistoricalOrdersPage";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
 function Header({title,description}:{title:string;description:string}) {return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
@@ -49,6 +50,10 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   const user=await pageUser(area);const [slug,id]=segments;
   if(isRemovedCrmModule(area,slug))notFound();
   if(segments.length>2)notFound();
+  if(slug==='historical-orders'){
+    if(area!=='crm'||!can(user,'historical-orders.read'))notFound();
+    return <HistoricalOrdersPage user={user} id={id} query={query}/>;
+  }
   if(slug==='internal-documents'){
     if(area!=='crm'||!can(user,'internal-documents.access'))notFound();
     return <InternalDocumentsPage user={user} id={id} query={query}/>;

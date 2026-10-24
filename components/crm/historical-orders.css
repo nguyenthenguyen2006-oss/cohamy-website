@@ -1,0 +1,6 @@
+.historical-orders-page { min-width: 0; }
+.historical-orders-page .crm-table-wrap { max-width: 100%; overflow: auto; }
+.historical-orders-page .data-table { min-width: 780px; }
+.historical-orders-page .historical-orders-table { min-width: 1150px; }
+.historical-invoice-image { display: block; max-width: 100%; height: auto; margin: 20px auto 0; border: 1px solid #e8d8bf; }
+.historical-totals { margin-top: 20px; }
