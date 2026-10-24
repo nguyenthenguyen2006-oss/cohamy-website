@@ -1,0 +1,59 @@
+{
+  "environment": "STAGING",
+  "status": "PASS",
+  "testedAt": "2026-10-24T22:22:25.425Z",
+  "cases": [
+    {
+      "name": "HCM has four real paid historical sales, exact source amounts and 663 fulfilled units",
+      "status": "PASS"
+    },
+    {
+      "name": "All immutable original invoices and checksums remain intact",
+      "status": "PASS"
+    },
+    {
+      "name": "HCM receipts 3211 minus sales 663 and known transfer 84 reconcile to 2464 per mapped product",
+      "status": "PASS"
+    },
+    {
+      "name": "HN receives exactly 84 known units and all eight unidentified gifts remain explicitly pending",
+      "status": "PASS"
+    },
+    {
+      "name": "September and October roll forwards use source document dates, preserving actual movement recording time",
+      "status": "PASS"
+    },
+    {
+      "name": "Exactly one completed import audit and no invented lot dates",
+      "status": "PASS"
+    },
+    {
+      "name": "Existing warehouse role scope applies to the imported sales",
+      "status": "PASS"
+    }
+  ],
+  "totals": {
+    "receipt": 3211,
+    "sales": 663,
+    "salesAmount": 31163000,
+    "knownTransfer": 84,
+    "unclassifiedTransfer": 8,
+    "hcmKnownClosing": 2464,
+    "hnKnownClosing": 184
+  },
+  "historicalDataGaps": [
+    {
+      "name": "Socola hạnh nhân dâu tây",
+      "asOf": "2026-10-05",
+      "quantity": "-11",
+      "note": "Supplied source receipts and dispatch dates imply missing earlier stock or a source date to reconcile; no invented opening adjustment was posted."
+    },
+    {
+      "name": "Socola hạnh nhân matcha",
+      "asOf": "2026-10-05",
+      "quantity": "-11",
+      "note": "Supplied source receipts and dispatch dates imply missing earlier stock or a source date to reconcile; no invented opening adjustment was posted."
+    }
+  ],
+  "scope": "Read only against native services; no provider calls, outbound messages, new cash receipts or source edits."
+}

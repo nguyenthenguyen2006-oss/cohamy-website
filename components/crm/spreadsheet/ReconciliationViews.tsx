@@ -1153,6 +1153,7 @@ export function InventoryMatrixSheet({
  </>);
  return (
   <section aria-busy={loading} className="crm-reconciliation-container" aria-label="Bảng tính Nhập - Xuất - Tồn dạng ma trận">
+   {data.pendingUnclassifiedTransfers?.map(transfer=><p className="work-help" key={transfer.id}><strong>{transfer.quantity} gói tặng chưa biết sản phẩm</strong> · {transfer.sourceCode} → {transfer.destinationCode} ({transfer.code}). Đang chờ xác định loại hàng; chưa cộng/trừ vào tồn từng sản phẩm.</p>)}
    {/* Compact KPI Strip */}
    {workbench?<WorkbenchSummary primary={[
     {label:'Sản phẩm',value:`${data.totals.skuCount} mặt hàng`},

@@ -541,6 +541,7 @@ export interface MatrixProductRow {
 }
 
 export interface InventoryMatrixResult {
+ pendingUnclassifiedTransfers?:{id:string;code:string;sourceCode:string;destinationCode:string;quantity:number}[];
  rows:MatrixProductRow[];
  dynamicColumns:MatrixColumnDef[];
  movements:MatrixMovementItem[];
@@ -579,6 +580,15 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
  const allowedWhIds=warehouses.map(w=>w.id);
  const selectedWhId=query.warehouseId&&allowedWhIds.includes(query.warehouseId)?query.warehouseId:null;
  const targetWhIds=selectedWhId?[selectedWhId]:allowedWhIds;
+ const pendingUnclassifiedTransfers=targetWhIds.length?(await db.query<{id:string;code:string;sourceCode:string;destinationCode:string;quantity:number}>(`
+  SELECT t.id,t.code,sw.code AS "sourceCode",dw.code AS "destinationCode",
+   (SELECT coalesce(sum((line->>'quantity')::integer),0)::integer FROM jsonb_array_elements(coalesce(t.snapshot->'unclassifiedLines','[]'::jsonb)) line) AS quantity
+  FROM cohamy_crm.inventory_transfers t
+  JOIN cohamy_crm.warehouses sw ON sw.id=t.source_warehouse_id
+  JOIN cohamy_crm.warehouses dw ON dw.id=t.destination_warehouse_id
+  WHERE (t.source_warehouse_id=ANY($1::uuid[]) OR t.destination_warehouse_id=ANY($1::uuid[]))
+   AND t.status IN('IN_TRANSIT','PARTIAL') AND jsonb_array_length(coalesce(t.snapshot->'unclassifiedLines','[]'::jsonb))>0
+  ORDER BY t.created_at,t.id`,[targetWhIds])).rows:[];
 
  const fromDate=query.from&&z.iso.date().safeParse(query.from).success?query.from:null;
  const toDate=query.to&&z.iso.date().safeParse(query.to).success?query.to:null;
@@ -673,7 +683,7 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
    d.organization_id AS doc_org_id,
    doc_org.name AS doc_org_name,
    d.reason,
-   m.created_at::text AS created_at
+   d.created_at::text AS created_at
   FROM cohamy_crm.inventory_movements m
   JOIN cohamy_crm.inventory_documents d ON d.id = m.document_id
   JOIN cohamy_crm.warehouses w ON w.id = m.warehouse_id
@@ -684,7 +694,7 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
   LEFT JOIN cohamy_crm.organizations so_org ON so_org.id = so.organization_id
   LEFT JOIN cohamy_crm.organizations doc_org ON doc_org.id = d.organization_id
   WHERE m.warehouse_id = ANY($1::uuid[])
-  ORDER BY m.created_at ASC, m.id ASC
+  ORDER BY d.created_at ASC, m.created_at ASC, m.id ASC
  `,[targetWhIds])).rows:[];
 
  const partnerOptionsMap=new Map<string,string>();
@@ -864,6 +874,7 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
  }
 
  return {
+  pendingUnclassifiedTransfers,
   rows,
   dynamicColumns,
   movements:[...movementsInPeriod].reverse(),

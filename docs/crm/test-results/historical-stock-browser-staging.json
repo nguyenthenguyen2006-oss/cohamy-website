@@ -1,0 +1,15 @@
+{
+  "environment": "STAGING native PostgreSQL restored from production; real Edge over loopback SSH forwarding",
+  "status": "PASS",
+  "cases": [
+    "HCM warehouse filter exposes four paid source sales with exact totals",
+    "Actual staging stock and eight unresolved gifts remain visible on desktop and phone",
+    "Transfer stays partial and cannot be closed while product identity is unresolved",
+    "Native historical sales detail renders with its frozen source snapshot"
+  ],
+  "errors": [],
+  "writes": [],
+  "rollbackTest": "PASS: forced late SQL failure rolled back receipts, orders, movements, receivables and audit records",
+  "idempotencyTest": "PASS: repeat import returned ALREADY_APPLIED",
+  "build": "PASS: production build, TypeScript, ESLint and build trace isolation"
+}
