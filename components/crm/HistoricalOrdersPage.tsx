@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import {CrmNavLink as Link} from './CrmNavLink';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { historicalInvoice, listHistoricalInvoices } from '@/lib/crm/historical-orders';

@@ -9,7 +9,7 @@ import {CareReportPanel} from './RelationshipPages';
 import {DraftNoteForm,RecordActions} from './WorkspaceControls';
 import {getDraft} from '@/lib/crm/workspace';
 import {DocumentsPanel} from './UpgradePages';
-import Link from 'next/link';
+import {CrmNavLink as Link} from './CrmNavLink';
 import {notFound} from 'next/navigation';
 import {assignments,canManageWork,getOrder,listActivities,listOrders,listTasks,staffOptions,duplicatePartners,entityAudit,getCatalogItem,workReport} from '@/lib/crm/work';
 import {CrmError} from '@/lib/crm/permissions';

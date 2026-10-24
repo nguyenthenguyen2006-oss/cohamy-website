@@ -1,6 +1,6 @@
 import {DocumentFlowWorkspace} from './DocumentFlowWorkspace';
 import {flowWorkspace} from '@/lib/crm/document-flow';
-import Link from "next/link";
+import {CrmNavLink as Link} from './CrmNavLink';
 import { SquaresFour } from "@phosphor-icons/react/dist/ssr";
 import { visibleModules } from "@/lib/crm/modules";
 import { reviewQueue } from "@/lib/crm/onboarding";
@@ -13,9 +13,6 @@ import { CrmModuleIcon } from "./ModuleIcon";
 import { OnboardingChecklist } from "./PartnerLibraryPages";
 import { WorkHeader } from "./WorkPages";
 import { DashboardWorkbench } from "./spreadsheet/DashboardWorkbench";
-import { AccountantWorkspace } from "./AccountantWorkspace";
-import { WarehouseKeeperWorkspace } from "./WarehouseKeeperWorkspace";
-import { getAccountantWorkspaceData } from "@/lib/crm/accountant-workflow";
 
 export async function CrmDashboard({ user }: { user: Principal }) {
   if(user.area==='crm'&&(user.role==='ACCOUNTANT'||user.role==='FACTORY'||isWarehouseRole(user.role))){
@@ -34,49 +31,16 @@ export async function CrmDashboard({ user }: { user: Principal }) {
   let matrixData: Awaited<ReturnType<typeof inventoryMatrix>> | null = null;
 
   if (internal) {
-    try {
-      if (can(user, "orders.read")) {
-        [pendingOrders, inProgressOrders, readyOrders, reconciliationData] = await Promise.all([
-          listOrders(user, { status: "PENDING_REVIEW" }),
-          listOrders(user, { status: "IN_PROGRESS" }),
-          listOrders(user, { status: "READY" }),
-          salesReconciliation(user),
-        ]);
-      }
-    } catch {
-      pendingOrders = null;
-      inProgressOrders = null;
-      readyOrders = null;
-      reconciliationData = null;
-    }
-
-    try {
-      if (can(user, "warehouses.read")) {
-        matrixData = await inventoryMatrix(user);
-      }
-    } catch {
-      matrixData = null;
-    }
-
-    try {
-      if (user.role === "ADMIN") {
-        applications = await reviewQueue(user);
-      }
-    } catch {
-      applications = null;
-    }
-
-    try {
-      if (canManageWork(user)) {
-        [tasks, overdue] = await Promise.all([
-          listTasks(user, { today: "true", pageSize: "20" }),
-          listTasks(user, { overdue: "true", pageSize: "20" }),
-        ]);
-      }
-    } catch {
-      tasks = [];
-      overdue = [];
-    }
+    // The four domains are independent. Keep each domain's existing failure fallback.
+    const [orderData,stockData,applicationData,taskData]=await Promise.all([
+      can(user,'orders.read')?Promise.all([listOrders(user,{status:'PENDING_REVIEW'}),listOrders(user,{status:'IN_PROGRESS'}),listOrders(user,{status:'READY'}),salesReconciliation(user)]).catch(()=>null):null,
+      can(user,'warehouses.read')?inventoryMatrix(user).catch(()=>null):null,
+      user.role==='ADMIN'?reviewQueue(user).catch(()=>null):null,
+      canManageWork(user)?Promise.all([listTasks(user,{today:'true',pageSize:'20'}),listTasks(user,{overdue:'true',pageSize:'20'})]).catch(()=>null):null,
+    ]);
+    if(orderData)[pendingOrders,inProgressOrders,readyOrders,reconciliationData]=orderData;
+    matrixData=stockData;applications=applicationData;
+    if(taskData)[tasks,overdue]=taskData;
   }
 
   // Keep Dealer Portal (/portal) 100% untouched

@@ -1,0 +1,437 @@
+{
+  "phase": "before",
+  "environment": "Production Edge; cold context; actual HTTPS via temporary SSH SOCKS tunnel",
+  "testedAt": "2026-10-24T20:46:23.492Z",
+  "coldLoad": {
+    "navigation": {
+      "ttfb": 591,
+      "domContentLoaded": 931.8999999985099,
+      "load": 1378.199999999255,
+      "transfer": 20699,
+      "decoded": 153609
+    },
+    "resources": [
+      {
+        "type": "link",
+        "url": "/_next/static/media/2a65768255d6b625-s.p.3u4lli0-axodc.woff2",
+        "transfer": 38760,
+        "encoded": 38460,
+        "decoded": 38460,
+        "duration": 165.5
+      },
+      {
+        "type": "link",
+        "url": "/_next/static/media/a343f882a40d2cc9-s.p.1sj6eobyi31rd.woff2",
+        "transfer": 24876,
+        "encoded": 24576,
+        "decoded": 24576,
+        "duration": 175.59999999776483
+      },
+      {
+        "type": "link",
+        "url": "/_next/static/chunks/1urdwapqkykkr.css",
+        "transfer": 15702,
+        "encoded": 15402,
+        "decoded": 92044,
+        "duration": 180.09999999776483
+      },
+      {
+        "type": "link",
+        "url": "/_next/static/chunks/2lhii73x2thjq.css",
+        "transfer": 17007,
+        "encoded": 16707,
+        "decoded": 106339,
+        "duration": 250.29999999701977
+      },
+      {
+        "type": "link",
+        "url": "/_next/static/chunks/0ry27o3501ifw.css",
+        "transfer": 1767,
+        "encoded": 1467,
+        "decoded": 5184,
+        "duration": 175.10000000149012
+      },
+      {
+        "type": "link",
+        "url": "/_next/static/chunks/1edfvwc5_eck-.js",
+        "transfer": 3935,
+        "encoded": 3635,
+        "decoded": 12934,
+        "duration": 321.6000000014901
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/26g4tn5b226u5.js",
+        "transfer": 8839,
+        "encoded": 8539,
+        "decoded": 31996,
+        "duration": 321.9000000022352
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/3bvdabbo3ut63.js",
+        "transfer": 71943,
+        "encoded": 71643,
+        "decoded": 229044,
+        "duration": 357.5
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/1pxz49h7opnwp.js",
+        "transfer": 1089,
+        "encoded": 789,
+        "decoded": 789,
+        "duration": 363.6000000014901
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/turbopack-0zj2pu16gha9_.js",
+        "transfer": 4607,
+        "encoded": 4307,
+        "decoded": 10947,
+        "duration": 366.19999999925494
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/33t46atd3n2zd.js",
+        "transfer": 3989,
+        "encoded": 3689,
+        "decoded": 14434,
+        "duration": 366.5
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/1t7qvjhmnciik.js",
+        "transfer": 4247,
+        "encoded": 3947,
+        "decoded": 9429,
+        "duration": 366.6000000014901
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/2zx3q7e7c69qs.js",
+        "transfer": 43156,
+        "encoded": 42856,
+        "decoded": 155744,
+        "duration": 462.3999999985099
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/1gm0sacfhrnkf.js",
+        "transfer": 11755,
+        "encoded": 11455,
+        "decoded": 47263,
+        "duration": 526.5999999977648
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/0ujd0k59ceo55.js",
+        "transfer": 20458,
+        "encoded": 20158,
+        "decoded": 77937,
+        "duration": 535.3999999985099
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/3uiposytb_e0h.js",
+        "transfer": 2658,
+        "encoded": 2358,
+        "decoded": 6512,
+        "duration": 699.2999999970198
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/2xb-gawce7vph.js",
+        "transfer": 13835,
+        "encoded": 13535,
+        "decoded": 38850,
+        "duration": 699.5
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/2kunjtmbkrfu5.js",
+        "transfer": 13935,
+        "encoded": 13635,
+        "decoded": 43665,
+        "duration": 702.3999999985099
+      },
+      {
+        "type": "script",
+        "url": "/_next/static/chunks/3vjs-ije5c3qd.js",
+        "transfer": 52215,
+        "encoded": 51915,
+        "decoded": 207817,
+        "duration": 771.6999999992549
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-400-normal.19fn_nsidnous.woff2",
+        "transfer": 21468,
+        "encoded": 21168,
+        "decoded": 21168,
+        "duration": 247.89999999850988
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-600-normal.076r4lhepcnqo.woff2",
+        "transfer": 22332,
+        "encoded": 22032,
+        "decoded": 22032,
+        "duration": 236.69999999925494
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-800-normal.3nivembvkgs7e.woff2",
+        "transfer": 22620,
+        "encoded": 22320,
+        "decoded": 22320,
+        "duration": 240.80000000074506
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-500-normal.1052sz4r89346.woff2",
+        "transfer": 22192,
+        "encoded": 21892,
+        "decoded": 21892,
+        "duration": 246.80000000074506
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-700-normal.2q6i5oi91ug6_.woff2",
+        "transfer": 22452,
+        "encoded": 22152,
+        "decoded": 22152,
+        "duration": 251.19999999925494
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-vietnamese-600-normal.13vsqp3suqx94.woff2",
+        "transfer": 12476,
+        "encoded": 12176,
+        "decoded": 12176,
+        "duration": 252.30000000074506
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-ext-500-normal.0rnp16l9saec8.woff2",
+        "transfer": 13848,
+        "encoded": 13548,
+        "decoded": 13548,
+        "duration": 257.8999999985099
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-vietnamese-500-normal.20bffioughox4.woff2",
+        "transfer": 12472,
+        "encoded": 12172,
+        "decoded": 12172,
+        "duration": 264.6000000014901
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-vietnamese-700-normal.02am7a5a9xufd.woff2",
+        "transfer": 12768,
+        "encoded": 12468,
+        "decoded": 12468,
+        "duration": 265.29999999701977
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-vietnamese-400-normal.0ir3lowcg2jd4.woff2",
+        "transfer": 11832,
+        "encoded": 11532,
+        "decoded": 11532,
+        "duration": 274.3999999985099
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-ext-600-normal.1oj0fq8a06f_9.woff2",
+        "transfer": 13908,
+        "encoded": 13608,
+        "decoded": 13608,
+        "duration": 273.5
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-ext-800-normal.2syjgt67a99r5.woff2",
+        "transfer": 14052,
+        "encoded": 13752,
+        "decoded": 13752,
+        "duration": 274.80000000074506
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-vietnamese-800-normal.3_w3_vxbh09qg.woff2",
+        "transfer": 12704,
+        "encoded": 12404,
+        "decoded": 12404,
+        "duration": 279.80000000074506
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-ext-400-normal.453xq1mlu-qfe.woff2",
+        "transfer": 13356,
+        "encoded": 13056,
+        "decoded": 13056,
+        "duration": 276.5
+      },
+      {
+        "type": "css",
+        "url": "/_next/static/media/be-vietnam-pro-latin-ext-700-normal.268cf9bs-gozs.woff2",
+        "transfer": 14152,
+        "encoded": 13852,
+        "decoded": 13852,
+        "duration": 266
+      },
+      {
+        "type": "img",
+        "url": "/_next/image",
+        "transfer": 3636,
+        "encoded": 3336,
+        "decoded": 3336,
+        "duration": 369.8999999985099
+      },
+      {
+        "type": "other",
+        "url": "/icon.png",
+        "transfer": 1724,
+        "encoded": 1424,
+        "decoded": 1401,
+        "duration": 144.79999999701977
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/search",
+        "transfer": 531,
+        "encoded": 231,
+        "decoded": 501,
+        "duration": 194.30000000074506
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/notifications",
+        "transfer": 533,
+        "encoded": 233,
+        "decoded": 508,
+        "duration": 194.10000000149012
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/profile",
+        "transfer": 532,
+        "encoded": 232,
+        "decoded": 502,
+        "duration": 194.20000000298023
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/hub/historical-orders",
+        "transfer": 543,
+        "encoded": 243,
+        "decoded": 516,
+        "duration": 194.30000000074506
+      },
+      {
+        "type": "fetch",
+        "url": "/crm",
+        "transfer": 1117,
+        "encoded": 817,
+        "decoded": 1569,
+        "duration": 203.30000000074506
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/search",
+        "transfer": 1160,
+        "encoded": 860,
+        "decoded": 1686,
+        "duration": 202.79999999701977
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/notifications",
+        "transfer": 1163,
+        "encoded": 863,
+        "decoded": 1693,
+        "duration": 202.39999999850988
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/profile",
+        "transfer": 1163,
+        "encoded": 863,
+        "decoded": 1687,
+        "duration": 202.40000000223517
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/hub/historical-orders",
+        "transfer": 1170,
+        "encoded": 870,
+        "decoded": 1701,
+        "duration": 248.40000000223517
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/historical-orders",
+        "transfer": 1168,
+        "encoded": 868,
+        "decoded": 1697,
+        "duration": 196.70000000298023
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/hub/internal-documents",
+        "transfer": 1166,
+        "encoded": 866,
+        "decoded": 1702,
+        "duration": 247.40000000223517
+      },
+      {
+        "type": "fetch",
+        "url": "/crm/internal-documents",
+        "transfer": 1164,
+        "encoded": 864,
+        "decoded": 1698,
+        "duration": 247
+      }
+    ],
+    "longTasks": [],
+    "wallMs": 2161
+  },
+  "navigations": [
+    {
+      "route": "/crm/historical-orders",
+      "readyMs": 400,
+      "rscRequests": 17,
+      "heading": "Đơn hàng cũ"
+    },
+    {
+      "route": "/crm/accounting-factory",
+      "readyMs": 251,
+      "rscRequests": 2,
+      "heading": "Phiếu đề nghị sản xuất/cấp hàng"
+    },
+    {
+      "route": "/crm/accounting-orders",
+      "readyMs": 305,
+      "rscRequests": 1,
+      "heading": "Phiếu đề nghị sản xuất/cấp hàng"
+    },
+    {
+      "route": "/crm/customers",
+      "readyMs": 344,
+      "rscRequests": 6,
+      "heading": "Quản lý khách hàng"
+    },
+    {
+      "route": "/crm/goods",
+      "readyMs": 211,
+      "rscRequests": 9,
+      "heading": "Danh mục hàng hóa"
+    }
+  ],
+  "errors": [],
+  "releaseSha": "2e7d1f16db39d92d5eab2ddf3a48d200f9898fcf",
+  "notes": "Cold production browser and navigation baseline; HTTPS transported through a temporary SSH SOCKS tunnel because this workstation direct HTTPS times out. Compare workload and byte counts; timings include tunnel/network latency."
+}

@@ -21,7 +21,7 @@ import {preferences,listFilters} from '@/lib/crm/workspace';
 import {ExportForm} from './DataJobForms';
 import {DataJobsPage} from './DataJobPages';
 import {ApplicationsPage,InvitationsPage,SearchPage,WorkspacePage,NotificationsPage,SessionsPanel,AuditPage,DocumentsPanel,ContactsPanel,TaskDetail} from './UpgradePages';
-import Link from "next/link";
+import {CrmNavLink as Link} from './CrmNavLink';
 import { notFound, redirect } from "next/navigation";
 import { pageUser } from "@/lib/crm/http";
 import { can, CrmError, isWarehouseRole } from "@/lib/crm/permissions";
@@ -38,9 +38,6 @@ import {mfaStatus} from '@/lib/crm/account-security';
 import { CrmHubPage } from "./CrmHubPage";
 import {InternalDocumentsPage} from "./InternalDocumentsPage";
 import {PortalNetworkPage,PeriodSalesPage,KpiPage,PortalOrderCatalogPage} from "./ChannelPages";
-import {AccountantWorkspace} from "./AccountantWorkspace";
-import {WarehouseKeeperWorkspace, type WarehouseKeeperTab} from "./WarehouseKeeperWorkspace";
-import {getAccountantWorkspaceData} from "@/lib/crm/accountant-workflow";
 import {HistoricalOrdersPage} from "./HistoricalOrdersPage";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
@@ -71,7 +68,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
     const allowed=visibleModules(user).some(m=>m.id===slug);
     if(!allowed)notFound();
     const initialTab=slug==='notifications'||slug==='warehouse-notifications'?'notifications':slug==='accounting-orders'||slug==='warehouse-orders'||slug==='warehouse-handover'?'issues':slug==='warehouse-stock'||slug==='accounting-warehouses'?'stock':slug==='accounting-factory'||slug==='warehouse-factory'||slug==='accounting-vat'?'receipts':'requests';
-    return <DocumentFlowWorkspace initialData={await flowWorkspace(user)} user={user} initialTab={initialTab}/>;
+    return <DocumentFlowWorkspace key={initialTab} initialData={await flowWorkspace(user)} user={user} initialTab={initialTab}/>;
   }
   const selectedModule=visibleModules(user).find(item=>item.id===slug);
   if(!selectedModule)return <><Header title="Không có quyền truy cập" description="Tài khoản của bạn không được cấp quyền mở phân hệ này."/><Link className="button button--secondary" href={`/${area}`}>Về trang chủ</Link></>;

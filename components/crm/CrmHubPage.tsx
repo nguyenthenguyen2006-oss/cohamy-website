@@ -1,4 +1,4 @@
-import Link from "next/link";
+import {CrmNavLink as Link} from './CrmNavLink';
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { getVisibleHubs, type CrmModule } from "@/lib/crm/modules";
