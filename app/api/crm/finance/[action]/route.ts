@@ -1,8 +1,9 @@
 import {apiError,apiUser,json,readJson,sameOrigin} from '@/lib/crm/http';
 import {CrmError} from '@/lib/crm/permissions';
 import * as finance from '@/lib/crm/finance';
+import {receivablesWorkspaceSummary} from '@/lib/crm/receivables-workspace';
 type Context={params:Promise<{action:string}>};
-export async function GET(request:Request,context:Context){try{const user=await apiUser(),{action}=await context.params,p=new URL(request.url).searchParams;if(action==='overview')return json(await finance.financeOverview(user));if(action==='aging')return json(await finance.receivableAging(user,p.get('asOf')??new Date().toISOString().slice(0,10)));if(action==='bank-suggestions')return json(await finance.bankMatchSuggestions(user,p.get('id')??''));throw new CrmError('NOT_FOUND',404);}catch(error){return apiError(error);}}
+export async function GET(request:Request,context:Context){try{const user=await apiUser(),{action}=await context.params,p=new URL(request.url).searchParams;if(action==='receivables-workspace')return json(await receivablesWorkspaceSummary(user));if(action==='overview')return json(await finance.financeOverview(user));if(action==='aging')return json(await finance.receivableAging(user,p.get('asOf')??new Date().toISOString().slice(0,10)));if(action==='bank-suggestions')return json(await finance.bankMatchSuggestions(user,p.get('id')??''));throw new CrmError('NOT_FOUND',404);}catch(error){return apiError(error);}}
 export async function POST(request:Request,context:Context){try{sameOrigin(request);const user=await apiUser(),{action}=await context.params,input=await readJson(request);
  if(action==='credit-configure')return json(await finance.configureCreditAccount(user,input));
  if(action==='receivable-post')return json(await finance.postOrderReceivable(user,input));

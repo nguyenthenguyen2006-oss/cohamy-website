@@ -1,0 +1,41 @@
+{
+  "environment": "STAGING native restored PostgreSQL / actual Edge",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "New partner overview and all finance metrics agree with the full server summary",
+      "status": "PASS"
+    },
+    {
+      "name": "Partner filter scopes amounts and rows across tabs; tab state and keyboard navigation remain usable",
+      "status": "PASS"
+    },
+    {
+      "name": "Posted ledger filters distinguish paid history, debt and source order links",
+      "status": "PASS"
+    },
+    {
+      "name": "Credit configuration opens for the chosen partner with actual limit, term and enabled state",
+      "status": "PASS"
+    },
+    {
+      "name": "Posting uses named eligible orders and preserves the explicit empty state without raw UUID entry",
+      "status": "PASS"
+    },
+    {
+      "name": "Order reconciliation and payment/upload workflows remain reachable with correct CRM links",
+      "status": "PASS"
+    },
+    {
+      "name": "Phone and desktop keep all controls within the viewport and scroll each dense table independently",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "unexpectedWrites": [],
+  "interceptedFinanceSubmissions": 1,
+  "realFinanceSubmissions": 0,
+  "testedAt": "2026-10-24T23:14:28.8530483Z",
+  "build": "PASS: production build with TypeScript, ESLint and private build trace exclusion",
+  "designScan": "Zero primary findings and advisories; desktop and phone visually checked"
+}

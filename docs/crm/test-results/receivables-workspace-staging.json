@@ -1,0 +1,46 @@
+{
+  "environment": "STAGING isolated restore of native production PostgreSQL",
+  "status": "PASS",
+  "testedAt": "2026-10-24T23:11:42.291Z",
+  "cases": [
+    {
+      "name": "Current full-ledger totals agree with the native posted receivable source",
+      "status": "PASS"
+    },
+    {
+      "name": "Internal summary rejects a portal principal before reading ledger data",
+      "status": "PASS"
+    },
+    {
+      "name": "Summary includes records beyond the 200-row detail cap",
+      "status": "PASS"
+    },
+    {
+      "name": "Due-today and future rows are not mislabeled overdue",
+      "status": "PASS"
+    },
+    {
+      "name": "Credit exposure stays separate from posted debt",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirmed unallocated funds exclude pending proofs and do not multiply across receivables",
+      "status": "PASS"
+    },
+    {
+      "name": "Posting picker accepts active held confirmed orders and excludes posted debt or inactive holds",
+      "status": "PASS"
+    },
+    {
+      "name": "Every synthetic finance row rolls back and original totals remain unchanged",
+      "status": "PASS"
+    }
+  ],
+  "baseline": {
+    "remaining": "8380400",
+    "unposted": "0",
+    "usedCredit": "8380400",
+    "postableOrders": 0
+  },
+  "writes": "STAGING synthetic rows rolled back; no production finance mutation or outbound message"
+}

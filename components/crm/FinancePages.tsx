@@ -4,16 +4,20 @@ import {listOrganizations} from '@/lib/crm/repository';
 import type {Principal} from '@/lib/crm/types';
 import {AllocationForm,BankImportForm,BankMatchForm,CashActionForm,CashCreateForm,CreditForm,DepositRefundForm,PaymentProofCreateForm,PaymentReviewForm,ReceivableAdjustForm,ReceivablePostForm,ReminderForm} from './FinanceForms';
 import {SalesReconciliationSheet} from './spreadsheet/ReconciliationViews';
+import {financeBusinessDate,receivablesWorkspaceSummary} from '@/lib/crm/receivables-workspace';
+import {ReceivablesWorkspace} from './ReceivablesWorkspace';
 type Overview=Awaited<ReturnType<typeof financeOverview>>;
 function Header({title,description}:{title:string;description:string}){return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
 const money=(v:string)=>BigInt(v).toLocaleString('vi-VN')+' đ';
 export async function FinancePage({user,mode,query={}}:{user:Principal;mode:string;query?:Record<string,string>}){
- const [data,aging,reconciliationData]=await Promise.all([
+ const [data,aging,reconciliationData,workspaceSummary]=await Promise.all([
   financeOverview(user) as Promise<Overview>,
-  receivableAging(user,new Date().toISOString().slice(0,10)),
+  receivableAging(user,user.area==='crm'&&mode==='debts'?financeBusinessDate():new Date().toISOString().slice(0,10)),
   user.area==='crm'&&mode!=='cash'?salesReconciliation(user,{q:query.q,organizationId:query.organizationId,warehouseId:query.warehouseId,status:query.status,deliveryStatus:query.deliveryStatus,paymentStatus:query.paymentStatus,from:query.from,to:query.to}).catch(()=>null):Promise.resolve(null),
+  user.area==='crm'&&mode==='debts'?receivablesWorkspaceSummary(user):Promise.resolve(null),
  ]);
  const internal=user.area==='crm'&&['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role),manager=user.area==='crm'&&['ADMIN','MANAGER'].includes(user.role),organizations=internal?(await listOrganizations(user,{page:1})).items.map(o=>({id:o.id,name:o.name})):[];
+ if(workspaceSummary)return <ReceivablesWorkspace data={data} summary={workspaceSummary} aging={aging} reconciliation={reconciliationData} organizations={organizations} canWrite={manager}/>;
  return <><Header title={mode==='cash'?'Thu, chi và hoàn tiền':mode==='payments'?'Chứng từ thanh toán':'Hạn mức và công nợ'} description="Số dư lấy từ sổ nguồn và phân bổ đã xác nhận; chứng từ tải lên không tự ghi đã thu."/>
  {user.area==='crm'&&mode!=='cash'&&reconciliationData&&<SalesReconciliationSheet initialData={reconciliationData} basePath={`/crm/${mode}`}/>}
  {mode!=='cash'&&<>

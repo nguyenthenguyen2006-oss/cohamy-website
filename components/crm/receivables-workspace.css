@@ -1,0 +1,28 @@
+.cohamy-crm .crm-finance-workspace{display:grid;gap:16px;min-width:0;grid-template-columns:minmax(0,1fr)}
+.cohamy-crm .crm-finance-workspace .crm-dash-panel{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.cohamy-crm .crm-finance-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cohamy-crm .crm-finance-summary-note{display:flex;gap:6px 24px;flex-wrap:wrap;font-size:12px;line-height:1.6;color:#57534e}
+.cohamy-crm .crm-finance-summary-note strong{color:#44403c;font-variant-numeric:tabular-nums}
+.cohamy-crm .crm-finance-filters,.cohamy-crm .crm-finance-view-filter{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;min-width:0}
+.cohamy-crm .crm-finance-filters>label{width:300px;max-width:100%}
+.cohamy-crm .crm-finance-view-filter>label{width:240px;max-width:100%}
+.cohamy-crm .crm-finance-filters>span,.cohamy-crm .crm-finance-view-filter>span{font-size:12px;color:#57534e;align-self:center}
+.cohamy-crm .crm-finance-workspace .crm-finance-filters label,.cohamy-crm .crm-finance-workspace .crm-finance-view-filter label{font-size:12px;font-weight:500;color:#57534e}
+.cohamy-crm .crm-finance-workspace .crm-finance-filters select,.cohamy-crm .crm-finance-workspace .crm-finance-view-filter select{height:34px;min-height:34px;font-size:13px;padding:5px 8px;border-color:#d6c5ad;background:#fffdf9}
+.cohamy-crm .crm-finance-section-heading{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.cohamy-crm .crm-finance-section-heading p{margin:0;font-size:13px;color:#57534e}
+.cohamy-crm .crm-finance-section-heading h2{margin:0;font-size:16px;font-weight:600}
+.cohamy-crm .crm-finance-inline-form{border:1px solid #eadbc5;padding:16px;background:#fffdf9;border-radius:6px;min-width:0}
+.cohamy-crm .crm-finance-inline-form .crm-finance-section-heading{margin-bottom:16px}
+.cohamy-crm .crm-finance-overdue{color:#b91c1c!important;font-weight:600}
+.cohamy-crm .crm-finance-detail{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin:0}
+.cohamy-crm .crm-finance-detail>div{display:grid;grid-template-columns:minmax(120px,1fr) minmax(0,1fr);gap:12px}
+.cohamy-crm .crm-finance-detail dt{font-size:12px;color:#57534e}
+.cohamy-crm .crm-finance-detail dd{margin:0;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.cohamy-crm .crm-finance-subsection{margin:8px 0 0;padding-top:12px;border-top:1px solid #eadbc5}
+.cohamy-crm .crm-finance-history{margin:0;padding-left:20px;font-size:13px}
+.cohamy-crm .crm-finance-history li{margin-bottom:12px}
+.cohamy-crm .crm-finance-history p{margin:4px 0 0;color:#57534e}
+.cohamy-crm .crm-finance-workspace .crm-cell-sub{display:block}
+.cohamy-crm .crm-finance-workspace .crm-spreadsheet-shell{max-width:100%}
+@media(max-width:640px){.cohamy-crm .crm-finance-workspace .crm-dash-compact-bar{display:grid;grid-template-columns:minmax(0,1fr)}.cohamy-crm .crm-finance-actions{width:100%}.cohamy-crm .crm-finance-actions>.button{flex:1;min-width:140px}.cohamy-crm .crm-finance-detail>div{grid-template-columns:minmax(0,1fr)}.cohamy-crm .crm-finance-inline-form{padding:12px}.cohamy-crm .crm-finance-filters>label,.cohamy-crm .crm-finance-view-filter>label{width:100%}}
