@@ -54,7 +54,7 @@ export function ChildDiscountForm({organizationId,label='Lưu chiết khấu tà
 export function PromotionForm({products,levels,partners}:{products:{sku:string;name:string}[];levels:Choice[];partners:Choice[]}){
  const [scope,setScope]=useState('ALL');const now=new Date();
  return <Form endpoint="/api/crm/channel/promotion" label="Tạo khuyến mãi" payload={f=>({version:0,sku:str(f,'sku'),name:str(f,'name'),campaign:str(f,'campaign'),percent:Number(str(f,'percent')),scope,targetOrganizationIds:scope==='DESIGNATED'?f.getAll('targetOrganizationIds').map(String):[],targetLevelIds:scope==='DESIGNATED'?f.getAll('targetLevelIds').map(String):[],minBaseQuantity:scope==='QUANTITY'?str(f,'minBaseQuantity'):'0',badge:str(f,'badge')||null,startsAt:iso(str(f,'startsAt')),endsAt:iso(str(f,'endsAt')),active:true,reason:str(f,'reason')})}>
-  <div className="work-fields"><label>Sản phẩm<select name="sku" required><option value="">Chọn SKU</option>{products.map(p=><option key={p.sku} value={p.sku}>{p.sku} · {p.name}</option>)}</select></label>
+  <div className="work-fields"><label>Sản phẩm<select name="sku" required><option value="">Chọn sản phẩm</option>{products.map(p=><option key={p.sku} value={p.sku}>{p.name}</option>)}</select></label>
   <label>Tên khuyến mãi<input name="name" required minLength={2} maxLength={160} placeholder="VD: Mừng sản phẩm mới"/></label><label>Chiến dịch<input name="campaign" maxLength={160} placeholder="VD: Khai trương tháng 11"/></label>
   <label>Giảm (%)<input name="percent" type="number" min={0} max={100} step="0.01" required/></label>
   <label>Cơ chế<select value={scope} onChange={e=>setScope(e.target.value)}>{Object.entries(promotionScopeLabels).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select></label>
@@ -90,7 +90,7 @@ export function IncentiveForm({levels,shareholders,products,defaultKey}:{levels:
   <label>Kỳ<select value={periodType} onChange={e=>setPeriodType(e.target.value)}>{Object.entries(periodLabels).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select></label>
   <label>Mã kỳ<input name="periodKey" required defaultValue={defaultKey} placeholder="2026-10 · 2026-Q4 · 2026" pattern="[0-9]{4}(-(0[1-9]|1[0-2])|-Q[1-4])?"/></label>
   <label>Chỉ tiêu<select value={metric} onChange={e=>setMetric(e.target.value)}><option value="REVENUE">Doanh số (đ)</option><option value="QUANTITY">Số lượng một SKU</option></select></label>
-  {metric==='QUANTITY'&&<label>SKU<select name="sku" required><option value="">Chọn</option>{products.map(p=><option key={p.sku} value={p.sku}>{p.sku} · {p.name}</option>)}</select></label>}
+  {metric==='QUANTITY'&&<label>SKU<select name="sku" required><option value="">Chọn</option>{products.map(p=><option key={p.sku} value={p.sku}>{p.name}</option>)}</select></label>}
   <label>Mục tiêu<input name="target" required inputMode="decimal" pattern="[0-9]+([.][0-9]{1,6})?" placeholder="300000000"/></label>
   <label>Áp dụng cho<select value={audience} onChange={e=>setAudience(e.target.value)}><option value="ALL">Tất cả đối tác</option><option value="SHAREHOLDER_BRANCH">Nhánh của một cổ đông</option><option value="LEVEL">Một hạng thành viên</option></select></label>
   {audience==='SHAREHOLDER_BRANCH'&&<label>Cổ đông<select name="audienceRef" required><option value="">Chọn</option>{shareholders.map(s=><option key={s.id} value={s.id}>{s.name}</option>)}</select></label>}

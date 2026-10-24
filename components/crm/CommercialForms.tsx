@@ -14,29 +14,10 @@ Object.assign(errors,{ORDER_POLICY_UNAVAILABLE:'Chưa có quy tắc đơn hàng 
 
 Object.assign(errors,{INVALID_TIERS:'Bậc số lượng phải tăng dần, không chồng nhau; mỗi dòng dạng từ;đến;%.',LEVEL_UNAVAILABLE:'Hạng thành viên không còn hoạt động.',LEVEL_CODE_OR_RANK_TAKEN:'Mã hoặc thứ tự hạng đã tồn tại.',COMMERCIAL_PARTNER_UNAVAILABLE:'Đối tác không hoạt động hoặc đã được gộp.',NOT_DIRECT_CHILD:'Chỉ đặt chiết khấu cho cấp dưới trực tiếp của bạn.',DISCOUNT_CEILING_UNCONFIGURED:'Bạn chưa có chiết khấu từ cấp trên nên chưa thể đặt cho cấp dưới.',DISCOUNT_EXCEEDS_UPSTREAM:'Chiết khấu cho cấp dưới không được vượt mức bạn đang nhận từ cấp trên.',TRANSFER_SAME_PARENT:'Đơn vị đã thuộc quản lý này.',TRANSFER_ALREADY_PENDING:'Đơn vị đang có yêu cầu chuyển cây chờ duyệt.',DISTRIBUTION_CYCLE_DETECTED:'Không thể chuyển vào nhánh cấp dưới của chính đơn vị đó.',DISTRIBUTION_SELF_PARENT_BLOCKED:'Không thể tự quản lý chính mình.',ALREADY_PROCESSED:'Yêu cầu đã được xử lý.',ORGANIZATION_INACTIVE_OR_NOT_FOUND:'Đơn vị không hoạt động hoặc không tồn tại.',TARGET_NOT_REACHED:'Đối tác chưa đạt chỉ tiêu chương trình.',ALREADY_AWARDED:'Đối tác đã được trao thưởng chương trình này.',NOT_ELIGIBLE:'Đối tác không thuộc đối tượng chương trình.',PROGRAM_NOT_ACTIVE:'Chương trình chưa kích hoạt.',INVALID_PERIOD:'Mã kỳ không hợp lệ (2026-10, 2026-Q4 hoặc 2026).',SHAREHOLDER_NOT_FOUND:'Không tìm thấy cổ đông.',NO_SHORTAGE:'Số lượng kho có đã đủ, không cần báo thiếu.',ORDER_CLOSED:'Đơn đã đóng.'});
 export interface ProductChoice {id:string;sku:string;name:string;stock_unit:string;weight_label?:string;retail_price?:string;image?:string;version:number;units:{code:string;label:string;version:number;numerator:string;denominator:string;is_case:boolean;allow_fractional:boolean;active:boolean}[]}
-const skuImageMap:Record<string,string>={
-  'WEB-cohamy-almond-chocolate':'/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg',
-  'WEB-cohamy-almond-durian-chocolate':'/images/products/20261009/cohamy-almond-durian-chocolate-80g/01.jpg',
-  'WEB-cohamy-almond-matcha-chocolate':'/images/products/20261009/cohamy-almond-matcha-chocolate-80g/01.jpg',
-  'WEB-cohamy-almond-strawberry-chocolate':'/images/products/20261009/cohamy-almond-strawberry-chocolate-80g/01.jpg',
-  'WEB-cohamy-cashew-chocolate':'/images/products/20261009/cohamy-cashew-chocolate-80g/01.jpg',
-  'WEB-cohamy-rainbow-chocolate':'/images/products/20261009/cohamy-chocolate-candy-65g/01.jpg',
-  'WEB-jamy-macadamia-chocolate':'/images/products/20261009/cohamy-macadamia-chocolate-80g/01.jpg',
-  'WEB-jamy-mango-dried-chocolate':'/images/products/20261009/cohamy-mango-chocolate-80g/01.jpg',
-  'cohamy-almond-chocolate-80g':'/images/products/20261009/cohamy-almond-chocolate-80g/01.jpg',
-  'cohamy-almond-durian-chocolate-80g':'/images/products/20261009/cohamy-almond-durian-chocolate-80g/01.jpg',
-  'cohamy-almond-matcha-chocolate-80g':'/images/products/20261009/cohamy-almond-matcha-chocolate-80g/01.jpg',
-  'cohamy-almond-strawberry-chocolate-80g':'/images/products/20261009/cohamy-almond-strawberry-chocolate-80g/01.jpg',
-  'cohamy-cashew-chocolate-80g':'/images/products/20261009/cohamy-cashew-chocolate-80g/01.jpg',
-  'cohamy-chocolate-candy-65g':'/images/products/20261009/cohamy-chocolate-candy-65g/01.jpg',
-  'cohamy-macadamia-chocolate-80g':'/images/products/20261009/cohamy-macadamia-chocolate-80g/01.jpg',
-  'cohamy-mango-chocolate-80g':'/images/products/20261009/cohamy-mango-chocolate-80g/01.jpg',
-};
-export function resolveProductImage(sku:string,productImage?:string){
-  if(skuImageMap[sku])return skuImageMap[sku];
-  if(productImage&&!productImage.includes('-55g.')&&!productImage.includes('-150g.')&&!productImage.includes('-160g.'))return productImage;
-  return '/images/logo/cohamy-c-gold.png';
-}
+export {resolveProductImage} from './product-images';
+import {resolveProductImage} from './product-images';
+import {CommercialProductGrid} from './CommercialProductGrid';
+import {enteredProductLines} from '@/lib/crm/product-entry';
 export function ProductThumbZoom({src,name,sku,weightLabel,retailPrice,stockUnit,rowIndex}:{src?:string;name?:string;sku?:string;weightLabel?:string;retailPrice?:string;stockUnit?:string;rowIndex?:number}){
   const [pos,setPos]=useState<{top:number;left:number}|null>(null);
   const openZoom=(el:HTMLElement)=>{
@@ -124,7 +105,7 @@ export function Form({endpoint,label,children,payload,destination,preview,multip
 export function PriceTierForm(){return <Form endpoint="/api/crm/pricing/tier" label="Tạo cấp giá" payload={f=>({version:0,code:str(f,'code'),name:str(f,'name'),active:true})}><div className="work-fields"><label>Mã cấp giá<input name="code" required minLength={2} maxLength={40} pattern="([A-Za-z0-9_]|-)+"/></label><label>Tên cấp giá<input name="name" required minLength={2} maxLength={120}/></label></div></Form>;}
 export function AssignTierForm({partners,tiers}:{partners:Choice[];tiers:Choice[]}){const [selected,setSelected]=useState('');return <Form endpoint="/api/crm/pricing/assign-tier" label="Gán cấp giá" payload={f=>({organizationId:selected,tierId:str(f,'tierId'),version:partners.find(p=>p.id===selected)?.pricingVersion??0,reason:str(f,'reason')})}><div className="work-fields"><label>Đối tác<select required value={selected} onChange={e=>setSelected(e.target.value)}><option value="">Chọn đối tác</option>{partners.map(p=><option key={p.id} value={p.id}>{p.name} · {p.code}</option>)}</select></label><label>Cấp giá<select name="tierId" required><option value="">Chọn cấp giá</option>{tiers.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}</select></label><label>Lý do<input name="reason" required minLength={3} maxLength={500}/></label></div><p>Cấp mới áp dụng khi tính giá cho báo giá mới. Báo giá đã gửi giữ nguyên điều kiện.</p></Form>;}
 export function PriceUnitForm({product,unit}:{product:ProductChoice;unit?:ProductChoice['units'][number]}){return <Form endpoint="/api/crm/pricing/unit" label={unit?'Lưu quy đổi '+unit.code:'Thêm quy đổi'} payload={f=>({productId:product.id,productVersion:product.version,version:unit?.version??0,code:unit?.code??str(f,'code'),label:str(f,'label'),numerator:str(f,'numerator'),denominator:str(f,'denominator'),isCase:f.has('isCase'),allowFractional:f.has('allowFractional'),active:f.has('active'),reason:str(f,'reason')})}><p>1 đơn vị chọn = tử số / mẫu số {product.stock_unit||'đơn vị gốc chưa khai báo'}. BASE luôn là 1/1. Quy đổi mới không sửa báo giá đã gửi.</p><div className="work-fields"><label>Mã đơn vị<input name="code" required maxLength={40} pattern="([A-Za-z0-9_]|-)+" defaultValue={unit?.code} readOnly={Boolean(unit)}/></label><label>Tên đơn vị<input name="label" required maxLength={80} defaultValue={unit?.label}/></label><label>Tử số<input name="numerator" required inputMode="numeric" pattern="[0-9]+" maxLength={24} defaultValue={unit?.numerator}/></label><label>Mẫu số<input name="denominator" required inputMode="numeric" pattern="[0-9]+" maxLength={24} defaultValue={unit?.denominator}/></label><label>Lý do<input name="reason" required minLength={3} maxLength={500}/></label></div><label className="work-check"><input name="isCase" type="checkbox" defaultChecked={unit?.is_case}/>Đơn vị thùng dùng tính mức tối thiểu</label><label className="work-check"><input name="allowFractional" type="checkbox" defaultChecked={unit?.allow_fractional}/>Cho phép số lượng lẻ</label><label className="work-check"><input name="active" type="checkbox" defaultChecked={unit?.active??true}/>Đang sử dụng</label></Form>;}
-function Sku({products,value,onChange,label}:{products:ProductChoice[];value:string;onChange:(v:string)=>void;label:string}){return <label>{label}<select aria-label={label} required value={value} onChange={e=>onChange(e.target.value)}><option value="">Chọn SKU</option>{products.map(p=><option key={p.id} value={p.sku}>{p.sku} · {p.name}</option>)}</select></label>;}
+function Sku({products,value,onChange,label}:{products:ProductChoice[];value:string;onChange:(v:string)=>void;label:string}){return <label>{label}<select aria-label={label} required value={value} onChange={e=>onChange(e.target.value)}><option value="">Chọn sản phẩm</option>{products.map(p=><option key={p.id} value={p.sku}>{p.name}</option>)}</select></label>;}
 const blankLine=()=>({sku:'',unitPrice:'',thresholds:[] as PriceDefinition['lines'][number]['thresholds']});
 export function PriceBookForm({products,tiers,partners,book,latest}:{products:ProductChoice[];tiers:Choice[];partners:Choice[];book?:PriceBook;latest?:PriceVersion}){
  const d=latest?.definition,[audience,setAudience]=useState(d?.audience??'ALL'),[lines,setLines]=useState(d?.lines??[blankLine()]),[minimums,setMinimums]=useState(d?.minimum.skus??[]),[gifts,setGifts]=useState(d?.gifts??[]);
@@ -137,93 +118,10 @@ export function PriceBookForm({products,tiers,partners,book,latest}:{products:Pr
  <fieldset><legend>Combo và hàng tặng</legend>{gifts.map((g,i)=><div className="commercial-row" key={i}><div className="work-fields"><label>Tên chương trình {i+1}<input required value={g.name} maxLength={120} onChange={e=>setGift(i,{name:e.target.value})}/></label><label>Nhóm ưu tiên {i+1}<input required value={g.group} maxLength={80} onChange={e=>setGift(i,{group:e.target.value})}/></label><label>Ưu tiên hàng tặng {i+1}<input type="number" min={0} max={1000} step={1} required value={g.priority} onChange={e=>setGift(i,{priority:Number(e.target.value)})}/></label><label>Cộng dồn {i+1}<select value={g.stacking} onChange={e=>setGift(i,{stacking:e.target.value as 'EXCLUSIVE'|'STACK'})}><option value="EXCLUSIVE">Chỉ ưu tiên cao nhất trong nhóm</option><option value="STACK">Cộng các chương trình cùng nhóm</option></select></label><label>Lặp phần tặng {i+1}<select value={g.repeat} onChange={e=>setGift(i,{repeat:e.target.value as 'ONCE'|'PER_THRESHOLD'})}><option value="ONCE">Một lần khi đủ điều kiện</option><option value="PER_THRESHOLD">Theo số lần đủ mọi điều kiện</option></select></label><Sku products={products} value={g.giftSku} label={'SKU hàng tặng '+(i+1)} onChange={giftSku=>setGift(i,{giftSku})}/><label>Số lượng gốc được tặng {i+1}<input required value={g.giftBaseQuantity} inputMode="decimal" onChange={e=>setGift(i,{giftBaseQuantity:e.target.value})}/></label></div><p>Cần đủ mọi SKU trả tiền dưới đây. Hàng tặng không kích hoạt chương trình khác.</p>{g.conditions.map((c,n)=><div className="commercial-inline" key={n}><Sku products={products} value={c.sku} label={'SKU điều kiện '+(i+1)+'.'+(n+1)} onChange={sku=>setGift(i,{conditions:g.conditions.map((v,k)=>k===n?{...v,sku}:v)})}/><label>Số lượng gốc điều kiện {i+1}.{n+1}<input required value={c.minBaseQuantity} inputMode="decimal" onChange={e=>setGift(i,{conditions:g.conditions.map((v,k)=>k===n?{...v,minBaseQuantity:e.target.value}:v)})}/></label><button type="button" className="button button--secondary" disabled={g.conditions.length===1} onClick={()=>setGift(i,{conditions:g.conditions.filter((_,k)=>k!==n)})}>Bỏ điều kiện {i+1}.{n+1}</button></div>)}<div className="commercial-actions"><button type="button" className="button button--secondary" disabled={g.conditions.length>=20} onClick={()=>setGift(i,{conditions:[...g.conditions,{sku:'',minBaseQuantity:''}]})}>Thêm điều kiện cho chương trình {i+1}</button><button type="button" className="button button--secondary" onClick={()=>setGifts(v=>v.filter((_,k)=>k!==i))}>Bỏ chương trình {i+1}</button></div></div>)}<button type="button" className="button button--secondary" disabled={gifts.length>=100} onClick={()=>setGifts(v=>[...v,{name:'',group:'',priority:0,stacking:'EXCLUSIVE',repeat:'ONCE',conditions:[{sku:'',minBaseQuantity:''}],giftSku:'',giftBaseQuantity:''}])}>Thêm chương trình tặng</button></fieldset><label>Điều kiện giao hàng<textarea aria-label="Điều kiện giao hàng" name="deliveryTerms" required maxLength={2000} defaultValue={d?.deliveryTerms}/></label></Form>;
 }
 export function PublishPriceForm({book,latest}:{book:PriceBook;latest?:PriceVersion}){return <Form endpoint="/api/crm/pricing/publish" label="Xác nhận phát hành / thu hồi" payload={f=>({id:book.id,version:book.version,versionId:str(f,'action')==='PUBLISH'?latest?.id:book.published_version_id,action:str(f,'action'),reason:str(f,'reason')})}><div className="work-fields"><label>Thao tác với bảng giá<select name="action"><option value="PUBLISH">{latest?.id===book.published_version_id?'Phát hành lại bản đang áp dụng':'Phát hành bản nháp mới nhất'} {latest?.number}</option>{book.status==='PUBLISHED'&&<option value="WITHDRAW">Thu hồi bảng đang phát hành</option>}</select></label><label>Lý do phát hành hoặc thu hồi<input name="reason" required minLength={3} maxLength={500}/></label></div><p>Phát hành áp dụng cho báo giá mới trong phạm vi và thời hạn đã chọn. Bản báo giá đã gửi giữ nguyên giá.</p><label className="work-check"><input type="checkbox" required/>Tôi đã kiểm tra chính sách, giá và quy đổi đơn vị.</label></Form>;}
-function filterActiveBasketLines(lines:Basket['lines']){
- const filled=lines.filter(l=>l.sku.trim()!==''&&l.unitCode.trim()!==''&&l.quantity.trim()!==''&&Number(l.quantity)>0);
- return filled.length>0?filled:lines;
-}
+function filterActiveBasketLines(lines:Basket['lines']){return enteredProductLines(lines);}
 function BasketFields({products,lines,setLines,discount=0,credit=false}:{products:ProductChoice[];lines:Basket['lines'];setLines:(l:Basket['lines'])=>void;discount?:number;credit?:boolean}){
- const hasValidLine=lines.some(l=>l.sku.trim()!==''&&l.unitCode.trim()!==''&&l.quantity.trim()!==''&&Number(l.quantity)>0);
- const fillCatalog=()=>{
-  const existingBySku=new Map(lines.filter(l=>l.sku).map(l=>[l.sku,l]));
-  const next=products.slice(0,200).map(p=>{
-   const prev=existingBySku.get(p.sku);
-   return prev?{...prev,unitCode:prev.unitCode||defaultUnitForProduct(p)}:{sku:p.sku,unitCode:defaultUnitForProduct(p),quantity:''};
-  });
-  if(next.length)setLines(next);
- };
- const compactFilled=()=>{
-  const filled=lines.filter(l=>l.quantity.trim()!==''&&Number(l.quantity)>0);
-  setLines(filled.length?filled:[{sku:'',unitCode:'',quantity:''}]);
- };
- return <><fieldset className="crm-basket-sheet-fieldset"><legend>Hàng hóa và số lượng</legend>
-  <div className="crm-basket-sheet-toolbar">
-   <div className="crm-basket-sheet-summary">
-    <span>Đang có <strong>{lines.filter(l=>l.sku&&Number(l.quantity)>0).length||lines.length}</strong> dòng</span>
-    <span>· Tổng số lượng: <strong>{lines.reduce((sum,l)=>sum+(Number(l.quantity)>0?Number(l.quantity):0),0).toLocaleString('vi-VN')}</strong> gói</span>
-   </div>
-   <div className="crm-basket-sheet-actions">
-    {products.length>1&&<button type="button" className="button button--secondary crm-btn-compact" onClick={fillCatalog}>⚡ Điền sẵn bảng tất cả sản phẩm</button>}
-    {lines.length>1&&hasValidLine&&<button type="button" className="button button--secondary crm-btn-compact" onClick={compactFilled}>Lọc giữ dòng đã nhập số gói</button>}
-    <button type="button" className="button button--secondary crm-btn-compact" disabled={lines.length>=200} onClick={()=>setLines([...lines,{sku:'',unitCode:'',quantity:''}])}>Thêm hàng</button>
-   </div>
-  </div>
-  <div className="crm-basket-sheet-wrap" role="region" aria-label="Bảng nhập sản phẩm theo hàng và cột" tabIndex={0}>
-   <table className="crm-basket-sheet-table">
-    <thead>
-     <tr>
-      <th className="col-img">Hình ảnh</th>
-      <th className="col-product">Tên sản phẩm</th>
-      <th className="col-unit">Đơn vị</th>
-      <th className="col-qty">Gói (Số lượng)</th>
-      <th className="col-price">Đơn giá / Giá riêng</th>
-      <th className="col-action">Xóa</th>
-     </tr>
-    </thead>
-    <tbody>
-     {lines.map((l,i)=>{
-      const p=products.find(x=>x.sku===l.sku);
-      const rowRequired=!hasValidLine&&i===0;
-      const imgSrc=l.sku?resolveProductImage(l.sku,p?.image):'';
-      const unitLabel=p?.units.find(u=>u.code===l.unitCode)?.label||(p?.stock_unit||'Gói');
-      return <tr key={i} className={Number(l.quantity)>0?'is-filled':''}>
-       <td className="col-img">
-        <ProductThumbZoom src={imgSrc} name={p?.name||l.sku} sku={l.sku} weightLabel={p?.weight_label} retailPrice={p?.retail_price} stockUnit={p?.stock_unit} rowIndex={i}/>
-       </td>
-       <td className="col-product">
-        <select aria-label={'SKU đặt '+(i+1)} required={rowRequired} value={l.sku} onChange={e=>{const sku=e.target.value,prod=products.find(x=>x.sku===sku);setLines(lines.map((r,n)=>n===i?{sku,unitCode:defaultUnitForProduct(prod),quantity:r.quantity,requestedUnitPrice:r.requestedUnitPrice}:r));}}>
-         <option value="">-- Chọn sản phẩm --</option>
-         {products.map(prod=><option key={prod.id} value={prod.sku}>{prod.name}{prod.weight_label?' ('+prod.weight_label+')':''} · {prod.sku}</option>)}
-        </select>
-        {p&&<div className="crm-basket-product-meta"><span className="crm-basket-sku-badge">{p.sku}</span>{p.weight_label&&<span className="crm-basket-weight-badge">{p.weight_label}</span>}</div>}
-       </td>
-       <td className="col-unit">
-        <select aria-label={'Đơn vị đặt '+(i+1)} required={rowRequired} value={l.unitCode} onChange={e=>setLines(lines.map((r,n)=>n===i?{...r,unitCode:e.target.value}:r))}>
-         <option value="">Chọn đơn vị</option>
-         {p?.units.filter(u=>u.active).map(u=><option key={u.code} value={u.code}>{u.label}</option>)}
-        </select>
-       </td>
-       <td className="col-qty">
-        <div className="crm-basket-qty-cell">
-         <input aria-label={'Số lượng đặt '+(i+1)} required={rowRequired} inputMode="decimal" placeholder="Nhập số gói..." className="crm-basket-qty-input" value={l.quantity} onChange={e=>setLines(lines.map((r,n)=>n===i?{...r,quantity:e.target.value}:r))} onKeyDown={e=>{if(e.key==='ArrowDown'||e.key==='Enter'){if(i+1<lines.length){e.preventDefault();const nextEl=e.currentTarget.closest('tbody')?.querySelector<HTMLInputElement>(`input[aria-label="Số lượng đặt ${i+2}"]`);nextEl?.focus();nextEl?.select();}}else if(e.key==='ArrowUp'&&i>0){e.preventDefault();const prevEl=e.currentTarget.closest('tbody')?.querySelector<HTMLInputElement>(`input[aria-label="Số lượng đặt ${i}"]`);prevEl?.focus();prevEl?.select();}}}/>
-         <span className="crm-basket-qty-unit">{unitLabel}</span>
-        </div>
-        <div className="crm-basket-qty-chips">
-         {[10,20,50,100].map(step=><button key={step} type="button" tabIndex={-1} className="crm-qty-chip" onClick={()=>setLines(lines.map((r,n)=>n===i?{...r,quantity:String((Number(r.quantity)>0?Number(r.quantity):0)+step)}:r))}>+{step}</button>)}
-        </div>
-       </td>
-       <td className="col-price">
-        {p?.retail_price&&<div className="crm-basket-ref-price">Giá gốc: <strong>{Number(p.retail_price).toLocaleString('vi-VN')} ₫</strong> / {p.stock_unit||'Gói'}</div>}
-        <input aria-label={'Giá khác bảng (VND / đơn vị gốc) '+(i+1)} inputMode="numeric" pattern="[0-9]+" maxLength={24} placeholder="Giá riêng (nếu có)" value={l.requestedUnitPrice??''} onChange={e=>setLines(lines.map((r,n)=>n===i?{...r,requestedUnitPrice:e.target.value||undefined}:r))}/>
-       </td>
-       <td className="col-action">
-        <button type="button" className="button button--secondary crm-btn-compact" disabled={lines.length===1} onClick={()=>setLines(lines.filter((_,n)=>n!==i))}>Bỏ hàng {i+1}</button>
-       </td>
-      </tr>;
-     })}
-    </tbody>
-   </table>
-  </div>
- </fieldset><div className="work-fields"><label>Chiết khấu yêu cầu (%)<input name="discount" type="number" min={0} max={100} step="0.01" required defaultValue={discount/100}/></label></div><label className="work-check"><input name="creditTerms" type="checkbox" defaultChecked={credit}/>Yêu cầu mua công nợ</label></>;
+ const [discountPct,setDiscountPct]=useState(discount/100);
+ return <><CommercialProductGrid products={products} lines={lines} setLines={setLines} discountPercent={discountPct}/><div className="work-fields"><label>Chiết khấu yêu cầu (%)<input name="discount" type="number" min={0} max={100} step="0.01" required defaultValue={discount/100} onChange={e=>setDiscountPct(Number(e.target.value)||0)}/></label></div><label className="work-check"><input name="creditTerms" type="checkbox" defaultChecked={credit}/>Yêu cầu mua công nợ</label></>;
 }
 export function QuoteForm({products,partners,head,latest}:{products:ProductChoice[];partners:Choice[];head?:Quotation;latest?:QuotationViewVersion}){const [lines,setLines]=useState<Basket['lines']>(latest?.snapshot.basket.lines??[{sku:'',unitCode:'',quantity:''}]);return <Form endpoint="/api/crm/quotations/save" label="Lưu phiên bản báo giá" destination={r=>'/crm/quotations/'+r.id} payload={f=>({...(head?{id:head.id}:{}),version:head?.version??0,organizationId:head?.organization_id??str(f,'organizationId'),basket:{lines:filterActiveBasketLines(lines),discountBasisPoints:percent(str(f,'discount')),creditTerms:f.has('creditTerms')},delivery:{recipient:str(f,'recipient'),phone:str(f,'phone'),address:str(f,'address')},note:str(f,'note')})}><p>Tính lại theo bảng giá và quy đổi hiện tại. Bản đã gửi giữ nguyên; bản mới cần được gửi riêng.</p>{!head&&<label>Đối tác nhận báo giá<select name="organizationId" required><option value="">Chọn đối tác trong phạm vi</option>{partners.map(p=><option key={p.id} value={p.id}>{p.name} · {p.code}</option>)}</select></label>}<BasketFields products={products} lines={lines} setLines={setLines} discount={latest?.snapshot.basket.discountBasisPoints} credit={latest?.snapshot.basket.creditTerms}/><fieldset><legend>Thông tin giao và ghi chú gửi đối tác</legend><div className="work-fields"><label>Người nhận hàng<input name="recipient" required minLength={2} maxLength={120} defaultValue={latest?.snapshot.delivery.recipient}/></label><label>Số điện thoại nhận hàng<input name="phone" required minLength={5} maxLength={40} defaultValue={latest?.snapshot.delivery.phone}/></label><label>Địa chỉ giao<textarea aria-label="Địa chỉ giao" name="address" required minLength={3} maxLength={500} defaultValue={latest?.snapshot.delivery.address}/></label><label>Ghi chú gửi đối tác<textarea aria-label="Ghi chú gửi đối tác" name="note" maxLength={2000} defaultValue={latest?.snapshot.note}/></label></div></fieldset></Form>;}
 export function QuoteActionForm({head,version,manager,portal}:{head:Quotation;version:QuotationViewVersion;manager:boolean;portal:boolean}){return <Form endpoint="/api/crm/quotations/action" label="Xác nhận thao tác báo giá" payload={f=>({id:head.id,version:head.version,versionId:version.id,action:str(f,'action'),reason:str(f,'reason')})}><div className="work-fields"><label>Thao tác báo giá<select name="action">{portal?<><option value="ACCEPT">Chấp nhận bản đang gửi</option><option value="REQUEST_REVISION">Yêu cầu sửa bản đang gửi</option></>:<><option value="SEND">Gửi bản mới nhất vào portal</option>{manager&&version.approval_required&&<><option value="APPROVE">Duyệt ngoại lệ bản mới nhất</option><option value="REJECT">Từ chối ngoại lệ bản mới nhất</option></>}</>}</select></label><label>Lý do / nội dung phản hồi<textarea aria-label="Lý do / nội dung phản hồi" name="reason" required minLength={3} maxLength={2000}/></label></div><p>Thao tác gắn với phiên bản {version.number}. PDF và các điều kiện của bản đã gửi được giữ nguyên.</p></Form>;}
