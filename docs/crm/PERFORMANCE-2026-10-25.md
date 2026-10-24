@@ -11,6 +11,8 @@
 - Operations pages retain all five Vietnamese font weights, with the Latin and Vietnamese subsets. Duplicate service-worker registration in the CRM shell is removed; the operations layout still registers it.
 - The historical invoice table keeps dates and monetary figures on one line.
 - Cohamy-only nginx tuning adds JSON/React-stream MIME types to gzip, compression level 5 and `Vary: Accept-Encoding`. It changes neither proxy destinations nor private cache headers. The operator script validates the configuration, keeps a source backup and rolls back on failure.
+- A production warm-up exposed a real V8 heap exhaustion at the previous 512 MB limit. The web process receives a bounded 1,536 MB heap and 2 GB RSS restart threshold on the 16 GB VPS; the worker configuration is unchanged. This is capacity headroom, not proof that every possible memory leak is eliminated.
+- Deployment preserves or provisions the shared WordPress webhook replay directory. The previous production environment omitted it, causing authenticated CMS callbacks to repeatedly fail with `WORDPRESS_REPLAY_DIR_REQUIRED`. The existing signature, timestamp and atomic replay checks remain enforced.
 
 ## Evidence and limits
 

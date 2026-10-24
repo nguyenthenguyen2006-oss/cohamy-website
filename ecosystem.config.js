@@ -6,13 +6,15 @@ module.exports = {
       script: "node_modules/next/dist/bin/next",
       interpreter: process.env.COHAMY_NODE_BINARY || process.execPath,
       args: "start",
-      node_args: ["--max-old-space-size=512"],
+      // The production route graph exceeds 512 MB after warm-up; retain headroom
+      // for rendering while keeping a bounded process on the 16 GB VPS.
+      node_args: ["--max-old-space-size=1536"],
       cwd: __dirname,
       exec_mode: "fork",
       instances: 1,
       autorestart: true,
       watch: false,
-      max_memory_restart: "1G",
+      max_memory_restart: "2G",
       env_production: {
         NODE_ENV: "production",
         PORT: 3001,
