@@ -133,10 +133,17 @@ export CRM_DATABASE_URL="postgresql://cohamy_runtime:$RUNTIME_PASSWORD@127.0.0.1
 export COHAMY_PREVIOUS_ENV="$BACKUP/previous.env.production"
 BLOG_SOURCE="$(node -e 'const fs=require("fs"),c=require("node:util").parseEnv(fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8"));const s=c.BLOG_SOURCE||"legacy";if(!["legacy","wordpress","sheets"].includes(s))process.exit(2);process.stdout.write(s);')"
 export BLOG_SOURCE CRM_WEBSITE_ORDER_INTAKE=true
+if [[ "$BLOG_SOURCE" = wordpress ]]; then
+  # Keep replay protection across releases so valid CMS events do not retry 503
+  # indefinitely when an older release was missing this runtime setting.
+  WORDPRESS_REPLAY_DIR="$(node -e 'const fs=require("fs"),c=require("node:util").parseEnv(fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8"));process.stdout.write(c.WORDPRESS_REPLAY_DIR||"/root/cohamy-shared/wordpress-webhook-replay");')"
+  export WORDPRESS_REPLAY_DIR
+  mkdir -p "$WORDPRESS_REPLAY_DIR"
+fi
 export CRM_REGISTRATION_MODE=OPEN
 export UPLOAD_DIR="$SHARED/uploads/blog" NEXT_PUBLIC_UPLOAD_BASE_URL=https://cohamy.vn/uploads/blog
 mkdir -p "$UPLOAD_DIR"
-node -e 'const fs=require("fs");const keys=["CRM_DATABASE_MODE","CRM_DATABASE_URL","CRM_ENVIRONMENT","CRM_PUBLIC_ORIGIN","CRM_WEBSITE_ORDER_INTAKE","CRM_REGISTRATION_MODE","BLOG_SOURCE","UPLOAD_DIR","NEXT_PUBLIC_UPLOAD_BASE_URL","CRM_SETTINGS_ENCRYPTION_KEY"];const old=fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8").split(/\r?\n/).filter(l=>!keys.some(k=>l.startsWith(k+"="))&&!l.startsWith("CRM_BOOTSTRAP_")&&!l.startsWith("CRM_LOCAL_DATA_DIR=")).join("\n");fs.writeFileSync(".env.production",old+"\n"+keys.map(k=>k+"="+process.env[k]).join("\n")+"\n",{mode:0o600});'
+node -e 'const fs=require("fs");const keys=["CRM_DATABASE_MODE","CRM_DATABASE_URL","CRM_ENVIRONMENT","CRM_PUBLIC_ORIGIN","CRM_WEBSITE_ORDER_INTAKE","CRM_REGISTRATION_MODE","BLOG_SOURCE","UPLOAD_DIR","NEXT_PUBLIC_UPLOAD_BASE_URL","CRM_SETTINGS_ENCRYPTION_KEY",...(process.env.WORDPRESS_REPLAY_DIR?["WORDPRESS_REPLAY_DIR"]:[])];const old=fs.readFileSync(process.env.COHAMY_PREVIOUS_ENV,"utf8").split(/\r?\n/).filter(l=>!keys.some(k=>l.startsWith(k+"="))&&!l.startsWith("CRM_BOOTSTRAP_")&&!l.startsWith("CRM_LOCAL_DATA_DIR=")).join("\n");fs.writeFileSync(".env.production",old+"\n"+keys.map(k=>k+"="+process.env[k]).join("\n")+"\n",{mode:0o600});'
 npm run build
 npm run test:crm:build
 

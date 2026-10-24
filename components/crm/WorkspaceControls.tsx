@@ -1,5 +1,5 @@
 'use client';
-import Link from 'next/link';
+import {CrmNavLink as Link} from './CrmNavLink';
 import {useEffect,useId,useRef,useState,useMemo} from 'react';
 import {useRouter} from 'next/navigation';
 import type {Organization} from '@/lib/crm/types';

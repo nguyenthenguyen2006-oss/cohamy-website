@@ -28,12 +28,14 @@ export function DashboardWorkbench({
  pendingOrders,
  tasks,
  overdueTasks,
+ showTasks = true,
 }: {
  reconciliation: SalesReconciliationResult | null;
  inventoryMatrix: InventoryMatrixResult | null;
  pendingOrders: OrderRecord[];
  tasks: TaskRecord[];
  overdueTasks: TaskRecord[];
+ showTasks?: boolean;
 }) {
  const defaultSheet =
   reconciliation && reconciliation.orders.length > 0
@@ -188,7 +190,7 @@ export function DashboardWorkbench({
  const sheets:{key:Sheet;label:string;count:string;icon:typeof Table}[]=[
   ...(reconciliation?[{key:'reconciliation' as const,label:'Bán hàng & công nợ',count:`${reconciliation.orders.length} đơn`,icon:Table}]:[]),
   ...(inventoryMatrix?[{key:'matrix' as const,label:'Nhập – xuất – tồn',count:`${inventoryMatrix.rows.length} mặt hàng`,icon:Warehouse}]:[]),
-  {key:'queues',label:'Việc cần xử lý',count:`${pendingOrders.length+allTasks.length} mục`,icon:ListChecks},
+  {key:'queues',label:showTasks?'Việc cần xử lý':'Yêu cầu website',count:`${pendingOrders.length+(showTasks?allTasks.length:0)} mục`,icon:ListChecks},
  ];
  return (
   <div className="crm-dashboard-sheets">
@@ -252,7 +254,7 @@ export function DashboardWorkbench({
       }
      />
 
-     <CrmSpreadsheet
+     {showTasks&&<CrmSpreadsheet
       sheetKey="dashboard_tasks_queue"
       presentation="workbench"
       defaultDensity="comfortable"
@@ -266,7 +268,7 @@ export function DashboardWorkbench({
         Mở bảng Công việc →
        </Link>
       }
-     />
+     />}
     </div>
    )}</div>
   </div>

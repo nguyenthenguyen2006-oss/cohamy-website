@@ -4,7 +4,7 @@ import * as c from '@/lib/crm/channel';
 import * as r from '@/lib/crm/period-reports';
 type Context={params:Promise<{action:string}>};
 // Meeting 12/10: network, levels, promotions, transfers, management chain, order catalog, period reports, KPI.
-export async function GET(request:Request,context:Context){try{const {action}=await context.params,user=await apiUser(['levels','network','profile','promotions','transfers','network-requests'].includes(action)?'network':undefined),q=new URL(request.url).searchParams;
+export async function GET(request:Request,context:Context){try{const {action}=await context.params,user=await apiUser(['levels','network','profile','promotions','transfers','network-requests'].includes(action)?'network':action==='report'?'period-sales':action.startsWith('incentive')?'kpi':undefined),q=new URL(request.url).searchParams;
  if(action==='levels')return json(await c.listMembershipLevels());
  if(action==='network')return json(await c.networkOverview(user));
  if(action==='profile')return json(await c.partnerChannelProfile(user,q.get('id')??''));
@@ -18,7 +18,7 @@ export async function GET(request:Request,context:Context){try{const {action}=aw
  if(action==='incentive-progress')return json(await r.incentiveProgress(user,q.get('id')??''));
  throw new CrmError('NOT_FOUND',404);
 }catch(e){return apiError(e);}}
-export async function POST(request:Request,context:Context){try{sameOrigin(request);const {action}=await context.params,user=await apiUser(['level','profile','promotion','promotion-active','child-discount','transfer-request','transfer-decision'].includes(action)?'network':undefined),input=await readJson(request);
+export async function POST(request:Request,context:Context){try{sameOrigin(request);const {action}=await context.params,user=await apiUser(['level','profile','promotion','promotion-active','child-discount','transfer-request','transfer-decision'].includes(action)?'network':action==='report'?'period-sales':action.startsWith('incentive')?'kpi':undefined),input=await readJson(request);
  if(action==='level')return json(await c.saveMembershipLevel(user,input));
  if(action==='profile')return json(await c.setPartnerProfile(user,input));
  if(action==='promotion')return json(await c.savePromotion(user,input));

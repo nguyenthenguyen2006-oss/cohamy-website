@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { CrmNavLink as Link } from './CrmNavLink';
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -19,8 +19,8 @@ import {
 import { getVisibleHubs, visibleModules } from "@/lib/crm/modules";
 import { roleLabels, type Principal } from "@/lib/crm/types";
 import { CrmModuleIcon } from "./ModuleIcon";
-import { PwaRegistrar } from "./PwaRegistrar";
 import { QuickCreate } from "./QuickCreate";
+import './performance.css';
 
 const subLabels: Record<string, string> = {
   new: "Tạo mới",
@@ -140,7 +140,7 @@ export function CrmShell({
   if (isPortal) {
     return (
       <div className="work-shell">
-        <PwaRegistrar />
+        
         <a className="skip-link" href="#portal-content">
           Đến nội dung chính
         </a>
@@ -263,7 +263,7 @@ export function CrmShell({
 
   return (
     <div className={`crm-golden-saas-shell${sidebarCollapsed ? " sidebar-collapsed" : ""}`}>
-      <PwaRegistrar />
+      
       <a className="skip-link" href="#crm-main">
         Chuyển đến nội dung chính
       </a>
@@ -353,7 +353,7 @@ export function CrmShell({
         </div>
 
         <div className="crm-topbar__actions">
-          {user.role !== "ACCOUNTANT" && (
+          {connected.some(module => module.id === "search") && (
             <Link
               href="/crm/search"
               className="crm-topbar__search-pill"
@@ -365,14 +365,14 @@ export function CrmShell({
             </Link>
           )}
 
-          <Link
+          {connected.some(module => module.id === "notifications") && <Link
             href="/crm/notifications"
             className="crm-topbar__icon-btn"
             aria-label="Thông báo hóa đơn & hệ thống"
             title="Thông báo hóa đơn & hệ thống"
           >
             <Bell size={18} weight="bold" aria-hidden="true" />
-          </Link>
+          </Link>}
 
           {user.role !== "ACCOUNTANT" && (
             <div className="crm-topbar__quick-create">
