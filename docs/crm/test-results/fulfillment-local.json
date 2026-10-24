@@ -1,13 +1,13 @@
 {
-  "testedAt": "2026-10-12T08:11:24.638Z",
+  "testedAt": "2026-10-24T20:35:32.874Z",
   "environment": "LOCAL isolated fictitious PGlite; no real delivery/stock/money/provider mutation",
   "status": "PASS",
   "references": {
-    "orderId": "1acc8ece-da2a-4b21-a10c-2c8ab1f48528",
-    "firstDelivery": "1602d6d0-4968-435a-9182-589f67283130",
-    "firstParcel": "2b211dac-65e1-40e9-bccf-fec2b7bed346",
-    "firstTrip": "656cdb2e-639a-4ae9-be9e-ea4dbaa0f8ab",
-    "returnId": "6d347b80-bdf2-40fc-9a78-2e32314118f4"
+    "orderId": "c01b8f83-ec88-4a7c-8bc8-f34c0cccfb67",
+    "firstDelivery": "a4219942-7b1e-469d-8324-b6e7f8623d4f",
+    "firstParcel": "fe03615b-dd19-48aa-8dbb-5324cd3abee8",
+    "firstTrip": "929e7680-feda-499f-b975-1fa41e332cdf",
+    "returnId": "67c2d537-5bf6-4198-b209-f299f05f5bc7"
   },
   "cases": [
     {
@@ -40,6 +40,14 @@
     },
     {
       "name": "F069/F070 return eligibility and quarantine movement do not create refund or sellable stock",
+      "status": "PASS"
+    },
+    {
+      "name": "Bulk source picking validates every scan atomically, preserves version and replays once",
+      "status": "PASS"
+    },
+    {
+      "name": "Bulk backorders reject a bad product without partial writes and retry once",
       "status": "PASS"
     }
   ]

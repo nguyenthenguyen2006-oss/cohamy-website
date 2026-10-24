@@ -1,0 +1,19 @@
+{
+  "environment": "LOCAL Edge / isolated PGlite",
+  "mail": "DISABLED",
+  "cases": [
+    {
+      "name": "Picking shows every eligible source lot with names, unit, scan and quantity; saves both in one transaction",
+      "status": "PASS"
+    },
+    {
+      "name": "Backorder grid contains only shortage products and submits named rows in one save",
+      "status": "PASS"
+    },
+    {
+      "name": "Commercial request opens prefilled catalogue by name; untouched products are omitted from saved request",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}

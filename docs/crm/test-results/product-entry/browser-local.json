@@ -1,0 +1,39 @@
+{
+  "environment": "LOCAL / real Edge / isolated PGlite",
+  "provider": "DISABLED; no external sends",
+  "cases": [
+    {
+      "test": "Bulk catalogue has names/images/units; search preserves quantities, quick increments and Enter; only entered rows persist",
+      "status": "PASS"
+    },
+    {
+      "test": "Admin creates draft → preview → sends factory request via actual form",
+      "status": "PASS"
+    },
+    {
+      "test": "Factory accepts assigned request and creates/locks a transfer from it",
+      "status": "PASS"
+    },
+    {
+      "test": "Warehouse form autofills 100; receipt 98 persists with discrepancy and locks",
+      "status": "PASS"
+    },
+    {
+      "test": "Accountant has linked document columns, uploads VAT once, no legacy approval buttons",
+      "status": "PASS"
+    },
+    {
+      "test": "Warehouse issues standalone delivery through real form; preview leaves stock and confirmation deducts once",
+      "status": "PASS"
+    },
+    {
+      "test": "Direct API checks deny wrong warehouse, accountant/manager mutations and settings reads",
+      "status": "PASS"
+    },
+    {
+      "test": "Admin mail rules UI and role screens fit desktop and mobile",
+      "status": "PASS"
+    }
+  ],
+  "errors": []
+}
