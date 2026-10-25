@@ -107,7 +107,7 @@ export async function getReceivableDetail(user: Principal, receivableId: string)
     `SELECT a.id, a.payment_id, a.amount::text, a.created_at as allocated_at, p.code as payment_code, p.reference
      FROM cohamy_crm.payment_allocations a
      JOIN cohamy_crm.payment_receipts p ON p.id = a.payment_id
-     WHERE a.receivable_id = $1
+     WHERE a.receivable_id = $1 AND NOT EXISTS(SELECT 1 FROM cohamy_crm.invoice_allocation_reversals rev WHERE rev.allocation_id=a.id)
      ORDER BY a.created_at ASC`,
     [rec.id]
   )).rows;

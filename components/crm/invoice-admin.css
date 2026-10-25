@@ -1,0 +1,22 @@
+.cohamy-crm .crm-invoice-actions{display:inline-flex;flex-wrap:wrap;gap:var(--space-2,.5rem);align-items:center}
+.crm-invoice-admin-dialog{width:min(1180px,calc(100vw - 24px));max-height:calc(100dvh - 32px);padding:var(--space-5,1.25rem);border:1px solid var(--crm-border,#d6c5ad);border-radius:var(--radius-card,12px);background:var(--crm-bg-surface);color:var(--crm-ink);font:inherit;overflow:auto}
+.crm-invoice-admin-dialog::backdrop{background:rgb(23 43 67 / .45)}
+.crm-invoice-admin-dialog form{display:grid;gap:var(--space-4,1rem)}
+.crm-invoice-admin-dialog label{display:grid;gap:var(--space-1,.25rem)}
+.crm-invoice-admin-dialog input,.crm-invoice-admin-dialog select,.crm-invoice-admin-dialog textarea{width:100%;min-width:0;box-sizing:border-box;font:inherit;color:inherit;background:var(--crm-bg-surface);border:1px solid var(--crm-border,#d6c5ad);border-radius:var(--radius-field,5px);padding:var(--space-2,.5rem)}
+.crm-invoice-admin-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-3,.75rem)}
+.crm-invoice-admin-dialog .crm-table-wrap{max-width:100%;overflow:auto}
+.crm-invoice-admin-dialog :focus-visible{outline:2px solid var(--crm-focus,#bf4b14);outline-offset:2px}
+@media(max-width:700px){.crm-invoice-admin-fields{grid-template-columns:minmax(0,1fr)}.crm-invoice-admin-dialog{max-height:calc(100dvh - 16px);padding:var(--space-3,.75rem)}.crm-invoice-admin-dialog .work-actions{flex-wrap:wrap}}
+
+.crm-invoice-admin-dialog{margin:auto;inset:0;box-sizing:border-box}
+.crm-invoice-admin-dialog .work-actions{display:flex;align-items:center;gap:var(--space-3,.75rem);flex-wrap:wrap}
+.crm-invoice-admin-dialog header.work-actions{justify-content:space-between;align-items:flex-start}
+.crm-invoice-admin-dialog h2{font-size:18px;line-height:1.4;margin:0}
+.crm-invoice-admin-dialog .crm-product-entry table{min-width:1100px}
+.crm-invoice-admin-dialog .crm-product-entry-name{min-width:300px}
+.crm-invoice-admin-dialog .crm-product-entry td input{min-width:130px;font-variant-numeric:tabular-nums}
+.crm-invoice-admin-dialog input[readonly]{background:var(--crm-bg-muted,#f6f4ef)}
+
+.crm-invoice-impact-hint{display:none}
+@media(max-width:700px){.crm-invoice-impact-hint{display:block;font-size:12px;color:var(--crm-text-muted,#57534e);margin:0}}

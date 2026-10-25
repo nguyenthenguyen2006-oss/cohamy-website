@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "environment": "STAGING restored native PostgreSQL; no stock mutation",
+  "cases": [
+    {
+      "name": "Native original inventory document cannot reverse stock again after Admin invoice recall",
+      "status": "PASS"
+    }
+  ]
+}

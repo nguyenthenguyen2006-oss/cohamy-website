@@ -31,12 +31,16 @@ export const historicalInvoiceSchema = z.object({
   if (data.subtotal + data.vatAmount !== data.total || data.paidAmount !== data.total) context.addIssue({ code:'custom', message:'TOTAL_OR_PAYMENT_MISMATCH' });
 });
 export type HistoricalInvoice = z.infer<typeof historicalInvoiceSchema>;
+export type HistoricalInvoiceView=Omit<HistoricalInvoice,'paymentStatus'|'paymentConfirmation'|'lines'>&{
+ paymentStatus:'PAID'|'PARTIAL'|'UNPAID'|'CANCELLED';paymentConfirmation:string;fee?:number;
+ lines:{name:string;unit:string;quantity:number;unitPrice:number;amount:number}[];
+};
 export interface HistoricalInvoiceRecord {
   id: string;
   warehouse_id: string;
   warehouse_name: string;
   warehouse_region: string;
-  snapshot: HistoricalInvoice;
+  snapshot: HistoricalInvoiceView;
   source_filename: string;
   source_size: number;
   source_checksum: string;

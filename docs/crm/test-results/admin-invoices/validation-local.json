@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL source validation; isolated test data only",
+  "checks": {
+    "typescript": "tsc --noEmit passed",
+    "eslint": "Changed sources pass; existing unused warehouseRoleRegion import warning remains in fulfillment.ts",
+    "catalog": {
+      "operations": 336,
+      "available": 228,
+      "retired": 108,
+      "status": "PASS"
+    },
+    "services": {
+      "cases": 14,
+      "status": "PASS"
+    },
+    "nativeRestoredPostgres": {
+      "cases": 7,
+      "status": "PASS",
+      "reports": [
+        "native-staging.json",
+        "native-note.json",
+        "native-guard.json"
+      ]
+    },
+    "mcpWrites": "Stage official SDK edit, recall and both retry layers passed; production business writes prohibited during QA",
+    "ui": "Tax row column absent; desktop/390/320; reason, focus, Escape, scoped horizontal scroll and recall quantities verified",
+    "concurrentReleaseCompatibility": {
+      "preservedSha": "9247dd81fb36c78b4472464021b63f02e93f345c",
+      "buyerCases": 13,
+      "invoiceCases": 14,
+      "status": "PASS",
+      "migration": "046-admin-invoices.sql follows deployed 045-customer-supermarket.sql"
+    }
+  }
+}

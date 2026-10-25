@@ -2,7 +2,7 @@ export type FlowKind = 'REQUEST' | 'DISPATCH' | 'RECEIPT' | 'ISSUE';
 export type FlowLine = {
   productId:string; sku:string; name:string; unit:string; quantity:string;
   ordered:string; shipped:string; received:string; difference:string;
-  unitPrice:string; amount:string; note:string;
+  unitPrice:string; amount:string; discount?:string; tax?:string; note:string;
 };
 export type FlowSnapshot = {
   id:string; code:string; kind:FlowKind; revision:number; state:string;

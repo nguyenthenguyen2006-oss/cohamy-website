@@ -8,6 +8,8 @@ import { assertPermission, CrmError, warehouseRoleRegion } from './permissions';
 import { commercialDigest, parseCommercial } from './commercial-common';
 import { historicalInvoiceSchema, type HistoricalInvoiceRecord } from './historical-order-model';
 import type { Principal } from './types';
+import type {InvoiceContent} from './invoice-admin-model';
+import {invoiceLineAmount} from './invoice-admin-read';
 
 const sha = (bytes: Buffer) => createHash('sha256').update(bytes).digest('hex');
 const batchSchema = z.object({ warehouseId:z.uuid(), invoices:z.array(z.object({
@@ -25,12 +27,14 @@ function scope(user: Principal) {
   if (user.role === 'WAREHOUSE') { params.push(user.membershipId); sql += ' AND EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.warehouse_id=w.id AND a.membership_id=$2)'; }
   return { sql, params };
 }
-const columns = 'h.id,h.warehouse_id,h.snapshot,h.snapshot_checksum,h.source_filename,h.source_size,h.source_checksum,h.imported_at::text,w.name AS warehouse_name,w.region AS warehouse_region';
-function verifySnapshot(row: HistoricalInvoiceRecord & { snapshot_checksum:string }) {
+const adminJoin="LEFT JOIN cohamy_crm.invoice_admin_heads ia ON ia.kind='HISTORICAL' AND ia.entity_id=h.id";
+const columns = `h.id,COALESCE((ia.content->>'warehouseId')::uuid,h.warehouse_id) AS warehouse_id,h.snapshot,h.snapshot_checksum,h.source_filename,h.source_size,h.source_checksum,h.imported_at::text,w.name AS warehouse_name,w.region AS warehouse_region,ia.content AS admin_content,ia.total_amount::text AS admin_total,ia.paid_amount::text AS admin_paid,ia.cancelled_at AS admin_cancelled`;
+function verifySnapshot(row: HistoricalInvoiceRecord & { snapshot_checksum:string;admin_content?:InvoiceContent|null;admin_total?:string;admin_paid?:string;admin_cancelled?:string|null }) {
   const parsed = historicalInvoiceSchema.safeParse(row.snapshot);
   if (!parsed.success || commercialDigest(parsed.data) !== row.snapshot_checksum) throw new CrmError('HISTORICAL_INVOICE_INTEGRITY_FAILED',503);
-  const { snapshot_checksum: _, ...record } = row;
+  const { snapshot_checksum: _,admin_content:content,admin_total:total,admin_paid:paid,admin_cancelled:cancelled, ...record } = row;
   void _;
+  if(content){const amount=Number(total),collected=Number(paid),subtotal=content.lines.reduce((n,l)=>n+Number(l.unitPrice)*Number(l.quantity)-Number(l.discount),0),tax=content.lines.reduce((n,l)=>n+Number(l.tax),0);record.snapshot={...record.snapshot,series:content.invoiceSymbol,number:content.invoiceNumber,date:content.issuedDate,buyerName:content.buyerName,buyerContact:content.recipient,buyerTaxId:content.buyerTaxId,buyerAddress:content.buyerAddress,note:content.note,lines:content.lines.map(l=>({name:l.name,unit:l.unit,quantity:Number(l.quantity),unitPrice:Number(l.unitPrice),amount:Number(invoiceLineAmount(l))-Number(l.tax)})),subtotal,fee:Number(content.fee),vatAmount:tax,total:amount,paidAmount:collected,paymentStatus:cancelled?'CANCELLED':collected>=amount?'PAID':collected>0?'PARTIAL':'UNPAID',paymentConfirmation:'ADMIN_CORRECTED_FROM_LEDGER'};}
   return record;
 }
 export async function listHistoricalInvoices(user: Principal, query:{q?:string;page?:string}={}) {
@@ -39,16 +43,16 @@ export async function listHistoricalInvoices(user: Principal, query:{q?:string;p
   return (await database()).transaction(async tx => {
     await assertCurrentPrincipal(tx,user);
     const params = [...access.params,'%'+q+'%'];
-    const where = access.sql + ` AND (h.invoice_number ILIKE $${params.length} OR h.snapshot->>'buyerName' ILIKE $${params.length} OR h.snapshot->>'buyerTaxId' ILIKE $${params.length})`;
-    const summary = (await tx.query<{total:string;amount:string;paid:string}>(`SELECT count(*)::text AS total,coalesce(sum((h.snapshot->>'total')::bigint),0)::text AS amount,coalesce(sum((h.snapshot->>'paidAmount')::bigint),0)::text AS paid FROM cohamy_crm.historical_order_invoices h JOIN cohamy_crm.warehouses w ON w.id=h.warehouse_id WHERE ${where}`,params)).rows[0];
-    const items = (await tx.query<HistoricalInvoiceRecord & {snapshot_checksum:string}>(`SELECT ${columns} FROM cohamy_crm.historical_order_invoices h JOIN cohamy_crm.warehouses w ON w.id=h.warehouse_id WHERE ${where} ORDER BY h.invoice_date DESC,h.invoice_number DESC,h.id LIMIT 50 OFFSET $${params.length+1}`,[...params,(page-1)*50])).rows.map(verifySnapshot);
+    const where = access.sql + ` AND ia.cancelled_at IS NULL AND (COALESCE(ia.content->>'invoiceNumber',h.invoice_number) ILIKE $${params.length} OR COALESCE(ia.content->>'buyerName',h.snapshot->>'buyerName') ILIKE $${params.length} OR COALESCE(ia.content->>'buyerTaxId',h.snapshot->>'buyerTaxId') ILIKE $${params.length})`;
+    const summary = (await tx.query<{total:string;amount:string;paid:string}>(`SELECT count(*)::text AS total,coalesce(sum(coalesce(ia.total_amount,(h.snapshot->>'total')::bigint)),0)::text AS amount,coalesce(sum(coalesce(ia.paid_amount,(h.snapshot->>'paidAmount')::bigint)),0)::text AS paid FROM cohamy_crm.historical_order_invoices h ${adminJoin} JOIN cohamy_crm.warehouses w ON w.id=COALESCE((ia.content->>'warehouseId')::uuid,h.warehouse_id) WHERE ${where}`,params)).rows[0];
+    const items = (await tx.query<HistoricalInvoiceRecord & {snapshot_checksum:string}>(`SELECT ${columns} FROM cohamy_crm.historical_order_invoices h ${adminJoin} JOIN cohamy_crm.warehouses w ON w.id=COALESCE((ia.content->>'warehouseId')::uuid,h.warehouse_id) WHERE ${where} ORDER BY COALESCE(ia.content->>'issuedDate',h.invoice_date::text) DESC,h.invoice_number DESC,h.id LIMIT 50 OFFSET $${params.length+1}`,[...params,(page-1)*50])).rows.map(verifySnapshot);
     return {items,total:Number(summary.total),amount:summary.amount,paid:summary.paid,page,pageSize:50};
   });
 }
 async function record(sql:Sql,user:Principal,id:string) {
   const access=scope(user);
   if (!z.uuid().safeParse(id).success) throw new CrmError('NOT_FOUND',404);
-  const row=(await sql.query<HistoricalInvoiceRecord & {snapshot_checksum:string}>(`SELECT ${columns} FROM cohamy_crm.historical_order_invoices h JOIN cohamy_crm.warehouses w ON w.id=h.warehouse_id WHERE ${access.sql} AND h.id=$${access.params.length+1}`,[...access.params,id])).rows[0];
+  const row=(await sql.query<HistoricalInvoiceRecord & {snapshot_checksum:string}>(`SELECT ${columns} FROM cohamy_crm.historical_order_invoices h ${adminJoin} JOIN cohamy_crm.warehouses w ON w.id=COALESCE((ia.content->>'warehouseId')::uuid,h.warehouse_id) WHERE ${access.sql} AND h.id=$${access.params.length+1}`,[...access.params,id])).rows[0];
   if (!row) throw new CrmError('NOT_FOUND',404);
   return verifySnapshot(row);
 }

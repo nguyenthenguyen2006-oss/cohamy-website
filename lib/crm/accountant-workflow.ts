@@ -1178,6 +1178,7 @@ export async function getAccountantWorkspaceData(user: Principal) {
        LEFT JOIN cohamy_crm.sales_orders s ON s.request_id = r.id
        LEFT JOIN cohamy_crm.warehouses w ON w.id = c.warehouse_id
        LEFT JOIN cohamy_crm.users u ON u.id = r.creator_id
+       WHERE NOT EXISTS (SELECT 1 FROM cohamy_crm.invoice_admin_heads ia WHERE ia.kind='SALES' AND ia.entity_id=COALESCE(c.order_id,s.id) AND ia.cancelled_at IS NOT NULL)
        ORDER BY c.updated_at DESC, c.created_at DESC
        LIMIT 200`
     ),
@@ -1250,6 +1251,7 @@ export async function getAccountantWorkspaceData(user: Principal) {
        JOIN cohamy_crm.warehouses w ON w.id = f.warehouse_id
        LEFT JOIN cohamy_crm.factory_invoices p ON p.id = f.parent_id
        LEFT JOIN cohamy_crm.organizations sup ON sup.id = f.supplier_id
+       WHERE f.workflow_state<>'CANCELLED'
        ORDER BY f.created_at DESC
        LIMIT 200`
     ),
@@ -1308,6 +1310,7 @@ export async function getAccountantWorkspaceData(user: Principal) {
               h.created_by_name, h.created_by_role, h.created_at::text
        FROM cohamy_crm.warehouse_handover_invoices h
        JOIN cohamy_crm.warehouses w ON w.id = h.warehouse_id
+       WHERE h.workflow_state<>'CANCELLED'
        ORDER BY h.created_at DESC
        LIMIT 200`
     ),
@@ -1505,6 +1508,7 @@ export async function getAccountantWorkspaceData(user: Principal) {
        LEFT JOIN cohamy_crm.warehouse_handover_invoices h ON h.id = v.handover_invoice_id
        LEFT JOIN cohamy_crm.warehouses w ON w.id = COALESCE(v.warehouse_id, c.warehouse_id, h.warehouse_id)
        LEFT JOIN cohamy_crm.vat_invoices pv ON pv.id = v.parent_vat_invoice_id
+       WHERE v.status<>'CANCELLED'
        ORDER BY v.updated_at DESC, v.created_at DESC
        LIMIT 200`
     ),
