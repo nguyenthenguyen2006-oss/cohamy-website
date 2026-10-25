@@ -1,0 +1,176 @@
+{
+  "status": "PASS",
+  "release": "9247dd81fb36c78b4472464021b63f02e93f345c",
+  "testedAt": "2026-10-25T09:11:33.150Z",
+  "backups": {
+    "beforeMigration": "/root/cohamy-backups/20261025T085809Z-9247dd81fb36/pre-migration/2026-10-25T085941169Z-fa0258a3",
+    "beforeCutover": "/root/cohamy-backups/20261025T085809Z-9247dd81fb36/before-cutover/2026-10-25T090652648Z-7781bd41",
+    "bothRestoredAndVerified": true
+  },
+  "candidateChecks": 14,
+  "publicHttpsChecks": 14,
+  "businessData": [
+    {
+      "table": "products",
+      "rows": "11",
+      "unchanged": true
+    },
+    {
+      "table": "warehouses",
+      "rows": "2",
+      "unchanged": true
+    },
+    {
+      "table": "warehouse_locations",
+      "rows": "5",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_lots",
+      "rows": "15",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_balances",
+      "rows": "22",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_movements",
+      "rows": "103",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_documents",
+      "rows": "20",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_reservations",
+      "rows": "43",
+      "unchanged": true
+    },
+    {
+      "table": "warehouse_handover_invoices",
+      "rows": "1",
+      "unchanged": true
+    },
+    {
+      "table": "factory_invoices",
+      "rows": "5",
+      "unchanged": true
+    },
+    {
+      "table": "accounting_order_clearances",
+      "rows": "10",
+      "unchanged": true
+    },
+    {
+      "table": "sales_orders",
+      "rows": "8",
+      "unchanged": true
+    },
+    {
+      "table": "payment_receipts",
+      "rows": "0",
+      "unchanged": true
+    },
+    {
+      "table": "historical_order_invoices",
+      "rows": "4",
+      "unchanged": true
+    }
+  ],
+  "businessDataUnchanged": true,
+  "newTableRows": [
+    {
+      "table": "buyer_branches",
+      "rows": "0"
+    },
+    {
+      "table": "buyer_contracts",
+      "rows": "0"
+    },
+    {
+      "table": "buyer_orders",
+      "rows": "0"
+    },
+    {
+      "table": "buyer_order_events",
+      "rows": "0"
+    },
+    {
+      "table": "buyer_actions",
+      "rows": "0"
+    },
+    {
+      "table": "buyer_delivery_receipts",
+      "rows": "0"
+    },
+    {
+      "table": "buyer_statement_acknowledgements",
+      "rows": "0"
+    }
+  ],
+  "buyerAccounts": [],
+  "productionQaAccounts": 0,
+  "immutableRuntimePermissions": [
+    {
+      "table": "buyer_order_events",
+      "read": true,
+      "insert": true,
+      "update": false,
+      "delete": false
+    },
+    {
+      "table": "buyer_actions",
+      "read": true,
+      "insert": true,
+      "update": false,
+      "delete": false
+    },
+    {
+      "table": "buyer_delivery_receipts",
+      "read": true,
+      "insert": true,
+      "update": false,
+      "delete": false
+    },
+    {
+      "table": "buyer_statement_acknowledgements",
+      "read": true,
+      "insert": true,
+      "update": false,
+      "delete": false
+    }
+  ],
+  "existingAutomaticPdfMail": {
+    "enabled": true,
+    "event": "warehouse.issue.confirmed",
+    "attachment": "EVENT",
+    "recipientVerifiedAgainstConfiguredAddress": true
+  },
+  "processes": [
+    {
+      "name": "cohamy",
+      "pid": 2744976,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/9247dd81fb36c78b4472464021b63f02e93f345c",
+      "restarts": 0,
+      "memoryBytes": 567287808
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 2744977,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/9247dd81fb36c78b4472464021b63f02e93f345c",
+      "restarts": 0,
+      "memoryBytes": 123703296
+    }
+  ],
+  "stagingCleanup": {
+    "databaseDropped": "cohamy_qa_buyer_20261025_007bf349",
+    "runtimeRoleDropped": true,
+    "temporaryCredentialFilesRemoved": true
+  }
+}

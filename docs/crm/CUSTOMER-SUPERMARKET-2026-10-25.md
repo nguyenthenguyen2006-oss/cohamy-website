@@ -8,7 +8,7 @@ Phạm vi đã xác nhận: bổ sung hai loại tài khoản để Admin cấp 
 2. Vào **Tài khoản → Tạo mới**, chọn **Khách hàng** hoặc **Siêu thị** và đúng hồ sơ.
 3. Người dùng đăng nhập tại /portal. Tài khoản nội bộ tiếp tục dùng /crm.
 
-Hai vai trò mới thuộc hồ sơ CUSTOMER. Không mở quyền của đại lý, nhà máy hoặc nhân viên nội bộ cho khách. Cùng một hồ sơ không thể có hai loại tài khoản bên mua đang hoạt động trái nhau.
+Hai vai trò mới thuộc hồ sơ CUSTOMER. Không mở quyền của đại lý, nhà máy hoặc nhân viên nội bộ cho khách. Khi cấp tài khoản hoặc đổi vai trò, hệ thống chặn loại bên mua xung đột với tài khoản khác đang hoạt động trong cùng hồ sơ.
 
 ## Luồng khách hàng
 
@@ -62,3 +62,16 @@ Catalog tài khoản chứa giá trị enum thật, gồm CUSTOMER và SUPERMARK
 - Hồi quy: 19 nhóm luồng nhà máy/kho/kế toán/chứng từ/mail đã đạt.
 - Kết quả chi tiết: docs/crm/test-results/buyer/. Kiểm thử dùng hồ sơ giả trong database riêng, không phải dữ liệu kinh doanh production.
 - Khi triển khai phải có backup/restore đã xác minh, migration cộng thêm, candidate smoke và kiểm tra lại HTTPS/MCP. Không suy diễn bằng chứng staging thành đã triển khai production.
+
+## Production đã xác minh
+
+- Đã triển khai source 9247dd81fb36c78b4472464021b63f02e93f345c lên cohamy.vn ngày 25/10/2026.
+- Hai bản backup trước migration và trước chuyển release đều đã khôi phục thử, kiểm tra manifest và tính toàn vẹn tệp.
+- 14 kiểm tra candidate và 14 kiểm tra HTTPS production đạt, gồm OAuth/MCP thật, enum hai loại tài khoản và API dữ liệu mới.
+- Đối chiếu fingerprint 14 bảng kinh doanh trước/sau: giữ nguyên dữ liệu, tồn kho, đơn hàng, thanh toán và hóa đơn cũ.
+- Bảy bảng mới chưa có dữ liệu kinh doanh; không tạo tài khoản khách/siêu thị giả trên production. Admin tự cấp sau.
+- Rule tự gửi PDF khi xác nhận xuất kho tới địa chỉ thông báo đã cấu hình vẫn được bật.
+- Web và worker chạy đúng release, không có lần restart; database/role và tệp credential kiểm thử riêng đã được dọn.
+- Chi tiết tại production.json và production-smoke.json trong thư mục bằng chứng của tính năng.
+
+Lần build máy chủ đầu bị OOM khi nhiều build chạy cùng lúc. Đã dừng dev server kiểm thử riêng, build lại thành công và chỉ chuyển release sau khi candidate đạt. Đây không phải một lần rollback dữ liệu.
