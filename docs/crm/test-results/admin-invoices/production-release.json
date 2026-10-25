@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "sha": "ad4eacfa763444ef9312e8b03f6af6901a515ad5",
+  "environment": "PRODUCTION",
+  "preservedConcurrentRelease": "9247dd81fb36c78b4472464021b63f02e93f345c",
+  "restoreProofs": [
+    {
+      "phase": "pre-migration",
+      "status": "PASS",
+      "tables": 219
+    },
+    {
+      "phase": "before-cutover",
+      "status": "PASS",
+      "tables": 222
+    }
+  ],
+  "candidateSmokeChecks": 14,
+  "runtime": "web and worker online; zero restarts; exact release directory and commit",
+  "healthOk": true,
+  "blogSource": "wordpress",
+  "businessVerification": "Public business reads only; invoice mutations tested on isolated restored PostgreSQL"
+}

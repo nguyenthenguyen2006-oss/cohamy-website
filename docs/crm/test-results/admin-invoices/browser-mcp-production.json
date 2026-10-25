@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION public HTTPS; business reads only, QA OAuth grant revoked",
+  "cases": [
+    {
+      "name": "Official MCP SDK discovers invoice reads/writes, reads current invoices, exact warehouse recall preview and all three new history tables",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Admin interface opens edit/recall in place, requires a reason, traps focus, closes with Escape, displays exact warehouse quantities and fits desktop/390/320 viewports",
+      "status": "PASS"
+    }
+  ]
+}
