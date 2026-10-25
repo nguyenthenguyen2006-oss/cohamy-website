@@ -3,69 +3,53 @@ import * as mcpManagement from '@/app/api/crm/mcp/oauth/[action]/route';
 import * as r1 from '@/app/api/crm/[resource]/[id]/route';
 import * as r2 from '@/app/api/crm/[resource]/route';
 import * as r3 from '@/app/api/crm/accountant/[action]/route';
-import * as r4 from '@/app/api/crm/articles/[action]/route';
-import * as r5 from '@/app/api/crm/automation/[action]/route';
-import * as r6 from '@/app/api/crm/buyer/[action]/route';
-import * as r7 from '@/app/api/crm/care/[action]/route';
-import * as r8 from '@/app/api/crm/channel/[action]/route';
-import * as r9 from '@/app/api/crm/commerce/[action]/route';
-import * as r10 from '@/app/api/crm/consignment/[action]/route';
-import * as r11 from '@/app/api/crm/document-flow/[action]/route';
-import * as r12 from '@/app/api/crm/documents/[id]/route';
-import * as r13 from '@/app/api/crm/documents/route';
-import * as r14 from '@/app/api/crm/finance/[action]/route';
-import * as r15 from '@/app/api/crm/fulfillment/[action]/route';
-import * as r16 from '@/app/api/crm/governance/[action]/route';
-import * as r17 from '@/app/api/crm/historical-orders/[id]/route';
-import * as r18 from '@/app/api/crm/historical-orders/route';
-import * as r19 from '@/app/api/crm/internal-documents/[id]/route';
-import * as r20 from '@/app/api/crm/internal-documents/route';
-import * as r21 from '@/app/api/crm/inventory/[action]/route';
-import * as r22 from '@/app/api/crm/jobs/[action]/route';
-import * as r23 from '@/app/api/crm/library/[action]/route';
-import * as r24 from '@/app/api/crm/me/route';
-import * as r25 from '@/app/api/crm/onboarding/[action]/route';
-import * as r26 from '@/app/api/crm/partners/duplicates/route';
-import * as r27 from '@/app/api/crm/partners/merge/route';
-import * as r28 from '@/app/api/crm/pricing/[action]/route';
-import * as r29 from '@/app/api/crm/procurement/[action]/route';
-import * as r30 from '@/app/api/crm/quotations/[action]/route';
-import * as r31 from '@/app/api/crm/relationships/[action]/route';
-import * as r32 from '@/app/api/crm/reports/[action]/route';
-import * as r33 from '@/app/api/crm/spreadsheet/[action]/route';
-import * as r34 from '@/app/api/crm/work/[action]/route';
-import * as r35 from '@/app/api/crm/workspace/[action]/route';
+import * as r4 from '@/app/api/crm/accounts/invitations/route';
+import * as r5 from '@/app/api/crm/accounts/provision/route';
+import * as r6 from '@/app/api/crm/articles/[action]/route';
+import * as r7 from '@/app/api/crm/automation/[action]/route';
+import * as r8 from '@/app/api/crm/buyer/[action]/route';
+import * as r9 from '@/app/api/crm/care/[action]/route';
+import * as r10 from '@/app/api/crm/channel/[action]/route';
+import * as r11 from '@/app/api/crm/commerce/[action]/route';
+import * as r12 from '@/app/api/crm/consignment/[action]/route';
+import * as r13 from '@/app/api/crm/document-flow/[action]/route';
+import * as r14 from '@/app/api/crm/documents/[id]/route';
+import * as r15 from '@/app/api/crm/documents/route';
+import * as r16 from '@/app/api/crm/finance/[action]/route';
+import * as r17 from '@/app/api/crm/fulfillment/[action]/route';
+import * as r18 from '@/app/api/crm/governance/[action]/route';
+import * as r19 from '@/app/api/crm/historical-orders/[id]/route';
+import * as r20 from '@/app/api/crm/historical-orders/route';
+import * as r21 from '@/app/api/crm/internal-documents/[id]/route';
+import * as r22 from '@/app/api/crm/internal-documents/route';
+import * as r23 from '@/app/api/crm/inventory/[action]/route';
+import * as r24 from '@/app/api/crm/jobs/[action]/route';
+import * as r25 from '@/app/api/crm/library/[action]/route';
+import * as r26 from '@/app/api/crm/me/route';
+import * as r27 from '@/app/api/crm/onboarding/[action]/route';
+import * as r28 from '@/app/api/crm/partners/duplicates/route';
+import * as r29 from '@/app/api/crm/partners/merge/route';
+import * as r30 from '@/app/api/crm/pricing/[action]/route';
+import * as r31 from '@/app/api/crm/procurement/[action]/route';
+import * as r32 from '@/app/api/crm/quotations/[action]/route';
+import * as r33 from '@/app/api/crm/relationships/[action]/route';
+import * as r34 from '@/app/api/crm/reports/[action]/route';
+import * as r35 from '@/app/api/crm/spreadsheet/[action]/route';
+import * as r36 from '@/app/api/crm/work/[action]/route';
+import * as r37 from '@/app/api/crm/workspace/[action]/route';
 export interface McpRoute {id:string;method:'GET'|'POST'|'PATCH'|'PUT'|'DELETE';template:string;source:string;group:string;status:'AVAILABLE'|'RETIRED';moduleId:string|null;params:string[];selector:Record<string,string>;query:string[];inputContract:string;multipart:boolean;sourceHash:string}
 const sharedContracts: Record<string,string> = {
   "4b75ce37fd75d5d5": "z.object({id:z.uuid()}).strict() // connection id from GET connections",
-  "323cb8767ddb4069": "const roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nconst organizationSchema = z.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n}).strict()\nz.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n})\nconst updateSchema = organizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\norganizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\nconst warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() }).strict()\nz.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() })\nconst accountSchema = z.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() }).strict()\nz.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() })\nz.object({ active: z.boolean() })",
-  "45c8ca02967cc4bd": "z.object({id:z.string().trim().min(1),expectedUpdatedAt:z.string().optional(),reason:z.string().optional(),idempotencyKey:z.uuid().optional()})\nconst articleInputSchema = z.object({\n  id: z.string().trim().optional(), expectedUpdatedAt: z.string().optional(),\n  groupId: z.string().trim().min(1).optional(), locale: z.enum(BLOG_LOCALES).default('vi'),\n  slug: z.string().trim().min(1).max(180), title: z.string().trim().min(1).max(200),\n  excerpt: z.string().trim().optional(), summary: z.string().trim().optional(),\n  contentHtml: z.string().max(180000).optional(), content: z.string().max(180000).optional(),\n  coverImage: z.string().trim().default(''), coverImageAlt: z.string().trim().default(''),\n  author: z.string().trim().default('Cohamy'), category: z.enum(BLOG_CATEGORIES).default('brand-story'),\n  tags: z.array(z.string().trim()).default([]), featured: z.boolean().default(false),\n  relatedProductIds: z.array(z.string().trim()).default([]),\n  seoTitle: z.string().trim().default(''), seoDescription: z.string().trim().default(''),\n  canonicalUrl: z.string().trim().default(''), robotsIndex: z.boolean().default(true),\n  status: z.enum(BLOG_STATUSES).default('draft'), scheduledAt: z.string().default(''), publishedAt: z.string().default(''),\n  reason: z.string().trim().optional(), idempotencyKey: z.string().trim().optional(),\n}).strict()\nz.object({\n  id: z.string().trim().optional(), expectedUpdatedAt: z.string().optional(),\n  groupId: z.string().trim().min(1).optional(), locale: z.enum(BLOG_LOCALES).default('vi'),\n  slug: z.string().trim().min(1).max(180), title: z.string().trim().min(1).max(200),\n  excerpt: z.string().trim().optional(), summary: z.string().trim().optional(),\n  contentHtml: z.string().max(180000).optional(), content: z.string().max(180000).optional(),\n  coverImage: z.string().trim().default(''), coverImageAlt: z.string().trim().default(''),\n  author: z.string().trim().default('Cohamy'), category: z.enum(BLOG_CATEGORIES).default('brand-story'),\n  tags: z.array(z.string().trim()).default([]), featured: z.boolean().default(false),\n  relatedProductIds: z.array(z.string().trim()).default([]),\n  seoTitle: z.string().trim().default(''), seoDescription: z.string().trim().default(''),\n  canonicalUrl: z.string().trim().default(''), robotsIndex: z.boolean().default(true),\n  status: z.enum(BLOG_STATUSES).default('draft'), scheduledAt: z.string().default(''), publishedAt: z.string().default(''),\n  reason: z.string().trim().optional(), idempotencyKey: z.string().trim().optional(),\n})",
-  "6da65dfc842ff509": "const scheduleSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),kind:z.enum(kinds),frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),every:z.number().int().min(1).max(52),nextDueAt:z.iso.datetime({offset:true}),enabled:z.boolean()}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),kind:z.enum(kinds),frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),every:z.number().int().min(1).max(52),nextDueAt:z.iso.datetime({offset:true}),enabled:z.boolean()})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(120),eventAction:z.enum(['application.approved','partner.created']),title:z.string().trim().min(2).max(240),kind:z.enum(kinds),assigneeId:z.uuid(),dueMinutes:z.number().int().min(1).max(525600),enabled:z.boolean()})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(120),kind:z.enum(kinds),delayMinutes:z.number().int().min(0).max(525600),recipientId:z.uuid(),enabled:z.boolean()})\nz.object({taskId:z.uuid(),follow:z.boolean()})\nz.object({fromId:z.uuid(),toId:z.uuid(),reason:z.string().trim().min(3).max(1000)})\nz.object({id:z.uuid()})",
-  "549c7bfab0acf7a4": "const priceLineSchema = z.object({productId:uuid,unitPrice:money,vatRate:z.number().int().min(0).max(100)}).strict()\nz.object({productId:uuid,unitPrice:money,vatRate:z.number().int().min(0).max(100)})\nconst deliverySchema = z.object({recipient:text.min(2).max(120),phone:text.min(5).max(40),address:text.min(3).max(500)}).strict()\nz.object({recipient:text.min(2).max(120),phone:text.min(5).max(40),address:text.min(3).max(500)})\nconst createSchema = z.object({organizationId:uuid.optional(),buyerRole:z.enum(['CUSTOMER','SUPERMARKET']).optional(),warehouseId:uuid,\n branchId:uuid.optional(),contractId:uuid.optional(),delivery:deliverySchema.optional(),note:text.max(2000).default(''),\n lines:z.array(z.object({productId:uuid,quantity:z.number().int().min(1).max(1000000),unit:z.enum(['PACK','CASE'])}).strict()).min(1).max(100),idempotencyKey:uuid}).strict()\nz.object({organizationId:uuid.optional(),buyerRole:z.enum(['CUSTOMER','SUPERMARKET']).optional(),warehouseId:uuid,\n branchId:uuid.optional(),contractId:uuid.optional(),delivery:deliverySchema.optional(),note:text.max(2000).default(''),\n lines:z.array(z.object({productId:uuid,quantity:z.number().int().min(1).max(1000000),unit:z.enum(['PACK','CASE'])}).strict()).min(1).max(100),idempotencyKey:uuid})\nz.object({productId:uuid,quantity:z.number().int().min(1).max(1000000),unit:z.enum(['PACK','CASE'])})\nconst quoteSchema = z.object({id:uuid,version:z.number().int().positive(),expiresOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(100),note:text.max(2000).default(''),idempotencyKey:uuid}).strict()\nz.object({id:uuid,version:z.number().int().positive(),expiresOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(100),note:text.max(2000).default(''),idempotencyKey:uuid})\nconst orderActionSchema = z.object({id:uuid,version:z.number().int().positive(),idempotencyKey:uuid}).strict()\nz.object({id:uuid,version:z.number().int().positive(),idempotencyKey:uuid})\nconst branchSchema = z.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid.optional(),code:text.min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:text.min(2).max(200),address:text.min(3).max(500),recipient:text.min(2).max(120),phone:text.min(5).max(40),active:z.boolean().default(true),idempotencyKey:uuid}).strict().refine(d=>Boolean(d.id)===(d.version>0))\nz.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid.optional(),code:text.min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:text.min(2).max(200),address:text.min(3).max(500),recipient:text.min(2).max(120),phone:text.min(5).max(40),active:z.boolean().default(true),idempotencyKey:uuid})\nconst contractSchema = z.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid,code:text.min(2).max(80),startsOn:z.iso.date(),endsOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(300),active:z.boolean().default(true),note:text.max(2000).default(''),idempotencyKey:uuid}).strict().refine(d=>d.endsOn>=d.startsOn&&Boolean(d.id)===(d.version>0))\nz.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid,code:text.min(2).max(80),startsOn:z.iso.date(),endsOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(300),active:z.boolean().default(true),note:text.max(2000).default(''),idempotencyKey:uuid})\nconst receiveSchema = z.object({id:uuid,issueId:uuid,issueRevision:z.number().int().positive(),lines:z.array(z.object({productId:uuid,received:z.number().int().min(0).max(100000000)}).strict()).min(1).max(300),note:text.max(2000).default(''),idempotencyKey:uuid}).strict()\nz.object({id:uuid,issueId:uuid,issueRevision:z.number().int().positive(),lines:z.array(z.object({productId:uuid,received:z.number().int().min(0).max(100000000)}).strict()).min(1).max(300),note:text.max(2000).default(''),idempotencyKey:uuid})\nz.object({productId:uuid,received:z.number().int().min(0).max(100000000)})\nconst statementSchema = z.object({organizationId:uuid.optional(),month:z.string().regex(/^20\\d{2}-(0[1-9]|1[0-2])$/),checksum:z.string().regex(/^[a-f0-9]{64}$/),note:text.max(2000).default(''),idempotencyKey:uuid}).strict()\nz.object({organizationId:uuid.optional(),month:z.string().regex(/^20\\d{2}-(0[1-9]|1[0-2])$/),checksum:z.string().regex(/^[a-f0-9]{64}$/),note:text.max(2000).default(''),idempotencyKey:uuid})\nconst roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nz.object({version:z.number().int().positive(),status:z.enum(orderStates),reason:z.string().trim().max(1000).default(''),assignedTo:z.uuid().nullable().optional(),organizationId:z.uuid().nullable().optional()})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),body:z.string().trim().min(1).max(4000),mentionedMembershipIds:z.array(z.uuid()).max(20).refine(ids=>new Set(ids).size===ids.length).default([])})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),dueAt:z.iso.datetime({offset:true}),kind:z.enum(['GENERAL','FOLLOW_UP','SUPPORT','APPROVAL']).default('GENERAL')})\nz.object({version:z.number().int().positive(),done:z.boolean()})\nz.object({type:z.enum(['partner','warehouse']),id:z.uuid(),membershipIds:z.array(z.uuid()).max(100)})\nz.object({currentPassword:z.string().min(1).max(72),newPassword:z.string().min(12).max(72)})\nz.object({action:z.enum(['revoke','password','role']),password:z.string().min(12).max(72).optional(),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()})\nz.object({version:z.number().int().positive(),sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(200),stockUnit:z.string().trim().max(40),unitsPerCase:z.number().int().min(1).max(100000).nullable(),active:z.boolean()})",
-  "502b5bc2f8f693a6": "z.object({id:z.uuid().optional(),organizationId:z.uuid(),name:z.string().trim().min(2).max(120),responsibility:z.enum(['Chủ đơn vị','Người mua','Kế toán','Người nhận','Khác']),phone:z.string().trim().max(40),email:z.union([z.literal(''),z.email()]),isPrimary:z.boolean(),active:z.boolean(),version:z.number().int().min(0)})\nz.object({taskId:z.uuid(),items:z.array(z.object({title:z.string().trim().min(1).max(200),done:z.boolean()})).max(50),version:z.number().int().positive()})\nz.object({title:z.string().trim().min(1).max(200),done:z.boolean()})\nz.object({taskId:z.uuid(),prerequisiteId:z.uuid(),remove:z.boolean().default(false)})",
-  "189b005f2c78e16c": "const tierSchema = z.object({minQuantity:quantityText,maxQuantity:quantityText.nullable().optional(),discountPercent:z.number().min(0).max(100)}).strict()\nz.object({minQuantity:quantityText,maxQuantity:quantityText.nullable().optional(),discountPercent:z.number().min(0).max(100)})\nconst levelSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().regex(/^[A-Z0-9_]{2,40}$/),name:z.string().trim().min(1).max(80),rank:z.number().int().min(0).max(100000),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).nullable().optional(),tiers:z.array(tierSchema).max(20).default([]),color:z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#64748b'),description:z.string().trim().max(500).default(''),active:z.boolean().default(true),reason,idempotencyKey:idem}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().regex(/^[A-Z0-9_]{2,40}$/),name:z.string().trim().min(1).max(80),rank:z.number().int().min(0).max(100000),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).nullable().optional(),tiers:z.array(tierSchema).max(20).default([]),color:z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#64748b'),description:z.string().trim().max(500).default(''),active:z.boolean().default(true),reason,idempotencyKey:idem})\nconst profileSchema = z.object({organizationId:z.uuid(),partnerType:z.enum(['SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),membershipLevelId:z.uuid().nullable().optional(),region:z.enum(['NORTH','SOUTH']).nullable().optional(),reason,idempotencyKey:idem}).strict()\nz.object({organizationId:z.uuid(),partnerType:z.enum(['SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),membershipLevelId:z.uuid().nullable().optional(),region:z.enum(['NORTH','SOUTH']).nullable().optional(),reason,idempotencyKey:idem})\nconst promotionSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),sku:z.string().trim().min(2).max(80),name:z.string().trim().min(2).max(160),campaign:z.string().trim().max(160).default(''),percent:z.number().min(0).max(100),scope:z.enum(['ALL','DESIGNATED','QUANTITY']),targetOrganizationIds:z.array(z.uuid()).max(500).default([]),targetLevelIds:z.array(z.uuid()).max(20).default([]),minBaseQuantity:quantityText.default('0'),badge:z.enum(['HOT','NEW','SALE']).nullable().default(null),startsAt:z.iso.datetime({offset:true}),endsAt:z.iso.datetime({offset:true}),active:z.boolean().default(true),reason,idempotencyKey:idem}).strict()\n .superRefine((d,c)=>{if(new Date(d.endsAt)<=new Date(d.startsAt))c.addIssue({code:'custom',message:'End must follow start'});if(d.scope==='DESIGNATED'&&!d.targetOrganizationIds.length&&!d.targetLevelIds.length)c.addIssue({code:'custom',message:'Designated needs targets'});if(d.scope==='QUANTITY'&&fixed(d.minBaseQuantity)<=0n)c.addIssue({code:'custom',message:'Quantity scope needs a minimum'});})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),sku:z.string().trim().min(2).max(80),name:z.string().trim().min(2).max(160),campaign:z.string().trim().max(160).default(''),percent:z.number().min(0).max(100),scope:z.enum(['ALL','DESIGNATED','QUANTITY']),targetOrganizationIds:z.array(z.uuid()).max(500).default([]),targetLevelIds:z.array(z.uuid()).max(20).default([]),minBaseQuantity:quantityText.default('0'),badge:z.enum(['HOT','NEW','SALE']).nullable().default(null),startsAt:z.iso.datetime({offset:true}),endsAt:z.iso.datetime({offset:true}),active:z.boolean().default(true),reason,idempotencyKey:idem})\nz.object({id:z.uuid(),version:z.number().int().positive(),active:z.boolean(),reason,idempotencyKey:idem})\nconst childDiscountSchema = z.object({organizationId:z.uuid(),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).optional(),tiers:z.array(tierSchema).max(20).default([]),reason,idempotencyKey:idem}).strict()\nz.object({organizationId:z.uuid(),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).optional(),tiers:z.array(tierSchema).max(20).default([]),reason,idempotencyKey:idem})\nconst transferSchema = z.object({organizationId:z.uuid(),toParentId:z.uuid(),reason,idempotencyKey:z.uuid()}).strict()\nz.object({organizationId:z.uuid(),toParentId:z.uuid(),reason,idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),decision:z.enum(['APPROVE','REJECT']),reason,idempotencyKey:idem})\nconst invoiceSchema = z.object({orderId:z.uuid(),kind:z.enum(['BUYER','COMPANY']),companyName:z.string().trim().max(200).default(''),taxCode:z.string().trim().max(40).regex(/^[0-9A-Za-z-]*$/).default(''),address:z.string().trim().max(500).default(''),email:z.union([z.literal(''),z.email()]).default(''),reason,idempotencyKey:idem}).strict()\n .superRefine((d,c)=>{if(d.kind==='COMPANY'&&(d.companyName.length<2||d.taxCode.length<6||d.address.length<3))c.addIssue({code:'custom',message:'Company invoice needs name, tax code and address'});})\nz.object({orderId:z.uuid(),kind:z.enum(['BUYER','COMPANY']),companyName:z.string().trim().max(200).default(''),taxCode:z.string().trim().max(40).regex(/^[0-9A-Za-z-]*$/).default(''),address:z.string().trim().max(500).default(''),email:z.union([z.literal(''),z.email()]).default(''),reason,idempotencyKey:idem})\nconst shortageSchema = z.object({orderId:z.uuid(),sku:z.string().trim().min(2).max(80),needed:quantityText,available:quantityText,note:z.string().trim().max(500).default(''),idempotencyKey:idem}).strict()\nz.object({orderId:z.uuid(),sku:z.string().trim().min(2).max(80),needed:quantityText,available:quantityText,note:z.string().trim().max(500).default(''),idempotencyKey:idem})\nconst periodKeySchema = z.string().regex(/^\\d{4}(?:-(?:0[1-9]|1[0-2])|-Q[1-4])?$/)\nconst reportSchema = z.object({periodType:z.enum(['MONTH','QUARTER','YEAR']).default('MONTH'),periodKey:periodKeySchema.optional(),view:z.enum(['DIRECT','NETWORK','PURCHASES','SALES']).optional()}).strict()\nz.object({periodType:z.enum(['MONTH','QUARTER','YEAR']).default('MONTH'),periodKey:periodKeySchema.optional(),view:z.enum(['DIRECT','NETWORK','PURCHASES','SALES']).optional()})\nconst programSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),name:z.string().trim().min(3).max(160),description:z.string().trim().max(1000).default(''),periodType:z.enum(['MONTH','QUARTER','YEAR']),periodKey:periodKeySchema,metric:z.enum(['REVENUE','QUANTITY']),target:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku:z.string().trim().min(2).max(80).nullable().default(null),audience:z.enum(['ALL','SHAREHOLDER_BRANCH','LEVEL']).default('ALL'),audienceRef:z.uuid().nullable().default(null),rewardType:z.enum(['UPGRADE_LEVEL','DISCOUNT_PERCENT','GIFT_AMOUNT']),rewardLevelId:z.uuid().nullable().default(null),rewardPercent:z.number().min(0).max(100).nullable().default(null),rewardAmount:z.string().regex(/^\\d{1,24}$/).nullable().default(null),status:z.enum(['DRAFT','ACTIVE','CLOSED']).default('ACTIVE'),reason,idempotencyKey:z.uuid().optional()}).strict()\n .superRefine((d,c)=>{const issue=(m:string)=>c.addIssue({code:'custom',message:m});if(fixed(d.target)<=0n)issue('Target must be positive');if(d.metric==='QUANTITY'&&!d.sku)issue('Quantity needs SKU');if(d.audience!=='ALL'&&!d.audienceRef)issue('Audience needs reference');if(d.rewardType==='UPGRADE_LEVEL'&&!d.rewardLevelId)issue('Level required');if(d.rewardType==='DISCOUNT_PERCENT'&&d.rewardPercent===null)issue('Percent required');if(d.rewardType==='GIFT_AMOUNT'&&!d.rewardAmount)issue('Amount required');})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),name:z.string().trim().min(3).max(160),description:z.string().trim().max(1000).default(''),periodType:z.enum(['MONTH','QUARTER','YEAR']),periodKey:periodKeySchema,metric:z.enum(['REVENUE','QUANTITY']),target:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku:z.string().trim().min(2).max(80).nullable().default(null),audience:z.enum(['ALL','SHAREHOLDER_BRANCH','LEVEL']).default('ALL'),audienceRef:z.uuid().nullable().default(null),rewardType:z.enum(['UPGRADE_LEVEL','DISCOUNT_PERCENT','GIFT_AMOUNT']),rewardLevelId:z.uuid().nullable().default(null),rewardPercent:z.number().min(0).max(100).nullable().default(null),rewardAmount:z.string().regex(/^\\d{1,24}$/).nullable().default(null),status:z.enum(['DRAFT','ACTIVE','CLOSED']).default('ACTIVE'),reason,idempotencyKey:z.uuid().optional()})\nz.object({programId:z.uuid(),organizationId:z.uuid(),reason,idempotencyKey:z.uuid().optional()})",
-  "5e83061a863b9ba2": "const deliverySchema = z.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)}).strict()\nz.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)})\nconst saveSchema = z.object({\n id:z.uuid().optional(),version:z.number().int().min(0),organizationId:z.uuid(),\n channel:z.enum(['PORTAL','PHONE','VISIT','OTHER','WEBSITE','QUOTATION','REORDER','EXCEL']),\n sourceWebsiteId:z.uuid().optional(),sourceQuotationId:z.uuid().optional(),sourceOrderId:z.uuid().optional(),\n basket:basketSchema,delivery:deliverySchema,note:z.string().trim().max(2000),idempotencyKey:z.uuid(),\n dealId:z.uuid().optional(),\n}).strict().refine(d=>Boolean(d.id)===(d.version>0)).refine(d=>\n Boolean(d.sourceWebsiteId)===(d.channel==='WEBSITE')&&Boolean(d.sourceQuotationId)===(d.channel==='QUOTATION')&&Boolean(d.sourceOrderId)===(d.channel==='REORDER'))\nz.object({\n id:z.uuid().optional(),version:z.number().int().min(0),organizationId:z.uuid(),\n channel:z.enum(['PORTAL','PHONE','VISIT','OTHER','WEBSITE','QUOTATION','REORDER','EXCEL']),\n sourceWebsiteId:z.uuid().optional(),sourceQuotationId:z.uuid().optional(),sourceOrderId:z.uuid().optional(),\n basket:basketSchema,delivery:deliverySchema,note:z.string().trim().max(2000),idempotencyKey:z.uuid(),\n dealId:z.uuid().optional(),\n})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),action:z.enum(['PROPOSE','OWNER_APPROVE','OWNER_REJECT']),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),action:z.enum(['APPROVE','REJECT','CONFIRM']),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()})\nconst orderPolicySchema = z.object({\n enabled:z.boolean(),requireOwnerApproval:z.boolean(),alwaysManagerApproval:z.boolean(),\n managerApprovalAmount:money.nullable(),creditRequiresApproval:z.boolean(),nonSelfApproval:z.boolean(),\n acceptedQuotePrice:z.enum(['UNTIL_QUOTE_EXPIRY','REPRICE']),pendingPrice:z.literal('UNTIL_REQUEST_EXPIRY'),\n requiredPartnerFields:z.array(z.enum(['phone','email','business_id','address','contact_name'])).max(5)\n  .refine(fields=>new Set(fields).size===fields.length),\n approvalRoles:z.array(z.enum(['ADMIN','MANAGER'])).min(1).max(2).refine(roles=>new Set(roles).size===roles.length),\n confirmationRoles:z.array(z.enum(['ADMIN','MANAGER','SALES'])).min(1).max(3).refine(roles=>new Set(roles).size===roles.length),\n provisionalReservation:z.object({mode:z.enum(['ON_SUBMIT','AFTER_APPROVAL']),ttlMinutes:z.number().int().min(1).max(10080),allowPartial:z.boolean()}).strict().optional(),\n}).strict()\nz.object({\n enabled:z.boolean(),requireOwnerApproval:z.boolean(),alwaysManagerApproval:z.boolean(),\n managerApprovalAmount:money.nullable(),creditRequiresApproval:z.boolean(),nonSelfApproval:z.boolean(),\n acceptedQuotePrice:z.enum(['UNTIL_QUOTE_EXPIRY','REPRICE']),pendingPrice:z.literal('UNTIL_REQUEST_EXPIRY'),\n requiredPartnerFields:z.array(z.enum(['phone','email','business_id','address','contact_name'])).max(5)\n  .refine(fields=>new Set(fields).size===fields.length),\n approvalRoles:z.array(z.enum(['ADMIN','MANAGER'])).min(1).max(2).refine(roles=>new Set(roles).size===roles.length),\n confirmationRoles:z.array(z.enum(['ADMIN','MANAGER','SALES'])).min(1).max(3).refine(roles=>new Set(roles).size===roles.length),\n provisionalReservation:z.object({mode:z.enum(['ON_SUBMIT','AFTER_APPROVAL']),ttlMinutes:z.number().int().min(1).max(10080),allowPartial:z.boolean()}).strict().optional(),\n})\nz.object({mode:z.enum(['ON_SUBMIT','AFTER_APPROVAL']),ttlMinutes:z.number().int().min(1).max(10080),allowPartial:z.boolean()})\nz.object({version:z.number().int().min(0),definition:orderPolicySchema,reason:z.string().trim().min(3).max(1000),idempotencyKey:z.uuid()})\nz.object({organizationId:z.uuid(),basket:basketSchema,hours:z.number().int().min(1).max(168).default(24)})\nconst inputSchema = z.object({organizationId:z.uuid(),mapping:z.object({sku:z.number().int().min(1).max(50),unit:z.number().int().min(1).max(50),quantity:z.number().int().min(1).max(50)}).strict().refine(m=>new Set(Object.values(m)).size===3),delivery:z.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)}).strict(),discountBasisPoints:z.number().int().min(0).max(10000),creditTerms:z.boolean(),note:z.string().trim().max(2000),idempotencyKey:z.uuid()}).strict()\nz.object({organizationId:z.uuid(),mapping:z.object({sku:z.number().int().min(1).max(50),unit:z.number().int().min(1).max(50),quantity:z.number().int().min(1).max(50)}).strict().refine(m=>new Set(Object.values(m)).size===3),delivery:z.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)}).strict(),discountBasisPoints:z.number().int().min(0).max(10000),creditTerms:z.boolean(),note:z.string().trim().max(2000),idempotencyKey:z.uuid()})\nz.object({sku:z.number().int().min(1).max(50),unit:z.number().int().min(1).max(50),quantity:z.number().int().min(1).max(50)})\nz.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)})\nz.object({id:z.uuid()})\nz.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)})\nz.object({id:z.uuid(),version:z.number().int().positive(),basket:basketSchema,delivery,note:z.string().trim().max(2000),reason,idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),reason,idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),version:z.number().int().positive(),reason,idempotencyKey:z.uuid()})\nconst escalateSchema = z.object({\n  requestId: z.uuid(),\n  reason: z.string().trim().min(3).max(1000),\n  idempotencyKey: z.uuid(),\n}).strict()\nz.object({\n  requestId: z.uuid(),\n  reason: z.string().trim().min(3).max(1000),\n  idempotencyKey: z.uuid(),\n})\nconst draftInvoicePreviewSchema = z.object({\n organizationId:z.uuid(),\n basket:basketSchema,\n delivery:z.object({\n  recipient:z.string().trim().max(200).default(''),\n  phone:z.string().trim().max(80).default(''),\n  address:z.string().trim().max(500).default(''),\n  expectedDeliveryDate:z.string().trim().max(120).optional(),\n }),\n note:z.string().trim().max(2000).default(''),\n requestCode:z.string().trim().max(80).optional(),\n invoiceCode:z.string().trim().max(80).optional(),\n})\nz.object({\n organizationId:z.uuid(),\n basket:basketSchema,\n delivery:z.object({\n  recipient:z.string().trim().max(200).default(''),\n  phone:z.string().trim().max(80).default(''),\n  address:z.string().trim().max(500).default(''),\n  expectedDeliveryDate:z.string().trim().max(120).optional(),\n }),\n note:z.string().trim().max(2000).default(''),\n requestCode:z.string().trim().max(80).optional(),\n invoiceCode:z.string().trim().max(80).optional(),\n})\nz.object({\n  recipient:z.string().trim().max(200).default(''),\n  phone:z.string().trim().max(80).default(''),\n  address:z.string().trim().max(500).default(''),\n  expectedDeliveryDate:z.string().trim().max(120).optional(),\n })",
-  "df96b48727936486": "z.object({productId:z.uuid(),custodianWarehouseId:z.uuid(),minStock:zeroQuantity,replenishTo:zeroQuantity,slowDays:z.number().int().min(0).max(3650),nearExpiryDays:z.number().int().min(0).max(3650)})\nz.object({startsOn:day,endsOn:day.nullable(),settlementDays:z.number().int().min(1).max(365),partnerBasisPoints:z.number().int().min(0).max(10000),lines:z.array(agreementLine).min(1).max(200)})\nz.object({id:z.uuid().optional(),organizationId:z.uuid(),version:z.number().int().min(0),snapshot:agreementSnapshot,reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),reason,idempotencyKey:key})\nz.object({sourceLocationId:z.uuid(),productId:z.uuid(),lotId:z.uuid(),custodianWarehouseId:z.uuid(),quantity})\nz.object({agreementId:z.uuid(),agreementVersionId:z.uuid(),lines:z.array(line).min(1).max(200),reason,idempotencyKey:key})\nz.object({batchId:z.uuid(),received:zeroQuantity,damaged:zeroQuantity,short:zeroQuantity})\nz.object({shipmentId:z.uuid(),version:z.number().int().positive(),lines:z.array(line).min(1).max(200),final:z.boolean(),reason,idempotencyKey:key})\nz.object({batchId:z.uuid(),quantity,grossAmount:money})\nz.object({agreementId:z.uuid(),agreementVersionId:z.uuid(),periodStart:day,periodEnd:day,source:z.enum(['MANUAL','FILE']),lines:z.array(line).min(1).max(1000),reason,idempotencyKey:key})\nz.object({agreementId:z.uuid(),agreementVersionId:z.uuid(),periodStart:day,periodEnd:day,reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['ACCEPT','DISPUTE']),reason,idempotencyKey:key})\nz.object({originalId:z.uuid(),grossDelta:z.string().regex(/^-?[0-9]{1,30}$/u),partnerDelta:z.string().regex(/^-?[0-9]{1,30}$/u),reason,idempotencyKey:key})\nz.object({agreementId:z.uuid(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),decision:z.enum(['APPROVE','REJECT']),reason,idempotencyKey:key})\nz.object({batchId:z.uuid(),quantity})\nz.object({agreementId:z.uuid(),lines:z.array(line).min(1).max(200),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','REJECT','SHIP','RECEIVE']),destinationLocationId:z.uuid().nullable(),received:z.array(z.object({lineId:z.uuid(),quantity:zeroQuantity}).strict()).max(200).default([]),reason,idempotencyKey:key})\nz.object({lineId:z.uuid(),quantity:zeroQuantity})\nconst inputSchema = z.object({agreementId:z.uuid(),agreementVersionId:z.uuid(),periodStart:day,periodEnd:day,reason:z.string().trim().min(3).max(2000),mapping:z.object({batchId:z.number().int().min(1).max(20),quantity:z.number().int().min(1).max(20),grossAmount:z.number().int().min(1).max(20)}).strict()}).strict()\nz.object({agreementId:z.uuid(),agreementVersionId:z.uuid(),periodStart:day,periodEnd:day,reason:z.string().trim().min(3).max(2000),mapping:z.object({batchId:z.number().int().min(1).max(20),quantity:z.number().int().min(1).max(20),grossAmount:z.number().int().min(1).max(20)}).strict()})\nz.object({batchId:z.number().int().min(1).max(20),quantity:z.number().int().min(1).max(20),grossAmount:z.number().int().min(1).max(20)})\nz.object({id:z.uuid()})",
-  "e1f2fdaffdb8473e": "const inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  lines:z.array(z.object({productId:uuid,quantity, note:z.string().trim().max(500).default('')})).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()\nz.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  lines:z.array(z.object({productId:uuid,quantity, note:z.string().trim().max(500).default('')})).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n})\nz.object({productId:uuid,quantity, note:z.string().trim().max(500).default('')})\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),idempotencyKey:uuid})\nz.object({id:uuid,idempotencyKey:uuid})\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),reason:z.string().trim().min(5).max(2000),note:z.string().max(2000),dueDate:z.union([z.literal(''),z.iso.date()]).optional(),delivery:z.record(z.string().max(60),z.string().trim().max(1000)).optional(),lines:z.array(z.object({productId:uuid,quantity})).min(1).max(300),idempotencyKey:uuid})\nz.object({productId:uuid,quantity})\nconst recipientsSchema = z.object({to:z.array(z.email()).max(50),cc:z.array(z.email()).max(50),bcc:z.array(z.email()).max(50)}).strict()\nz.object({to:z.array(z.email()).max(50),cc:z.array(z.email()).max(50),bcc:z.array(z.email()).max(50)})\nz.object({id:z.uuid().optional(),event:z.enum([...coreMailEvents.map(x=>x.event),...businessMailEvents.filter(e=>e.available).map(e=>e.event)]),warehouseId:z.uuid().nullable(),factoryMembershipId:z.uuid().nullable(),enabled:z.boolean(),recipients:recipientsSchema,subject:z.string().trim().min(1).max(200),body:z.string().trim().min(1).max(10000),attachments:z.enum(['EVENT','BUNDLE']),version:z.number().int().min(0)})\nz.object({id:z.uuid(),version:z.number().int().positive()})\nz.object({id:z.uuid()})\nz.object({ruleId:z.uuid(),documentId:z.uuid().optional(),businessSnapshotId:z.uuid().optional()})\nz.object({id:z.uuid(),reason:z.string().trim().min(5).max(1000),resend:z.boolean().default(false)})\nz.object({email:z.email()})\nz.object({event:z.string().max(80),email:z.email(),'message-id':z.string().min(1).max(500),ts_event:z.number().optional(),ts:z.number().optional(),id:z.union([z.string(),z.number()]).optional()})\nconst schema = z.object({version:z.number().int().min(0),senderEmail:z.email().max(320).transform(v=>v.toLowerCase()),apiKey:z.string().trim().max(1024).default(''),removeKey:z.boolean().default(false)}).strict()\nz.object({version:z.number().int().min(0),senderEmail:z.email().max(320).transform(v=>v.toLowerCase()),apiKey:z.string().trim().max(1024).default(''),removeKey:z.boolean().default(false)})",
-  "ac88782efea25ebc": "const prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})",
-  "c2dd009a56f92569": "z.object({organizationId:z.uuid(),limitAmount:nonNegativeMoney,termsDays:z.number().int().min(0).max(3650),enabled:z.boolean(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),postingDate:date,reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),amount:money,kind:z.enum(['PAYMENT','DEPOSIT']),paidAt:z.iso.datetime({offset:true}),reference:z.string().trim().min(2).max(200),documentVersionId:z.uuid().nullable(),reason,idempotencyKey:key,dealId:z.uuid().optional(),payerOrganizationId:z.uuid().optional(),payeeOrganizationId:z.uuid().optional(),method:z.string().default('BANK_TRANSFER'),notes:z.string().default('')})\nz.object({id:z.uuid(),version:z.number().int().positive(),decision:z.enum(['CONFIRM','REJECT']),reason,idempotencyKey:key})\nz.object({paymentId:z.uuid(),paymentVersion:z.number().int().positive(),allocations:z.array(z.object({receivableId:z.uuid(),amount:money}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({receivableId:z.uuid(),amount:money})\nz.object({bankCode:z.string().trim().min(2).max(30),externalId:z.string().trim().min(1).max(200),occurredAt:z.iso.datetime({offset:true}),amount:money,reference:z.string().trim().max(500),counterparty:z.string().trim().max(300),raw:z.record(z.string(),z.unknown()),reason,idempotencyKey:key})\nz.object({transactionId:z.uuid(),paymentId:z.uuid(),paymentVersion:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({matchId:z.uuid(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['ADJUST','DISPUTE','RESOLVE']),amount:signedMoney,reason,idempotencyKey:key})\nz.object({receivableId:z.uuid(),scheduledFor:z.iso.datetime({offset:true}),channel:z.enum(['IN_APP','EMAIL','SMS']),recipient:z.string().trim().min(2).max(320),template:z.string().trim().min(3).max(4000),reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),kind:z.enum(['COLLECT','PAY','REFUND']),amount:money,sourceType:z.string().trim().min(2).max(50),sourceId:z.string().trim().min(1).max(200),documentVersionId:z.uuid().nullable().default(null),reason,idempotencyKey:key})\nz.object({paymentId:z.uuid(),paymentVersion:z.number().int().positive(),amount:money,reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','REJECT','EXECUTE','REVERSE']),reason,idempotencyKey:key})",
-  "0b68af9bfa721841": "z.object({productId:z.uuid(),quantity,expectedOn:z.iso.date().nullable(),ownerMembershipId:z.uuid().nullable()})\nz.object({orderId:z.uuid(),productId:z.uuid(),quantity,expectedOn:z.iso.date().nullable(),ownerMembershipId:z.uuid().nullable(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(line).min(1).max(200),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(z.object({reservationId:z.uuid(),quantity}).strict()).min(1).max(200),windowStart:z.iso.datetime({offset:true}).nullable(),windowEnd:z.iso.datetime({offset:true}).nullable(),requirements:z.string().trim().max(1000),reason,idempotencyKey:key})\nz.object({reservationId:z.uuid(),quantity})\nz.object({lineId:z.uuid(),quantity,scannerCode:z.string().trim().min(1).max(120),manual:z.boolean()})\nz.object({id:z.uuid(),version:z.number().int().positive(),lineId:z.uuid(),quantity,scannerCode:z.string().trim().min(1).max(120),manual:z.boolean(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(scan).min(1).max(200),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),label:z.string().trim().min(1).max(200),lines:z.array(z.object({lineId:z.uuid(),quantity}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({lineId:z.uuid(),quantity})\nz.object({parcelIds:z.array(z.uuid()).min(1).max(200).refine(v=>new Set(v).size===v.length),driverName:z.string().trim().min(2).max(120),driverPhone:z.string().trim().min(5).max(40),routeNote:z.string().trim().max(2000),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),outcome:z.enum(['DELIVERED','FAILED']),recipient:z.string().trim().max(120),confirmation:z.string().trim().max(1000),photoDocumentId:z.uuid().nullable(),signatureDocumentId:z.uuid().nullable(),resolution:z.enum(['RESCHEDULE','RETURN']).nullable(),nextAttemptAt:z.iso.datetime({offset:true}).nullable(),reason,idempotencyKey:key})\nz.object({parcelId:z.uuid(),status:z.string().trim().min(2).max(80),trackingCode:z.string().trim().max(120).nullable(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(z.object({deliveryLineId:z.uuid(),quantity,reason:z.string().trim().min(3).max(1000),photoDocumentId:z.uuid().nullable()}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({deliveryLineId:z.uuid(),quantity,reason:z.string().trim().min(3).max(1000),photoDocumentId:z.uuid().nullable()})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','REJECT']),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({requestLineId:z.uuid(),quantity,disposition:z.enum(['RESALE','QUARANTINE','DAMAGED']),locationId:z.uuid(),reason:z.string().trim().min(3).max(1000)}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({requestLineId:z.uuid(),quantity,disposition:z.enum(['RESALE','QUARANTINE','DAMAGED']),locationId:z.uuid(),reason:z.string().trim().min(3).max(1000)})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(120),enabled:z.boolean(),idempotencyKey:z.uuid()})\nz.object({parcelCode:z.string().trim().min(1).max(120),status:z.enum(statuses),trackingCode:z.string().trim().max(120).nullable().default(null)})",
-  "264ced0af0c1313b": "z.object({})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})\nconst roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nz.object({ids:z.array(z.uuid()).min(1).max(50).refine(v=>new Set(v).size===v.length),action:z.enum(['DEACTIVATE','ACTIVATE','STAGE']),reason:z.string().trim().min(3).max(500),stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional()})\nz.object({id:z.uuid()})\nconst definitionSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(roles.length),writeRoles:z.array(z.enum(roles)).max(roles.length),active:z.boolean()}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(roles.length),writeRoles:z.array(z.enum(roles)).max(roles.length),active:z.boolean()})\nz.object({organizationId:z.uuid(),fieldId:z.uuid(),definitionVersion:z.number().int().positive(),version:z.number().int().min(0),value:z.unknown()})\nz.object({id:z.uuid(),role:z.enum(roles)})",
-  "932cb1d4862a03fd": "const inputSchema = z.object({\n  title: z.string().trim().min(1).max(200),\n  description: z.string().trim().max(2000),\n  filename: z.string().min(1).max(180).regex(/^[^/\\\\\\x00-\\x1f\\x7f]+$/u).refine(value => !/\\p{Cf}/u.test(value)),\n  mime: z.string().max(180),\n  content: z.instanceof(Buffer),\n  uploadKey: z.uuid(),\n}).strict()\nz.object({\n  title: z.string().trim().min(1).max(200),\n  description: z.string().trim().max(2000),\n  filename: z.string().min(1).max(180).regex(/^[^/\\\\\\x00-\\x1f\\x7f]+$/u).refine(value => !/\\p{Cf}/u.test(value)),\n  mime: z.string().max(180),\n  content: z.instanceof(Buffer),\n  uploadKey: z.uuid(),\n})",
-  "c709e49062689122": "z.object({warehouseId:z.uuid(),code:z.string().trim().min(1).max(40).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(120),kind:z.enum(['PICK','QUARANTINE','DAMAGED']).default('PICK'),idempotencyKey:key})\nconst receiptSchema = z.object({locationId:z.uuid(),lines:z.array(z.object({productId:z.uuid(),lotCode:z.string().trim().min(1).max(80),manufacturedOn:z.iso.date().nullable(),expiresOn:z.iso.date().nullable(),quantity}).strict()).min(1).max(200),referenceType:z.string().trim().min(2).max(80),referenceId:z.string().trim().min(1).max(120),reason,idempotencyKey:key}).strict()\nz.object({locationId:z.uuid(),lines:z.array(z.object({productId:z.uuid(),lotCode:z.string().trim().min(1).max(80),manufacturedOn:z.iso.date().nullable(),expiresOn:z.iso.date().nullable(),quantity}).strict()).min(1).max(200),referenceType:z.string().trim().min(2).max(80),referenceId:z.string().trim().min(1).max(120),reason,idempotencyKey:key})\nz.object({productId:z.uuid(),lotCode:z.string().trim().min(1).max(80),manufacturedOn:z.iso.date().nullable(),expiresOn:z.iso.date().nullable(),quantity})\nz.object({id:z.uuid(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),warehouseId:z.uuid(),minimumShelfLifeDays:z.number().int().min(0).max(3650).default(0),allowPartial:z.boolean().default(false),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),reason,idempotencyKey:key})\nz.object({lotId:z.uuid(),reason,idempotencyKey:key})\nz.object({productId:z.uuid(),lotId:z.uuid(),quantity,destinationLocationId:z.uuid()})\nz.object({sourceLocationId:z.uuid(),lines:z.array(transferLine).min(1).max(200),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({index:z.number().int().min(0).max(199),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),shortage:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).default('0')}).strict()).min(1).max(200),final:z.boolean(),reason,idempotencyKey:key})\nz.object({index:z.number().int().min(0).max(199),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),shortage:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).default('0')})\nz.object({warehouseId:z.uuid(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({locationId:z.uuid(),productId:z.uuid(),lotId:z.uuid(),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/)}).strict()).min(1).max(5000),reason,idempotencyKey:key})\nz.object({locationId:z.uuid(),productId:z.uuid(),lotId:z.uuid(),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/)})\nz.object({id:z.uuid(),version:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({id:z.uuid().optional(),warehouseId:z.uuid(),productId:z.uuid(),lowAvailable:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),slowDays:z.number().int().min(0).max(3650),nearExpiryDays:z.number().int().min(0).max(3650),version:z.number().int().min(0),active:z.boolean(),idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['PROGRESS','CLOSE']),note:reason,idempotencyKey:key})",
-  "d917735483ca69b1": "z.object({id:z.uuid()})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})\nz.object({idempotencyKey:z.uuid(),kind:z.enum(['CUSTOMER','DEALER']),mapping:z.partialRecord(z.enum(columns),z.number().int().min(1).max(50))})\nz.object({idempotencyKey:z.uuid(),q:z.string().max(120).default(''),tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).default(''),kind:z.enum(['CUSTOMER','DEALER']).optional(),columns:z.array(z.enum(columns)).min(1).max(9)})",
-  "38e4b9be72dcc73f": "const schema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),title:z.string().trim().min(2).max(200),category:z.enum(['CATALOGUE','IMAGE','GUIDE','POLICY']),audience:z.enum(['ALL_DEALERS','DEALER_OWNER','DEALER_STAFF']),organizationId:z.uuid().nullable().default(null),requiredRead:z.boolean(),status:z.enum(['DRAFT','PUBLISHED','WITHDRAWN']),effectiveAt:z.iso.datetime({offset:true}),expiresAt:z.iso.datetime({offset:true}).nullable().default(null)}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),title:z.string().trim().min(2).max(200),category:z.enum(['CATALOGUE','IMAGE','GUIDE','POLICY']),audience:z.enum(['ALL_DEALERS','DEALER_OWNER','DEALER_STAFF']),organizationId:z.uuid().nullable().default(null),requiredRead:z.boolean(),status:z.enum(['DRAFT','PUBLISHED','WITHDRAWN']),effectiveAt:z.iso.datetime({offset:true}),expiresAt:z.iso.datetime({offset:true}).nullable().default(null)})",
-  "a144acf5db418f0d": "z.object({id:z.uuid(),data:z.unknown().optional()})\nconst profileSchema = z.object({companyName:z.string().trim().min(2).max(200),representative:z.string().trim().min(2).max(120),phone:z.string().trim().regex(/^\\+?[0-9 ()-]{8,25}$/),address:z.string().trim().min(5).max(500),region:z.string().trim().min(2).max(120)}).strict()\nz.object({companyName:z.string().trim().min(2).max(200),representative:z.string().trim().min(2).max(120),phone:z.string().trim().regex(/^\\+?[0-9 ()-]{8,25}$/),address:z.string().trim().min(5).max(500),region:z.string().trim().min(2).max(120)})\nprofileSchema.extend({email:z.email().toLowerCase(),password:z.string().min(12).max(72).refine(value=>Buffer.byteLength(value,'utf8')<=72),idempotencyKey:z.uuid(),invitationToken:z.string().regex(/^[A-Za-z0-9_-]{43}$/).optional()})\nz.object({email:z.email().toLowerCase(),password:z.string().min(1).max(72)})\nprofileSchema.extend({version:z.number().int().positive()})\nz.object({code:z.string().regex(/^\\d{6}$/)})\nz.object({version:z.number().int().positive()})\nz.object({version:z.number().int().positive(),reviewerId:z.uuid().nullable()})\nz.object({version:z.number().int().positive(),action:z.enum(['NEEDS_INFO','REJECTED','APPROVE']),message:z.string().trim().max(1000).default(''),fields:z.array(z.enum(['companyName','representative','phone','address','region'])).max(5).default([]),organizationId:z.uuid().optional(),role:z.enum(['DEALER_OWNER','DEALER_STAFF']).optional(),assigneeId:z.uuid().optional(),partnerType:z.enum(['DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),parentOrganizationId:z.uuid().nullable().optional(),pricingTierId:z.uuid().nullable().optional(),creditEnabled:z.boolean().optional(),creditLimit:z.coerce.number().min(0).optional()})\nz.object({organizationId:z.uuid().optional(),role:z.enum(['DEALER_OWNER','DEALER_STAFF']),expiresAt:z.iso.datetime({offset:true}),maxUses:z.number().int().min(1).max(100)})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})",
-  "c17c19457580298d": "z.object({phone:z.string().max(40).default(''),email:z.string().max(254).default(''),businessId:z.string().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(''),excludeId:z.uuid().optional()})",
-  "15a95b643f6600e0": "const choicesSchema = z.object({name:choice,phone:choice,email:choice,business_id:choice,address:choice,source:choice,segment:choice,contact_name:choice,stage:choice,contactPreferences:choice,primaryContact:choice}).strict()\nz.object({name:choice,phone:choice,email:choice,business_id:choice,address:choice,source:choice,segment:choice,contact_name:choice,stage:choice,contactPreferences:choice,primaryContact:choice})\nz.object({sourceId:z.uuid(),targetId:z.uuid(),choices:choicesSchema,reason:z.string().trim().min(3).max(1000)})\nz.object({id:z.uuid()})",
-  "12778bb866c3b7ac": "z.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(120),active:z.boolean()})\nz.object({organizationId:z.uuid(),tierId:z.uuid(),version:z.number().int().min(0),reason:z.string().trim().min(3).max(500)})\nz.object({productId:z.uuid(),productVersion:z.number().int().positive(),code:z.string().min(1).max(40).regex(/^[A-Za-z0-9_-]+$/),label:z.string().trim().min(1).max(80),numerator:z.string().regex(/^\\d{1,24}$/),denominator:z.string().regex(/^\\d{1,24}$/),isCase:z.boolean(),allowFractional:z.boolean(),active:z.boolean(),version:z.number().int().min(0),reason:z.string().trim().min(3).max(500)})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(120),definition:priceDefinitionSchema,idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),action:z.enum(['PUBLISH','WITHDRAW']),reason:z.string().trim().min(3).max(500),idempotencyKey:z.uuid()})\nz.object({organizationId:z.uuid(),basket:basketSchema})",
-  "15e0b4a66174ee31": "z.object({code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),name:z.string().trim().min(2).max(200),phone:z.string().trim().max(40),email:z.union([z.literal(''),z.email()]),address:z.string().trim().max(500),businessId:z.string().trim().max(40),contactName:z.string().trim().max(120),termsDays:z.number().int().min(0).max(3650),payableEnabled:z.boolean(),reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),contactName:z.string().trim().max(120),contactEmail:z.union([z.literal(''),z.email()]),contactPhone:z.string().trim().max(40),termsDays:z.number().int().min(0).max(3650),payableEnabled:z.boolean(),active:z.boolean(),version:z.number().int().min(0),reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),productId:z.uuid(),supplierSku:z.string().trim().min(1).max(100),leadDays:z.number().int().min(0).max(3650),active:z.boolean(),version:z.number().int().min(0),idempotencyKey:key})\nz.object({neededOn:day,lines:z.array(z.object({productId:z.uuid(),quantity,note:z.string().trim().max(500)}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({productId:z.uuid(),quantity,note:z.string().trim().max(500)})\nz.object({id:z.uuid(),version:z.number().int().positive(),decision:z.enum(['APPROVE','REJECT']),reason,idempotencyKey:key})\nz.object({requestId:z.uuid(),deadline:z.iso.datetime({offset:true}),supplierIds:z.array(z.uuid()).min(1).max(100),reason,idempotencyKey:key})\nz.object({rfqId:z.uuid(),supplierId:z.uuid(),channel:z.enum(['INTERNAL','EMAIL']),recipient:z.string().trim().min(1).max(320),reason,idempotencyKey:key})\nz.object({requestLineId:z.uuid(),quantity,unitPrice:money,expectedOn:day,feeAmount:money})\nz.object({rfqId:z.uuid(),supplierId:z.uuid(),lines:z.array(line).min(1).max(200),terms:z.string().trim().min(1).max(2000),validUntil:day,reason,idempotencyKey:key})\nz.object({quoteId:z.uuid(),expectedOn:day,selectionReason:reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),decision:z.enum(['APPROVE','CANCEL']),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),expectedOn:day,lateReason:z.string().trim().max(1000),lines:z.array(z.object({lineId:z.uuid(),quantity,unitPrice:money}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({lineId:z.uuid(),quantity,unitPrice:money})\nz.object({orderLineId:z.uuid(),accepted:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/u),rejected:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/u),rejectionReason:z.string().trim().max(1000),locationId:z.uuid(),lotCode:z.string().trim().min(1).max(80),manufacturedOn:day.nullable(),expiresOn:day.nullable()})\nz.object({orderId:z.uuid(),orderVersion:z.number().int().positive(),receivedAt:z.iso.datetime({offset:true}),lines:z.array(receiptLine).min(1).max(200),reason,idempotencyKey:key})\nz.object({receiptLineId:z.uuid(),quantity,reason,documentVersionId:z.uuid().nullable(),idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),status:z.enum(['ACKNOWLEDGED','RESOLVED','REJECTED']),reason,idempotencyKey:key})\nz.object({receiptId:z.uuid(),reason,idempotencyKey:key})\nz.object({supplierId:z.uuid(),amount:z.string().regex(/^[1-9][0-9]{0,29}$/u),reason,idempotencyKey:key})\nz.object({payableId:z.uuid(),amount:z.string().regex(/^[1-9][0-9]{0,29}$/u)})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','EXECUTE','REVERSE']),allocations:z.array(allocation).max(200).default([]),reason,idempotencyKey:key})\nz.object({from:day,to:day})",
-  "845d845bffd916fe": "const deliverySchema = z.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)}).strict()\nz.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),organizationId:z.uuid(),basket:basketSchema,delivery:deliverySchema,note:z.string().trim().max(2000),idempotencyKey:z.uuid(),dealId:z.uuid().optional()})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),action:z.enum(['APPROVE','REJECT','SEND','ACCEPT','REQUEST_REVISION']),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()})",
-  "4a4183e56d3a18aa": "z.object({kind:z.enum(['tags','reasons']),id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(100),active:z.boolean()})\nz.object({organizationId:z.uuid(),version:z.number().int().positive(),tagIds:z.array(z.uuid()).max(30).refine(ids=>new Set(ids).size===ids.length)})\nz.object({organizationId:z.uuid(),version:z.number().int().min(0),channel:z.enum(['PHONE','EMAIL','ZALO','IN_PERSON']),preferredTime:z.string().trim().max(200),interestedSkus:z.array(z.string().trim().min(1).max(80)).max(30).refine(ids=>new Set(ids).size===ids.length),notes:z.string().trim().max(1000)})\nz.object({id:z.uuid().optional(),organizationId:z.uuid(),version:z.number().int().min(0),title:z.string().trim().min(2).max(200),stage:z.enum(opportunityStages),reasonId:z.uuid().nullable().default(null),notes:z.string().trim().max(1000)})\nz.object({organizationId:z.uuid(),visitedAt:z.iso.datetime({offset:true}),result:z.string().trim().min(2).max(2000),supportRequest:z.string().trim().max(1000),idempotencyKey:z.uuid()})",
-  "cd2353e6c2ed75b4": "const filtersSchema = z.object({from:day,to:day,inactivityDays:z.number().int().min(1).max(730).default(60),organizationId:z.uuid().optional(),sku:z.string().trim().max(80).optional()}).strict().refine(v=>v.from<=v.to&&new Date(v.to).getTime()-new Date(v.from).getTime()<=366*86400000,{message:'REPORT_RANGE_TOO_LARGE'})\nz.object({from:day,to:day,inactivityDays:z.number().int().min(1).max(730).default(60),organizationId:z.uuid().optional(),sku:z.string().trim().max(80).optional()})\nconst subscriptionSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(100),reportKey:z.enum(['EXECUTIVE','SALES','FULFILLMENT','INVENTORY','FINANCE','QUALITY']),filters:filtersSchema,frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),nextRunAt:z.iso.datetime({offset:true}),channel:z.enum(['IN_APP','EMAIL']),recipient:z.string().trim().max(254),enabled:z.boolean()}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(100),reportKey:z.enum(['EXECUTIVE','SALES','FULFILLMENT','INVENTORY','FINANCE','QUALITY']),filters:filtersSchema,frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),nextRunAt:z.iso.datetime({offset:true}),channel:z.enum(['IN_APP','EMAIL']),recipient:z.string().trim().max(254),enabled:z.boolean()})",
-  "ac6d4fab69fbe835": "const partnerPatchItemSchema = z.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  phone:z.string().trim().max(40).optional(),\n  email:z.union([z.literal(''),z.email()]).optional(),\n  address:z.string().trim().max(500).optional(),\n  contact_name:z.string().trim().max(120).optional(),\n  segment:z.string().trim().max(120).optional(),\n  source:z.string().trim().max(120).optional(),\n  business_id:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).optional(),\n  stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional(),\n  active:z.boolean().optional(),\n }).strict(),\n}).strict()\nz.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  phone:z.string().trim().max(40).optional(),\n  email:z.union([z.literal(''),z.email()]).optional(),\n  address:z.string().trim().max(500).optional(),\n  contact_name:z.string().trim().max(120).optional(),\n  segment:z.string().trim().max(120).optional(),\n  source:z.string().trim().max(120).optional(),\n  business_id:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).optional(),\n  stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional(),\n  active:z.boolean().optional(),\n }).strict(),\n})\nz.object({\n  code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  phone:z.string().trim().max(40).optional(),\n  email:z.union([z.literal(''),z.email()]).optional(),\n  address:z.string().trim().max(500).optional(),\n  contact_name:z.string().trim().max(120).optional(),\n  segment:z.string().trim().max(120).optional(),\n  source:z.string().trim().max(120).optional(),\n  business_id:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).optional(),\n  stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional(),\n  active:z.boolean().optional(),\n })\nz.object({\n  preview:z.boolean().default(false),\n  rows:z.array(partnerPatchItemSchema).min(1).max(100),\n  reason:z.string().trim().min(2).max(500).default('Cập nhật trực tiếp trên bảng tính CRM'),\n })\nconst catalogPatchItemSchema = z.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  stock_unit:z.string().trim().min(1).max(40).optional(),\n  units_per_case:z.number().int().min(1).max(100000).nullable().optional(),\n  active:z.boolean().optional(),\n }).strict(),\n}).strict()\nz.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  stock_unit:z.string().trim().min(1).max(40).optional(),\n  units_per_case:z.number().int().min(1).max(100000).nullable().optional(),\n  active:z.boolean().optional(),\n }).strict(),\n})\nz.object({\n  sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  stock_unit:z.string().trim().min(1).max(40).optional(),\n  units_per_case:z.number().int().min(1).max(100000).nullable().optional(),\n  active:z.boolean().optional(),\n })\nz.object({\n  preview:z.boolean().default(false),\n  rows:z.array(catalogPatchItemSchema).min(1).max(100),\n  reason:z.string().trim().min(2).max(500).default('Cập nhật hàng hóa trực tiếp trên bảng tính CRM'),\n })",
-  "fd519d88129097f9": "z.object({id:z.uuid(),data:z.unknown()})\nconst roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nz.object({version:z.number().int().positive(),status:z.enum(orderStates),reason:z.string().trim().max(1000).default(''),assignedTo:z.uuid().nullable().optional(),organizationId:z.uuid().nullable().optional()})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),body:z.string().trim().min(1).max(4000),mentionedMembershipIds:z.array(z.uuid()).max(20).refine(ids=>new Set(ids).size===ids.length).default([])})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),dueAt:z.iso.datetime({offset:true}),kind:z.enum(['GENERAL','FOLLOW_UP','SUPPORT','APPROVAL']).default('GENERAL')})\nz.object({version:z.number().int().positive(),done:z.boolean()})\nz.object({type:z.enum(['partner','warehouse']),id:z.uuid(),membershipIds:z.array(z.uuid()).max(100)})\nz.object({currentPassword:z.string().min(1).max(72),newPassword:z.string().min(12).max(72)})\nz.object({action:z.enum(['revoke','password','role']),password:z.string().min(12).max(72).optional(),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()})\nz.object({version:z.number().int().positive(),sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(200),stockUnit:z.string().trim().max(40),unitsPerCase:z.number().int().min(1).max(100000).nullable(),active:z.boolean()})",
-  "9944a2bcb35ea93b": "z.object({id:z.string()})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})"
+  "163f84da97f74d9d": "z.object({active:z.boolean()}).strict()",
+  "49eb406c9d2d6b12": "const accountInvitationSchema = z.object({membershipId:z.uuid(),action:z.enum(['SEND','RESEND','REVOKE']),idempotencyKey:z.uuid()}).strict()",
+  "aa42e977bba8920f": "const roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nconst provisionAccountSchema = z.object({email:z.email().trim().toLowerCase(),displayName:z.string().trim().min(2).max(120),role:z.enum(roles),organizationId:z.uuid(),idempotencyKey:z.uuid()}).strict()",
+  "02e062e883e9c013": "z.object({id:z.string().trim().min(1),expectedUpdatedAt:z.string().optional(),reason:z.string().optional(),idempotencyKey:z.uuid().optional()})",
+  "42c78b8845773eec": "z.object({})",
+  "35e942bb2a930ba0": "z.object({id:z.uuid()})",
+  "eb18e2fa220be416": "z.object({id:z.uuid(),data:z.unknown().optional()})",
+  "94f61031f3af48fc": "const roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nz.object({id:z.uuid(),data:z.object({action:z.enum([\"revoke\",\"role\"]),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()}).strict()}).strict()",
+  "73056b67e96a03b5": "z.object({id:z.uuid(),data:z.unknown()})",
+  "20ab15d6cbac8c72": "z.object({id:z.string()})"
 };
 const metadata: McpRoute[] = [
   {
@@ -119,7 +103,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1c4cb6efb6c1ea59569195503ef3090ebe05621b2b5b1f243c7d47c4cf2f4932"
+    "sourceHash": "62541c798984125a6cdc8760e671d54776db4308419b11f1fc332ead95e7fb8b"
   },
   {
     "id": "PATCH /api/crm/accounts/[id]",
@@ -136,9 +120,9 @@ const metadata: McpRoute[] = [
       "resource": "accounts"
     },
     "query": [],
-    "inputContract": "323cb8767ddb4069",
+    "inputContract": "163f84da97f74d9d",
     "multipart": false,
-    "sourceHash": "1c4cb6efb6c1ea59569195503ef3090ebe05621b2b5b1f243c7d47c4cf2f4932"
+    "sourceHash": "62541c798984125a6cdc8760e671d54776db4308419b11f1fc332ead95e7fb8b"
   },
   {
     "id": "PATCH /api/crm/partners/[id]",
@@ -155,9 +139,9 @@ const metadata: McpRoute[] = [
       "resource": "partners"
     },
     "query": [],
-    "inputContract": "323cb8767ddb4069",
+    "inputContract": "",
     "multipart": false,
-    "sourceHash": "1c4cb6efb6c1ea59569195503ef3090ebe05621b2b5b1f243c7d47c4cf2f4932"
+    "sourceHash": "62541c798984125a6cdc8760e671d54776db4308419b11f1fc332ead95e7fb8b"
   },
   {
     "id": "GET /api/crm/accounts",
@@ -179,7 +163,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
+    "sourceHash": "16cfeee02be6c28cd24e5c289858dfb5c76e44fbab48e678246031a52871e46b"
   },
   {
     "id": "GET /api/crm/catalog",
@@ -201,7 +185,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
+    "sourceHash": "16cfeee02be6c28cd24e5c289858dfb5c76e44fbab48e678246031a52871e46b"
   },
   {
     "id": "GET /api/crm/partners",
@@ -223,7 +207,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
+    "sourceHash": "16cfeee02be6c28cd24e5c289858dfb5c76e44fbab48e678246031a52871e46b"
   },
   {
     "id": "GET /api/crm/warehouses",
@@ -245,24 +229,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
-  },
-  {
-    "id": "POST /api/crm/accounts",
-    "method": "POST",
-    "template": "/api/crm/accounts",
-    "source": "app/api/crm/[resource]/route.ts",
-    "group": "directory",
-    "status": "AVAILABLE",
-    "moduleId": null,
-    "params": [],
-    "selector": {
-      "resource": "accounts"
-    },
-    "query": [],
-    "inputContract": "323cb8767ddb4069",
-    "multipart": false,
-    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
+    "sourceHash": "16cfeee02be6c28cd24e5c289858dfb5c76e44fbab48e678246031a52871e46b"
   },
   {
     "id": "POST /api/crm/partners",
@@ -277,9 +244,9 @@ const metadata: McpRoute[] = [
       "resource": "partners"
     },
     "query": [],
-    "inputContract": "323cb8767ddb4069",
+    "inputContract": "",
     "multipart": false,
-    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
+    "sourceHash": "16cfeee02be6c28cd24e5c289858dfb5c76e44fbab48e678246031a52871e46b"
   },
   {
     "id": "POST /api/crm/warehouses",
@@ -294,9 +261,9 @@ const metadata: McpRoute[] = [
       "resource": "warehouses"
     },
     "query": [],
-    "inputContract": "323cb8767ddb4069",
+    "inputContract": "",
     "multipart": false,
-    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
+    "sourceHash": "16cfeee02be6c28cd24e5c289858dfb5c76e44fbab48e678246031a52871e46b"
   },
   {
     "id": "GET /api/crm/accountant/order-clearance",
@@ -679,6 +646,53 @@ const metadata: McpRoute[] = [
     "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
+    "id": "POST /api/crm/accounts/invitations",
+    "method": "POST",
+    "template": "/api/crm/accounts/invitations",
+    "source": "app/api/crm/accounts/invitations/route.ts",
+    "group": "accounts",
+    "status": "AVAILABLE",
+    "moduleId": "accounts",
+    "params": [],
+    "selector": {},
+    "query": [],
+    "inputContract": "49eb406c9d2d6b12",
+    "multipart": false,
+    "sourceHash": "fd50d61b798404bf071812253ec00e2425f129e7e23f45e41229b92f4c8f5ee5"
+  },
+  {
+    "id": "GET /api/crm/accounts/invitations",
+    "method": "GET",
+    "template": "/api/crm/accounts/invitations",
+    "source": "app/api/crm/accounts/invitations/route.ts",
+    "group": "accounts",
+    "status": "AVAILABLE",
+    "moduleId": "accounts",
+    "params": [],
+    "selector": {},
+    "query": [
+      "membershipId"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "fd50d61b798404bf071812253ec00e2425f129e7e23f45e41229b92f4c8f5ee5"
+  },
+  {
+    "id": "POST /api/crm/accounts/provision",
+    "method": "POST",
+    "template": "/api/crm/accounts/provision",
+    "source": "app/api/crm/accounts/provision/route.ts",
+    "group": "accounts",
+    "status": "AVAILABLE",
+    "moduleId": "accounts",
+    "params": [],
+    "selector": {},
+    "query": [],
+    "inputContract": "aa42e977bba8920f",
+    "multipart": false,
+    "sourceHash": "16f0cd613384f3de2c75af80de1dc176f58c57ea06bd954f10dc76941c54d369"
+  },
+  {
     "id": "GET /api/crm/articles/get",
     "method": "GET",
     "template": "/api/crm/articles/get",
@@ -741,7 +755,7 @@ const metadata: McpRoute[] = [
       "action": "archive"
     },
     "query": [],
-    "inputContract": "45c8ca02967cc4bd",
+    "inputContract": "02e062e883e9c013",
     "multipart": false,
     "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
@@ -758,7 +772,7 @@ const metadata: McpRoute[] = [
       "action": "publish"
     },
     "query": [],
-    "inputContract": "45c8ca02967cc4bd",
+    "inputContract": "02e062e883e9c013",
     "multipart": false,
     "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
@@ -775,7 +789,7 @@ const metadata: McpRoute[] = [
       "action": "save"
     },
     "query": [],
-    "inputContract": "45c8ca02967cc4bd",
+    "inputContract": "02e062e883e9c013",
     "multipart": false,
     "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
@@ -792,7 +806,7 @@ const metadata: McpRoute[] = [
       "action": "unpublish"
     },
     "query": [],
-    "inputContract": "45c8ca02967cc4bd",
+    "inputContract": "02e062e883e9c013",
     "multipart": false,
     "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
@@ -942,7 +956,7 @@ const metadata: McpRoute[] = [
       "action": "follow"
     },
     "query": [],
-    "inputContract": "6da65dfc842ff509",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
@@ -959,7 +973,7 @@ const metadata: McpRoute[] = [
       "action": "handover-confirm"
     },
     "query": [],
-    "inputContract": "6da65dfc842ff509",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
@@ -976,7 +990,7 @@ const metadata: McpRoute[] = [
       "action": "handover-preview"
     },
     "query": [],
-    "inputContract": "6da65dfc842ff509",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
@@ -993,7 +1007,7 @@ const metadata: McpRoute[] = [
       "action": "rule"
     },
     "query": [],
-    "inputContract": "6da65dfc842ff509",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
@@ -1010,7 +1024,7 @@ const metadata: McpRoute[] = [
       "action": "schedule"
     },
     "query": [],
-    "inputContract": "6da65dfc842ff509",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
@@ -1027,7 +1041,7 @@ const metadata: McpRoute[] = [
       "action": "sla"
     },
     "query": [],
-    "inputContract": "6da65dfc842ff509",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
@@ -1233,7 +1247,7 @@ const metadata: McpRoute[] = [
       "action": "acknowledge"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1250,7 +1264,7 @@ const metadata: McpRoute[] = [
       "action": "branch"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1267,7 +1281,7 @@ const metadata: McpRoute[] = [
       "action": "cancel"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1284,7 +1298,7 @@ const metadata: McpRoute[] = [
       "action": "confirm"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1301,7 +1315,7 @@ const metadata: McpRoute[] = [
       "action": "contract"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1318,7 +1332,7 @@ const metadata: McpRoute[] = [
       "action": "create"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1335,7 +1349,7 @@ const metadata: McpRoute[] = [
       "action": "quote"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1352,7 +1366,7 @@ const metadata: McpRoute[] = [
       "action": "receive"
     },
     "query": [],
-    "inputContract": "549c7bfab0acf7a4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
@@ -1426,7 +1440,7 @@ const metadata: McpRoute[] = [
       "action": "checklist"
     },
     "query": [],
-    "inputContract": "502b5bc2f8f693a6",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
@@ -1443,7 +1457,7 @@ const metadata: McpRoute[] = [
       "action": "contact"
     },
     "query": [],
-    "inputContract": "502b5bc2f8f693a6",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
@@ -1460,7 +1474,7 @@ const metadata: McpRoute[] = [
       "action": "dependency"
     },
     "query": [],
-    "inputContract": "502b5bc2f8f693a6",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
@@ -1730,7 +1744,7 @@ const metadata: McpRoute[] = [
       "action": "child-discount"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1747,7 +1761,7 @@ const metadata: McpRoute[] = [
       "action": "incentive"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1764,7 +1778,7 @@ const metadata: McpRoute[] = [
       "action": "incentive-award"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1781,7 +1795,7 @@ const metadata: McpRoute[] = [
       "action": "invoice-recipient"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1798,7 +1812,7 @@ const metadata: McpRoute[] = [
       "action": "level"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1815,7 +1829,7 @@ const metadata: McpRoute[] = [
       "action": "profile"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1832,7 +1846,7 @@ const metadata: McpRoute[] = [
       "action": "promotion"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1849,7 +1863,7 @@ const metadata: McpRoute[] = [
       "action": "promotion-active"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1866,7 +1880,7 @@ const metadata: McpRoute[] = [
       "action": "shortage"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1883,7 +1897,7 @@ const metadata: McpRoute[] = [
       "action": "transfer-decision"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -1900,7 +1914,7 @@ const metadata: McpRoute[] = [
       "action": "transfer-request"
     },
     "query": [],
-    "inputContract": "189b005f2c78e16c",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
@@ -2253,7 +2267,7 @@ const metadata: McpRoute[] = [
       "action": "cancel-order"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2270,7 +2284,7 @@ const metadata: McpRoute[] = [
       "action": "change-confirm"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2287,7 +2301,7 @@ const metadata: McpRoute[] = [
       "action": "change-preview"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2304,7 +2318,7 @@ const metadata: McpRoute[] = [
       "action": "duplicates"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2321,7 +2335,7 @@ const metadata: McpRoute[] = [
       "action": "escalate-request"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2338,7 +2352,7 @@ const metadata: McpRoute[] = [
       "action": "excel-confirm"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2355,7 +2369,7 @@ const metadata: McpRoute[] = [
       "action": "excel-preview"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": true,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2372,7 +2386,7 @@ const metadata: McpRoute[] = [
       "action": "invoice-pdf"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2389,7 +2403,7 @@ const metadata: McpRoute[] = [
       "action": "invoice-preview"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2406,7 +2420,7 @@ const metadata: McpRoute[] = [
       "action": "order-action"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2423,7 +2437,7 @@ const metadata: McpRoute[] = [
       "action": "request-action"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2440,7 +2454,7 @@ const metadata: McpRoute[] = [
       "action": "save-policy"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2457,7 +2471,7 @@ const metadata: McpRoute[] = [
       "action": "save-request"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2474,7 +2488,7 @@ const metadata: McpRoute[] = [
       "action": "submit-request"
     },
     "query": [],
-    "inputContract": "5e83061a863b9ba2",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
@@ -2548,7 +2562,7 @@ const metadata: McpRoute[] = [
       "action": "agreement-accept"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2565,7 +2579,7 @@ const metadata: McpRoute[] = [
       "action": "agreement-save"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2582,7 +2596,7 @@ const metadata: McpRoute[] = [
       "action": "receive"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2599,7 +2613,7 @@ const metadata: McpRoute[] = [
       "action": "replenishment-decide"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2616,7 +2630,7 @@ const metadata: McpRoute[] = [
       "action": "replenishment-suggest"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2633,7 +2647,7 @@ const metadata: McpRoute[] = [
       "action": "return-act"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2650,7 +2664,7 @@ const metadata: McpRoute[] = [
       "action": "return-request"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2667,7 +2681,7 @@ const metadata: McpRoute[] = [
       "action": "sale-confirm"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2684,7 +2698,7 @@ const metadata: McpRoute[] = [
       "action": "sale-preview"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": true,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2701,7 +2715,7 @@ const metadata: McpRoute[] = [
       "action": "sale-report"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2718,7 +2732,7 @@ const metadata: McpRoute[] = [
       "action": "settlement-act"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2735,7 +2749,7 @@ const metadata: McpRoute[] = [
       "action": "settlement-adjust"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2752,7 +2766,7 @@ const metadata: McpRoute[] = [
       "action": "settlement-create"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2769,7 +2783,7 @@ const metadata: McpRoute[] = [
       "action": "ship"
     },
     "query": [],
-    "inputContract": "df96b48727936486",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
@@ -2891,7 +2905,7 @@ const metadata: McpRoute[] = [
       "action": "accept"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -2908,7 +2922,7 @@ const metadata: McpRoute[] = [
       "action": "amend"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -2925,7 +2939,7 @@ const metadata: McpRoute[] = [
       "action": "confirm"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -2942,7 +2956,7 @@ const metadata: McpRoute[] = [
       "action": "preview-mail"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -2959,7 +2973,7 @@ const metadata: McpRoute[] = [
       "action": "preview-mail-rule"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -2976,7 +2990,7 @@ const metadata: McpRoute[] = [
       "action": "remove-mail-rule"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -2993,7 +3007,7 @@ const metadata: McpRoute[] = [
       "action": "retry-mail"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -3010,7 +3024,7 @@ const metadata: McpRoute[] = [
       "action": "save"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -3027,7 +3041,7 @@ const metadata: McpRoute[] = [
       "action": "save-mail-rule"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -3044,7 +3058,7 @@ const metadata: McpRoute[] = [
       "action": "save-provider"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -3061,7 +3075,7 @@ const metadata: McpRoute[] = [
       "action": "test-mail"
     },
     "query": [],
-    "inputContract": "e1f2fdaffdb8473e",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
@@ -3096,7 +3110,7 @@ const metadata: McpRoute[] = [
       "content-type",
       "file"
     ],
-    "inputContract": "ac88782efea25ebc",
+    "inputContract": "",
     "multipart": true,
     "sourceHash": "02d91614d25f959cc2716d478abab6fd979d1033a203af06805776f5e6d6c030"
   },
@@ -3193,7 +3207,7 @@ const metadata: McpRoute[] = [
       "action": "bank-import"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3210,7 +3224,7 @@ const metadata: McpRoute[] = [
       "action": "bank-match"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3227,7 +3241,7 @@ const metadata: McpRoute[] = [
       "action": "bank-match-reverse"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3244,7 +3258,7 @@ const metadata: McpRoute[] = [
       "action": "cash-act"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3261,7 +3275,7 @@ const metadata: McpRoute[] = [
       "action": "cash-create"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3278,7 +3292,7 @@ const metadata: McpRoute[] = [
       "action": "credit-configure"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3295,7 +3309,7 @@ const metadata: McpRoute[] = [
       "action": "deposit-refund"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3312,7 +3326,7 @@ const metadata: McpRoute[] = [
       "action": "payment-allocate"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3329,7 +3343,7 @@ const metadata: McpRoute[] = [
       "action": "payment-create"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3346,7 +3360,7 @@ const metadata: McpRoute[] = [
       "action": "payment-review"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3363,7 +3377,7 @@ const metadata: McpRoute[] = [
       "action": "receivable-adjust"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3380,7 +3394,7 @@ const metadata: McpRoute[] = [
       "action": "receivable-post"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3397,7 +3411,7 @@ const metadata: McpRoute[] = [
       "action": "reminder-run"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3414,7 +3428,7 @@ const metadata: McpRoute[] = [
       "action": "reminder-schedule"
     },
     "query": [],
-    "inputContract": "c2dd009a56f92569",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
@@ -3450,7 +3464,7 @@ const metadata: McpRoute[] = [
       "action": "backorder"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3467,7 +3481,7 @@ const metadata: McpRoute[] = [
       "action": "carrier-connection"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3484,7 +3498,7 @@ const metadata: McpRoute[] = [
       "action": "carrier-manual"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3501,7 +3515,7 @@ const metadata: McpRoute[] = [
       "action": "delivery-create"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3518,7 +3532,7 @@ const metadata: McpRoute[] = [
       "action": "delivery-finish"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3535,7 +3549,7 @@ const metadata: McpRoute[] = [
       "action": "pack"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3552,7 +3566,7 @@ const metadata: McpRoute[] = [
       "action": "pick"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3569,7 +3583,7 @@ const metadata: McpRoute[] = [
       "action": "return-decide"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3586,7 +3600,7 @@ const metadata: McpRoute[] = [
       "action": "return-receive"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3603,7 +3617,7 @@ const metadata: McpRoute[] = [
       "action": "return-request"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3620,7 +3634,7 @@ const metadata: McpRoute[] = [
       "action": "trip-create"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3637,7 +3651,7 @@ const metadata: McpRoute[] = [
       "action": "trip-dispatch"
     },
     "query": [],
-    "inputContract": "0b68af9bfa721841",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
@@ -3656,7 +3670,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "GET /api/crm/governance/custom-values",
@@ -3673,7 +3687,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "GET /api/crm/governance/field-definitions",
@@ -3690,7 +3704,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "GET /api/crm/governance/permissions",
@@ -3707,7 +3721,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "POST /api/crm/governance/bulk-confirm",
@@ -3722,9 +3736,9 @@ const metadata: McpRoute[] = [
       "action": "bulk-confirm"
     },
     "query": [],
-    "inputContract": "264ced0af0c1313b",
+    "inputContract": "42c78b8845773eec",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "POST /api/crm/governance/bulk-preview",
@@ -3739,9 +3753,9 @@ const metadata: McpRoute[] = [
       "action": "bulk-preview"
     },
     "query": [],
-    "inputContract": "264ced0af0c1313b",
+    "inputContract": "42c78b8845773eec",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "POST /api/crm/governance/custom-value",
@@ -3756,9 +3770,9 @@ const metadata: McpRoute[] = [
       "action": "custom-value"
     },
     "query": [],
-    "inputContract": "264ced0af0c1313b",
+    "inputContract": "42c78b8845773eec",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "POST /api/crm/governance/field-definition",
@@ -3773,9 +3787,9 @@ const metadata: McpRoute[] = [
       "action": "field-definition"
     },
     "query": [],
-    "inputContract": "264ced0af0c1313b",
+    "inputContract": "42c78b8845773eec",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "POST /api/crm/governance/role-preview",
@@ -3790,9 +3804,9 @@ const metadata: McpRoute[] = [
       "action": "role-preview"
     },
     "query": [],
-    "inputContract": "264ced0af0c1313b",
+    "inputContract": "42c78b8845773eec",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "POST /api/crm/governance/session-revoke-others",
@@ -3807,9 +3821,9 @@ const metadata: McpRoute[] = [
       "action": "session-revoke-others"
     },
     "query": [],
-    "inputContract": "264ced0af0c1313b",
+    "inputContract": "42c78b8845773eec",
     "multipart": false,
-    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
+    "sourceHash": "2f3ce9aeebf4443d45e8fa0c793c7d594d461a38a3b227781aa04dc01995c469"
   },
   {
     "id": "GET /api/crm/historical-orders/[id]",
@@ -3903,7 +3917,7 @@ const metadata: McpRoute[] = [
       "title",
       "uploadKey"
     ],
-    "inputContract": "932cb1d4862a03fd",
+    "inputContract": "",
     "multipart": true,
     "sourceHash": "ca9cd0be9d6fe70759da3d744779382d584a7fa8ca2c599cdd341d110296d266"
   },
@@ -4015,7 +4029,7 @@ const metadata: McpRoute[] = [
       "action": "alert-rule"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4032,7 +4046,7 @@ const metadata: McpRoute[] = [
       "action": "consume"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4049,7 +4063,7 @@ const metadata: McpRoute[] = [
       "action": "count-approve"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4066,7 +4080,7 @@ const metadata: McpRoute[] = [
       "action": "count-record"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4083,7 +4097,7 @@ const metadata: McpRoute[] = [
       "action": "count-start"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4100,7 +4114,7 @@ const metadata: McpRoute[] = [
       "action": "create-location"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4117,7 +4131,7 @@ const metadata: McpRoute[] = [
       "action": "recall-open"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4134,7 +4148,7 @@ const metadata: McpRoute[] = [
       "action": "recall-update"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4151,7 +4165,7 @@ const metadata: McpRoute[] = [
       "action": "receipt"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4168,7 +4182,7 @@ const metadata: McpRoute[] = [
       "action": "release"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4185,7 +4199,7 @@ const metadata: McpRoute[] = [
       "action": "reserve"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4202,7 +4216,7 @@ const metadata: McpRoute[] = [
       "action": "reverse"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4219,7 +4233,7 @@ const metadata: McpRoute[] = [
       "action": "transfer-receive"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4236,7 +4250,7 @@ const metadata: McpRoute[] = [
       "action": "transfer-ship"
     },
     "query": [],
-    "inputContract": "c709e49062689122",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
@@ -4316,7 +4330,7 @@ const metadata: McpRoute[] = [
       "kind",
       "mapping"
     ],
-    "inputContract": "d917735483ca69b1",
+    "inputContract": "35e942bb2a930ba0",
     "multipart": false,
     "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
@@ -4339,7 +4353,7 @@ const metadata: McpRoute[] = [
       "kind",
       "mapping"
     ],
-    "inputContract": "d917735483ca69b1",
+    "inputContract": "35e942bb2a930ba0",
     "multipart": false,
     "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
@@ -4362,7 +4376,7 @@ const metadata: McpRoute[] = [
       "kind",
       "mapping"
     ],
-    "inputContract": "d917735483ca69b1",
+    "inputContract": "35e942bb2a930ba0",
     "multipart": true,
     "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
@@ -4430,7 +4444,7 @@ const metadata: McpRoute[] = [
       "action": "save"
     },
     "query": [],
-    "inputContract": "38e4b9be72dcc73f",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c7e8387c06f2596fef26d60dc0a99b623b86dd7702734d7c5c3612ca70bd6b5a"
   },
@@ -4513,7 +4527,7 @@ const metadata: McpRoute[] = [
       "action": "edit"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4530,7 +4544,7 @@ const metadata: McpRoute[] = [
       "action": "invitation"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4547,7 +4561,7 @@ const metadata: McpRoute[] = [
       "action": "invitation-revoke"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4564,7 +4578,7 @@ const metadata: McpRoute[] = [
       "action": "login"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4581,7 +4595,7 @@ const metadata: McpRoute[] = [
       "action": "logout"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4598,7 +4612,7 @@ const metadata: McpRoute[] = [
       "action": "register"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4615,7 +4629,7 @@ const metadata: McpRoute[] = [
       "action": "review"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4632,7 +4646,7 @@ const metadata: McpRoute[] = [
       "action": "reviewer"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4649,7 +4663,7 @@ const metadata: McpRoute[] = [
       "action": "submit"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4666,7 +4680,7 @@ const metadata: McpRoute[] = [
       "action": "verification-confirm"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4683,7 +4697,7 @@ const metadata: McpRoute[] = [
       "action": "verification-send"
     },
     "query": [],
-    "inputContract": "a144acf5db418f0d",
+    "inputContract": "eb18e2fa220be416",
     "multipart": false,
     "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
@@ -4698,7 +4712,7 @@ const metadata: McpRoute[] = [
     "params": [],
     "selector": {},
     "query": [],
-    "inputContract": "c17c19457580298d",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "c389fc99245eceb8be66b99ccdf0e13406f0123ec036dbdbf53db607259f20ad"
   },
@@ -4713,7 +4727,7 @@ const metadata: McpRoute[] = [
     "params": [],
     "selector": {},
     "query": [],
-    "inputContract": "15a95b643f6600e0",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "41828f3144f58970f0c5d36e2703b28026f0886e862d28639929bb4e26cf4b32"
   },
@@ -4825,7 +4839,7 @@ const metadata: McpRoute[] = [
       "action": "assign-tier"
     },
     "query": [],
-    "inputContract": "12778bb866c3b7ac",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
@@ -4842,7 +4856,7 @@ const metadata: McpRoute[] = [
       "action": "preview"
     },
     "query": [],
-    "inputContract": "12778bb866c3b7ac",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
@@ -4859,7 +4873,7 @@ const metadata: McpRoute[] = [
       "action": "publish"
     },
     "query": [],
-    "inputContract": "12778bb866c3b7ac",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
@@ -4876,7 +4890,7 @@ const metadata: McpRoute[] = [
       "action": "save"
     },
     "query": [],
-    "inputContract": "12778bb866c3b7ac",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
@@ -4893,7 +4907,7 @@ const metadata: McpRoute[] = [
       "action": "tier"
     },
     "query": [],
-    "inputContract": "12778bb866c3b7ac",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
@@ -4910,7 +4924,7 @@ const metadata: McpRoute[] = [
       "action": "unit"
     },
     "query": [],
-    "inputContract": "12778bb866c3b7ac",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
@@ -5011,7 +5025,7 @@ const metadata: McpRoute[] = [
       "action": "claim-create"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5028,7 +5042,7 @@ const metadata: McpRoute[] = [
       "action": "claim-update"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5045,7 +5059,7 @@ const metadata: McpRoute[] = [
       "action": "order-amend"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5062,7 +5076,7 @@ const metadata: McpRoute[] = [
       "action": "order-decide"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5079,7 +5093,7 @@ const metadata: McpRoute[] = [
       "action": "payable-post"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5096,7 +5110,7 @@ const metadata: McpRoute[] = [
       "action": "payment-act"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5113,7 +5127,7 @@ const metadata: McpRoute[] = [
       "action": "payment-create"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5130,7 +5144,7 @@ const metadata: McpRoute[] = [
       "action": "quote-add"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5147,7 +5161,7 @@ const metadata: McpRoute[] = [
       "action": "quote-select"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5164,7 +5178,7 @@ const metadata: McpRoute[] = [
       "action": "receipt"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5181,7 +5195,7 @@ const metadata: McpRoute[] = [
       "action": "request-create"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5198,7 +5212,7 @@ const metadata: McpRoute[] = [
       "action": "request-decide"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5215,7 +5229,7 @@ const metadata: McpRoute[] = [
       "action": "rfq-create"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5232,7 +5246,7 @@ const metadata: McpRoute[] = [
       "action": "rfq-dispatch"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5249,7 +5263,7 @@ const metadata: McpRoute[] = [
       "action": "supplier-create"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5266,7 +5280,7 @@ const metadata: McpRoute[] = [
       "action": "supplier-product"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5283,7 +5297,7 @@ const metadata: McpRoute[] = [
       "action": "supplier-save"
     },
     "query": [],
-    "inputContract": "15e0b4a66174ee31",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
@@ -5405,7 +5419,7 @@ const metadata: McpRoute[] = [
       "action": "action"
     },
     "query": [],
-    "inputContract": "845d845bffd916fe",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
@@ -5422,7 +5436,7 @@ const metadata: McpRoute[] = [
       "action": "save"
     },
     "query": [],
-    "inputContract": "845d845bffd916fe",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
@@ -5524,7 +5538,7 @@ const metadata: McpRoute[] = [
       "action": "dictionary"
     },
     "query": [],
-    "inputContract": "4a4183e56d3a18aa",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
@@ -5541,7 +5555,7 @@ const metadata: McpRoute[] = [
       "action": "opportunity"
     },
     "query": [],
-    "inputContract": "4a4183e56d3a18aa",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
@@ -5558,7 +5572,7 @@ const metadata: McpRoute[] = [
       "action": "preferences"
     },
     "query": [],
-    "inputContract": "4a4183e56d3a18aa",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
@@ -5575,7 +5589,7 @@ const metadata: McpRoute[] = [
       "action": "tags"
     },
     "query": [],
-    "inputContract": "4a4183e56d3a18aa",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
@@ -5592,7 +5606,7 @@ const metadata: McpRoute[] = [
       "action": "visit"
     },
     "query": [],
-    "inputContract": "4a4183e56d3a18aa",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
@@ -5655,7 +5669,7 @@ const metadata: McpRoute[] = [
       "action": "subscription-save"
     },
     "query": [],
-    "inputContract": "cd2353e6c2ed75b4",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8ad94ea636879e449f991a1c811af5822dcf7bbb1117be1388bdd5ebba044825"
   },
@@ -5706,7 +5720,7 @@ const metadata: McpRoute[] = [
       "action": "catalog-cells"
     },
     "query": [],
-    "inputContract": "ac6d4fab69fbe835",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8ed4f5568f556ec6dc4a68d402e9f85adde73a6c09a1fbccc3251a9136a585e9"
   },
@@ -5723,7 +5737,7 @@ const metadata: McpRoute[] = [
       "action": "partner-cells"
     },
     "query": [],
-    "inputContract": "ac6d4fab69fbe835",
+    "inputContract": "",
     "multipart": false,
     "sourceHash": "8ed4f5568f556ec6dc4a68d402e9f85adde73a6c09a1fbccc3251a9136a585e9"
   },
@@ -5791,7 +5805,7 @@ const metadata: McpRoute[] = [
       "action": "account"
     },
     "query": [],
-    "inputContract": "fd519d88129097f9",
+    "inputContract": "94f61031f3af48fc",
     "multipart": false,
     "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
@@ -5808,7 +5822,7 @@ const metadata: McpRoute[] = [
       "action": "activity"
     },
     "query": [],
-    "inputContract": "fd519d88129097f9",
+    "inputContract": "73056b67e96a03b5",
     "multipart": false,
     "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
@@ -5825,7 +5839,7 @@ const metadata: McpRoute[] = [
       "action": "assignment"
     },
     "query": [],
-    "inputContract": "fd519d88129097f9",
+    "inputContract": "73056b67e96a03b5",
     "multipart": false,
     "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
@@ -5842,7 +5856,7 @@ const metadata: McpRoute[] = [
       "action": "catalog"
     },
     "query": [],
-    "inputContract": "fd519d88129097f9",
+    "inputContract": "73056b67e96a03b5",
     "multipart": false,
     "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
@@ -5859,24 +5873,7 @@ const metadata: McpRoute[] = [
       "action": "order"
     },
     "query": [],
-    "inputContract": "fd519d88129097f9",
-    "multipart": false,
-    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
-  },
-  {
-    "id": "POST /api/crm/work/password",
-    "method": "POST",
-    "template": "/api/crm/work/password",
-    "source": "app/api/crm/work/[action]/route.ts",
-    "group": "work",
-    "status": "AVAILABLE",
-    "moduleId": null,
-    "params": [],
-    "selector": {
-      "action": "password"
-    },
-    "query": [],
-    "inputContract": "fd519d88129097f9",
+    "inputContract": "73056b67e96a03b5",
     "multipart": false,
     "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
@@ -5893,7 +5890,7 @@ const metadata: McpRoute[] = [
       "action": "task"
     },
     "query": [],
-    "inputContract": "fd519d88129097f9",
+    "inputContract": "73056b67e96a03b5",
     "multipart": false,
     "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
@@ -5910,7 +5907,7 @@ const metadata: McpRoute[] = [
       "action": "task-update"
     },
     "query": [],
-    "inputContract": "fd519d88129097f9",
+    "inputContract": "73056b67e96a03b5",
     "multipart": false,
     "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
@@ -5929,7 +5926,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/bookmarks",
@@ -5946,7 +5943,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/documents",
@@ -5963,7 +5960,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/draft",
@@ -5980,7 +5977,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/filters",
@@ -5997,7 +5994,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/notifications",
@@ -6014,7 +6011,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/preferences",
@@ -6031,7 +6028,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/search",
@@ -6048,7 +6045,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "GET /api/crm/workspace/sessions",
@@ -6065,7 +6062,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "POST /api/crm/workspace/bookmark",
@@ -6080,9 +6077,9 @@ const metadata: McpRoute[] = [
       "action": "bookmark"
     },
     "query": [],
-    "inputContract": "9944a2bcb35ea93b",
+    "inputContract": "20ab15d6cbac8c72",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "POST /api/crm/workspace/document-read",
@@ -6097,9 +6094,9 @@ const metadata: McpRoute[] = [
       "action": "document-read"
     },
     "query": [],
-    "inputContract": "9944a2bcb35ea93b",
+    "inputContract": "20ab15d6cbac8c72",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "POST /api/crm/workspace/draft",
@@ -6114,9 +6111,9 @@ const metadata: McpRoute[] = [
       "action": "draft"
     },
     "query": [],
-    "inputContract": "9944a2bcb35ea93b",
+    "inputContract": "20ab15d6cbac8c72",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "POST /api/crm/workspace/filter",
@@ -6131,9 +6128,9 @@ const metadata: McpRoute[] = [
       "action": "filter"
     },
     "query": [],
-    "inputContract": "9944a2bcb35ea93b",
+    "inputContract": "20ab15d6cbac8c72",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "POST /api/crm/workspace/notification-read",
@@ -6148,9 +6145,9 @@ const metadata: McpRoute[] = [
       "action": "notification-read"
     },
     "query": [],
-    "inputContract": "9944a2bcb35ea93b",
+    "inputContract": "20ab15d6cbac8c72",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "POST /api/crm/workspace/preferences",
@@ -6165,9 +6162,9 @@ const metadata: McpRoute[] = [
       "action": "preferences"
     },
     "query": [],
-    "inputContract": "9944a2bcb35ea93b",
+    "inputContract": "20ab15d6cbac8c72",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   },
   {
     "id": "POST /api/crm/workspace/session-revoke",
@@ -6182,13 +6179,21 @@ const metadata: McpRoute[] = [
       "action": "session-revoke"
     },
     "query": [],
-    "inputContract": "9944a2bcb35ea93b",
+    "inputContract": "20ab15d6cbac8c72",
     "multipart": false,
-    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
+    "sourceHash": "999b619038ff38eb835b9c63469316ac7544ab1ea4994d0b5c5c42a1a3080b9e"
   }
 ];
 export const mcpRoutes: McpRoute[] = metadata.map(route=>({...route,inputContract:sharedContracts[route.inputContract]??''}));
 export const mcpExcludedRoutes: {route:string;reason:string}[] = [
+  {
+    "route": "/api/crm/accounts",
+    "reason": "Credential administration stays in the browser; use accounts/provision and accounts/invitations for MCP provisioning"
+  },
+  {
+    "route": "/api/crm/auth/activate",
+    "reason": "Browser login/logout"
+  },
   {
     "route": "/api/crm/auth/login",
     "reason": "Browser login/logout"
@@ -6224,41 +6229,47 @@ export const mcpExcludedRoutes: {route:string;reason:string}[] = [
   {
     "route": "/api/crm/security/[action]",
     "reason": "Public account recovery and MFA enrollment stay in the browser"
+  },
+  {
+    "route": "/api/crm/work/password",
+    "reason": "Credential administration stays in the browser; use accounts/provision and accounts/invitations for MCP provisioning"
   }
 ];
 export const mcpHandlers: Record<string, unknown> = {"app/api/crm/mcp/oauth/[action]/route.ts": mcpManagement,
 "app/api/crm/[resource]/[id]/route.ts": r1,
 "app/api/crm/[resource]/route.ts": r2,
 "app/api/crm/accountant/[action]/route.ts": r3,
-"app/api/crm/articles/[action]/route.ts": r4,
-"app/api/crm/automation/[action]/route.ts": r5,
-"app/api/crm/buyer/[action]/route.ts": r6,
-"app/api/crm/care/[action]/route.ts": r7,
-"app/api/crm/channel/[action]/route.ts": r8,
-"app/api/crm/commerce/[action]/route.ts": r9,
-"app/api/crm/consignment/[action]/route.ts": r10,
-"app/api/crm/document-flow/[action]/route.ts": r11,
-"app/api/crm/documents/[id]/route.ts": r12,
-"app/api/crm/documents/route.ts": r13,
-"app/api/crm/finance/[action]/route.ts": r14,
-"app/api/crm/fulfillment/[action]/route.ts": r15,
-"app/api/crm/governance/[action]/route.ts": r16,
-"app/api/crm/historical-orders/[id]/route.ts": r17,
-"app/api/crm/historical-orders/route.ts": r18,
-"app/api/crm/internal-documents/[id]/route.ts": r19,
-"app/api/crm/internal-documents/route.ts": r20,
-"app/api/crm/inventory/[action]/route.ts": r21,
-"app/api/crm/jobs/[action]/route.ts": r22,
-"app/api/crm/library/[action]/route.ts": r23,
-"app/api/crm/me/route.ts": r24,
-"app/api/crm/onboarding/[action]/route.ts": r25,
-"app/api/crm/partners/duplicates/route.ts": r26,
-"app/api/crm/partners/merge/route.ts": r27,
-"app/api/crm/pricing/[action]/route.ts": r28,
-"app/api/crm/procurement/[action]/route.ts": r29,
-"app/api/crm/quotations/[action]/route.ts": r30,
-"app/api/crm/relationships/[action]/route.ts": r31,
-"app/api/crm/reports/[action]/route.ts": r32,
-"app/api/crm/spreadsheet/[action]/route.ts": r33,
-"app/api/crm/work/[action]/route.ts": r34,
-"app/api/crm/workspace/[action]/route.ts": r35};
+"app/api/crm/accounts/invitations/route.ts": r4,
+"app/api/crm/accounts/provision/route.ts": r5,
+"app/api/crm/articles/[action]/route.ts": r6,
+"app/api/crm/automation/[action]/route.ts": r7,
+"app/api/crm/buyer/[action]/route.ts": r8,
+"app/api/crm/care/[action]/route.ts": r9,
+"app/api/crm/channel/[action]/route.ts": r10,
+"app/api/crm/commerce/[action]/route.ts": r11,
+"app/api/crm/consignment/[action]/route.ts": r12,
+"app/api/crm/document-flow/[action]/route.ts": r13,
+"app/api/crm/documents/[id]/route.ts": r14,
+"app/api/crm/documents/route.ts": r15,
+"app/api/crm/finance/[action]/route.ts": r16,
+"app/api/crm/fulfillment/[action]/route.ts": r17,
+"app/api/crm/governance/[action]/route.ts": r18,
+"app/api/crm/historical-orders/[id]/route.ts": r19,
+"app/api/crm/historical-orders/route.ts": r20,
+"app/api/crm/internal-documents/[id]/route.ts": r21,
+"app/api/crm/internal-documents/route.ts": r22,
+"app/api/crm/inventory/[action]/route.ts": r23,
+"app/api/crm/jobs/[action]/route.ts": r24,
+"app/api/crm/library/[action]/route.ts": r25,
+"app/api/crm/me/route.ts": r26,
+"app/api/crm/onboarding/[action]/route.ts": r27,
+"app/api/crm/partners/duplicates/route.ts": r28,
+"app/api/crm/partners/merge/route.ts": r29,
+"app/api/crm/pricing/[action]/route.ts": r30,
+"app/api/crm/procurement/[action]/route.ts": r31,
+"app/api/crm/quotations/[action]/route.ts": r32,
+"app/api/crm/relationships/[action]/route.ts": r33,
+"app/api/crm/reports/[action]/route.ts": r34,
+"app/api/crm/spreadsheet/[action]/route.ts": r35,
+"app/api/crm/work/[action]/route.ts": r36,
+"app/api/crm/workspace/[action]/route.ts": r37};

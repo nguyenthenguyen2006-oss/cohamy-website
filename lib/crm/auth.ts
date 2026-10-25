@@ -45,13 +45,13 @@ async function withPasswordIdentity<T>(email: string, password: string, accept: 
     ON CONFLICT(key_hash) DO UPDATE SET attempts=CASE WHEN cohamy_crm.login_attempts.window_start < now()-interval '15 minutes' THEN 1 ELSE cohamy_crm.login_attempts.attempts+1 END,
     window_start=CASE WHEN cohamy_crm.login_attempts.window_start < now()-interval '15 minutes' THEN now() ELSE cohamy_crm.login_attempts.window_start END RETURNING attempts`, [key]);
   if (attempt.rows[0].attempts > 8) throw new CrmError("LOGIN_RATE_LIMITED", 429);
-  const result = await db.query<{ id: string; password_hash: string; active: boolean }>("SELECT id,password_hash,active FROM cohamy_crm.users WHERE email=$1", [email]);
+  const result = await db.query<{ id: string; password_hash: string; active: boolean; activation_status:string }>("SELECT id,password_hash,active,activation_status FROM cohamy_crm.users WHERE email=$1", [email]);
   const candidate = result.rows[0];
   const matches = await bcrypt.compare(password, candidate?.password_hash ?? dummyHash);
-  if (!candidate?.active || !matches) throw new CrmError("INVALID_CREDENTIALS", 401);
+  if (!candidate?.active || candidate.activation_status!=='ACTIVE' || !matches) throw new CrmError("INVALID_CREDENTIALS", 401);
   return db.transaction(async tx => {
     // Hold the current identity and password until this authentication completes.
-    const identities = await tx.query<IdentityRow>(`${principalSelect} WHERE u.id=$1 AND u.password_hash=$2 AND u.active AND m.active AND o.active ORDER BY m.id FOR SHARE OF u,m,o`, [candidate.id,candidate.password_hash]);
+    const identities = await tx.query<IdentityRow>(`${principalSelect} WHERE u.id=$1 AND u.password_hash=$2 AND u.activation_status='ACTIVE' AND u.active AND m.active AND o.active ORDER BY m.id FOR SHARE OF u,m,o`, [candidate.id,candidate.password_hash]);
     const user = identities.rows.map(principal).find((value): value is Principal => value !== null);
     if (!user) throw new CrmError("INVALID_CREDENTIALS", 401);
     const accepted = await accept(tx,user);
@@ -86,18 +86,18 @@ export async function authenticate(token?: string): Promise<Principal | null> {
   if (!token || !/^[A-Za-z0-9_-]{43}$/u.test(token)) return null;
   const db = await database();
   const result = await db.query<IdentityRow>(`${principalSelect} JOIN cohamy_crm.sessions s ON s.membership_id=m.id
-    WHERE s.token_hash=$1 AND s.expires_at>now() AND s.revoked_at IS NULL AND u.active AND m.active AND o.active`, [digest(token)]);
+    WHERE s.token_hash=$1 AND s.expires_at>now() AND s.revoked_at IS NULL AND u.activation_status='ACTIVE' AND u.active AND m.active AND o.active`, [digest(token)]);
   return result.rows[0] ? principal(result.rows[0]) : null;
 }
 export async function membershipPrincipal(id: string, sql?: Sql): Promise<Principal | null> {
-  const result=await(sql??await database()).query<IdentityRow>(`${principalSelect} WHERE m.id=$1 AND u.active AND m.active AND o.active`,[id]);
+  const result=await(sql??await database()).query<IdentityRow>(`${principalSelect} WHERE m.id=$1 AND u.activation_status='ACTIVE' AND u.active AND m.active AND o.active`,[id]);
   return result.rows[0]?principal(result.rows[0]):null;
 }
 // Request authentication can precede a lock or role change. Hold the current
 // identity rows until the write commits, rather than trusting that snapshot.
 export async function assertCurrentPrincipal(sql: Sql, user: Principal): Promise<void> {
   const result = await sql.query<IdentityRow>(`${principalSelect}
-    WHERE m.id=$1 AND u.active AND m.active AND o.active FOR SHARE OF m,u,o`, [user.membershipId]);
+    WHERE m.id=$1 AND u.activation_status='ACTIVE' AND u.active AND m.active AND o.active FOR SHARE OF m,u,o`, [user.membershipId]);
   const current = result.rows[0] ? principal(result.rows[0]) : null;
   if (!current || current.id !== user.id || current.role !== user.role ||
       current.organizationId !== user.organizationId || current.area !== user.area ||

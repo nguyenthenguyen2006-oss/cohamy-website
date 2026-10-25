@@ -19,9 +19,9 @@ function values(node,key){const found=new Set();const condition=n=>{
  }
  if(ts.isCallExpression(n)&&n.expression.getText().endsWith('.includes')&&n.arguments[0]?.getText()===key){const arr=n.expression.expression;if(ts.isArrayLiteralExpression(arr))for(const e of arr.elements)if(ts.isStringLiteral(e))found.add(e.text);}
 };visit(node,n=>{if(ts.isIfStatement(n))visit(n.expression,condition);if(ts.isSwitchStatement(n)&&n.expression.getText()===key)for(const c of n.caseBlock.clauses)if(ts.isCaseClause(c)&&ts.isStringLiteral(c.expression))found.add(c.expression.text);});return [...found].sort();}
-function contracts(file){
+function contracts(file,only){
  const s=parse(file),parts=[];
- visit(s,n=>{if(ts.isVariableDeclaration(n)&&ts.isIdentifier(n.name)&&/schema$/i.test(n.name.text)&&n.initializer)parts.push('const '+n.name.text+' = '+n.initializer.getText());else if(ts.isCallExpression(n)&&(n.expression.getText()==='z.object'||ts.isPropertyAccessExpression(n.expression)&&['extend','pick','omit','partial','required','merge'].includes(n.expression.name.text)))parts.push(n.getText());});
+ visit(s,n=>{if(ts.isVariableDeclaration(n)&&ts.isIdentifier(n.name)&&/schema$/i.test(n.name.text)&&(!only||n.name.text===only)&&n.initializer)parts.push('const '+n.name.text+' = '+n.initializer.getText());else if(!only&&ts.isCallExpression(n)&&(n.expression.getText()==='z.object'||ts.isPropertyAccessExpression(n.expression)&&['extend','pick','omit','partial','required','merge'].includes(n.expression.name.text)))parts.push(n.getText());});
  const text=[...new Set(parts)].join('\n');
  // Imported role constants are part of an account command's real contract.
  // Include their values so clients can discover newly added account types.
@@ -51,9 +51,11 @@ for(const file of walk(root).sort()){
   for(const selection of selections){
     const template='/api/crm/'+(selector?relative.replace('['+selector+']',selection):relative);
     const id=method+' '+template;
+    if(['POST /api/crm/accounts','POST /api/crm/work/password'].includes(id)){skipped.push({route:template,reason:'Credential administration stays in the browser; use accounts/provision and accounts/invitations for MCP provisioning'});continue;}
     if(id==='POST /api/crm/buyer/password'){skipped.push({route:template,reason:'Password changes remain in the authenticated browser'});continue;}
     let moduleId;visit(node,n=>{if(ts.isCallExpression(n)&&n.expression.getText()==='apiUser')moduleId=evaluate(n.arguments[0],selection);});
-    routes.push({id,method,template,source:file,group:group.startsWith('[')?'directory':group,status:typeof moduleId==='string'&&removed.has(moduleId)?'RETIRED':'AVAILABLE',moduleId:moduleId??null,params:keys.filter(k=>k!==selector),selector:selector?{[selector]:selection}:{},query,inputContract:method==='GET'?'':contract,multipart:['POST /api/crm/documents','POST /api/crm/internal-documents','POST /api/crm/jobs/preview','POST /api/crm/commerce/excel-preview','POST /api/crm/consignment/sale-preview'].includes(id),sourceHash:createHash('sha256').update(text+serviceFiles.map(readSource).join('\n')).digest('hex')});
+    const safeContract=id==='POST /api/crm/accounts/provision'?contracts('lib/crm/account-provision-contracts.ts','provisionAccountSchema'):id==='POST /api/crm/accounts/invitations'?contracts('lib/crm/account-provision-contracts.ts','accountInvitationSchema'):id==='PATCH /api/crm/accounts/[id]'?'z.object({active:z.boolean()}).strict()':id==='POST /api/crm/work/account'?readSource('lib/crm/types.ts').match(/^export const roles = .+$/m)[0].replace(/^export /,'')+'\nz.object({id:z.uuid(),data:z.object({action:z.enum(["revoke","role"]),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()}).strict()}).strict()':contract;
+    routes.push({id,method,template,source:file,group:group.startsWith('[')?'directory':group,status:typeof moduleId==='string'&&removed.has(moduleId)?'RETIRED':'AVAILABLE',moduleId:moduleId??null,params:keys.filter(k=>k!==selector),selector:selector?{[selector]:selection}:{},query,inputContract:method==='GET'?'':safeContract,multipart:['POST /api/crm/documents','POST /api/crm/internal-documents','POST /api/crm/jobs/preview','POST /api/crm/commerce/excel-preview','POST /api/crm/consignment/sale-preview'].includes(id),sourceHash:createHash('sha256').update(text+serviceFiles.map(readSource).join('\n')).digest('hex')});
   }
  }
 }

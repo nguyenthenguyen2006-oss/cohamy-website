@@ -21,6 +21,8 @@ export async function invokeOperation(user:Principal,input:unknown,write:boolean
  requireMcpAdmin(user);const parsed=invokeSchema.safeParse(input);if(!parsed.success)throw new CrmError('INVALID_FIELDS',400);const d=parsed.data,r=mcpRoutes.find(r=>r.id===d.operation);
  if(!r||write===(r.method==='GET'))throw new CrmError('MCP_OPERATION_NOT_AVAILABLE',403);
  if(r.status==='RETIRED')throw new CrmError('MCP_MODULE_RETIRED_USE_DATA_FOR_HISTORY',404);
+ const containsCredential=(value:unknown):boolean=>Array.isArray(value)?value.some(containsCredential):!!value&&typeof value==='object'&&Object.entries(value).some(([k,v])=>/^(?:password|currentPassword|newPassword|password_hash|token|token_hash|secret)$/i.test(k)||containsCredential(v));
+ if(containsCredential(d.input))throw new CrmError('MCP_CREDENTIAL_INPUT_NOT_ALLOWED',400);
  if(Object.keys(d.params).some(k=>!r.params.some(p=>p===k))||r.params.some(k=>!d.params[k]||/[\/\\?#\u0000]/.test(d.params[k])))throw new CrmError('MCP_INVALID_PATH_PARAMETERS',400);
  let pathname:string=r.template;for(const k of r.params)pathname=pathname.replace('['+k+']',encodeURIComponent(d.params[k]));
  const url=new URL(pathname,mcpOrigin());for(const [k,v]of Object.entries(d.query))url.searchParams.set(k,v);

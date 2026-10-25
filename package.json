@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test:crm:provision": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-account-provisioning.ts",
+    "test:crm:provision-browser": "node scripts/crm/verify-provision-browser.mjs",
+    "crm:provision-demo": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/provision-demo.ts",
     "typecheck": "next typegen && tsc --noEmit",
     "test:crm:buyer": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-buyer.ts",
     "test:crm:buyer-browser": "node scripts/crm/verify-buyer-browser.mjs",

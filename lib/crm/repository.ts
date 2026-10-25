@@ -180,7 +180,12 @@ export async function createWarehouse(user: Principal, input: unknown) {
 export async function listAccounts(user: Principal) {
   assertPermission(user, "accounts.manage");
   const db = await database();
-  return (await db.query<{ id: string; display_name: string; email: string; role: string; organization_name: string; organization_kind:string; user_id:string;version:number; active: boolean }>(`SELECT m.id,m.user_id,m.version,u.display_name,u.email,m.role,o.name AS organization_name,o.kind AS organization_kind,(u.active AND m.active AND o.active) AS active FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id ORDER BY u.email,m.id`)).rows;
+  return (await db.query<{ id: string; display_name: string; email: string; role: string; organization_id:string; organization_name: string; organization_kind:string; user_id:string;version:number; active: boolean; activation_status:string;activated_at:string|null;is_demo:boolean;status:string;invitation_status:string|null }>(`SELECT m.id,m.user_id,m.version,u.display_name,u.email,m.role,o.id AS organization_id,o.name AS organization_name,o.kind AS organization_kind,(u.active AND m.active AND o.active) AS active,u.activation_status,u.activated_at,u.is_demo,
+  CASE WHEN NOT(u.active AND m.active AND o.active) THEN 'DISABLED' WHEN u.activation_status='ACTIVE' THEN 'ACTIVE'
+   WHEN i.expires_at<=now() AND i.revoked_at IS NULL AND i.consumed_at IS NULL THEN 'EXPIRED' ELSE 'PENDING_ACTIVATION' END AS status,
+  CASE WHEN i.revoked_at IS NOT NULL THEN 'REVOKED' ELSE i.delivery_status END AS invitation_status
+  FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id
+  LEFT JOIN LATERAL(SELECT expires_at,revoked_at,consumed_at,delivery_status FROM cohamy_crm.account_invitations WHERE membership_id=m.id ORDER BY created_at DESC,id LIMIT 1)i ON true ORDER BY u.email,m.id`)).rows;
 }
 export async function createAccount(user: Principal, input: unknown) {
   assertPermission(user, "accounts.manage");
@@ -212,6 +217,7 @@ export async function setAccountActive(user: Principal, membershipId: string, in
   const db = await database();
   return db.transaction(async tx => {
     await tx.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');await assertCurrentPrincipal(tx,user);
+    if(data.active){const target=(await tx.query<{organization_id:string;role:string}>('SELECT organization_id,role FROM cohamy_crm.memberships WHERE id=$1 FOR UPDATE',[membershipId])).rows[0];if(target&&isBuyerRole(target.role)){await tx.query('SELECT id FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[target.organization_id]);if((await tx.query("SELECT id FROM cohamy_crm.memberships WHERE organization_id=$1 AND id<>$2 AND active AND role IN('CUSTOMER','SUPERMARKET') AND role<>$3",[target.organization_id,membershipId,target.role])).rows.length)throw new CrmError('BUYER_ROLE_CONFLICT',409);}}
     const result = await tx.query<{ user_id: string }>("UPDATE cohamy_crm.memberships SET active=$1,version=version+1 WHERE id=$2 RETURNING user_id", [data.active, membershipId]);
     if (!result.rows[0]) throw new CrmError("NOT_FOUND", 404);
     await tx.query('UPDATE cohamy_crm.sessions SET revoked_at=now() WHERE membership_id=$1 AND revoked_at IS NULL',[membershipId]);
