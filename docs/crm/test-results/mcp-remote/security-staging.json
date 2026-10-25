@@ -1,0 +1,42 @@
+{
+  "environment": "STAGING native restored PostgreSQL",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Only current internal Admin identity may authorize or use the Admin MCP",
+      "status": "PASS"
+    },
+    {
+      "name": "Unregistered redirects, different resource audiences and plain PKCE are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Denying consent needs no login and never issues an authorization code",
+      "status": "PASS"
+    },
+    {
+      "name": "Authorization nonce is bound to the pending request and can be consumed only once",
+      "status": "PASS"
+    },
+    {
+      "name": "Codes and bearer credentials remain bound to the client, audience and Admin membership",
+      "status": "PASS"
+    },
+    {
+      "name": "Expired access credentials cannot read any MCP tools or records",
+      "status": "PASS"
+    },
+    {
+      "name": "Membership changes invalidate access and refresh credentials immediately",
+      "status": "PASS"
+    },
+    {
+      "name": "A password change revokes all delegated MCP connections through the database trigger",
+      "status": "PASS"
+    },
+    {
+      "name": "All business domains can be paged while SQL identifiers and sensitive columns fail closed",
+      "status": "PASS"
+    }
+  ]
+}

@@ -6,6 +6,8 @@ import { authenticate, SESSION_COOKIE } from "./auth";
 import { CrmError } from "./permissions";
 import { assertModuleAvailable } from "./module-availability";
 import type { Area, Principal } from "./types";
+import { mcpIdentity } from './mcp/context';
+import { membershipPrincipal } from './auth';
 
 const privateHeaders = { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "Referrer-Policy": "no-referrer" };
 export function json(value: unknown, status = 200) { return Response.json(value, { status, headers: privateHeaders }); }
@@ -35,8 +37,10 @@ export async function readJson(request: Request, maximumBytes = 32768) {
   } finally { reader.releaseLock(); }
 }
 export async function apiUser(moduleId?: string): Promise<Principal> {
-  const user = await authenticate((await cookies()).get(SESSION_COOKIE)?.value);
+  const delegated = mcpIdentity.getStore();
+  const user = delegated ? await membershipPrincipal(delegated.membershipId) : await authenticate((await cookies()).get(SESSION_COOKIE)?.value);
   if (!user) throw new CrmError("UNAUTHORIZED", 401);
+  if (delegated && (user.role !== 'ADMIN' || user.area !== 'crm' || user.id !== delegated.id || user.membershipVersion !== delegated.membershipVersion)) throw new CrmError('FORBIDDEN',403);
   if (moduleId) assertModuleAvailable(user, moduleId);
   return user;
 }

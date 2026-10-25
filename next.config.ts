@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['jsdom', 'pg', '@electric-sql/pglite', 'pdfkit'],
   outputFileTracingIncludes: { '/api/wordpress/analyze': ['./wordpress/rank-math-analysis/**/*'], '/api/crm/**': ['./db/crm/**/*'], '/api/crm/document-flow/**': ['./assets/crm/fonts/**/*','./assets/crm/delivery-template/**/*'], '/api/crm/quotations/**': ['./assets/crm/fonts/**/*', './public/images/logo/cohamy-brand-logo.png'] },
   outputFileTracingExcludes: { '/*': ['.local/**/*', 'docs/crm/test-results/**/*', '.impeccable/review/**/*'] },
-  experimental: { serverComponentsHmrCache: false },
+  experimental: { serverComponentsHmrCache: false, cpus: 2 },
   // Resolve metadata before sending HTTP headers: upstream failures must not stream a fake 200.
   htmlLimitedBots: /.*/,
   async headers() {

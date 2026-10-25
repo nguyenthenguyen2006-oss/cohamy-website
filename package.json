@@ -16,7 +16,7 @@
     "test:crm:work": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-work.ts",
     "test:crm:work-browser": "node scripts/crm/verify-work-browser.mjs",
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/crm/generate-mcp-catalog.mjs --check && node scripts/build-production.mjs",
     "start": "next start",
     "lint": "eslint",
     "sheet:init": "node --conditions=react-server --import tsx scripts/init-blog-sheet.ts",
@@ -95,11 +95,15 @@
     "crm:demo-target-test": "node --import tsx scripts/crm/demo/test-database-target.ts",
     "test:crm:meeting-migration": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-migration.ts",
     "test:crm:meeting-runtime-browser": "node scripts/crm/verify-meeting-runtime-browser.mjs",
-    "test:crm:internal-documents": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-internal-documents.ts && node scripts/crm/verify-internal-documents-browser.mjs"
+    "test:crm:internal-documents": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-internal-documents.ts && node scripts/crm/verify-internal-documents-browser.mjs",
+    "crm:mcp:catalog": "node scripts/crm/generate-mcp-catalog.mjs",
+    "test:crm:mcp:catalog": "node scripts/crm/generate-mcp-catalog.mjs --check",
+    "test:crm:mcp:browser": "node scripts/crm/verify-mcp-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "@fontsource/be-vietnam-pro": "^5.3.0",
+    "@modelcontextprotocol/sdk": "1.32.2",
     "@phosphor-icons/react": "^2.1.10",
     "@tiptap/extension-image": "^3.29.1",
     "@tiptap/extension-link": "^3.29.1",
@@ -113,8 +117,9 @@
     "googleapis": "^173.0.0",
     "jose": "^6.2.4",
     "jsdom": "^28.1.0",
+    "jszip": "3.10.2",
     "lucide-react": "^1.21.0",
-    "next": "16.3.5",
+    "next": "16.4.3",
     "next-intl": "^4.13.0",
     "papaparse": "^5.5.4",
     "pdfkit": "^0.20.2",
@@ -124,11 +129,10 @@
     "react-dom": "19.2.4",
     "sanitize-html": "^2.17.6",
     "server-only": "0.0.1",
-    "sharp": "0.35.4",
+    "sharp": "0.35.5",
     "sonner": "^2.0.7",
-    "zod": "^4.4.3",
-    "zustand": "^5.0.14",
-    "jszip": "3.10.2"
+    "zod": "4.6.6",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",
@@ -141,7 +145,7 @@
     "@types/react-dom": "^19",
     "@types/sanitize-html": "^2.16.1",
     "eslint": "^9",
-    "eslint-config-next": "16.3.5",
+    "eslint-config-next": "16.4.3",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.1",
     "typescript": "^5"

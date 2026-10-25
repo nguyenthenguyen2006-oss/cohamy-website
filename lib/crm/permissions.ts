@@ -17,7 +17,7 @@ export function can(user: Principal, permission: string): boolean {
   if(permission==='historical-orders.import')return user.area==='crm'&&user.role==='ADMIN';
   if(permission==='historical-orders.read')return user.area==='crm'&&(['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role)||isWarehouseRole(user.role));
   if(permission==='internal-documents.manage')return user.area==='crm'&&user.role==='ADMIN';
-  if(permission==='internal-documents.read')return user.area==='crm'&&(user.role==='ACCOUNTANT'||isWarehouseRole(user.role));
+  if(permission==='internal-documents.read')return user.area==='crm'&&(user.role==='ADMIN'||user.role==='ACCOUNTANT'||isWarehouseRole(user.role));
   if(permission==='internal-documents.access')return user.area==='crm'&&(user.role==='ADMIN'||user.role==='ACCOUNTANT'||isWarehouseRole(user.role));
   if(permission==="document-flow.admin")return user.area==="crm"&&user.role==="ADMIN";
   if(permission==="pricing.manage")return user.area==="crm"&&["ADMIN","MANAGER"].includes(user.role);

@@ -31,6 +31,7 @@ export interface CrmModule { id: string; label: string; shortLabel: string; icon
 const internalDocumentsModule: CrmModule = { id: 'internal-documents', label: 'Tài liệu nội bộ', shortLabel: 'Tài liệu', icon: 'library', tone: 'primary', permission: 'internal-documents.access', status: 'CONNECTED' };
 const historicalOrdersModule: CrmModule = { id: 'historical-orders', label: 'Đơn hàng cũ', shortLabel: 'Đơn cũ', icon: 'order', tone: 'primary', permission: 'historical-orders.read', status: 'CONNECTED' };
 const internal: CrmModule[] = [
+  {id:'mcp',label:'Kết nối ChatGPT / MCP',shortLabel:'ChatGPT / MCP',icon:'account',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
   historicalOrdersModule,
   internalDocumentsModule,
   {id:'factory-requests',label:'Phiếu đề nghị sản xuất/cấp hàng',shortLabel:'Đề nghị nhà máy',icon:'procurement',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
@@ -251,7 +252,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "account",
     color: "#64748b",
     gradient: "linear-gradient(135deg, #64748b, #334155)",
-    moduleIds: ["accounts", "fields", "audit", "workspace", "profile", "document-notifications", "factory-requests"],
+    moduleIds: ["accounts", "fields", "audit", "workspace", "profile", "document-notifications", "factory-requests", "mcp"],
   },
 ];
 

@@ -110,7 +110,7 @@ export async function uploadInternalDocument(user: Principal, input: unknown) {
 }
 
 export async function downloadInternalDocument(user: Principal, id: string) {
-  // Admin manages the catalogue; only accountants and warehouse accounts receive file contents.
+  // Admin can inspect all business documents, including through its delegated MCP connection.
   assertPermission(user, 'internal-documents.read');
   return (await database()).transaction(async tx => {
     await assertCurrentPrincipal(tx, user);

@@ -1,0 +1,67 @@
+{
+  "environment": "STAGING restored native PostgreSQL, real Edge OAuth and official MCP client",
+  "cases": [
+    {
+      "name": "Unauthenticated MCP is closed; OAuth discovery advertises PKCE and the canonical audience",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Edge Admin consent returns a valid OAuth callback with state and issuer identification (callback captured by QA)",
+      "status": "PASS"
+    },
+    {
+      "name": "Wrong PKCE verifier is rejected and authorization codes are single use",
+      "status": "PASS"
+    },
+    {
+      "name": "Official MCP client initializes, lists all tools, and sees accurate read/write annotations",
+      "status": "PASS"
+    },
+    {
+      "name": "Capability discovery includes live debt data and native write contracts",
+      "status": "PASS"
+    },
+    {
+      "name": "Business tables are readable with working pagination; credential tables and password columns are excluded",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP reads the exact native receivables and stock views used by the website",
+      "status": "PASS"
+    },
+    {
+      "name": "Provider settings are available without leaking the Brevo API key",
+      "status": "PASS"
+    },
+    {
+      "name": "Foreign browser origins are rejected even when a bearer token is supplied",
+      "status": "PASS"
+    },
+    {
+      "name": "STAGING native create/edit works, retries return the original result, conflicting retries and stale versions are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Read tools cannot mutate; arbitrary URLs are never dispatched",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin MCP uploads and reads the exact original document bytes through native validation",
+      "status": "PASS"
+    },
+    {
+      "name": "Refresh credentials rotate and used refresh tokens cannot be reused",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP can read and revoke its own connection through native Admin management, immediately disabling OAuth access",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin management shows connection history and revocation state on desktop and phones",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "productionBusinessWrites": 0
+}

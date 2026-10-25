@@ -59,14 +59,14 @@ try {
     const response = await context.request.get(base + '/api/crm/internal-documents?q=' + encodeURIComponent(title), { maxRetries: 2 });
     const data = await response.json(); assert.equal(data.total, 1); uploadedId = data.items[0].id;
     assert.equal('content' in data.items[0], false);
-    assert.equal((await context.request.get(base + '/api/crm/internal-documents/' + uploadedId)).status(), 403);
+    const adminFile=await context.request.get(base + '/api/crm/internal-documents/' + uploadedId);assert.equal(adminFile.status(),200);assert.deepEqual(await adminFile.body(),bytes);
   });
-  await check('Admin desktop/mobile pages use the existing CRM table layout without file-read controls', async () => {
+  await check('Admin desktop/mobile pages keep the CRM table layout and document-read controls', async () => {
     for (const width of [1440, 390]) {
       await page.setViewportSize({ width, height: 1000 });
       await page.goto(base + '/crm/internal-documents?q=' + encodeURIComponent(title));
       await expect(page.getByRole('button', { name: 'Đăng tài liệu', exact: true })).toBeVisible();
-      assert.equal(await page.getByRole('link', { name: 'Tải xuống', exact: true }).count(), 0);
+      assert.ok(await page.getByRole('link', { name: 'Tải xuống', exact: true }).count()>0);
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
       const file = screenshots + '/internal-documents-admin-' + width + '.png'; await page.screenshot({ path: file, fullPage: true }); screens.push(file);
     }

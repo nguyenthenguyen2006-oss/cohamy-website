@@ -35,7 +35,7 @@ export async function InternalDocumentsPage({ user, id, query }: { user: Princip
   const q = typeof query.q === 'string' ? query.q : '', page = typeof query.page === 'string' ? query.page : undefined;
   const data = await listInternalDocuments(user, { q, page });
   return <div className="internal-documents-page">
-    <header className="portal-page-header"><div><h1>Tài liệu nội bộ</h1><p>{manage ? 'Admin đăng tài liệu; kế toán và thủ kho được mở tệp và tải xuống.' : 'Tài liệu do admin đăng dành cho kế toán và thủ kho.'}</p></div></header>
+    <header className="portal-page-header"><div><h1>Tài liệu nội bộ</h1><p>{manage ? 'Admin đăng và kiểm tra tài liệu; kế toán và thủ kho được mở tệp và tải xuống.' : 'Tài liệu do admin đăng dành cho kế toán và thủ kho.'}</p></div></header>
     {manage && <section className="work-section"><h2>Đăng tài liệu mới</h2><InternalDocumentUpload/></section>}
     <section className="work-section">
       <form className="table-toolbar" method="get"><label>Tìm tài liệu<input name="q" defaultValue={q} maxLength={120} placeholder="Tên tài liệu hoặc tên tệp"/></label><button className="button button--secondary">Tìm kiếm</button>{q && <Link href={root} className="button button--secondary">Bỏ lọc</Link>}</form>

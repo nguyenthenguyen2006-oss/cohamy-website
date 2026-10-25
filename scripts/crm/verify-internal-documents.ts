@@ -40,11 +40,11 @@ async function main() {
     for (const role of roles.filter(role => !role.startsWith('DEALER_'))) { const user = (await login(role.toLowerCase() + '@crm-qa.invalid', qaPassword)).user; principals.set(role, user); }
     principals.set('DEALER_OWNER', (await login('a@crm-qa.invalid', qaPassword)).user);
     principals.set('DEALER_STAFF', (await login('dealer_staff@crm-qa.invalid', qaPassword)).user);
-    await check('Role matrix: admin uploads/manages; only accountants and all warehouse roles read file bytes', async () => {
+    await check('Role matrix: admin uploads/manages; admin, accountants and all warehouse roles read file bytes', async () => {
       for (const role of roles) {
         const user = principals.get(role)!;
         assert.ok(user, role);
-        const read = role === 'ACCOUNTANT' || role.startsWith('WAREHOUSE'), access = read || role === 'ADMIN';
+        const read = role === 'ADMIN' || role === 'ACCOUNTANT' || role.startsWith('WAREHOUSE'), access = read;
         assert.equal(can(user, 'internal-documents.manage'), role === 'ADMIN', role);
         assert.equal(can(user, 'internal-documents.read'), read, role);
         assert.equal(visibleModules(user).some(module => module.id === 'internal-documents'), access, role);
