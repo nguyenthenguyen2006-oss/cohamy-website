@@ -96,6 +96,8 @@
     "test:crm:meeting-migration": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-meeting-migration.ts",
     "test:crm:meeting-runtime-browser": "node scripts/crm/verify-meeting-runtime-browser.mjs",
     "test:crm:internal-documents": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-internal-documents.ts && node scripts/crm/verify-internal-documents-browser.mjs",
+    "test:crm:admin-invoices": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-admin-invoices.ts",
+    "test:crm:admin-invoices-browser": "node scripts/crm/verify-admin-invoices-browser.mjs",
     "crm:mcp:catalog": "node scripts/crm/generate-mcp-catalog.mjs",
     "test:crm:mcp:catalog": "node scripts/crm/generate-mcp-catalog.mjs --check",
     "test:crm:mcp:browser": "node scripts/crm/verify-mcp-browser.mjs",

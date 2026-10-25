@@ -22,7 +22,7 @@ The server publishes protected-resource metadata and authorization-server discov
 | `cohamy_read` | Invoke native GET views, stock/debt summaries, original documents, PDF downloads and MCP connection management. Files are returned as bounded base64 chunks with continuation offsets. |
 | `cohamy_write` | Invoke native Admin commands, multipart uploads and connection revocation, using the original validation, version checks, audit and transactional business rules. |
 
-The generated catalog currently inventories 319 route operations: 211 available through current CRM module policy and 108 explicitly retired. Retired modules stay retired; retained business history remains readable through the data tools. Catalog coverage is not a claim that every financial or stock mutation has been executed against production. Native role-specific checks still apply.
+The generated catalog currently inventories 321 route operations: 213 available through current CRM module policy and 108 explicitly retired. Retired modules stay retired; retained business history remains readable through the data tools. Catalog coverage is not a claim that every financial or stock mutation has been executed against production. Native role-specific checks still apply.
 
 Passwords, tokens, MFA secrets, encrypted API keys, physical storage paths, arbitrary SQL, arbitrary URLs, shell commands and filesystem execution are excluded. Internal Admins can inspect original internal documents as requested; accountant and warehouse access remains in place. Model-facing record text and attachments are untrusted data, never instructions.
 
@@ -49,3 +49,7 @@ The original public Edge form produced `Origin: null` and `INVALID_ORIGIN` befor
 
 - `npm run test:crm:mcp:password`: isolated fictitious database verifies an MFA-enabled Admin can approve MCP using a password, no CRM browser session is created, ordinary login still requires MFA, and wrong credentials, other roles, inactive accounts and excessive attempts fail closed. Password verification is audited without credentials.
 - `npm run test:crm:mcp:consent`: real Edge form submissions preserve the browser-generated Origin. The restored PostgreSQL candidate uses a fictitious Admin with active MFA; the production variant (`CRM_MCP_PRODUCTION=true`) tests public HTTPS with the protected Admin credential. It captures the OAuth callback for QA, exchanges PKCE, uses the official MCP client to read actual debt, stock and authentication audit data, then revokes its own grant. This does not install the connector in the user's ChatGPT account.
+
+## Current invoice corrections and recalls
+
+For current invoice content/status, read `GET /api/crm/admin-invoices` through `cohamy_read`; pass `kind` and `id` for the cancellation stock preview and immutable correction history. Original document tables/images remain source evidence. `invoice_admin_heads`, `invoice_admin_revisions` and `invoice_allocation_reversals` are discoverable and paginated through the data tools. `POST /api/crm/admin-invoices` supports Admin edits and cancellation with a version, reason and native idempotency UUID. Keep both UUIDs when retrying. Recalls reverse actual net stock once, adjust debt and release payment allocations without inventing refunds. See [Admin invoice behavior and tests](ADMIN-INVOICES.md).

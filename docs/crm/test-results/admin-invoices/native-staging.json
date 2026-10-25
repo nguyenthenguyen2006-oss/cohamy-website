@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "environment": "STAGING restored native PostgreSQL with runtime DML role; real source data copied from production; no production writes or messages",
+  "cases": [
+    {
+      "name": "Native PostgreSQL concurrent historical invoice recalls return issued stock exactly once",
+      "status": "PASS"
+    },
+    {
+      "name": "A transport retry replays the stored result without another stock or finance entry",
+      "status": "PASS"
+    },
+    {
+      "name": "The original source image remains byte-identical while the linked sale and receivables are cancelled",
+      "status": "PASS"
+    },
+    {
+      "name": "The actual 84-package HCM-to-HN transfer reverses both warehouses and leaves eight unidentified gifts unposted",
+      "status": "PASS"
+    },
+    {
+      "name": "The production-equivalent runtime cannot overwrite invoice or allocation reversal history",
+      "status": "PASS"
+    }
+  ]
+}

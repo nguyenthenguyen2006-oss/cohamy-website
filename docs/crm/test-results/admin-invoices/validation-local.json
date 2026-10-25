@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL source validation; isolated test data only",
+  "checks": {
+    "typescript": "tsc --noEmit passed",
+    "eslint": "Changed sources pass; existing unused warehouseRoleRegion import warning remains in fulfillment.ts",
+    "catalog": {
+      "operations": 321,
+      "available": 213,
+      "retired": 108,
+      "status": "PASS"
+    },
+    "services": {
+      "cases": 14,
+      "status": "PASS"
+    },
+    "nativeRestoredPostgres": {
+      "cases": 7,
+      "status": "PASS",
+      "reports": [
+        "native-staging.json",
+        "native-note.json",
+        "native-guard.json"
+      ]
+    },
+    "mcpWrites": "Stage official SDK edit, recall and both retry layers passed; production business writes prohibited during QA",
+    "ui": "Tax row column absent; desktop/390/320; reason, focus, Escape, scoped horizontal scroll and recall quantities verified"
+  }
+}

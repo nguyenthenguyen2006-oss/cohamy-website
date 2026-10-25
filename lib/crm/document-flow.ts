@@ -124,12 +124,12 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
       for(const l of d.lines){const p=(await sql.query<{id:string;sku:string;name:string;stock_unit:string}>('SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE id=$1 AND active',[l.productId])).rows[0];if(!p)throw new CrmError('PRODUCT_INVALID',400);if(!p.stock_unit)throw new CrmError('PRODUCT_STOCK_UNIT_REQUIRED',409);lines.push({...plainLine(p,l.quantity),unitPrice:'',amount:'',shipped:l.quantity,note:l.note});}
       delivery={giver:user.displayName,...d.delivery};totals={goods:'',discount:'',shipping:'',total:'',paid:'',remaining:''};
     }else{
-    const c=(await sql.query<{id:string;document_code:string;warehouse_id:string;order_id:string|null;request_id:string|null;immutable_lines:Array<Record<string,unknown>>;snapshot:Record<string,unknown>;organization_name:string;orderer_name:string;orderer_phone:string;paid_amount:string;discount_amount:string}>("SELECT c.*,o.name AS organization_name,v.snapshot FROM cohamy_crm.accounting_order_clearances c JOIN cohamy_crm.organizations o ON o.id=c.organization_id LEFT JOIN cohamy_crm.commercial_requests r ON r.id=c.request_id LEFT JOIN cohamy_crm.commercial_request_versions v ON v.id=r.latest_version_id WHERE c.id=$1 FOR UPDATE OF c",[d.clearanceId])).rows[0];
+    const c=(await sql.query<{id:string;document_code:string;warehouse_id:string;order_id:string|null;request_id:string|null;immutable_lines:Array<Record<string,unknown>>;snapshot:Record<string,unknown>;organization_name:string;orderer_name:string;orderer_phone:string;paid_amount:string;discount_amount:string}>("SELECT c.*,o.name AS organization_name,COALESCE(sv.snapshot->'quote',v.snapshot) AS snapshot FROM cohamy_crm.accounting_order_clearances c JOIN cohamy_crm.organizations o ON o.id=c.organization_id LEFT JOIN cohamy_crm.commercial_requests r ON r.id=c.request_id LEFT JOIN cohamy_crm.commercial_request_versions v ON v.id=r.latest_version_id LEFT JOIN cohamy_crm.sales_orders so ON so.id=c.order_id LEFT JOIN cohamy_crm.sales_order_versions sv ON sv.id=COALESCE(so.confirmed_version_id,so.latest_version_id) WHERE c.id=$1 FOR UPDATE OF c",[d.clearanceId])).rows[0];
     if(!c||c.warehouse_id!==warehouseId)throw new CrmError('NOT_FOUND',404);
     sourceId=c.id;sourceCode=c.document_code;salesOrderId=c.order_id;requestId=c.request_id;
     if(salesOrderId){
       await sql.query('SELECT id FROM cohamy_crm.sales_orders WHERE id=$1 FOR UPDATE',[salesOrderId]);
-      const otherIssue=(await sql.query("SELECT m.id FROM cohamy_crm.inventory_movements m JOIN cohamy_crm.inventory_documents i ON i.id=m.document_id WHERE m.source_order_id=$1 AND m.quantity<0 AND i.reference_type<>'warehouse-handover' LIMIT 1",[salesOrderId])).rows[0];
+      const otherIssue=(await sql.query("SELECT m.id FROM cohamy_crm.inventory_movements m JOIN cohamy_crm.inventory_documents i ON i.id=m.document_id WHERE m.source_order_id=$1 AND m.quantity<0 AND i.reference_type<>'warehouse-handover' AND NOT(i.reference_type='admin-invoice' AND i.reference_id LIKE 'FLOW:%') LIMIT 1",[salesOrderId])).rows[0];
       if(otherIssue)throw new CrmError('ORDER_ALREADY_ISSUED_BY_OTHER_FLOW',409);
     }
     if(!c.immutable_lines.length){const {extractSnapshotTotals}=await import('./accountant-workflow');c.immutable_lines=extractSnapshotTotals(c.snapshot).lines as unknown as Array<Record<string,unknown>>;}
@@ -282,8 +282,8 @@ export async function flowWorkspace(user:Principal){
   const rows=async<T>(text:string,params:unknown[]=[]) => (await db.query<T>(text,params)).rows;
   // Independent scoped reads share the bounded connection pool; no cross-request cache.
   const [factory,issues,warehouses,products,factories,stocks,orders]=await Promise.all([
-    rows<FlowRow>(`SELECT f.* FROM cohamy_crm.factory_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${factoryWhere}) ORDER BY f.created_at DESC LIMIT 500`,params),
-    isFactory?[]:rows<FlowRow>(`SELECT f.* FROM cohamy_crm.warehouse_handover_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${scope.sql}) ORDER BY f.created_at DESC LIMIT 500`,scope.params),
+    rows<FlowRow>(`SELECT f.* FROM cohamy_crm.factory_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${factoryWhere}) AND f.workflow_state<>'CANCELLED' ORDER BY f.created_at DESC LIMIT 500`,params),
+    isFactory?[]:rows<FlowRow>(`SELECT f.* FROM cohamy_crm.warehouse_handover_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${scope.sql}) AND f.workflow_state<>'CANCELLED' ORDER BY f.created_at DESC LIMIT 500`,scope.params),
     isFactory?[]:rows<{id:string;code:string;name:string}>(`SELECT w.id,w.code,w.name FROM cohamy_crm.warehouses w WHERE w.active AND (${scope.sql}) ORDER BY w.code`,scope.params),
     user.role==='ADMIN'||isWarehouseRole(user.role)?rows<{id:string;sku:string;name:string;stock_unit:string}>('SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE active ORDER BY sku'):[],
     user.role==='ADMIN'?rows<{id:string;name:string}>("SELECT m.id,u.display_name AS name FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id WHERE m.organization_id=$1 AND m.role='FACTORY' AND m.active AND u.active ORDER BY u.display_name",[user.organizationId]):[],
@@ -302,7 +302,7 @@ export async function flowWorkspace(user:Principal){
   return {documents:visible.flatMap(x=>x.flow_payload?[x.flow_payload]:[]),legacy,vats,warehouses,products,factories,stocks,orders,accepted:accepted.map(x=>x.entity_id),notifications,revisions};
 }
 export async function downloadFlowPdf(user:Principal,id:string,revision?:number){
-  const db=await database();const row=await flowAccess(db,user,id);const r=(await db.query<{pdf:Uint8Array;filename:string;checksum:string;snapshot:FlowSnapshot}>('SELECT * FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND ($2::integer IS NULL OR revision=$2) ORDER BY revision DESC LIMIT 1',[row.id,revision??null])).rows[0];
+  const db=await database();const row=await flowAccess(db,user,id);if(row.workflow_state==='DRAFT'&&revision===undefined&&row.flow_payload)return {bytes:await renderFlowPdf(row.flow_payload),filename:row.code+'-nhap.pdf',snapshot:row.flow_payload,checksum:''};const r=(await db.query<{pdf:Uint8Array;filename:string;checksum:string;snapshot:FlowSnapshot}>('SELECT * FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND ($2::integer IS NULL OR revision=$2) ORDER BY revision DESC LIMIT 1',[row.id,revision??null])).rows[0];
   if(r)return {...r,bytes:Buffer.from(r.pdf)};
   if(revision!==undefined)throw new CrmError('NOT_FOUND',404);
   if(!row.flow_payload){const snapshot=await legacyFlowSnapshot(db,row);return {bytes:await renderFlowPdf(snapshot),filename:`${row.code}-lich-su.pdf`,snapshot,checksum:''};}
@@ -343,4 +343,17 @@ export async function amendFlowDocument(user:Principal,input:unknown){
     await audit(sql,user.id,'document-flow.amended',s.id,{before:s,after,reason:d.reason,inventoryId});await enqueueDocumentMail(sql,{event:'document.amended',snapshot:after,files:[{type:'FLOW',id:file.revisionId,filename:file.filename,checksum:file.checksum}]});
     const result={id:s.id,code:s.code,version:after.revision,state:after.state};await record(sql,user,d.idempotencyKey,hash,result);return result;
   });
+}
+
+export async function persistAdminFlowRevision(sql:Sql,user:Principal,before:FlowSnapshot,after:FlowSnapshot,reason:string){
+  if(user.area!=='crm'||user.role!=='ADMIN')throw new CrmError('FORBIDDEN',403);
+  const saved=(await sql.query('SELECT id FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND revision=$2',[before.id,before.revision])).rows.length;
+  if(!saved)await archive(sql,user,before,'Bản trước khi Admin điều chỉnh');
+  const file=after.state==='DRAFT'?null:await archive(sql,user,after,reason);
+  await sql.query("SELECT set_config('cohamy.document_amend','on',true)");
+  const total=after.totals.total??after.lines.reduce((n,l)=>n+BigInt(l.amount||'0'),0n).toString();
+  if(after.kind==='ISSUE')await sql.query('UPDATE cohamy_crm.warehouse_handover_invoices SET flow_payload=$1::jsonb,workflow_version=$2,workflow_state=$3,lines=$4::jsonb,note=$5,warehouse_id=$6,total_quantity=$7,total_amount=$8,updated_at=now() WHERE id=$9',[JSON.stringify(after),after.revision,after.state,JSON.stringify(legacyLines(after)),after.note,after.warehouseId,fixedText(after.lines.reduce((n,l)=>n+fixed(l.quantity),0n)),total,after.id]);
+  else await sql.query('UPDATE cohamy_crm.factory_invoices SET flow_payload=$1::jsonb,workflow_version=$2,workflow_state=$3,lines=$4::jsonb,note=$5,warehouse_id=$6,total_amount=$7,total_ordered_qty=$9,total_dispatched_qty=$10,total_received_qty=$11,updated_at=now() WHERE id=$8',[JSON.stringify(after),after.revision,after.state,JSON.stringify(legacyLines(after)),after.note,after.warehouseId,total,after.id,...(['ordered','shipped','received'] as const).map(key=>fixedText(after.lines.reduce((n,l)=>n+fixed(l[key]||'0'),0n)))]);
+  await audit(sql,user.id,after.state==='CANCELLED'?'document-flow.cancelled':'document-flow.amended',after.id,{before,after,reason,adminInvoice:true});
+  return file;
 }

@@ -9,7 +9,7 @@ export type ProductEntryRow={key:string;name:string;sku?:string;image?:string;un
 export type ProductEntryColumn<R>={key:string;label:string;render:(row:R,index:number)=>ReactNode};
 
 /** Rows stay mounted when filtered, so searching never discards an entered quantity. */
-export function ProductEntryGrid<R extends ProductEntryRow>({rows,columns,label='Sản phẩm và số lượng',help}:{rows:R[];columns:ProductEntryColumn<R>[];label?:string;help?:string}){
+export function ProductEntryGrid<R extends ProductEntryRow>({rows,columns,label='Sản phẩm và số lượng',help,renderName}:{rows:R[];columns:ProductEntryColumn<R>[];label?:string;help?:string;renderName?:(row:R,index:number)=>ReactNode}){
  const id=useId(),[query,setQuery]=useState('');
  const needle=query.trim().toLocaleLowerCase('vi');
  const shown=rows.filter(r=>r.name.toLocaleLowerCase('vi').includes(needle)).length;
@@ -21,7 +21,7 @@ export function ProductEntryGrid<R extends ProductEntryRow>({rows,columns,label=
    <table><thead><tr><th scope="col">Ảnh</th><th scope="col">Tên sản phẩm</th><th scope="col">Đơn vị</th>{columns.map(c=><th scope="col" key={c.key}>{c.label}</th>)}</tr></thead>
     <tbody>{rows.map((row,i)=><tr key={row.key} hidden={!row.name.toLocaleLowerCase('vi').includes(needle)} className={row.selected?'is-filled':''}>
      <td className="crm-product-entry-image"><Image src={resolveProductImage(row.sku??'',row.image)} alt={row.name} unoptimized width={44} height={52} style={{width:44,height:52,objectFit:'contain'}}/></td>
-     <th scope="row" className="crm-product-entry-name"><strong>{row.name}</strong>{row.detail&&<small>{row.detail}</small>}</th>
+     <th scope="row" className="crm-product-entry-name">{renderName?renderName(row,i):<strong>{row.name}</strong>}{row.detail&&<small>{row.detail}</small>}</th>
      <td className="crm-product-entry-unit">{row.unit||'Chưa khai báo'}</td>
      {columns.map(c=><td key={c.key}>{c.render(row,i)}</td>)}
     </tr>)}</tbody>

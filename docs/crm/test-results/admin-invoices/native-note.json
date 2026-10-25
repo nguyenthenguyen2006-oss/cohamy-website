@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "environment": "STAGING restored native PostgreSQL",
+  "cases": [
+    {
+      "name": "Note-only correction of copied discounted sale preserves stock, reserves, nominal prices, discount metadata and clearance financial totals",
+      "status": "PASS"
+    }
+  ]
+}

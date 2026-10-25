@@ -1,0 +1,16 @@
+{
+  "initialDisposition": "fix",
+  "finalDisposition": "ship",
+  "scope": "Verdict scores the single named material fix; it is not a new whole-surface audit.",
+  "materialFix": {
+    "issue": "Mobile recall quantities offscreen without discovery guidance or accessible scroll region",
+    "status": "resolved",
+    "evidence": [
+      ".impeccable/review/recall-mobile.png",
+      ".impeccable/review/recall-mobile-quantities.png",
+      "components/crm/AdminInvoiceActions.tsx",
+      "browser-ui-staging.json"
+    ]
+  },
+  "reviewer": "Fresh shipped impeccable-finish-reviewer; no degraded substitute"
+}
