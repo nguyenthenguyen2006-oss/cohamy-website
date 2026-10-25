@@ -422,7 +422,7 @@ export async function ensureAccountantWorkflowSchema(sql: Sql) {
     await sql.exec(`
       ALTER TABLE cohamy_crm.memberships DROP CONSTRAINT IF EXISTS memberships_role_check;
       ALTER TABLE cohamy_crm.memberships ADD CONSTRAINT memberships_role_check
-        CHECK (role IN ('ADMIN','MANAGER','SALES','FACTORY','WAREHOUSE','WAREHOUSE_HCM','WAREHOUSE_HN','ACCOUNTANT','DEALER_OWNER','DEALER_STAFF'));
+        CHECK (role IN ('ADMIN','MANAGER','SALES','FACTORY','WAREHOUSE','WAREHOUSE_HCM','WAREHOUSE_HN','ACCOUNTANT','DEALER_OWNER','DEALER_STAFF','CUSTOMER','SUPERMARKET'));
 
       ALTER TABLE cohamy_crm.notifications DROP CONSTRAINT IF EXISTS notifications_entity_type_check;
       ALTER TABLE cohamy_crm.notifications ADD CONSTRAINT notifications_entity_type_check
@@ -911,6 +911,7 @@ export async function syncOrderClearanceOnRequestSave(
     requestId: string;
     actorId: string;
     isNew: boolean;
+    warehouseId?: string;
   }
 ) {
   await ensureAccountantWorkflowSchema(sql);
@@ -973,9 +974,12 @@ export async function syncOrderClearanceOnRequestSave(
 
   const defaultWh = (
     await sql.query<{id: string; code: string; region: string | null}>(
-      isSouth
+      input.warehouseId
+        ? "SELECT id,code,region FROM cohamy_crm.warehouses WHERE id=$1 AND active"
+        : isSouth
         ? "SELECT id, code, region FROM cohamy_crm.warehouses WHERE (region='SOUTH' OR code ILIKE '%HCM%') AND active ORDER BY created_at LIMIT 1"
-        : "SELECT id, code, region FROM cohamy_crm.warehouses WHERE (region='NORTH' OR code ILIKE '%HN%') AND active ORDER BY created_at LIMIT 1"
+        : "SELECT id, code, region FROM cohamy_crm.warehouses WHERE (region='NORTH' OR code ILIKE '%HN%') AND active ORDER BY created_at LIMIT 1",
+      input.warehouseId ? [input.warehouseId] : []
     )
   ).rows[0];
 

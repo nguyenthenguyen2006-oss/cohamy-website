@@ -7,7 +7,7 @@ import {database,type Sql} from './db';
 import {audit,assertCurrentPrincipal} from './auth';
 import {allPartners,assertPermission,CrmError,warehouseRoleRegion} from './permissions';
 import {getOrganization,partnerScope,assertWritableOrganization,ensureRegionalWarehouseAssignments} from './repository';
-import {roles,type Principal,type CatalogProduct} from './types';
+import {roles,isBuyerRole,roleOrganizationKind,type Principal,type CatalogProduct} from './types';
 import {orderStates,type OrderRecord,type EntityType,type StaffOption,type TaskRecord,type ActivityRecord} from './work-types';
 
 function parse<T>(schema:z.ZodType<T>,input:unknown):T {const r=schema.safeParse(input);if(!r.success)throw new CrmError('INVALID_FIELDS',400);return r.data;}
@@ -83,7 +83,11 @@ export async function manageAccount(user:Principal,id:string,input:unknown){
   if(!m)throw new CrmError('NOT_FOUND',404);if(m.user_id===user.id)throw new CrmError('CANNOT_CHANGE_SELF',409);
   if(d.action==='password'){if(!d.password)throw new CrmError('INVALID_FIELDS',400);await tx.query('UPDATE cohamy_crm.users SET password_hash=$1 WHERE id=$2',[await bcrypt.hash(d.password,12),m.user_id]);}
   if(d.action==='role'){
-   if(!d.role||m.kind!==(d.role.startsWith('DEALER_')?'DEALER':'COHAMY'))throw new CrmError('ROLE_ORGANIZATION_MISMATCH',400);
+   if(!d.role||m.kind!==roleOrganizationKind(d.role))throw new CrmError('ROLE_ORGANIZATION_MISMATCH',400);
+   if(isBuyerRole(d.role)){
+    await tx.query('SELECT id FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[m.organization_id]);
+    if((await tx.query("SELECT id FROM cohamy_crm.memberships WHERE organization_id=$1 AND id<>$2 AND role IN('CUSTOMER','SUPERMARKET') AND role<>$3 AND active",[m.organization_id,id,d.role])).rows.length)throw new CrmError('BUYER_ROLE_CONFLICT',409);
+   }
    if(d.expectedVersion===undefined)throw new CrmError('ROLE_PREVIEW_REQUIRED',409);
    if(m.version!==d.expectedVersion)throw new CrmError('VERSION_CONFLICT',409);
    await tx.query('UPDATE cohamy_crm.memberships SET role=$1,version=version+1 WHERE id=$2',[d.role,id]);

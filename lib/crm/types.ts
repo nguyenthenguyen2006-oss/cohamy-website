@@ -1,5 +1,7 @@
-export const roles = ["ADMIN", "MANAGER", "SALES", "FACTORY", "WAREHOUSE_HCM", "WAREHOUSE_HN", "WAREHOUSE", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
-export const accountAssignableRoles = ["ADMIN", "MANAGER", "SALES", "FACTORY", "WAREHOUSE_HCM", "WAREHOUSE_HN", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF"] as const;
+export const roles = ["ADMIN", "MANAGER", "SALES", "FACTORY", "WAREHOUSE_HCM", "WAREHOUSE_HN", "WAREHOUSE", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF", "CUSTOMER", "SUPERMARKET"] as const;
+export const accountAssignableRoles = ["ADMIN", "MANAGER", "SALES", "FACTORY", "WAREHOUSE_HCM", "WAREHOUSE_HN", "ACCOUNTANT", "DEALER_OWNER", "DEALER_STAFF", "CUSTOMER", "SUPERMARKET"] as const;
+export function isBuyerRole(role:string):role is "CUSTOMER"|"SUPERMARKET" {return role==="CUSTOMER"||role==="SUPERMARKET";}
+export function roleOrganizationKind(role:string):OrganizationKind {return isBuyerRole(role)?"CUSTOMER":role.startsWith("DEALER_")?"DEALER":"COHAMY";}
 export type Role = typeof roles[number];
 export function isWarehouseRole(role: string): role is "WAREHOUSE" | "WAREHOUSE_HCM" | "WAREHOUSE_HN" {
   return role === "WAREHOUSE" || role === "WAREHOUSE_HCM" || role === "WAREHOUSE_HN";
@@ -31,6 +33,8 @@ export const roleLabels: Record<Role, string> = {
   ACCOUNTANT: "Kế toán",
   DEALER_OWNER: "Chủ đại lý",
   DEALER_STAFF: "Nhân viên đại lý",
+  CUSTOMER: "Khách hàng",
+  SUPERMARKET: "Siêu thị",
 };
 export interface Organization {
   id: string; code: string; name: string; kind: OrganizationKind; phone: string;

@@ -27,6 +27,11 @@ export async function GET(request:Request,context:Context){try{
   return json(orderId?await invoicePdf.getOrderInvoicePayloadForSalesOrder(user,orderId,versionId):await invoicePdf.getOrderInvoicePayloadForRequest(user,requestId,versionId));
  }
  if(action==='invoice-pdf'){
+  const requestId=p.get('requestId')??id;
+  if(!p.get('orderId')&&/^[a-f0-9-]{36}$/i.test(requestId)){
+   const buyer=(await(await database()).query<{id:string}>('SELECT id FROM cohamy_crm.buyer_orders WHERE request_id=$1',[requestId])).rows[0];
+   if(buyer){const result=await(await import('@/lib/crm/buyer')).buyerDownload(user,buyer.id,'order');return new Response(new Uint8Array(result.bytes),{headers:{'Content-Type':result.mime,'Content-Disposition':"attachment; filename*=UTF-8''"+encodeURIComponent(result.filename),'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});}
+  }
   const result=await invoicePdf.downloadOrderInvoicePdf(user,{
    requestId:p.get('requestId')??(id||undefined),
    orderId:p.get('orderId')??undefined,

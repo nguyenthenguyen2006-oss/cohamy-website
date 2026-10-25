@@ -7,6 +7,7 @@ import { allPartners, assertPermission, CrmError, warehouseRoleRegion } from "./
 import { warehouseScope } from "./warehouse-scope";
 import { roles, type CatalogProduct, type Organization, type Principal, type Role, type Warehouse } from "./types";
 import bcrypt from "bcryptjs";
+import {isBuyerRole,roleOrganizationKind} from "./types";
 
 export const organizationSchema = z.object({
   code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),
@@ -31,6 +32,7 @@ const parse = <T>(schema: z.ZodType<T>, input: unknown): T => {
 };
 export function partnerScope(user: Principal, alias = "o"): { sql: string; params: unknown[] } {
   if (allPartners(user)) return { sql: "true", params: [] };
+  if(user.area==="portal"&&isBuyerRole(user.role))return {sql:`${alias}.id=$1`,params:[user.organizationId]};
   if (user.area === "portal") {
     return {
       sql: `(${alias}.id=$1 OR ${alias}.merged_into_id=$1 OR EXISTS (WITH RECURSIVE branch AS (SELECT child_organization_id FROM cohamy_crm.distribution_relations WHERE parent_organization_id=$1 AND status='ACTIVE' AND (ends_at IS NULL OR ends_at > now()) UNION SELECT dr.child_organization_id FROM cohamy_crm.distribution_relations dr JOIN branch b ON dr.parent_organization_id=b.child_organization_id WHERE dr.status='ACTIVE' AND (dr.ends_at IS NULL OR dr.ends_at > now())) SELECT 1 FROM branch WHERE child_organization_id=${alias}.id))`,
@@ -75,7 +77,7 @@ export async function listOrganizationOptions(user: Principal) {
   // paginated list fills up. Only privileged writers can enumerate these.
   if (!canOrganizationOptions(user)) throw new CrmError("FORBIDDEN", 403);
   const db = await database();
-  return (await db.query<Organization>(`SELECT ${organizationColumns} FROM cohamy_crm.organizations o WHERE o.active AND o.kind IN ('COHAMY','DEALER') ORDER BY (o.kind='COHAMY') DESC,o.name,o.id`)).rows;
+  return (await db.query<Organization>(`SELECT ${organizationColumns} FROM cohamy_crm.organizations o WHERE o.active AND o.kind IN ('COHAMY','DEALER','CUSTOMER') ORDER BY (o.kind='COHAMY') DESC,o.name,o.id`)).rows;
 }
 function canOrganizationOptions(user: Principal) {
   return user.area === "crm" && ["ADMIN", "MANAGER"].includes(user.role);
@@ -186,9 +188,13 @@ export async function createAccount(user: Principal, input: unknown) {
   const db = await database();
   const hash = await bcrypt.hash(data.password, 12);
   return db.transaction(async tx => {
+    await assertCurrentPrincipal(tx,user);
     const org = await getOrganization(user, data.organizationId, tx);
-    const isDealer = data.role.startsWith("DEALER_");
-    if (!org.active || org.kind !== (isDealer ? "DEALER" : "COHAMY")) throw new CrmError("ROLE_ORGANIZATION_MISMATCH", 400);
+    if (!org.active || org.kind !== roleOrganizationKind(data.role)) throw new CrmError("ROLE_ORGANIZATION_MISMATCH", 400);
+    if(isBuyerRole(data.role)){
+      await tx.query('SELECT id FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[org.id]);
+      if((await tx.query("SELECT id FROM cohamy_crm.memberships WHERE organization_id=$1 AND role IN('CUSTOMER','SUPERMARKET') AND role<>$2 AND active",[org.id,data.role])).rows.length)throw new CrmError("BUYER_ROLE_CONFLICT",409);
+    }
     const id = randomUUID();
     const membershipId = randomUUID();
     await tx.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash) VALUES ($1,$2,$3,$4)", [id, data.email, data.displayName, hash]);

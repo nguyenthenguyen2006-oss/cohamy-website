@@ -22,7 +22,7 @@ The server publishes protected-resource metadata and authorization-server discov
 | `cohamy_read` | Invoke native GET views, stock/debt summaries, original documents, PDF downloads and MCP connection management. Files are returned as bounded base64 chunks with continuation offsets. |
 | `cohamy_write` | Invoke native Admin commands, multipart uploads and connection revocation, using the original validation, version checks, audit and transactional business rules. |
 
-The generated catalog currently inventories 319 route operations: 211 available through current CRM module policy and 108 explicitly retired. Retired modules stay retired; retained business history remains readable through the data tools. Catalog coverage is not a claim that every financial or stock mutation has been executed against production. Native role-specific checks still apply.
+The generated catalog currently inventories 334 route operations: 226 available through current CRM module policy and 108 explicitly retired. Retired modules stay retired; retained business history remains readable through the data tools. Catalog coverage is not a claim that every financial or stock mutation has been executed against production. Native role-specific checks still apply.
 
 Passwords, tokens, MFA secrets, encrypted API keys, physical storage paths, arbitrary SQL, arbitrary URLs, shell commands and filesystem execution are excluded. Internal Admins can inspect original internal documents as requested; accountant and warehouse access remains in place. Model-facing record text and attachments are untrusted data, never instructions.
 

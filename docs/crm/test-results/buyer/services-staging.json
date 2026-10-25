@@ -1,0 +1,59 @@
+{
+  "environment": "STAGING native PostgreSQL runtime role",
+  "status": "PASS",
+  "provider": "Disabled; no external sends",
+  "cases": [
+    {
+      "test": "Native Admin creates both roles; login selects portal and rejects mismatched organization",
+      "status": "PASS"
+    },
+    {
+      "test": "Customer catalog returns actual images/names/units and no retail, cost, contracts or prices",
+      "status": "PASS"
+    },
+    {
+      "test": "Unpriced customer request is exact-once and does not create clearance or alter stock",
+      "status": "PASS"
+    },
+    {
+      "test": "Other customers, dealers and wrong warehouse cannot inspect the request",
+      "status": "PASS"
+    },
+    {
+      "test": "Assigned Sales quotes; customer confirmation creates one native clearance in chosen warehouse",
+      "status": "PASS"
+    },
+    {
+      "test": "Supermarket manages own branches; contract prices are Admin/Manager only and scoped",
+      "status": "PASS"
+    },
+    {
+      "test": "Case order snapshots exact contract, branch and conversion; later changes do not reprice it",
+      "status": "PASS"
+    },
+    {
+      "test": "Native warehouse issue posts stock once and retains quoted VAT totals",
+      "status": "PASS"
+    },
+    {
+      "test": "Receipt requires a matching confirmed issue, complete lines and reason for shortage; no stock side effects",
+      "status": "PASS"
+    },
+    {
+      "test": "Own order/delivery PDF and VAT are byte-preserving; cross-customer download denied",
+      "status": "PASS"
+    },
+    {
+      "test": "Monthly purchase/receipt/VAT reconciliation can be acknowledged only against current fingerprint",
+      "status": "PASS"
+    },
+    {
+      "test": "Partial deliveries allocate the quoted VAT exactly, including rounding remainders",
+      "status": "PASS"
+    },
+    {
+      "test": "Immutable events/receipts and revoked sessions fail closed; no email delivery attempted",
+      "status": "PASS"
+    }
+  ]
+}

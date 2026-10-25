@@ -5,41 +5,43 @@ import * as r2 from '@/app/api/crm/[resource]/route';
 import * as r3 from '@/app/api/crm/accountant/[action]/route';
 import * as r4 from '@/app/api/crm/articles/[action]/route';
 import * as r5 from '@/app/api/crm/automation/[action]/route';
-import * as r6 from '@/app/api/crm/care/[action]/route';
-import * as r7 from '@/app/api/crm/channel/[action]/route';
-import * as r8 from '@/app/api/crm/commerce/[action]/route';
-import * as r9 from '@/app/api/crm/consignment/[action]/route';
-import * as r10 from '@/app/api/crm/document-flow/[action]/route';
-import * as r11 from '@/app/api/crm/documents/[id]/route';
-import * as r12 from '@/app/api/crm/documents/route';
-import * as r13 from '@/app/api/crm/finance/[action]/route';
-import * as r14 from '@/app/api/crm/fulfillment/[action]/route';
-import * as r15 from '@/app/api/crm/governance/[action]/route';
-import * as r16 from '@/app/api/crm/historical-orders/[id]/route';
-import * as r17 from '@/app/api/crm/historical-orders/route';
-import * as r18 from '@/app/api/crm/internal-documents/[id]/route';
-import * as r19 from '@/app/api/crm/internal-documents/route';
-import * as r20 from '@/app/api/crm/inventory/[action]/route';
-import * as r21 from '@/app/api/crm/jobs/[action]/route';
-import * as r22 from '@/app/api/crm/library/[action]/route';
-import * as r23 from '@/app/api/crm/me/route';
-import * as r24 from '@/app/api/crm/onboarding/[action]/route';
-import * as r25 from '@/app/api/crm/partners/duplicates/route';
-import * as r26 from '@/app/api/crm/partners/merge/route';
-import * as r27 from '@/app/api/crm/pricing/[action]/route';
-import * as r28 from '@/app/api/crm/procurement/[action]/route';
-import * as r29 from '@/app/api/crm/quotations/[action]/route';
-import * as r30 from '@/app/api/crm/relationships/[action]/route';
-import * as r31 from '@/app/api/crm/reports/[action]/route';
-import * as r32 from '@/app/api/crm/spreadsheet/[action]/route';
-import * as r33 from '@/app/api/crm/work/[action]/route';
-import * as r34 from '@/app/api/crm/workspace/[action]/route';
+import * as r6 from '@/app/api/crm/buyer/[action]/route';
+import * as r7 from '@/app/api/crm/care/[action]/route';
+import * as r8 from '@/app/api/crm/channel/[action]/route';
+import * as r9 from '@/app/api/crm/commerce/[action]/route';
+import * as r10 from '@/app/api/crm/consignment/[action]/route';
+import * as r11 from '@/app/api/crm/document-flow/[action]/route';
+import * as r12 from '@/app/api/crm/documents/[id]/route';
+import * as r13 from '@/app/api/crm/documents/route';
+import * as r14 from '@/app/api/crm/finance/[action]/route';
+import * as r15 from '@/app/api/crm/fulfillment/[action]/route';
+import * as r16 from '@/app/api/crm/governance/[action]/route';
+import * as r17 from '@/app/api/crm/historical-orders/[id]/route';
+import * as r18 from '@/app/api/crm/historical-orders/route';
+import * as r19 from '@/app/api/crm/internal-documents/[id]/route';
+import * as r20 from '@/app/api/crm/internal-documents/route';
+import * as r21 from '@/app/api/crm/inventory/[action]/route';
+import * as r22 from '@/app/api/crm/jobs/[action]/route';
+import * as r23 from '@/app/api/crm/library/[action]/route';
+import * as r24 from '@/app/api/crm/me/route';
+import * as r25 from '@/app/api/crm/onboarding/[action]/route';
+import * as r26 from '@/app/api/crm/partners/duplicates/route';
+import * as r27 from '@/app/api/crm/partners/merge/route';
+import * as r28 from '@/app/api/crm/pricing/[action]/route';
+import * as r29 from '@/app/api/crm/procurement/[action]/route';
+import * as r30 from '@/app/api/crm/quotations/[action]/route';
+import * as r31 from '@/app/api/crm/relationships/[action]/route';
+import * as r32 from '@/app/api/crm/reports/[action]/route';
+import * as r33 from '@/app/api/crm/spreadsheet/[action]/route';
+import * as r34 from '@/app/api/crm/work/[action]/route';
+import * as r35 from '@/app/api/crm/workspace/[action]/route';
 export interface McpRoute {id:string;method:'GET'|'POST'|'PATCH'|'PUT'|'DELETE';template:string;source:string;group:string;status:'AVAILABLE'|'RETIRED';moduleId:string|null;params:string[];selector:Record<string,string>;query:string[];inputContract:string;multipart:boolean;sourceHash:string}
 const sharedContracts: Record<string,string> = {
   "4b75ce37fd75d5d5": "z.object({id:z.uuid()}).strict() // connection id from GET connections",
-  "9018ab7e8ccb5ef6": "const organizationSchema = z.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n}).strict()\nz.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n})\nconst updateSchema = organizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\norganizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\nconst warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() }).strict()\nz.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() })\nconst accountSchema = z.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() }).strict()\nz.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() })\nz.object({ active: z.boolean() })",
+  "323cb8767ddb4069": "const roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nconst organizationSchema = z.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n}).strict()\nz.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n})\nconst updateSchema = organizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\norganizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\nconst warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() }).strict()\nz.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() })\nconst accountSchema = z.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() }).strict()\nz.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() })\nz.object({ active: z.boolean() })",
   "45c8ca02967cc4bd": "z.object({id:z.string().trim().min(1),expectedUpdatedAt:z.string().optional(),reason:z.string().optional(),idempotencyKey:z.uuid().optional()})\nconst articleInputSchema = z.object({\n  id: z.string().trim().optional(), expectedUpdatedAt: z.string().optional(),\n  groupId: z.string().trim().min(1).optional(), locale: z.enum(BLOG_LOCALES).default('vi'),\n  slug: z.string().trim().min(1).max(180), title: z.string().trim().min(1).max(200),\n  excerpt: z.string().trim().optional(), summary: z.string().trim().optional(),\n  contentHtml: z.string().max(180000).optional(), content: z.string().max(180000).optional(),\n  coverImage: z.string().trim().default(''), coverImageAlt: z.string().trim().default(''),\n  author: z.string().trim().default('Cohamy'), category: z.enum(BLOG_CATEGORIES).default('brand-story'),\n  tags: z.array(z.string().trim()).default([]), featured: z.boolean().default(false),\n  relatedProductIds: z.array(z.string().trim()).default([]),\n  seoTitle: z.string().trim().default(''), seoDescription: z.string().trim().default(''),\n  canonicalUrl: z.string().trim().default(''), robotsIndex: z.boolean().default(true),\n  status: z.enum(BLOG_STATUSES).default('draft'), scheduledAt: z.string().default(''), publishedAt: z.string().default(''),\n  reason: z.string().trim().optional(), idempotencyKey: z.string().trim().optional(),\n}).strict()\nz.object({\n  id: z.string().trim().optional(), expectedUpdatedAt: z.string().optional(),\n  groupId: z.string().trim().min(1).optional(), locale: z.enum(BLOG_LOCALES).default('vi'),\n  slug: z.string().trim().min(1).max(180), title: z.string().trim().min(1).max(200),\n  excerpt: z.string().trim().optional(), summary: z.string().trim().optional(),\n  contentHtml: z.string().max(180000).optional(), content: z.string().max(180000).optional(),\n  coverImage: z.string().trim().default(''), coverImageAlt: z.string().trim().default(''),\n  author: z.string().trim().default('Cohamy'), category: z.enum(BLOG_CATEGORIES).default('brand-story'),\n  tags: z.array(z.string().trim()).default([]), featured: z.boolean().default(false),\n  relatedProductIds: z.array(z.string().trim()).default([]),\n  seoTitle: z.string().trim().default(''), seoDescription: z.string().trim().default(''),\n  canonicalUrl: z.string().trim().default(''), robotsIndex: z.boolean().default(true),\n  status: z.enum(BLOG_STATUSES).default('draft'), scheduledAt: z.string().default(''), publishedAt: z.string().default(''),\n  reason: z.string().trim().optional(), idempotencyKey: z.string().trim().optional(),\n})",
   "6da65dfc842ff509": "const scheduleSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),kind:z.enum(kinds),frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),every:z.number().int().min(1).max(52),nextDueAt:z.iso.datetime({offset:true}),enabled:z.boolean()}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),kind:z.enum(kinds),frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),every:z.number().int().min(1).max(52),nextDueAt:z.iso.datetime({offset:true}),enabled:z.boolean()})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(120),eventAction:z.enum(['application.approved','partner.created']),title:z.string().trim().min(2).max(240),kind:z.enum(kinds),assigneeId:z.uuid(),dueMinutes:z.number().int().min(1).max(525600),enabled:z.boolean()})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(120),kind:z.enum(kinds),delayMinutes:z.number().int().min(0).max(525600),recipientId:z.uuid(),enabled:z.boolean()})\nz.object({taskId:z.uuid(),follow:z.boolean()})\nz.object({fromId:z.uuid(),toId:z.uuid(),reason:z.string().trim().min(3).max(1000)})\nz.object({id:z.uuid()})",
+  "549c7bfab0acf7a4": "const priceLineSchema = z.object({productId:uuid,unitPrice:money,vatRate:z.number().int().min(0).max(100)}).strict()\nz.object({productId:uuid,unitPrice:money,vatRate:z.number().int().min(0).max(100)})\nconst deliverySchema = z.object({recipient:text.min(2).max(120),phone:text.min(5).max(40),address:text.min(3).max(500)}).strict()\nz.object({recipient:text.min(2).max(120),phone:text.min(5).max(40),address:text.min(3).max(500)})\nconst createSchema = z.object({organizationId:uuid.optional(),buyerRole:z.enum(['CUSTOMER','SUPERMARKET']).optional(),warehouseId:uuid,\n branchId:uuid.optional(),contractId:uuid.optional(),delivery:deliverySchema.optional(),note:text.max(2000).default(''),\n lines:z.array(z.object({productId:uuid,quantity:z.number().int().min(1).max(1000000),unit:z.enum(['PACK','CASE'])}).strict()).min(1).max(100),idempotencyKey:uuid}).strict()\nz.object({organizationId:uuid.optional(),buyerRole:z.enum(['CUSTOMER','SUPERMARKET']).optional(),warehouseId:uuid,\n branchId:uuid.optional(),contractId:uuid.optional(),delivery:deliverySchema.optional(),note:text.max(2000).default(''),\n lines:z.array(z.object({productId:uuid,quantity:z.number().int().min(1).max(1000000),unit:z.enum(['PACK','CASE'])}).strict()).min(1).max(100),idempotencyKey:uuid})\nz.object({productId:uuid,quantity:z.number().int().min(1).max(1000000),unit:z.enum(['PACK','CASE'])})\nconst quoteSchema = z.object({id:uuid,version:z.number().int().positive(),expiresOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(100),note:text.max(2000).default(''),idempotencyKey:uuid}).strict()\nz.object({id:uuid,version:z.number().int().positive(),expiresOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(100),note:text.max(2000).default(''),idempotencyKey:uuid})\nconst orderActionSchema = z.object({id:uuid,version:z.number().int().positive(),idempotencyKey:uuid}).strict()\nz.object({id:uuid,version:z.number().int().positive(),idempotencyKey:uuid})\nconst branchSchema = z.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid.optional(),code:text.min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:text.min(2).max(200),address:text.min(3).max(500),recipient:text.min(2).max(120),phone:text.min(5).max(40),active:z.boolean().default(true),idempotencyKey:uuid}).strict().refine(d=>Boolean(d.id)===(d.version>0))\nz.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid.optional(),code:text.min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:text.min(2).max(200),address:text.min(3).max(500),recipient:text.min(2).max(120),phone:text.min(5).max(40),active:z.boolean().default(true),idempotencyKey:uuid})\nconst contractSchema = z.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid,code:text.min(2).max(80),startsOn:z.iso.date(),endsOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(300),active:z.boolean().default(true),note:text.max(2000).default(''),idempotencyKey:uuid}).strict().refine(d=>d.endsOn>=d.startsOn&&Boolean(d.id)===(d.version>0))\nz.object({id:uuid.optional(),version:z.number().int().min(0),organizationId:uuid,code:text.min(2).max(80),startsOn:z.iso.date(),endsOn:z.iso.date(),lines:z.array(priceLineSchema).min(1).max(300),active:z.boolean().default(true),note:text.max(2000).default(''),idempotencyKey:uuid})\nconst receiveSchema = z.object({id:uuid,issueId:uuid,issueRevision:z.number().int().positive(),lines:z.array(z.object({productId:uuid,received:z.number().int().min(0).max(100000000)}).strict()).min(1).max(300),note:text.max(2000).default(''),idempotencyKey:uuid}).strict()\nz.object({id:uuid,issueId:uuid,issueRevision:z.number().int().positive(),lines:z.array(z.object({productId:uuid,received:z.number().int().min(0).max(100000000)}).strict()).min(1).max(300),note:text.max(2000).default(''),idempotencyKey:uuid})\nz.object({productId:uuid,received:z.number().int().min(0).max(100000000)})\nconst statementSchema = z.object({organizationId:uuid.optional(),month:z.string().regex(/^20\\d{2}-(0[1-9]|1[0-2])$/),checksum:z.string().regex(/^[a-f0-9]{64}$/),note:text.max(2000).default(''),idempotencyKey:uuid}).strict()\nz.object({organizationId:uuid.optional(),month:z.string().regex(/^20\\d{2}-(0[1-9]|1[0-2])$/),checksum:z.string().regex(/^[a-f0-9]{64}$/),note:text.max(2000).default(''),idempotencyKey:uuid})\nconst roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nz.object({version:z.number().int().positive(),status:z.enum(orderStates),reason:z.string().trim().max(1000).default(''),assignedTo:z.uuid().nullable().optional(),organizationId:z.uuid().nullable().optional()})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),body:z.string().trim().min(1).max(4000),mentionedMembershipIds:z.array(z.uuid()).max(20).refine(ids=>new Set(ids).size===ids.length).default([])})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),dueAt:z.iso.datetime({offset:true}),kind:z.enum(['GENERAL','FOLLOW_UP','SUPPORT','APPROVAL']).default('GENERAL')})\nz.object({version:z.number().int().positive(),done:z.boolean()})\nz.object({type:z.enum(['partner','warehouse']),id:z.uuid(),membershipIds:z.array(z.uuid()).max(100)})\nz.object({currentPassword:z.string().min(1).max(72),newPassword:z.string().min(12).max(72)})\nz.object({action:z.enum(['revoke','password','role']),password:z.string().min(12).max(72).optional(),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()})\nz.object({version:z.number().int().positive(),sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(200),stockUnit:z.string().trim().max(40),unitsPerCase:z.number().int().min(1).max(100000).nullable(),active:z.boolean()})",
   "502b5bc2f8f693a6": "z.object({id:z.uuid().optional(),organizationId:z.uuid(),name:z.string().trim().min(2).max(120),responsibility:z.enum(['Chủ đơn vị','Người mua','Kế toán','Người nhận','Khác']),phone:z.string().trim().max(40),email:z.union([z.literal(''),z.email()]),isPrimary:z.boolean(),active:z.boolean(),version:z.number().int().min(0)})\nz.object({taskId:z.uuid(),items:z.array(z.object({title:z.string().trim().min(1).max(200),done:z.boolean()})).max(50),version:z.number().int().positive()})\nz.object({title:z.string().trim().min(1).max(200),done:z.boolean()})\nz.object({taskId:z.uuid(),prerequisiteId:z.uuid(),remove:z.boolean().default(false)})",
   "189b005f2c78e16c": "const tierSchema = z.object({minQuantity:quantityText,maxQuantity:quantityText.nullable().optional(),discountPercent:z.number().min(0).max(100)}).strict()\nz.object({minQuantity:quantityText,maxQuantity:quantityText.nullable().optional(),discountPercent:z.number().min(0).max(100)})\nconst levelSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().regex(/^[A-Z0-9_]{2,40}$/),name:z.string().trim().min(1).max(80),rank:z.number().int().min(0).max(100000),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).nullable().optional(),tiers:z.array(tierSchema).max(20).default([]),color:z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#64748b'),description:z.string().trim().max(500).default(''),active:z.boolean().default(true),reason,idempotencyKey:idem}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().regex(/^[A-Z0-9_]{2,40}$/),name:z.string().trim().min(1).max(80),rank:z.number().int().min(0).max(100000),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).nullable().optional(),tiers:z.array(tierSchema).max(20).default([]),color:z.string().regex(/^#[0-9a-fA-F]{6}$/).default('#64748b'),description:z.string().trim().max(500).default(''),active:z.boolean().default(true),reason,idempotencyKey:idem})\nconst profileSchema = z.object({organizationId:z.uuid(),partnerType:z.enum(['SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),membershipLevelId:z.uuid().nullable().optional(),region:z.enum(['NORTH','SOUTH']).nullable().optional(),reason,idempotencyKey:idem}).strict()\nz.object({organizationId:z.uuid(),partnerType:z.enum(['SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),membershipLevelId:z.uuid().nullable().optional(),region:z.enum(['NORTH','SOUTH']).nullable().optional(),reason,idempotencyKey:idem})\nconst promotionSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),sku:z.string().trim().min(2).max(80),name:z.string().trim().min(2).max(160),campaign:z.string().trim().max(160).default(''),percent:z.number().min(0).max(100),scope:z.enum(['ALL','DESIGNATED','QUANTITY']),targetOrganizationIds:z.array(z.uuid()).max(500).default([]),targetLevelIds:z.array(z.uuid()).max(20).default([]),minBaseQuantity:quantityText.default('0'),badge:z.enum(['HOT','NEW','SALE']).nullable().default(null),startsAt:z.iso.datetime({offset:true}),endsAt:z.iso.datetime({offset:true}),active:z.boolean().default(true),reason,idempotencyKey:idem}).strict()\n .superRefine((d,c)=>{if(new Date(d.endsAt)<=new Date(d.startsAt))c.addIssue({code:'custom',message:'End must follow start'});if(d.scope==='DESIGNATED'&&!d.targetOrganizationIds.length&&!d.targetLevelIds.length)c.addIssue({code:'custom',message:'Designated needs targets'});if(d.scope==='QUANTITY'&&fixed(d.minBaseQuantity)<=0n)c.addIssue({code:'custom',message:'Quantity scope needs a minimum'});})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),sku:z.string().trim().min(2).max(80),name:z.string().trim().min(2).max(160),campaign:z.string().trim().max(160).default(''),percent:z.number().min(0).max(100),scope:z.enum(['ALL','DESIGNATED','QUANTITY']),targetOrganizationIds:z.array(z.uuid()).max(500).default([]),targetLevelIds:z.array(z.uuid()).max(20).default([]),minBaseQuantity:quantityText.default('0'),badge:z.enum(['HOT','NEW','SALE']).nullable().default(null),startsAt:z.iso.datetime({offset:true}),endsAt:z.iso.datetime({offset:true}),active:z.boolean().default(true),reason,idempotencyKey:idem})\nz.object({id:z.uuid(),version:z.number().int().positive(),active:z.boolean(),reason,idempotencyKey:idem})\nconst childDiscountSchema = z.object({organizationId:z.uuid(),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).optional(),tiers:z.array(tierSchema).max(20).default([]),reason,idempotencyKey:idem}).strict()\nz.object({organizationId:z.uuid(),method:z.enum(['FIXED_PERCENT','QUANTITY_TIER']),fixedPercent:z.number().min(0).max(100).optional(),tiers:z.array(tierSchema).max(20).default([]),reason,idempotencyKey:idem})\nconst transferSchema = z.object({organizationId:z.uuid(),toParentId:z.uuid(),reason,idempotencyKey:z.uuid()}).strict()\nz.object({organizationId:z.uuid(),toParentId:z.uuid(),reason,idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),decision:z.enum(['APPROVE','REJECT']),reason,idempotencyKey:idem})\nconst invoiceSchema = z.object({orderId:z.uuid(),kind:z.enum(['BUYER','COMPANY']),companyName:z.string().trim().max(200).default(''),taxCode:z.string().trim().max(40).regex(/^[0-9A-Za-z-]*$/).default(''),address:z.string().trim().max(500).default(''),email:z.union([z.literal(''),z.email()]).default(''),reason,idempotencyKey:idem}).strict()\n .superRefine((d,c)=>{if(d.kind==='COMPANY'&&(d.companyName.length<2||d.taxCode.length<6||d.address.length<3))c.addIssue({code:'custom',message:'Company invoice needs name, tax code and address'});})\nz.object({orderId:z.uuid(),kind:z.enum(['BUYER','COMPANY']),companyName:z.string().trim().max(200).default(''),taxCode:z.string().trim().max(40).regex(/^[0-9A-Za-z-]*$/).default(''),address:z.string().trim().max(500).default(''),email:z.union([z.literal(''),z.email()]).default(''),reason,idempotencyKey:idem})\nconst shortageSchema = z.object({orderId:z.uuid(),sku:z.string().trim().min(2).max(80),needed:quantityText,available:quantityText,note:z.string().trim().max(500).default(''),idempotencyKey:idem}).strict()\nz.object({orderId:z.uuid(),sku:z.string().trim().min(2).max(80),needed:quantityText,available:quantityText,note:z.string().trim().max(500).default(''),idempotencyKey:idem})\nconst periodKeySchema = z.string().regex(/^\\d{4}(?:-(?:0[1-9]|1[0-2])|-Q[1-4])?$/)\nconst reportSchema = z.object({periodType:z.enum(['MONTH','QUARTER','YEAR']).default('MONTH'),periodKey:periodKeySchema.optional(),view:z.enum(['DIRECT','NETWORK','PURCHASES','SALES']).optional()}).strict()\nz.object({periodType:z.enum(['MONTH','QUARTER','YEAR']).default('MONTH'),periodKey:periodKeySchema.optional(),view:z.enum(['DIRECT','NETWORK','PURCHASES','SALES']).optional()})\nconst programSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),name:z.string().trim().min(3).max(160),description:z.string().trim().max(1000).default(''),periodType:z.enum(['MONTH','QUARTER','YEAR']),periodKey:periodKeySchema,metric:z.enum(['REVENUE','QUANTITY']),target:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku:z.string().trim().min(2).max(80).nullable().default(null),audience:z.enum(['ALL','SHAREHOLDER_BRANCH','LEVEL']).default('ALL'),audienceRef:z.uuid().nullable().default(null),rewardType:z.enum(['UPGRADE_LEVEL','DISCOUNT_PERCENT','GIFT_AMOUNT']),rewardLevelId:z.uuid().nullable().default(null),rewardPercent:z.number().min(0).max(100).nullable().default(null),rewardAmount:z.string().regex(/^\\d{1,24}$/).nullable().default(null),status:z.enum(['DRAFT','ACTIVE','CLOSED']).default('ACTIVE'),reason,idempotencyKey:z.uuid().optional()}).strict()\n .superRefine((d,c)=>{const issue=(m:string)=>c.addIssue({code:'custom',message:m});if(fixed(d.target)<=0n)issue('Target must be positive');if(d.metric==='QUANTITY'&&!d.sku)issue('Quantity needs SKU');if(d.audience!=='ALL'&&!d.audienceRef)issue('Audience needs reference');if(d.rewardType==='UPGRADE_LEVEL'&&!d.rewardLevelId)issue('Level required');if(d.rewardType==='DISCOUNT_PERCENT'&&d.rewardPercent===null)issue('Percent required');if(d.rewardType==='GIFT_AMOUNT'&&!d.rewardAmount)issue('Amount required');})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0).default(0),name:z.string().trim().min(3).max(160),description:z.string().trim().max(1000).default(''),periodType:z.enum(['MONTH','QUARTER','YEAR']),periodKey:periodKeySchema,metric:z.enum(['REVENUE','QUANTITY']),target:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku:z.string().trim().min(2).max(80).nullable().default(null),audience:z.enum(['ALL','SHAREHOLDER_BRANCH','LEVEL']).default('ALL'),audienceRef:z.uuid().nullable().default(null),rewardType:z.enum(['UPGRADE_LEVEL','DISCOUNT_PERCENT','GIFT_AMOUNT']),rewardLevelId:z.uuid().nullable().default(null),rewardPercent:z.number().min(0).max(100).nullable().default(null),rewardAmount:z.string().regex(/^\\d{1,24}$/).nullable().default(null),status:z.enum(['DRAFT','ACTIVE','CLOSED']).default('ACTIVE'),reason,idempotencyKey:z.uuid().optional()})\nz.object({programId:z.uuid(),organizationId:z.uuid(),reason,idempotencyKey:z.uuid().optional()})",
   "5e83061a863b9ba2": "const deliverySchema = z.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)}).strict()\nz.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)})\nconst saveSchema = z.object({\n id:z.uuid().optional(),version:z.number().int().min(0),organizationId:z.uuid(),\n channel:z.enum(['PORTAL','PHONE','VISIT','OTHER','WEBSITE','QUOTATION','REORDER','EXCEL']),\n sourceWebsiteId:z.uuid().optional(),sourceQuotationId:z.uuid().optional(),sourceOrderId:z.uuid().optional(),\n basket:basketSchema,delivery:deliverySchema,note:z.string().trim().max(2000),idempotencyKey:z.uuid(),\n dealId:z.uuid().optional(),\n}).strict().refine(d=>Boolean(d.id)===(d.version>0)).refine(d=>\n Boolean(d.sourceWebsiteId)===(d.channel==='WEBSITE')&&Boolean(d.sourceQuotationId)===(d.channel==='QUOTATION')&&Boolean(d.sourceOrderId)===(d.channel==='REORDER'))\nz.object({\n id:z.uuid().optional(),version:z.number().int().min(0),organizationId:z.uuid(),\n channel:z.enum(['PORTAL','PHONE','VISIT','OTHER','WEBSITE','QUOTATION','REORDER','EXCEL']),\n sourceWebsiteId:z.uuid().optional(),sourceQuotationId:z.uuid().optional(),sourceOrderId:z.uuid().optional(),\n basket:basketSchema,delivery:deliverySchema,note:z.string().trim().max(2000),idempotencyKey:z.uuid(),\n dealId:z.uuid().optional(),\n})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),action:z.enum(['PROPOSE','OWNER_APPROVE','OWNER_REJECT']),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),version:z.number().int().positive(),versionId:z.uuid(),action:z.enum(['APPROVE','REJECT','CONFIRM']),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()})\nconst orderPolicySchema = z.object({\n enabled:z.boolean(),requireOwnerApproval:z.boolean(),alwaysManagerApproval:z.boolean(),\n managerApprovalAmount:money.nullable(),creditRequiresApproval:z.boolean(),nonSelfApproval:z.boolean(),\n acceptedQuotePrice:z.enum(['UNTIL_QUOTE_EXPIRY','REPRICE']),pendingPrice:z.literal('UNTIL_REQUEST_EXPIRY'),\n requiredPartnerFields:z.array(z.enum(['phone','email','business_id','address','contact_name'])).max(5)\n  .refine(fields=>new Set(fields).size===fields.length),\n approvalRoles:z.array(z.enum(['ADMIN','MANAGER'])).min(1).max(2).refine(roles=>new Set(roles).size===roles.length),\n confirmationRoles:z.array(z.enum(['ADMIN','MANAGER','SALES'])).min(1).max(3).refine(roles=>new Set(roles).size===roles.length),\n provisionalReservation:z.object({mode:z.enum(['ON_SUBMIT','AFTER_APPROVAL']),ttlMinutes:z.number().int().min(1).max(10080),allowPartial:z.boolean()}).strict().optional(),\n}).strict()\nz.object({\n enabled:z.boolean(),requireOwnerApproval:z.boolean(),alwaysManagerApproval:z.boolean(),\n managerApprovalAmount:money.nullable(),creditRequiresApproval:z.boolean(),nonSelfApproval:z.boolean(),\n acceptedQuotePrice:z.enum(['UNTIL_QUOTE_EXPIRY','REPRICE']),pendingPrice:z.literal('UNTIL_REQUEST_EXPIRY'),\n requiredPartnerFields:z.array(z.enum(['phone','email','business_id','address','contact_name'])).max(5)\n  .refine(fields=>new Set(fields).size===fields.length),\n approvalRoles:z.array(z.enum(['ADMIN','MANAGER'])).min(1).max(2).refine(roles=>new Set(roles).size===roles.length),\n confirmationRoles:z.array(z.enum(['ADMIN','MANAGER','SALES'])).min(1).max(3).refine(roles=>new Set(roles).size===roles.length),\n provisionalReservation:z.object({mode:z.enum(['ON_SUBMIT','AFTER_APPROVAL']),ttlMinutes:z.number().int().min(1).max(10080),allowPartial:z.boolean()}).strict().optional(),\n})\nz.object({mode:z.enum(['ON_SUBMIT','AFTER_APPROVAL']),ttlMinutes:z.number().int().min(1).max(10080),allowPartial:z.boolean()})\nz.object({version:z.number().int().min(0),definition:orderPolicySchema,reason:z.string().trim().min(3).max(1000),idempotencyKey:z.uuid()})\nz.object({organizationId:z.uuid(),basket:basketSchema,hours:z.number().int().min(1).max(168).default(24)})\nconst inputSchema = z.object({organizationId:z.uuid(),mapping:z.object({sku:z.number().int().min(1).max(50),unit:z.number().int().min(1).max(50),quantity:z.number().int().min(1).max(50)}).strict().refine(m=>new Set(Object.values(m)).size===3),delivery:z.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)}).strict(),discountBasisPoints:z.number().int().min(0).max(10000),creditTerms:z.boolean(),note:z.string().trim().max(2000),idempotencyKey:z.uuid()}).strict()\nz.object({organizationId:z.uuid(),mapping:z.object({sku:z.number().int().min(1).max(50),unit:z.number().int().min(1).max(50),quantity:z.number().int().min(1).max(50)}).strict().refine(m=>new Set(Object.values(m)).size===3),delivery:z.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)}).strict(),discountBasisPoints:z.number().int().min(0).max(10000),creditTerms:z.boolean(),note:z.string().trim().max(2000),idempotencyKey:z.uuid()})\nz.object({sku:z.number().int().min(1).max(50),unit:z.number().int().min(1).max(50),quantity:z.number().int().min(1).max(50)})\nz.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)})\nz.object({id:z.uuid()})\nz.object({recipient:z.string().trim().min(2).max(120),phone:z.string().trim().min(5).max(40),address:z.string().trim().min(3).max(500)})\nz.object({id:z.uuid(),version:z.number().int().positive(),basket:basketSchema,delivery,note:z.string().trim().max(2000),reason,idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),reason,idempotencyKey:z.uuid()})\nz.object({id:z.uuid(),version:z.number().int().positive(),reason,idempotencyKey:z.uuid()})\nconst escalateSchema = z.object({\n  requestId: z.uuid(),\n  reason: z.string().trim().min(3).max(1000),\n  idempotencyKey: z.uuid(),\n}).strict()\nz.object({\n  requestId: z.uuid(),\n  reason: z.string().trim().min(3).max(1000),\n  idempotencyKey: z.uuid(),\n})\nconst draftInvoicePreviewSchema = z.object({\n organizationId:z.uuid(),\n basket:basketSchema,\n delivery:z.object({\n  recipient:z.string().trim().max(200).default(''),\n  phone:z.string().trim().max(80).default(''),\n  address:z.string().trim().max(500).default(''),\n  expectedDeliveryDate:z.string().trim().max(120).optional(),\n }),\n note:z.string().trim().max(2000).default(''),\n requestCode:z.string().trim().max(80).optional(),\n invoiceCode:z.string().trim().max(80).optional(),\n})\nz.object({\n organizationId:z.uuid(),\n basket:basketSchema,\n delivery:z.object({\n  recipient:z.string().trim().max(200).default(''),\n  phone:z.string().trim().max(80).default(''),\n  address:z.string().trim().max(500).default(''),\n  expectedDeliveryDate:z.string().trim().max(120).optional(),\n }),\n note:z.string().trim().max(2000).default(''),\n requestCode:z.string().trim().max(80).optional(),\n invoiceCode:z.string().trim().max(80).optional(),\n})\nz.object({\n  recipient:z.string().trim().max(200).default(''),\n  phone:z.string().trim().max(80).default(''),\n  address:z.string().trim().max(500).default(''),\n  expectedDeliveryDate:z.string().trim().max(120).optional(),\n })",
@@ -48,7 +50,7 @@ const sharedContracts: Record<string,string> = {
   "ac88782efea25ebc": "const prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})",
   "c2dd009a56f92569": "z.object({organizationId:z.uuid(),limitAmount:nonNegativeMoney,termsDays:z.number().int().min(0).max(3650),enabled:z.boolean(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),postingDate:date,reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),amount:money,kind:z.enum(['PAYMENT','DEPOSIT']),paidAt:z.iso.datetime({offset:true}),reference:z.string().trim().min(2).max(200),documentVersionId:z.uuid().nullable(),reason,idempotencyKey:key,dealId:z.uuid().optional(),payerOrganizationId:z.uuid().optional(),payeeOrganizationId:z.uuid().optional(),method:z.string().default('BANK_TRANSFER'),notes:z.string().default('')})\nz.object({id:z.uuid(),version:z.number().int().positive(),decision:z.enum(['CONFIRM','REJECT']),reason,idempotencyKey:key})\nz.object({paymentId:z.uuid(),paymentVersion:z.number().int().positive(),allocations:z.array(z.object({receivableId:z.uuid(),amount:money}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({receivableId:z.uuid(),amount:money})\nz.object({bankCode:z.string().trim().min(2).max(30),externalId:z.string().trim().min(1).max(200),occurredAt:z.iso.datetime({offset:true}),amount:money,reference:z.string().trim().max(500),counterparty:z.string().trim().max(300),raw:z.record(z.string(),z.unknown()),reason,idempotencyKey:key})\nz.object({transactionId:z.uuid(),paymentId:z.uuid(),paymentVersion:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({matchId:z.uuid(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['ADJUST','DISPUTE','RESOLVE']),amount:signedMoney,reason,idempotencyKey:key})\nz.object({receivableId:z.uuid(),scheduledFor:z.iso.datetime({offset:true}),channel:z.enum(['IN_APP','EMAIL','SMS']),recipient:z.string().trim().min(2).max(320),template:z.string().trim().min(3).max(4000),reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),kind:z.enum(['COLLECT','PAY','REFUND']),amount:money,sourceType:z.string().trim().min(2).max(50),sourceId:z.string().trim().min(1).max(200),documentVersionId:z.uuid().nullable().default(null),reason,idempotencyKey:key})\nz.object({paymentId:z.uuid(),paymentVersion:z.number().int().positive(),amount:money,reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','REJECT','EXECUTE','REVERSE']),reason,idempotencyKey:key})",
   "0b68af9bfa721841": "z.object({productId:z.uuid(),quantity,expectedOn:z.iso.date().nullable(),ownerMembershipId:z.uuid().nullable()})\nz.object({orderId:z.uuid(),productId:z.uuid(),quantity,expectedOn:z.iso.date().nullable(),ownerMembershipId:z.uuid().nullable(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(line).min(1).max(200),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(z.object({reservationId:z.uuid(),quantity}).strict()).min(1).max(200),windowStart:z.iso.datetime({offset:true}).nullable(),windowEnd:z.iso.datetime({offset:true}).nullable(),requirements:z.string().trim().max(1000),reason,idempotencyKey:key})\nz.object({reservationId:z.uuid(),quantity})\nz.object({lineId:z.uuid(),quantity,scannerCode:z.string().trim().min(1).max(120),manual:z.boolean()})\nz.object({id:z.uuid(),version:z.number().int().positive(),lineId:z.uuid(),quantity,scannerCode:z.string().trim().min(1).max(120),manual:z.boolean(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(scan).min(1).max(200),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),label:z.string().trim().min(1).max(200),lines:z.array(z.object({lineId:z.uuid(),quantity}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({lineId:z.uuid(),quantity})\nz.object({parcelIds:z.array(z.uuid()).min(1).max(200).refine(v=>new Set(v).size===v.length),driverName:z.string().trim().min(2).max(120),driverPhone:z.string().trim().min(5).max(40),routeNote:z.string().trim().max(2000),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),outcome:z.enum(['DELIVERED','FAILED']),recipient:z.string().trim().max(120),confirmation:z.string().trim().max(1000),photoDocumentId:z.uuid().nullable(),signatureDocumentId:z.uuid().nullable(),resolution:z.enum(['RESCHEDULE','RETURN']).nullable(),nextAttemptAt:z.iso.datetime({offset:true}).nullable(),reason,idempotencyKey:key})\nz.object({parcelId:z.uuid(),status:z.string().trim().min(2).max(80),trackingCode:z.string().trim().max(120).nullable(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(z.object({deliveryLineId:z.uuid(),quantity,reason:z.string().trim().min(3).max(1000),photoDocumentId:z.uuid().nullable()}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({deliveryLineId:z.uuid(),quantity,reason:z.string().trim().min(3).max(1000),photoDocumentId:z.uuid().nullable()})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','REJECT']),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({requestLineId:z.uuid(),quantity,disposition:z.enum(['RESALE','QUARANTINE','DAMAGED']),locationId:z.uuid(),reason:z.string().trim().min(3).max(1000)}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({requestLineId:z.uuid(),quantity,disposition:z.enum(['RESALE','QUARANTINE','DAMAGED']),locationId:z.uuid(),reason:z.string().trim().min(3).max(1000)})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(120),enabled:z.boolean(),idempotencyKey:z.uuid()})\nz.object({parcelCode:z.string().trim().min(1).max(120),status:z.enum(statuses),trackingCode:z.string().trim().max(120).nullable().default(null)})",
-  "a0e428dc97ebde96": "z.object({})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})\nz.object({ids:z.array(z.uuid()).min(1).max(50).refine(v=>new Set(v).size===v.length),action:z.enum(['DEACTIVATE','ACTIVATE','STAGE']),reason:z.string().trim().min(3).max(500),stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional()})\nz.object({id:z.uuid()})\nconst definitionSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(roles.length),writeRoles:z.array(z.enum(roles)).max(roles.length),active:z.boolean()}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(roles.length),writeRoles:z.array(z.enum(roles)).max(roles.length),active:z.boolean()})\nz.object({organizationId:z.uuid(),fieldId:z.uuid(),definitionVersion:z.number().int().positive(),version:z.number().int().min(0),value:z.unknown()})\nz.object({id:z.uuid(),role:z.enum(roles)})",
+  "264ced0af0c1313b": "z.object({})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})\nconst roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nz.object({ids:z.array(z.uuid()).min(1).max(50).refine(v=>new Set(v).size===v.length),action:z.enum(['DEACTIVATE','ACTIVATE','STAGE']),reason:z.string().trim().min(3).max(500),stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional()})\nz.object({id:z.uuid()})\nconst definitionSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(roles.length),writeRoles:z.array(z.enum(roles)).max(roles.length),active:z.boolean()}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),key:z.string().regex(/^[a-z][a-z0-9_]{1,39}$/).refine(v=>!/(password|otp|token|secret|credential)/i.test(v)),label:z.string().trim().min(2).max(120),kind:z.enum(['TEXT','NUMBER','DATE','BOOLEAN','ENUM']),options:z.array(z.string().trim().min(1).max(100)).max(50).default([]),required:z.boolean(),readRoles:z.array(z.enum(roles)).min(1).max(roles.length),writeRoles:z.array(z.enum(roles)).max(roles.length),active:z.boolean()})\nz.object({organizationId:z.uuid(),fieldId:z.uuid(),definitionVersion:z.number().int().positive(),version:z.number().int().min(0),value:z.unknown()})\nz.object({id:z.uuid(),role:z.enum(roles)})",
   "932cb1d4862a03fd": "const inputSchema = z.object({\n  title: z.string().trim().min(1).max(200),\n  description: z.string().trim().max(2000),\n  filename: z.string().min(1).max(180).regex(/^[^/\\\\\\x00-\\x1f\\x7f]+$/u).refine(value => !/\\p{Cf}/u.test(value)),\n  mime: z.string().max(180),\n  content: z.instanceof(Buffer),\n  uploadKey: z.uuid(),\n}).strict()\nz.object({\n  title: z.string().trim().min(1).max(200),\n  description: z.string().trim().max(2000),\n  filename: z.string().min(1).max(180).regex(/^[^/\\\\\\x00-\\x1f\\x7f]+$/u).refine(value => !/\\p{Cf}/u.test(value)),\n  mime: z.string().max(180),\n  content: z.instanceof(Buffer),\n  uploadKey: z.uuid(),\n})",
   "c709e49062689122": "z.object({warehouseId:z.uuid(),code:z.string().trim().min(1).max(40).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(120),kind:z.enum(['PICK','QUARANTINE','DAMAGED']).default('PICK'),idempotencyKey:key})\nconst receiptSchema = z.object({locationId:z.uuid(),lines:z.array(z.object({productId:z.uuid(),lotCode:z.string().trim().min(1).max(80),manufacturedOn:z.iso.date().nullable(),expiresOn:z.iso.date().nullable(),quantity}).strict()).min(1).max(200),referenceType:z.string().trim().min(2).max(80),referenceId:z.string().trim().min(1).max(120),reason,idempotencyKey:key}).strict()\nz.object({locationId:z.uuid(),lines:z.array(z.object({productId:z.uuid(),lotCode:z.string().trim().min(1).max(80),manufacturedOn:z.iso.date().nullable(),expiresOn:z.iso.date().nullable(),quantity}).strict()).min(1).max(200),referenceType:z.string().trim().min(2).max(80),referenceId:z.string().trim().min(1).max(120),reason,idempotencyKey:key})\nz.object({productId:z.uuid(),lotCode:z.string().trim().min(1).max(80),manufacturedOn:z.iso.date().nullable(),expiresOn:z.iso.date().nullable(),quantity})\nz.object({id:z.uuid(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),warehouseId:z.uuid(),minimumShelfLifeDays:z.number().int().min(0).max(3650).default(0),allowPartial:z.boolean().default(false),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),reason,idempotencyKey:key})\nz.object({lotId:z.uuid(),reason,idempotencyKey:key})\nz.object({productId:z.uuid(),lotId:z.uuid(),quantity,destinationLocationId:z.uuid()})\nz.object({sourceLocationId:z.uuid(),lines:z.array(transferLine).min(1).max(200),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({index:z.number().int().min(0).max(199),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),shortage:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).default('0')}).strict()).min(1).max(200),final:z.boolean(),reason,idempotencyKey:key})\nz.object({index:z.number().int().min(0).max(199),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),shortage:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).default('0')})\nz.object({warehouseId:z.uuid(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({locationId:z.uuid(),productId:z.uuid(),lotId:z.uuid(),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/)}).strict()).min(1).max(5000),reason,idempotencyKey:key})\nz.object({locationId:z.uuid(),productId:z.uuid(),lotId:z.uuid(),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/)})\nz.object({id:z.uuid(),version:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({id:z.uuid().optional(),warehouseId:z.uuid(),productId:z.uuid(),lowAvailable:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),slowDays:z.number().int().min(0).max(3650),nearExpiryDays:z.number().int().min(0).max(3650),version:z.number().int().min(0),active:z.boolean(),idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['PROGRESS','CLOSE']),note:reason,idempotencyKey:key})",
   "d917735483ca69b1": "z.object({id:z.uuid()})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})\nz.object({idempotencyKey:z.uuid(),kind:z.enum(['CUSTOMER','DEALER']),mapping:z.partialRecord(z.enum(columns),z.number().int().min(1).max(50))})\nz.object({idempotencyKey:z.uuid(),q:z.string().max(120).default(''),tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).default(''),kind:z.enum(['CUSTOMER','DEALER']).optional(),columns:z.array(z.enum(columns)).min(1).max(9)})",
@@ -62,7 +64,7 @@ const sharedContracts: Record<string,string> = {
   "4a4183e56d3a18aa": "z.object({kind:z.enum(['tags','reasons']),id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(100),active:z.boolean()})\nz.object({organizationId:z.uuid(),version:z.number().int().positive(),tagIds:z.array(z.uuid()).max(30).refine(ids=>new Set(ids).size===ids.length)})\nz.object({organizationId:z.uuid(),version:z.number().int().min(0),channel:z.enum(['PHONE','EMAIL','ZALO','IN_PERSON']),preferredTime:z.string().trim().max(200),interestedSkus:z.array(z.string().trim().min(1).max(80)).max(30).refine(ids=>new Set(ids).size===ids.length),notes:z.string().trim().max(1000)})\nz.object({id:z.uuid().optional(),organizationId:z.uuid(),version:z.number().int().min(0),title:z.string().trim().min(2).max(200),stage:z.enum(opportunityStages),reasonId:z.uuid().nullable().default(null),notes:z.string().trim().max(1000)})\nz.object({organizationId:z.uuid(),visitedAt:z.iso.datetime({offset:true}),result:z.string().trim().min(2).max(2000),supportRequest:z.string().trim().max(1000),idempotencyKey:z.uuid()})",
   "cd2353e6c2ed75b4": "const filtersSchema = z.object({from:day,to:day,inactivityDays:z.number().int().min(1).max(730).default(60),organizationId:z.uuid().optional(),sku:z.string().trim().max(80).optional()}).strict().refine(v=>v.from<=v.to&&new Date(v.to).getTime()-new Date(v.from).getTime()<=366*86400000,{message:'REPORT_RANGE_TOO_LARGE'})\nz.object({from:day,to:day,inactivityDays:z.number().int().min(1).max(730).default(60),organizationId:z.uuid().optional(),sku:z.string().trim().max(80).optional()})\nconst subscriptionSchema = z.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(100),reportKey:z.enum(['EXECUTIVE','SALES','FULFILLMENT','INVENTORY','FINANCE','QUALITY']),filters:filtersSchema,frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),nextRunAt:z.iso.datetime({offset:true}),channel:z.enum(['IN_APP','EMAIL']),recipient:z.string().trim().max(254),enabled:z.boolean()}).strict()\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),name:z.string().trim().min(2).max(100),reportKey:z.enum(['EXECUTIVE','SALES','FULFILLMENT','INVENTORY','FINANCE','QUALITY']),filters:filtersSchema,frequency:z.enum(['DAILY','WEEKLY','MONTHLY']),nextRunAt:z.iso.datetime({offset:true}),channel:z.enum(['IN_APP','EMAIL']),recipient:z.string().trim().max(254),enabled:z.boolean()})",
   "ac6d4fab69fbe835": "const partnerPatchItemSchema = z.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  phone:z.string().trim().max(40).optional(),\n  email:z.union([z.literal(''),z.email()]).optional(),\n  address:z.string().trim().max(500).optional(),\n  contact_name:z.string().trim().max(120).optional(),\n  segment:z.string().trim().max(120).optional(),\n  source:z.string().trim().max(120).optional(),\n  business_id:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).optional(),\n  stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional(),\n  active:z.boolean().optional(),\n }).strict(),\n}).strict()\nz.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  phone:z.string().trim().max(40).optional(),\n  email:z.union([z.literal(''),z.email()]).optional(),\n  address:z.string().trim().max(500).optional(),\n  contact_name:z.string().trim().max(120).optional(),\n  segment:z.string().trim().max(120).optional(),\n  source:z.string().trim().max(120).optional(),\n  business_id:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).optional(),\n  stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional(),\n  active:z.boolean().optional(),\n }).strict(),\n})\nz.object({\n  code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  phone:z.string().trim().max(40).optional(),\n  email:z.union([z.literal(''),z.email()]).optional(),\n  address:z.string().trim().max(500).optional(),\n  contact_name:z.string().trim().max(120).optional(),\n  segment:z.string().trim().max(120).optional(),\n  source:z.string().trim().max(120).optional(),\n  business_id:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).optional(),\n  stage:z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).optional(),\n  active:z.boolean().optional(),\n })\nz.object({\n  preview:z.boolean().default(false),\n  rows:z.array(partnerPatchItemSchema).min(1).max(100),\n  reason:z.string().trim().min(2).max(500).default('Cập nhật trực tiếp trên bảng tính CRM'),\n })\nconst catalogPatchItemSchema = z.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  stock_unit:z.string().trim().min(1).max(40).optional(),\n  units_per_case:z.number().int().min(1).max(100000).nullable().optional(),\n  active:z.boolean().optional(),\n }).strict(),\n}).strict()\nz.object({\n id:z.uuid(),\n version:z.number().int().positive(),\n changes:z.object({\n  sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  stock_unit:z.string().trim().min(1).max(40).optional(),\n  units_per_case:z.number().int().min(1).max(100000).nullable().optional(),\n  active:z.boolean().optional(),\n }).strict(),\n})\nz.object({\n  sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/).optional(),\n  name:z.string().trim().min(2).max(200).optional(),\n  stock_unit:z.string().trim().min(1).max(40).optional(),\n  units_per_case:z.number().int().min(1).max(100000).nullable().optional(),\n  active:z.boolean().optional(),\n })\nz.object({\n  preview:z.boolean().default(false),\n  rows:z.array(catalogPatchItemSchema).min(1).max(100),\n  reason:z.string().trim().min(2).max(500).default('Cập nhật hàng hóa trực tiếp trên bảng tính CRM'),\n })",
-  "4cdd45717ac32c3b": "z.object({id:z.uuid(),data:z.unknown()})\nz.object({version:z.number().int().positive(),status:z.enum(orderStates),reason:z.string().trim().max(1000).default(''),assignedTo:z.uuid().nullable().optional(),organizationId:z.uuid().nullable().optional()})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),body:z.string().trim().min(1).max(4000),mentionedMembershipIds:z.array(z.uuid()).max(20).refine(ids=>new Set(ids).size===ids.length).default([])})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),dueAt:z.iso.datetime({offset:true}),kind:z.enum(['GENERAL','FOLLOW_UP','SUPPORT','APPROVAL']).default('GENERAL')})\nz.object({version:z.number().int().positive(),done:z.boolean()})\nz.object({type:z.enum(['partner','warehouse']),id:z.uuid(),membershipIds:z.array(z.uuid()).max(100)})\nz.object({currentPassword:z.string().min(1).max(72),newPassword:z.string().min(12).max(72)})\nz.object({action:z.enum(['revoke','password','role']),password:z.string().min(12).max(72).optional(),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()})\nz.object({version:z.number().int().positive(),sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(200),stockUnit:z.string().trim().max(40),unitsPerCase:z.number().int().min(1).max(100000).nullable(),active:z.boolean()})",
+  "fd519d88129097f9": "z.object({id:z.uuid(),data:z.unknown()})\nconst roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nz.object({version:z.number().int().positive(),status:z.enum(orderStates),reason:z.string().trim().max(1000).default(''),assignedTo:z.uuid().nullable().optional(),organizationId:z.uuid().nullable().optional()})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),body:z.string().trim().min(1).max(4000),mentionedMembershipIds:z.array(z.uuid()).max(20).refine(ids=>new Set(ids).size===ids.length).default([])})\nz.object({entityType:z.enum(['partner','order']),entityId:z.uuid(),title:z.string().trim().min(2).max(240),assigneeId:z.uuid(),dueAt:z.iso.datetime({offset:true}),kind:z.enum(['GENERAL','FOLLOW_UP','SUPPORT','APPROVAL']).default('GENERAL')})\nz.object({version:z.number().int().positive(),done:z.boolean()})\nz.object({type:z.enum(['partner','warehouse']),id:z.uuid(),membershipIds:z.array(z.uuid()).max(100)})\nz.object({currentPassword:z.string().min(1).max(72),newPassword:z.string().min(12).max(72)})\nz.object({action:z.enum(['revoke','password','role']),password:z.string().min(12).max(72).optional(),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()})\nz.object({version:z.number().int().positive(),sku:z.string().trim().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(200),stockUnit:z.string().trim().max(40),unitsPerCase:z.number().int().min(1).max(100000).nullable(),active:z.boolean()})",
   "9944a2bcb35ea93b": "z.object({id:z.string()})\nconst prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})"
 };
 const metadata: McpRoute[] = [
@@ -117,7 +119,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "c6e35b2da4800fdd9ca003ef7dc13c31875a954d71ddda7e53b27e25dde386a6"
+    "sourceHash": "1c4cb6efb6c1ea59569195503ef3090ebe05621b2b5b1f243c7d47c4cf2f4932"
   },
   {
     "id": "PATCH /api/crm/accounts/[id]",
@@ -134,9 +136,9 @@ const metadata: McpRoute[] = [
       "resource": "accounts"
     },
     "query": [],
-    "inputContract": "9018ab7e8ccb5ef6",
+    "inputContract": "323cb8767ddb4069",
     "multipart": false,
-    "sourceHash": "c6e35b2da4800fdd9ca003ef7dc13c31875a954d71ddda7e53b27e25dde386a6"
+    "sourceHash": "1c4cb6efb6c1ea59569195503ef3090ebe05621b2b5b1f243c7d47c4cf2f4932"
   },
   {
     "id": "PATCH /api/crm/partners/[id]",
@@ -153,9 +155,9 @@ const metadata: McpRoute[] = [
       "resource": "partners"
     },
     "query": [],
-    "inputContract": "9018ab7e8ccb5ef6",
+    "inputContract": "323cb8767ddb4069",
     "multipart": false,
-    "sourceHash": "c6e35b2da4800fdd9ca003ef7dc13c31875a954d71ddda7e53b27e25dde386a6"
+    "sourceHash": "1c4cb6efb6c1ea59569195503ef3090ebe05621b2b5b1f243c7d47c4cf2f4932"
   },
   {
     "id": "GET /api/crm/accounts",
@@ -177,7 +179,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "4f6b386a77792be8e6e29c80277e13f851dade2390eebf521944574badca8c29"
+    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
   },
   {
     "id": "GET /api/crm/catalog",
@@ -199,7 +201,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "4f6b386a77792be8e6e29c80277e13f851dade2390eebf521944574badca8c29"
+    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
   },
   {
     "id": "GET /api/crm/partners",
@@ -221,7 +223,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "4f6b386a77792be8e6e29c80277e13f851dade2390eebf521944574badca8c29"
+    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
   },
   {
     "id": "GET /api/crm/warehouses",
@@ -243,7 +245,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "4f6b386a77792be8e6e29c80277e13f851dade2390eebf521944574badca8c29"
+    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
   },
   {
     "id": "POST /api/crm/accounts",
@@ -258,9 +260,9 @@ const metadata: McpRoute[] = [
       "resource": "accounts"
     },
     "query": [],
-    "inputContract": "9018ab7e8ccb5ef6",
+    "inputContract": "323cb8767ddb4069",
     "multipart": false,
-    "sourceHash": "4f6b386a77792be8e6e29c80277e13f851dade2390eebf521944574badca8c29"
+    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
   },
   {
     "id": "POST /api/crm/partners",
@@ -275,9 +277,9 @@ const metadata: McpRoute[] = [
       "resource": "partners"
     },
     "query": [],
-    "inputContract": "9018ab7e8ccb5ef6",
+    "inputContract": "323cb8767ddb4069",
     "multipart": false,
-    "sourceHash": "4f6b386a77792be8e6e29c80277e13f851dade2390eebf521944574badca8c29"
+    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
   },
   {
     "id": "POST /api/crm/warehouses",
@@ -292,9 +294,9 @@ const metadata: McpRoute[] = [
       "resource": "warehouses"
     },
     "query": [],
-    "inputContract": "9018ab7e8ccb5ef6",
+    "inputContract": "323cb8767ddb4069",
     "multipart": false,
-    "sourceHash": "4f6b386a77792be8e6e29c80277e13f851dade2390eebf521944574badca8c29"
+    "sourceHash": "5afc5e2fde299606ae922ff78476b35c96ccec6212a6e7855b21e2b5e9c8c317"
   },
   {
     "id": "GET /api/crm/accountant/order-clearance",
@@ -314,7 +316,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "GET /api/crm/accountant/workspace",
@@ -334,7 +336,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/accountant-clear-order",
@@ -351,7 +353,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/accountant-verify-clearance",
@@ -368,7 +370,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/accountant-verify-factory-invoice",
@@ -385,7 +387,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/adjust-warehouse-stock",
@@ -402,7 +404,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/attach-vat-document",
@@ -419,7 +421,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/confirm-order-payment",
@@ -436,7 +438,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/confirm-warehouse-pickup",
@@ -453,7 +455,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/create-factory-dispatch",
@@ -470,7 +472,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/create-factory-order",
@@ -487,7 +489,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/create-handover-invoice",
@@ -504,7 +506,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/create-warehouse-reconciliation",
@@ -521,7 +523,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/record-order-payment",
@@ -538,7 +540,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/register-warehouse-order",
@@ -555,7 +557,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/request-vat-adjustment",
@@ -572,7 +574,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/save-customer-tax-profile",
@@ -589,7 +591,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/save-vat-invoice",
@@ -606,7 +608,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/staff-submit-payment",
@@ -623,7 +625,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/update-handover-delivery",
@@ -640,7 +642,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/update-product-price",
@@ -657,7 +659,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "POST /api/crm/accountant/update-reconciliation-status",
@@ -674,7 +676,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "52f0070511681a1c368b863abcc5c35d90d2e33b8948bc1012c89643ac28f45d"
+    "sourceHash": "071d6c1ae843fdd97738772725f0b9ec45db8f5e91a4227eedab910edbd071a6"
   },
   {
     "id": "GET /api/crm/articles/get",
@@ -699,7 +701,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "386b1687161eeaa4aab943b3f323a1a8ec57389dad5b88b2431a9a8ffe9b2ff2"
+    "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
   {
     "id": "GET /api/crm/articles/list",
@@ -724,7 +726,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "386b1687161eeaa4aab943b3f323a1a8ec57389dad5b88b2431a9a8ffe9b2ff2"
+    "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
   {
     "id": "POST /api/crm/articles/archive",
@@ -741,7 +743,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "45c8ca02967cc4bd",
     "multipart": false,
-    "sourceHash": "386b1687161eeaa4aab943b3f323a1a8ec57389dad5b88b2431a9a8ffe9b2ff2"
+    "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
   {
     "id": "POST /api/crm/articles/publish",
@@ -758,7 +760,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "45c8ca02967cc4bd",
     "multipart": false,
-    "sourceHash": "386b1687161eeaa4aab943b3f323a1a8ec57389dad5b88b2431a9a8ffe9b2ff2"
+    "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
   {
     "id": "POST /api/crm/articles/save",
@@ -775,7 +777,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "45c8ca02967cc4bd",
     "multipart": false,
-    "sourceHash": "386b1687161eeaa4aab943b3f323a1a8ec57389dad5b88b2431a9a8ffe9b2ff2"
+    "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
   {
     "id": "POST /api/crm/articles/unpublish",
@@ -792,7 +794,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "45c8ca02967cc4bd",
     "multipart": false,
-    "sourceHash": "386b1687161eeaa4aab943b3f323a1a8ec57389dad5b88b2431a9a8ffe9b2ff2"
+    "sourceHash": "868196a83a521307a380c04f19bacbeaeb5cdc6062b9d7a60d8584f5dc1aacc8"
   },
   {
     "id": "GET /api/crm/automation/escalations",
@@ -811,7 +813,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "GET /api/crm/automation/rule-runs",
@@ -830,7 +832,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "GET /api/crm/automation/rules",
@@ -849,7 +851,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "GET /api/crm/automation/schedule-runs",
@@ -868,7 +870,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "GET /api/crm/automation/schedules",
@@ -887,7 +889,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "GET /api/crm/automation/sla",
@@ -906,7 +908,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "GET /api/crm/automation/watchers",
@@ -925,7 +927,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "POST /api/crm/automation/follow",
@@ -942,7 +944,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "6da65dfc842ff509",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "POST /api/crm/automation/handover-confirm",
@@ -959,7 +961,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "6da65dfc842ff509",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "POST /api/crm/automation/handover-preview",
@@ -976,7 +978,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "6da65dfc842ff509",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "POST /api/crm/automation/rule",
@@ -993,7 +995,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "6da65dfc842ff509",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "POST /api/crm/automation/schedule",
@@ -1010,7 +1012,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "6da65dfc842ff509",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
   },
   {
     "id": "POST /api/crm/automation/sla",
@@ -1027,7 +1029,332 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "6da65dfc842ff509",
     "multipart": false,
-    "sourceHash": "bc6c464ed9148cdf5a3f47bbbaa9d04c9e28db36f1a3c2cab9fd388e2e4cc8ba"
+    "sourceHash": "499403b7ad7f398b04a0dc0bc1f5c8a5aeb30aa4e4fdf6db4a495a0f516fa778"
+  },
+  {
+    "id": "GET /api/crm/buyer/download",
+    "method": "GET",
+    "template": "/api/crm/buyer/download",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "download"
+    },
+    "query": [
+      "id",
+      "month",
+      "orderId",
+      "organizationId",
+      "page",
+      "q",
+      "revision",
+      "status",
+      "type"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "GET /api/crm/buyer/order",
+    "method": "GET",
+    "template": "/api/crm/buyer/order",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "order"
+    },
+    "query": [
+      "id",
+      "month",
+      "orderId",
+      "organizationId",
+      "page",
+      "q",
+      "revision",
+      "status",
+      "type"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "GET /api/crm/buyer/orders",
+    "method": "GET",
+    "template": "/api/crm/buyer/orders",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "orders"
+    },
+    "query": [
+      "id",
+      "month",
+      "orderId",
+      "organizationId",
+      "page",
+      "q",
+      "revision",
+      "status",
+      "type"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "GET /api/crm/buyer/organizations",
+    "method": "GET",
+    "template": "/api/crm/buyer/organizations",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "organizations"
+    },
+    "query": [
+      "id",
+      "month",
+      "orderId",
+      "organizationId",
+      "page",
+      "q",
+      "revision",
+      "status",
+      "type"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "GET /api/crm/buyer/report",
+    "method": "GET",
+    "template": "/api/crm/buyer/report",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "report"
+    },
+    "query": [
+      "id",
+      "month",
+      "orderId",
+      "organizationId",
+      "page",
+      "q",
+      "revision",
+      "status",
+      "type"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "GET /api/crm/buyer/setup",
+    "method": "GET",
+    "template": "/api/crm/buyer/setup",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "setup"
+    },
+    "query": [
+      "id",
+      "month",
+      "orderId",
+      "organizationId",
+      "page",
+      "q",
+      "revision",
+      "status",
+      "type"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "GET /api/crm/buyer/statement",
+    "method": "GET",
+    "template": "/api/crm/buyer/statement",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "statement"
+    },
+    "query": [
+      "id",
+      "month",
+      "orderId",
+      "organizationId",
+      "page",
+      "q",
+      "revision",
+      "status",
+      "type"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/acknowledge",
+    "method": "POST",
+    "template": "/api/crm/buyer/acknowledge",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "acknowledge"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/branch",
+    "method": "POST",
+    "template": "/api/crm/buyer/branch",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "branch"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/cancel",
+    "method": "POST",
+    "template": "/api/crm/buyer/cancel",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "cancel"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/confirm",
+    "method": "POST",
+    "template": "/api/crm/buyer/confirm",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "confirm"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/contract",
+    "method": "POST",
+    "template": "/api/crm/buyer/contract",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "contract"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/create",
+    "method": "POST",
+    "template": "/api/crm/buyer/create",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "create"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/quote",
+    "method": "POST",
+    "template": "/api/crm/buyer/quote",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "quote"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
+  },
+  {
+    "id": "POST /api/crm/buyer/receive",
+    "method": "POST",
+    "template": "/api/crm/buyer/receive",
+    "source": "app/api/crm/buyer/[action]/route.ts",
+    "group": "buyer",
+    "status": "AVAILABLE",
+    "moduleId": "buyer",
+    "params": [],
+    "selector": {
+      "action": "receive"
+    },
+    "query": [],
+    "inputContract": "549c7bfab0acf7a4",
+    "multipart": false,
+    "sourceHash": "725659f1c5b08cd9f1a5c4bdeb9562ef7e9523296f9e8e5124999fab8e08fc88"
   },
   {
     "id": "GET /api/crm/care/checklist",
@@ -1046,7 +1373,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "efff7e61c013dce1bc209212750f207b5be53332a16095a4aab0985bedcac74e"
+    "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
   {
     "id": "GET /api/crm/care/contacts",
@@ -1065,7 +1392,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "efff7e61c013dce1bc209212750f207b5be53332a16095a4aab0985bedcac74e"
+    "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
   {
     "id": "GET /api/crm/care/dependencies",
@@ -1084,7 +1411,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "efff7e61c013dce1bc209212750f207b5be53332a16095a4aab0985bedcac74e"
+    "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
   {
     "id": "POST /api/crm/care/checklist",
@@ -1101,7 +1428,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "502b5bc2f8f693a6",
     "multipart": false,
-    "sourceHash": "efff7e61c013dce1bc209212750f207b5be53332a16095a4aab0985bedcac74e"
+    "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
   {
     "id": "POST /api/crm/care/contact",
@@ -1118,7 +1445,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "502b5bc2f8f693a6",
     "multipart": false,
-    "sourceHash": "efff7e61c013dce1bc209212750f207b5be53332a16095a4aab0985bedcac74e"
+    "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
   {
     "id": "POST /api/crm/care/dependency",
@@ -1135,7 +1462,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "502b5bc2f8f693a6",
     "multipart": false,
-    "sourceHash": "efff7e61c013dce1bc209212750f207b5be53332a16095a4aab0985bedcac74e"
+    "sourceHash": "685d2e1460d61136840db74b3f09dbfa11e643df82801374939d00776e57b5a6"
   },
   {
     "id": "GET /api/crm/channel/catalog",
@@ -1158,7 +1485,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/chain",
@@ -1181,7 +1508,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/incentive-progress",
@@ -1204,7 +1531,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/incentives",
@@ -1227,7 +1554,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/levels",
@@ -1250,7 +1577,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/network",
@@ -1273,7 +1600,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/network-requests",
@@ -1296,7 +1623,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/profile",
@@ -1319,7 +1646,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/promotions",
@@ -1342,7 +1669,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/report",
@@ -1365,7 +1692,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/channel/transfers",
@@ -1388,7 +1715,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/child-discount",
@@ -1405,7 +1732,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/incentive",
@@ -1422,7 +1749,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/incentive-award",
@@ -1439,7 +1766,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/invoice-recipient",
@@ -1456,7 +1783,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/level",
@@ -1473,7 +1800,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/profile",
@@ -1490,7 +1817,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/promotion",
@@ -1507,7 +1834,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/promotion-active",
@@ -1524,7 +1851,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/shortage",
@@ -1541,7 +1868,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/transfer-decision",
@@ -1558,7 +1885,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "POST /api/crm/channel/transfer-request",
@@ -1575,7 +1902,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "189b005f2c78e16c",
     "multipart": false,
-    "sourceHash": "66b2b5c94f36d5cc7f09480890f39b512f35c5e1894c568410c4651cddaa247e"
+    "sourceHash": "f7b8c64fa74f544eeb43b286893411337c53e3dcd45217d126d851db1942d731"
   },
   {
     "id": "GET /api/crm/commerce/excel-template",
@@ -1599,7 +1926,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/invoice-data",
@@ -1623,7 +1950,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/invoice-pdf",
@@ -1647,7 +1974,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/order",
@@ -1671,7 +1998,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/order-events",
@@ -1695,7 +2022,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/order-route",
@@ -1719,7 +2046,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/order-versions",
@@ -1743,7 +2070,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/orders",
@@ -1767,7 +2094,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/policy",
@@ -1791,7 +2118,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/reorder",
@@ -1815,7 +2142,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/request",
@@ -1839,7 +2166,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/request-events",
@@ -1863,7 +2190,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/request-versions",
@@ -1887,7 +2214,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/commerce/requests",
@@ -1911,7 +2238,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/cancel-order",
@@ -1928,7 +2255,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/change-confirm",
@@ -1945,7 +2272,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/change-preview",
@@ -1962,7 +2289,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/duplicates",
@@ -1979,7 +2306,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/escalate-request",
@@ -1996,7 +2323,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/excel-confirm",
@@ -2013,7 +2340,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/excel-preview",
@@ -2030,7 +2357,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": true,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/invoice-pdf",
@@ -2047,7 +2374,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/invoice-preview",
@@ -2064,7 +2391,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/order-action",
@@ -2081,7 +2408,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/request-action",
@@ -2098,7 +2425,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/save-policy",
@@ -2115,7 +2442,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/save-request",
@@ -2132,7 +2459,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "POST /api/crm/commerce/submit-request",
@@ -2149,7 +2476,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "5e83061a863b9ba2",
     "multipart": false,
-    "sourceHash": "3fa126b57de551bc53034a7b8a6bbe15fa8416ad2feb73cf21c33cb8fa7f1a67"
+    "sourceHash": "ad27f329e6c4d3c2dfc2af9ad507b3d9d8007a87739a7a9cb8c03bd3a3e4a9ca"
   },
   {
     "id": "GET /api/crm/consignment/operations",
@@ -2168,7 +2495,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "GET /api/crm/consignment/overview",
@@ -2187,7 +2514,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "GET /api/crm/consignment/sale-template",
@@ -2206,7 +2533,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/agreement-accept",
@@ -2223,7 +2550,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/agreement-save",
@@ -2240,7 +2567,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/receive",
@@ -2257,7 +2584,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/replenishment-decide",
@@ -2274,7 +2601,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/replenishment-suggest",
@@ -2291,7 +2618,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/return-act",
@@ -2308,7 +2635,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/return-request",
@@ -2325,7 +2652,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/sale-confirm",
@@ -2342,7 +2669,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/sale-preview",
@@ -2359,7 +2686,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": true,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/sale-report",
@@ -2376,7 +2703,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/settlement-act",
@@ -2393,7 +2720,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/settlement-adjust",
@@ -2410,7 +2737,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/settlement-create",
@@ -2427,7 +2754,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "POST /api/crm/consignment/ship",
@@ -2444,7 +2771,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "df96b48727936486",
     "multipart": false,
-    "sourceHash": "20e94657df1a8643760beadef9e6c5aaaeb83390073ff67c22b5a1156d3ca503"
+    "sourceHash": "2ace204a8db834214217e3deafad7cb594d0f47164b896e04840e8f57db4d4a6"
   },
   {
     "id": "GET /api/crm/document-flow/mail-settings",
@@ -2465,7 +2792,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "GET /api/crm/document-flow/pdf",
@@ -2486,7 +2813,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "GET /api/crm/document-flow/provider-settings",
@@ -2507,7 +2834,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "GET /api/crm/document-flow/view",
@@ -2528,7 +2855,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "GET /api/crm/document-flow/workspace",
@@ -2549,7 +2876,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/accept",
@@ -2566,7 +2893,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/amend",
@@ -2583,7 +2910,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/confirm",
@@ -2600,7 +2927,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail",
@@ -2617,7 +2944,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail-rule",
@@ -2634,7 +2961,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/remove-mail-rule",
@@ -2651,7 +2978,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/retry-mail",
@@ -2668,7 +2995,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/save",
@@ -2685,7 +3012,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/save-mail-rule",
@@ -2702,7 +3029,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/save-provider",
@@ -2719,7 +3046,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "POST /api/crm/document-flow/test-mail",
@@ -2736,7 +3063,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e1f2fdaffdb8473e",
     "multipart": false,
-    "sourceHash": "a1062958b331e009af0044da114eaa8d9c321223e97e6eac0a2fa6765a72fcd7"
+    "sourceHash": "d441b81a23a223bebcf6c5c522d81b827b9168be5adfab39d8ccf83338f2a31e"
   },
   {
     "id": "GET /api/crm/documents/[id]",
@@ -2753,7 +3080,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "744ace9ac208b494f549178ec652b4a82ae8222b9a18283e4a1ce73f7d02b65e"
+    "sourceHash": "a4a4a13934e90f60ad746b88a63e773320599061eaed44e3d4446d7cde2a5362"
   },
   {
     "id": "POST /api/crm/documents",
@@ -2771,7 +3098,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "ac88782efea25ebc",
     "multipart": true,
-    "sourceHash": "88ced47eb0c55f544ab77a7066a9c0f08fedb60cacdd4de911fb970d658d3324"
+    "sourceHash": "02d91614d25f959cc2716d478abab6fd979d1033a203af06805776f5e6d6c030"
   },
   {
     "id": "GET /api/crm/finance/aging",
@@ -2791,7 +3118,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "GET /api/crm/finance/bank-suggestions",
@@ -2811,7 +3138,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "GET /api/crm/finance/overview",
@@ -2831,7 +3158,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "GET /api/crm/finance/receivables-workspace",
@@ -2851,7 +3178,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/bank-import",
@@ -2868,7 +3195,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/bank-match",
@@ -2885,7 +3212,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/bank-match-reverse",
@@ -2902,7 +3229,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/cash-act",
@@ -2919,7 +3246,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/cash-create",
@@ -2936,7 +3263,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/credit-configure",
@@ -2953,7 +3280,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/deposit-refund",
@@ -2970,7 +3297,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/payment-allocate",
@@ -2987,7 +3314,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/payment-create",
@@ -3004,7 +3331,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/payment-review",
@@ -3021,7 +3348,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/receivable-adjust",
@@ -3038,7 +3365,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/receivable-post",
@@ -3055,7 +3382,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/reminder-run",
@@ -3072,7 +3399,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "POST /api/crm/finance/reminder-schedule",
@@ -3089,7 +3416,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c2dd009a56f92569",
     "multipart": false,
-    "sourceHash": "90912dd00a8cc6b7d59f3bba569ed5a7624b134f902645c34963c6c632cab6c5"
+    "sourceHash": "fcac21730a3d50673df28fe672f786ac4bd965bb03139dc7e906bbbbc372cde6"
   },
   {
     "id": "GET /api/crm/fulfillment/order",
@@ -3108,7 +3435,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/backorder",
@@ -3125,7 +3452,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/carrier-connection",
@@ -3142,7 +3469,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/carrier-manual",
@@ -3159,7 +3486,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/delivery-create",
@@ -3176,7 +3503,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/delivery-finish",
@@ -3193,7 +3520,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/pack",
@@ -3210,7 +3537,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/pick",
@@ -3227,7 +3554,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/return-decide",
@@ -3244,7 +3571,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/return-receive",
@@ -3261,7 +3588,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/return-request",
@@ -3278,7 +3605,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/trip-create",
@@ -3295,7 +3622,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "POST /api/crm/fulfillment/trip-dispatch",
@@ -3312,7 +3639,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "0b68af9bfa721841",
     "multipart": false,
-    "sourceHash": "da1545ab12f8deda6010e4f9be697f250ba0ea7496ef820a0b19fc383a8a0bdf"
+    "sourceHash": "9ad0f57c0a7e5b5136f3007fb9f04a7d74ff48be18329c1b14c67dfa2e07e1da"
   },
   {
     "id": "GET /api/crm/governance/bulk-preview",
@@ -3329,7 +3656,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "GET /api/crm/governance/custom-values",
@@ -3346,7 +3673,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "GET /api/crm/governance/field-definitions",
@@ -3363,7 +3690,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "GET /api/crm/governance/permissions",
@@ -3380,7 +3707,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "POST /api/crm/governance/bulk-confirm",
@@ -3395,9 +3722,9 @@ const metadata: McpRoute[] = [
       "action": "bulk-confirm"
     },
     "query": [],
-    "inputContract": "a0e428dc97ebde96",
+    "inputContract": "264ced0af0c1313b",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "POST /api/crm/governance/bulk-preview",
@@ -3412,9 +3739,9 @@ const metadata: McpRoute[] = [
       "action": "bulk-preview"
     },
     "query": [],
-    "inputContract": "a0e428dc97ebde96",
+    "inputContract": "264ced0af0c1313b",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "POST /api/crm/governance/custom-value",
@@ -3429,9 +3756,9 @@ const metadata: McpRoute[] = [
       "action": "custom-value"
     },
     "query": [],
-    "inputContract": "a0e428dc97ebde96",
+    "inputContract": "264ced0af0c1313b",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "POST /api/crm/governance/field-definition",
@@ -3446,9 +3773,9 @@ const metadata: McpRoute[] = [
       "action": "field-definition"
     },
     "query": [],
-    "inputContract": "a0e428dc97ebde96",
+    "inputContract": "264ced0af0c1313b",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "POST /api/crm/governance/role-preview",
@@ -3463,9 +3790,9 @@ const metadata: McpRoute[] = [
       "action": "role-preview"
     },
     "query": [],
-    "inputContract": "a0e428dc97ebde96",
+    "inputContract": "264ced0af0c1313b",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "POST /api/crm/governance/session-revoke-others",
@@ -3480,9 +3807,9 @@ const metadata: McpRoute[] = [
       "action": "session-revoke-others"
     },
     "query": [],
-    "inputContract": "a0e428dc97ebde96",
+    "inputContract": "264ced0af0c1313b",
     "multipart": false,
-    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
+    "sourceHash": "b6b6940edff5a76dcf311a311aa92e68c774026177c5d89061c3562cb7fcbf9c"
   },
   {
     "id": "GET /api/crm/historical-orders/[id]",
@@ -3501,7 +3828,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "f20d2d794de1235215c2a895b487226f9358201b43ba3ee323c718fdb434f6c9"
+    "sourceHash": "5670141f4d257f1dd3a5e673dddedac20cd0a11f076346e49da8a199b06aae19"
   },
   {
     "id": "GET /api/crm/historical-orders",
@@ -3519,7 +3846,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "214e358adaa411c027df020ae97517960f36f012d909c3c150ae58ff535839fe"
+    "sourceHash": "178d9cfba437dfc30cdf8b8bb727828ff6164a336e2c31d2c839e6ffcc26fffb"
   },
   {
     "id": "GET /api/crm/internal-documents/[id]",
@@ -3538,7 +3865,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1b0b9849a9c364b22b301a22d810be35fcdb15e8f14cf5c3d7341d85ef54b273"
+    "sourceHash": "6b364f0d1c8f39fe7a2a47b244a6e65d161d297419c20faa0934d6ecf5f4a425"
   },
   {
     "id": "GET /api/crm/internal-documents",
@@ -3556,7 +3883,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "84a793992a446efea5d49711e4732fe71a35261e5b493a8088d9a6ae8ea94ec1"
+    "sourceHash": "ca9cd0be9d6fe70759da3d744779382d584a7fa8ca2c599cdd341d110296d266"
   },
   {
     "id": "POST /api/crm/internal-documents",
@@ -3578,7 +3905,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "932cb1d4862a03fd",
     "multipart": true,
-    "sourceHash": "84a793992a446efea5d49711e4732fe71a35261e5b493a8088d9a6ae8ea94ec1"
+    "sourceHash": "ca9cd0be9d6fe70759da3d744779382d584a7fa8ca2c599cdd341d110296d266"
   },
   {
     "id": "GET /api/crm/inventory/alerts",
@@ -3597,7 +3924,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "GET /api/crm/inventory/balances",
@@ -3616,7 +3943,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "GET /api/crm/inventory/count-preview",
@@ -3635,7 +3962,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "GET /api/crm/inventory/locations",
@@ -3654,7 +3981,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "GET /api/crm/inventory/lot-trace",
@@ -3673,7 +4000,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/alert-rule",
@@ -3690,7 +4017,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/consume",
@@ -3707,7 +4034,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/count-approve",
@@ -3724,7 +4051,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/count-record",
@@ -3741,7 +4068,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/count-start",
@@ -3758,7 +4085,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/create-location",
@@ -3775,7 +4102,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/recall-open",
@@ -3792,7 +4119,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/recall-update",
@@ -3809,7 +4136,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/receipt",
@@ -3826,7 +4153,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/release",
@@ -3843,7 +4170,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/reserve",
@@ -3860,7 +4187,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/reverse",
@@ -3877,7 +4204,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/transfer-receive",
@@ -3894,7 +4221,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "POST /api/crm/inventory/transfer-ship",
@@ -3911,7 +4238,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c709e49062689122",
     "multipart": false,
-    "sourceHash": "94220a4315203597f8be9125a104a0ff2bb5625974fcc0b1e7cd75e22c991c4f"
+    "sourceHash": "c9419c41b224e410a547c7d51d1275e2c73f1c43f2889903b3db7b39cf14b4ec"
   },
   {
     "id": "GET /api/crm/jobs/detail",
@@ -3930,7 +4257,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "32860ad4686f0a103f741db2065b5a7a32a62a74dab298776baa16c02dbb4063"
+    "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
   {
     "id": "GET /api/crm/jobs/download",
@@ -3949,7 +4276,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "32860ad4686f0a103f741db2065b5a7a32a62a74dab298776baa16c02dbb4063"
+    "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
   {
     "id": "GET /api/crm/jobs/list",
@@ -3968,7 +4295,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "32860ad4686f0a103f741db2065b5a7a32a62a74dab298776baa16c02dbb4063"
+    "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
   {
     "id": "POST /api/crm/jobs/confirm",
@@ -3991,7 +4318,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "d917735483ca69b1",
     "multipart": false,
-    "sourceHash": "32860ad4686f0a103f741db2065b5a7a32a62a74dab298776baa16c02dbb4063"
+    "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
   {
     "id": "POST /api/crm/jobs/export",
@@ -4014,7 +4341,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "d917735483ca69b1",
     "multipart": false,
-    "sourceHash": "32860ad4686f0a103f741db2065b5a7a32a62a74dab298776baa16c02dbb4063"
+    "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
   {
     "id": "POST /api/crm/jobs/preview",
@@ -4037,7 +4364,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "d917735483ca69b1",
     "multipart": true,
-    "sourceHash": "32860ad4686f0a103f741db2065b5a7a32a62a74dab298776baa16c02dbb4063"
+    "sourceHash": "4cbfcf0cccea53d4a0560adda08bc1e88f05cc5ed4855cbdccc74ef2b7fa3f4e"
   },
   {
     "id": "GET /api/crm/library/checklist",
@@ -4054,7 +4381,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "739b1871a552194dcd1af2093b0d93f6c222cf2323bacb10f205d791f6cdc815"
+    "sourceHash": "c7e8387c06f2596fef26d60dc0a99b623b86dd7702734d7c5c3612ca70bd6b5a"
   },
   {
     "id": "GET /api/crm/library/detail",
@@ -4071,7 +4398,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "739b1871a552194dcd1af2093b0d93f6c222cf2323bacb10f205d791f6cdc815"
+    "sourceHash": "c7e8387c06f2596fef26d60dc0a99b623b86dd7702734d7c5c3612ca70bd6b5a"
   },
   {
     "id": "GET /api/crm/library/list",
@@ -4088,7 +4415,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "739b1871a552194dcd1af2093b0d93f6c222cf2323bacb10f205d791f6cdc815"
+    "sourceHash": "c7e8387c06f2596fef26d60dc0a99b623b86dd7702734d7c5c3612ca70bd6b5a"
   },
   {
     "id": "POST /api/crm/library/save",
@@ -4105,7 +4432,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "38e4b9be72dcc73f",
     "multipart": false,
-    "sourceHash": "739b1871a552194dcd1af2093b0d93f6c222cf2323bacb10f205d791f6cdc815"
+    "sourceHash": "c7e8387c06f2596fef26d60dc0a99b623b86dd7702734d7c5c3612ca70bd6b5a"
   },
   {
     "id": "GET /api/crm/me",
@@ -4120,7 +4447,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "de099ad377aa8782d02ec927eb6a1b56ba2a20d30f6e180f8933ace231f41c79"
+    "sourceHash": "fc23b848b2a626cf2f9e4af029ae2b97bba3dfb99e53de8d1afb65a69f490c94"
   },
   {
     "id": "GET /api/crm/onboarding/application",
@@ -4137,7 +4464,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "GET /api/crm/onboarding/invitations",
@@ -4154,7 +4481,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "GET /api/crm/onboarding/queue",
@@ -4171,7 +4498,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/edit",
@@ -4188,7 +4515,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/invitation",
@@ -4205,7 +4532,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/invitation-revoke",
@@ -4222,7 +4549,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/login",
@@ -4239,7 +4566,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/logout",
@@ -4256,7 +4583,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/register",
@@ -4273,7 +4600,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/review",
@@ -4290,7 +4617,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/reviewer",
@@ -4307,7 +4634,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/submit",
@@ -4324,7 +4651,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/verification-confirm",
@@ -4341,7 +4668,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/onboarding/verification-send",
@@ -4358,7 +4685,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a144acf5db418f0d",
     "multipart": false,
-    "sourceHash": "1a31f0921ba922cb1c23b287010fdc7ef5b0464c78dee2208bd7eaf257c80a6c"
+    "sourceHash": "4c5d98dc0cf128e5a636c73838c3ba3aeca0020b5ae01537f84d300b9dec43af"
   },
   {
     "id": "POST /api/crm/partners/duplicates",
@@ -4373,7 +4700,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c17c19457580298d",
     "multipart": false,
-    "sourceHash": "57abb5a0e290f3cc77b4c7fef375a6d4cc20c651c32d0450f0928bf57312ccc2"
+    "sourceHash": "c389fc99245eceb8be66b99ccdf0e13406f0123ec036dbdbf53db607259f20ad"
   },
   {
     "id": "POST /api/crm/partners/merge",
@@ -4388,7 +4715,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15a95b643f6600e0",
     "multipart": false,
-    "sourceHash": "881e2214c572183e3991818e453bf4476a9294dfbcb09df98c1f95c4430f680e"
+    "sourceHash": "41828f3144f58970f0c5d36e2703b28026f0886e862d28639929bb4e26cf4b32"
   },
   {
     "id": "GET /api/crm/pricing/books",
@@ -4407,7 +4734,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "GET /api/crm/pricing/organization-tier",
@@ -4426,7 +4753,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "GET /api/crm/pricing/tiers",
@@ -4445,7 +4772,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "GET /api/crm/pricing/units",
@@ -4464,7 +4791,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "GET /api/crm/pricing/versions",
@@ -4483,7 +4810,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "POST /api/crm/pricing/assign-tier",
@@ -4500,7 +4827,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "12778bb866c3b7ac",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "POST /api/crm/pricing/preview",
@@ -4517,7 +4844,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "12778bb866c3b7ac",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "POST /api/crm/pricing/publish",
@@ -4534,7 +4861,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "12778bb866c3b7ac",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "POST /api/crm/pricing/save",
@@ -4551,7 +4878,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "12778bb866c3b7ac",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "POST /api/crm/pricing/tier",
@@ -4568,7 +4895,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "12778bb866c3b7ac",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "POST /api/crm/pricing/unit",
@@ -4585,7 +4912,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "12778bb866c3b7ac",
     "multipart": false,
-    "sourceHash": "126dd4269f0fd22eb13f69e383bbb9c32bc86fd0f7ef272062c13839771ca557"
+    "sourceHash": "8bc70a3292f6e46940e5ed652030e8f11f4f00f4a1f9f394973a5069b73fa04e"
   },
   {
     "id": "GET /api/crm/procurement/compare",
@@ -4606,7 +4933,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "GET /api/crm/procurement/operations",
@@ -4627,7 +4954,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "GET /api/crm/procurement/overview",
@@ -4648,7 +4975,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "GET /api/crm/procurement/performance",
@@ -4669,7 +4996,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/claim-create",
@@ -4686,7 +5013,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/claim-update",
@@ -4703,7 +5030,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/order-amend",
@@ -4720,7 +5047,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/order-decide",
@@ -4737,7 +5064,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/payable-post",
@@ -4754,7 +5081,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/payment-act",
@@ -4771,7 +5098,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/payment-create",
@@ -4788,7 +5115,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/quote-add",
@@ -4805,7 +5132,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/quote-select",
@@ -4822,7 +5149,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/receipt",
@@ -4839,7 +5166,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/request-create",
@@ -4856,7 +5183,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/request-decide",
@@ -4873,7 +5200,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/rfq-create",
@@ -4890,7 +5217,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/rfq-dispatch",
@@ -4907,7 +5234,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/supplier-create",
@@ -4924,7 +5251,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/supplier-product",
@@ -4941,7 +5268,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "POST /api/crm/procurement/supplier-save",
@@ -4958,7 +5285,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "15e0b4a66174ee31",
     "multipart": false,
-    "sourceHash": "6250937d831d24f62c288d8d0d9ebb83fcdd28801db494efb4f2b2c5888cc50f"
+    "sourceHash": "bf54e7e7433473b52a458e32539e949fa2e183c66b36074596a45663253b52c1"
   },
   {
     "id": "GET /api/crm/quotations/events",
@@ -4979,7 +5306,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fa6bb825c4fdfe7d6d97493b67d87e808e2fd612c0062ee0135f2468086fe642"
+    "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
   {
     "id": "GET /api/crm/quotations/head",
@@ -5000,7 +5327,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fa6bb825c4fdfe7d6d97493b67d87e808e2fd612c0062ee0135f2468086fe642"
+    "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
   {
     "id": "GET /api/crm/quotations/list",
@@ -5021,7 +5348,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fa6bb825c4fdfe7d6d97493b67d87e808e2fd612c0062ee0135f2468086fe642"
+    "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
   {
     "id": "GET /api/crm/quotations/pdf",
@@ -5042,7 +5369,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fa6bb825c4fdfe7d6d97493b67d87e808e2fd612c0062ee0135f2468086fe642"
+    "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
   {
     "id": "GET /api/crm/quotations/versions",
@@ -5063,7 +5390,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fa6bb825c4fdfe7d6d97493b67d87e808e2fd612c0062ee0135f2468086fe642"
+    "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
   {
     "id": "POST /api/crm/quotations/action",
@@ -5080,7 +5407,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "845d845bffd916fe",
     "multipart": false,
-    "sourceHash": "fa6bb825c4fdfe7d6d97493b67d87e808e2fd612c0062ee0135f2468086fe642"
+    "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
   {
     "id": "POST /api/crm/quotations/save",
@@ -5097,7 +5424,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "845d845bffd916fe",
     "multipart": false,
-    "sourceHash": "fa6bb825c4fdfe7d6d97493b67d87e808e2fd612c0062ee0135f2468086fe642"
+    "sourceHash": "0070b1294061346806273c19fe5292b4850177927a9736b0a76a695b71df1b5f"
   },
   {
     "id": "GET /api/crm/relationships/dictionary",
@@ -5114,7 +5441,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "GET /api/crm/relationships/opportunities",
@@ -5131,7 +5458,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "GET /api/crm/relationships/preferences",
@@ -5148,7 +5475,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "GET /api/crm/relationships/tags",
@@ -5165,7 +5492,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "GET /api/crm/relationships/visits",
@@ -5182,7 +5509,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "POST /api/crm/relationships/dictionary",
@@ -5199,7 +5526,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "4a4183e56d3a18aa",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "POST /api/crm/relationships/opportunity",
@@ -5216,7 +5543,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "4a4183e56d3a18aa",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "POST /api/crm/relationships/preferences",
@@ -5233,7 +5560,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "4a4183e56d3a18aa",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "POST /api/crm/relationships/tags",
@@ -5250,7 +5577,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "4a4183e56d3a18aa",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "POST /api/crm/relationships/visit",
@@ -5267,7 +5594,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "4a4183e56d3a18aa",
     "multipart": false,
-    "sourceHash": "e4c880de8d4950ceca7499c553cc413f5881c84620619e1d7b320961bbf8c331"
+    "sourceHash": "dbf63961166d0ac7be085d0c6c839cbcc4a69fa901c998acdb4e4c608677f818"
   },
   {
     "id": "GET /api/crm/reports/overview",
@@ -5290,7 +5617,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "ce1cbfcdb549f76d060af3ec7101dbef762ab454a1a50647a09034d0ea661041"
+    "sourceHash": "8ad94ea636879e449f991a1c811af5822dcf7bbb1117be1388bdd5ebba044825"
   },
   {
     "id": "GET /api/crm/reports/subscriptions",
@@ -5313,7 +5640,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "ce1cbfcdb549f76d060af3ec7101dbef762ab454a1a50647a09034d0ea661041"
+    "sourceHash": "8ad94ea636879e449f991a1c811af5822dcf7bbb1117be1388bdd5ebba044825"
   },
   {
     "id": "POST /api/crm/reports/subscription-save",
@@ -5330,7 +5657,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "cd2353e6c2ed75b4",
     "multipart": false,
-    "sourceHash": "ce1cbfcdb549f76d060af3ec7101dbef762ab454a1a50647a09034d0ea661041"
+    "sourceHash": "8ad94ea636879e449f991a1c811af5822dcf7bbb1117be1388bdd5ebba044825"
   },
   {
     "id": "GET /api/crm/spreadsheet/inventory-matrix",
@@ -5347,7 +5674,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "37b6bd253ea44a3c4686e0424a13b2096e18e46f1f57d558556815a3c9407204"
+    "sourceHash": "8ed4f5568f556ec6dc4a68d402e9f85adde73a6c09a1fbccc3251a9136a585e9"
   },
   {
     "id": "GET /api/crm/spreadsheet/reconciliation",
@@ -5364,7 +5691,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "37b6bd253ea44a3c4686e0424a13b2096e18e46f1f57d558556815a3c9407204"
+    "sourceHash": "8ed4f5568f556ec6dc4a68d402e9f85adde73a6c09a1fbccc3251a9136a585e9"
   },
   {
     "id": "POST /api/crm/spreadsheet/catalog-cells",
@@ -5381,7 +5708,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "ac6d4fab69fbe835",
     "multipart": false,
-    "sourceHash": "37b6bd253ea44a3c4686e0424a13b2096e18e46f1f57d558556815a3c9407204"
+    "sourceHash": "8ed4f5568f556ec6dc4a68d402e9f85adde73a6c09a1fbccc3251a9136a585e9"
   },
   {
     "id": "POST /api/crm/spreadsheet/partner-cells",
@@ -5398,7 +5725,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "ac6d4fab69fbe835",
     "multipart": false,
-    "sourceHash": "37b6bd253ea44a3c4686e0424a13b2096e18e46f1f57d558556815a3c9407204"
+    "sourceHash": "8ed4f5568f556ec6dc4a68d402e9f85adde73a6c09a1fbccc3251a9136a585e9"
   },
   {
     "id": "GET /api/crm/work/order",
@@ -5415,7 +5742,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "GET /api/crm/work/orders",
@@ -5432,7 +5759,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "GET /api/crm/work/tasks",
@@ -5449,7 +5776,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/account",
@@ -5464,9 +5791,9 @@ const metadata: McpRoute[] = [
       "action": "account"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/activity",
@@ -5481,9 +5808,9 @@ const metadata: McpRoute[] = [
       "action": "activity"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/assignment",
@@ -5498,9 +5825,9 @@ const metadata: McpRoute[] = [
       "action": "assignment"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/catalog",
@@ -5515,9 +5842,9 @@ const metadata: McpRoute[] = [
       "action": "catalog"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/order",
@@ -5532,9 +5859,9 @@ const metadata: McpRoute[] = [
       "action": "order"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/password",
@@ -5549,9 +5876,9 @@ const metadata: McpRoute[] = [
       "action": "password"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/task",
@@ -5566,9 +5893,9 @@ const metadata: McpRoute[] = [
       "action": "task"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "POST /api/crm/work/task-update",
@@ -5583,9 +5910,9 @@ const metadata: McpRoute[] = [
       "action": "task-update"
     },
     "query": [],
-    "inputContract": "4cdd45717ac32c3b",
+    "inputContract": "fd519d88129097f9",
     "multipart": false,
-    "sourceHash": "b3a9af3aebb8802e369968a030600686838b67cefa2b6979ff0262d8516f17f6"
+    "sourceHash": "c622ed10d1d144907085f03f2125741a394ecbee1c70e3ff0f44ee002313a88e"
   },
   {
     "id": "GET /api/crm/workspace/audit",
@@ -5602,7 +5929,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/bookmarks",
@@ -5619,7 +5946,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/documents",
@@ -5636,7 +5963,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/draft",
@@ -5653,7 +5980,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/filters",
@@ -5670,7 +5997,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/notifications",
@@ -5687,7 +6014,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/preferences",
@@ -5704,7 +6031,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/search",
@@ -5721,7 +6048,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "GET /api/crm/workspace/sessions",
@@ -5738,7 +6065,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "POST /api/crm/workspace/bookmark",
@@ -5755,7 +6082,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "POST /api/crm/workspace/document-read",
@@ -5772,7 +6099,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "POST /api/crm/workspace/draft",
@@ -5789,7 +6116,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "POST /api/crm/workspace/filter",
@@ -5806,7 +6133,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "POST /api/crm/workspace/notification-read",
@@ -5823,7 +6150,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "POST /api/crm/workspace/preferences",
@@ -5840,7 +6167,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   },
   {
     "id": "POST /api/crm/workspace/session-revoke",
@@ -5857,7 +6184,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
+    "sourceHash": "a55ccade851f7051ae29fce5cbfafe353d18e3e4ea4c6dc8dea727848df2cfb9"
   }
 ];
 export const mcpRoutes: McpRoute[] = metadata.map(route=>({...route,inputContract:sharedContracts[route.inputContract]??''}));
@@ -5873,6 +6200,10 @@ export const mcpExcludedRoutes: {route:string;reason:string}[] = [
   {
     "route": "/api/crm/brevo-webhook",
     "reason": "Provider webhook, not an admin operation"
+  },
+  {
+    "route": "/api/crm/buyer/password",
+    "reason": "Password changes remain in the authenticated browser"
   },
   {
     "route": "/api/crm/carrier/[code]",
@@ -5901,32 +6232,33 @@ export const mcpHandlers: Record<string, unknown> = {"app/api/crm/mcp/oauth/[act
 "app/api/crm/accountant/[action]/route.ts": r3,
 "app/api/crm/articles/[action]/route.ts": r4,
 "app/api/crm/automation/[action]/route.ts": r5,
-"app/api/crm/care/[action]/route.ts": r6,
-"app/api/crm/channel/[action]/route.ts": r7,
-"app/api/crm/commerce/[action]/route.ts": r8,
-"app/api/crm/consignment/[action]/route.ts": r9,
-"app/api/crm/document-flow/[action]/route.ts": r10,
-"app/api/crm/documents/[id]/route.ts": r11,
-"app/api/crm/documents/route.ts": r12,
-"app/api/crm/finance/[action]/route.ts": r13,
-"app/api/crm/fulfillment/[action]/route.ts": r14,
-"app/api/crm/governance/[action]/route.ts": r15,
-"app/api/crm/historical-orders/[id]/route.ts": r16,
-"app/api/crm/historical-orders/route.ts": r17,
-"app/api/crm/internal-documents/[id]/route.ts": r18,
-"app/api/crm/internal-documents/route.ts": r19,
-"app/api/crm/inventory/[action]/route.ts": r20,
-"app/api/crm/jobs/[action]/route.ts": r21,
-"app/api/crm/library/[action]/route.ts": r22,
-"app/api/crm/me/route.ts": r23,
-"app/api/crm/onboarding/[action]/route.ts": r24,
-"app/api/crm/partners/duplicates/route.ts": r25,
-"app/api/crm/partners/merge/route.ts": r26,
-"app/api/crm/pricing/[action]/route.ts": r27,
-"app/api/crm/procurement/[action]/route.ts": r28,
-"app/api/crm/quotations/[action]/route.ts": r29,
-"app/api/crm/relationships/[action]/route.ts": r30,
-"app/api/crm/reports/[action]/route.ts": r31,
-"app/api/crm/spreadsheet/[action]/route.ts": r32,
-"app/api/crm/work/[action]/route.ts": r33,
-"app/api/crm/workspace/[action]/route.ts": r34};
+"app/api/crm/buyer/[action]/route.ts": r6,
+"app/api/crm/care/[action]/route.ts": r7,
+"app/api/crm/channel/[action]/route.ts": r8,
+"app/api/crm/commerce/[action]/route.ts": r9,
+"app/api/crm/consignment/[action]/route.ts": r10,
+"app/api/crm/document-flow/[action]/route.ts": r11,
+"app/api/crm/documents/[id]/route.ts": r12,
+"app/api/crm/documents/route.ts": r13,
+"app/api/crm/finance/[action]/route.ts": r14,
+"app/api/crm/fulfillment/[action]/route.ts": r15,
+"app/api/crm/governance/[action]/route.ts": r16,
+"app/api/crm/historical-orders/[id]/route.ts": r17,
+"app/api/crm/historical-orders/route.ts": r18,
+"app/api/crm/internal-documents/[id]/route.ts": r19,
+"app/api/crm/internal-documents/route.ts": r20,
+"app/api/crm/inventory/[action]/route.ts": r21,
+"app/api/crm/jobs/[action]/route.ts": r22,
+"app/api/crm/library/[action]/route.ts": r23,
+"app/api/crm/me/route.ts": r24,
+"app/api/crm/onboarding/[action]/route.ts": r25,
+"app/api/crm/partners/duplicates/route.ts": r26,
+"app/api/crm/partners/merge/route.ts": r27,
+"app/api/crm/pricing/[action]/route.ts": r28,
+"app/api/crm/procurement/[action]/route.ts": r29,
+"app/api/crm/quotations/[action]/route.ts": r30,
+"app/api/crm/relationships/[action]/route.ts": r31,
+"app/api/crm/reports/[action]/route.ts": r32,
+"app/api/crm/spreadsheet/[action]/route.ts": r33,
+"app/api/crm/work/[action]/route.ts": r34,
+"app/api/crm/workspace/[action]/route.ts": r35};

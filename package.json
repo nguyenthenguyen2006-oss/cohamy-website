@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "typecheck": "next typegen && tsc --noEmit",
+    "test:crm:buyer": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-buyer.ts",
+    "test:crm:buyer-browser": "node scripts/crm/verify-buyer-browser.mjs",
     "crm:init": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/init.ts",
     "crm:seed-qa": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/seed-qa.ts",
     "crm:demo-seed": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/demo/seed.ts",

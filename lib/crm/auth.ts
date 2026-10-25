@@ -4,6 +4,7 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { database, type Sql } from "./db";
 import { CrmError } from "./permissions";
 import type { Principal, Role } from "./types";
+import {isBuyerRole,roleOrganizationKind} from "./types";
 
 export const SESSION_COOKIE = "cohamy_crm_session";
 export const SESSION_SECONDS = 8 * 60 * 60;
@@ -15,9 +16,9 @@ const principalSelect = `SELECT u.id, u.email, u.display_name, m.id AS membershi
 type IdentityRow = { id: string; email: string; display_name: string; membership_id: string; membership_version: number; role: Role; organization_id: string; organization_name: string; kind: string };
 function principal(row: IdentityRow): Principal | null {
   const dealer = ["DEALER_OWNER", "DEALER_STAFF"].includes(row.role);
-  if ((dealer && row.kind !== "DEALER") || (!dealer && row.kind !== "COHAMY")) return null;
+  if(row.kind!==roleOrganizationKind(row.role))return null;
   return { id: row.id, email: row.email, displayName: row.display_name, membershipId: row.membership_id,
-    membershipVersion: row.membership_version, role: row.role, organizationId: row.organization_id, organizationName: row.organization_name, area: dealer ? "portal" : "crm" };
+    membershipVersion: row.membership_version, role: row.role, organizationId: row.organization_id, organizationName: row.organization_name, area: dealer||isBuyerRole(row.role) ? "portal" : "crm" };
 }
 export async function audit(sql: Sql, actorId: string | null, action: string, entityId: string, payload: unknown = {}) {
   await sql.query("INSERT INTO cohamy_crm.audit_events(id,actor_id,action,entity_id,payload) VALUES ($1,$2,$3,$4,$5::jsonb)",

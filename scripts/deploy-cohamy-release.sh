@@ -165,6 +165,10 @@ CANDIDATE_PID=
 unset CRM_DATABASE_URL CRM_DATABASE_MODE CRM_ENVIRONMENT CRM_PUBLIC_ORIGIN CRM_WEBSITE_ORDER_INTAKE BLOG_SOURCE UPLOAD_DIR NEXT_PUBLIC_UPLOAD_BASE_URL POSTGRES_PASSWORD POSTGRES_USER POSTGRES_DB CRM_SETTINGS_ENCRYPTION_KEY
 # Reload retains the old npm script/cwd when switching between release directories.
 # Replace only Cohamy's process registration; source/data and other apps are untouched.
+if [[ -f "$SHARED/current-release" ]]; then
+  test "$(<"$SHARED/current-release")" = "$PREVIOUS"
+  test "$(<"$SHARED/current-sha")" = "$(git -C "$PREVIOUS" rev-parse HEAD)"
+fi
 CUTOVER=1
 if pm2 describe cohamy >/dev/null 2>&1; then pm2 delete cohamy; fi
 if pm2 describe cohamy-crm-worker >/dev/null 2>&1; then pm2 delete cohamy-crm-worker; fi

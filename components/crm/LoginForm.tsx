@@ -1,9 +1,11 @@
 "use client";
 import { EnvelopeSimple, Eye, EyeSlash, LockKey, SignIn } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useState,useSyncExternalStore, type FormEvent } from "react";
+const subscribeReady=()=>()=>{};
 
 export function CrmLoginForm() {
+  const ready=useSyncExternalStore(subscribeReady,()=>true,()=>false);
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,7 +59,7 @@ export function CrmLoginForm() {
   }
 
   return (
-    <form className="auth-form crm-login-form" onSubmit={submit}>
+    <form className="auth-form crm-login-form" method="post" action="/api/crm/auth/login" onSubmit={submit}>
       <div className="field crm-login-field">
         <label htmlFor="login-email">Email</label>
         <div className="crm-login-input-wrap">
@@ -72,7 +74,7 @@ export function CrmLoginForm() {
             placeholder="Email đăng nhập"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            disabled={pending}
+            disabled={pending||!ready}
           />
         </div>
       </div>
@@ -91,7 +93,7 @@ export function CrmLoginForm() {
             placeholder="Mật khẩu"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            disabled={pending}
+            disabled={pending||!ready}
           />
           <button
             className="password-toggle crm-password-toggle"
@@ -119,7 +121,7 @@ export function CrmLoginForm() {
               placeholder="123456 hoặc XXXX-XXXX"
               value={secondFactor}
               onChange={(event) => setSecondFactor(event.target.value.toUpperCase())}
-              disabled={pending}
+              disabled={pending||!ready}
             />
           </div>
         </div>
@@ -134,7 +136,7 @@ export function CrmLoginForm() {
       <button
         className="button button--primary crm-login-btn"
         type="submit"
-        disabled={pending}
+        disabled={pending||!ready}
         aria-label="Đăng nhập"
       >
         <SignIn aria-hidden size={20} weight="bold" />

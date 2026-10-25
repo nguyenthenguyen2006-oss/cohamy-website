@@ -1,6 +1,7 @@
 import { can, isWarehouseRole } from "./permissions";
 import { isRemovedCrmModule } from "./module-availability";
 import type { Principal } from "./types";
+import {isBuyerRole} from "./types";
 export type ModuleIcon =
   | "customer"
   | "dealer"
@@ -30,7 +31,9 @@ export type ModuleIcon =
 export interface CrmModule { id: string; label: string; shortLabel: string; icon: ModuleIcon; tone: string; permission: string; status: "CONNECTED" | "PENDING"; bottom?: number }
 const internalDocumentsModule: CrmModule = { id: 'internal-documents', label: 'Tài liệu nội bộ', shortLabel: 'Tài liệu', icon: 'library', tone: 'primary', permission: 'internal-documents.access', status: 'CONNECTED' };
 const historicalOrdersModule: CrmModule = { id: 'historical-orders', label: 'Đơn hàng cũ', shortLabel: 'Đơn cũ', icon: 'order', tone: 'primary', permission: 'historical-orders.read', status: 'CONNECTED' };
+const buyerOrdersModule:CrmModule={id:'buyer-orders',label:'Đơn khách hàng / siêu thị',shortLabel:'Đơn khách / siêu thị',icon:'order',tone:'primary',permission:'buyer.review',status:'CONNECTED'};
 const internal: CrmModule[] = [
+  buyerOrdersModule,
   {id:'mcp',label:'Kết nối ChatGPT / MCP',shortLabel:'ChatGPT / MCP',icon:'account',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
   historicalOrdersModule,
   internalDocumentsModule,
@@ -67,6 +70,7 @@ const internal: CrmModule[] = [
   { id: "accounting-warehouses", label: "Tồn kho HN-HCM & Công nợ NM", shortLabel: "Tồn HN-HCM & Nợ NM", icon: "warehouse", tone: "orange", permission: "warehouses.read", status: "CONNECTED" },
 ];
 const accountantModules: CrmModule[] = [
+  buyerOrdersModule,
   historicalOrdersModule,
   internalDocumentsModule,
   { id: "accounting-factory", label: "1. NHÀ MÁY → KHO", shortLabel: "Nhà máy → Kho", icon: "procurement", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 1 },
@@ -78,6 +82,7 @@ const factoryModules: CrmModule[] = [
   { id: "notifications", label: "2. Thông báo Kho tiếp nhận", shortLabel: "Thông báo", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED", bottom: 2 },
 ];
 const warehouseKeeperModules: CrmModule[] = [
+  buyerOrdersModule,
   historicalOrdersModule,
   internalDocumentsModule,
   { id: "warehouse-stock", label: "1. Kiểm tra Số lượng Hàng trong Kho", shortLabel: "Tồn kho", icon: "warehouse", tone: "indigo", permission: "warehouses.read", status: "CONNECTED", bottom: 1 },
@@ -108,8 +113,16 @@ const dealer: CrmModule[] = [
   { id: "payments", label: "Chứng từ thanh toán", shortLabel: "Chứng từ", icon: "cash", tone: "orange", permission: "finance.read", status: "CONNECTED" },
   { id: "profile", label: "Tài khoản", shortLabel: "Tài khoản", icon: "account", tone: "secondary", permission: "profile.read", status: "CONNECTED" },
 ];
+const buyerModules:CrmModule[]=[
+ {id:'goods',label:'Sản phẩm & đặt hàng',shortLabel:'Đặt hàng',icon:'goods',tone:'primary',permission:'buyer.access',status:'CONNECTED',bottom:1},
+ {id:'orders',label:'Đơn hàng & hóa đơn của tôi',shortLabel:'Đơn hàng',icon:'order',tone:'primary',permission:'buyer.access',status:'CONNECTED',bottom:2},
+ {id:'contracts',label:'Bảng giá hợp đồng B2B',shortLabel:'Giá B2B',icon:'pricing',tone:'primary',permission:'buyer.supermarket',status:'CONNECTED'},
+ {id:'branches',label:'Chi nhánh nhận hàng',shortLabel:'Chi nhánh',icon:'dealer',tone:'primary',permission:'buyer.supermarket',status:'CONNECTED'},
+ {id:'purchases',label:'Mua hàng & đối soát tháng',shortLabel:'Đối soát',icon:'report',tone:'primary',permission:'buyer.supermarket',status:'CONNECTED',bottom:3},
+ {id:'profile',label:'Tài khoản & bảo mật',shortLabel:'Tài khoản',icon:'account',tone:'primary',permission:'profile.read',status:'CONNECTED'},
+];
 export const visibleModules = (user: Principal) => {
-  const modules = user.area !== "crm" ? dealer
+  const modules = user.area !== "crm" ? isBuyerRole(user.role)?buyerModules:dealer
     : user.role === "ACCOUNTANT" ? accountantModules
     : user.role === "FACTORY" ? factoryModules
     : isWarehouseRole(user.role) ? warehouseKeeperModules : internal;
@@ -162,7 +175,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "order",
     color: "#2563eb",
     gradient: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
-    moduleIds: ["requests", "sales", "orders", "quotations", "pricing"],
+    moduleIds: ["buyer-orders", "requests", "sales", "orders", "quotations", "pricing", "contracts", "branches", "purchases"],
   },
   {
     id: "customers",
