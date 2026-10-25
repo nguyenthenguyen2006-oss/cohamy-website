@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "applicationRelease": "f307fd0ed237548e58b00d9dcf380b7c4fd9d512",
+  "verifiedAt": "2026-10-25T10:48:07.773Z",
+  "localServiceGroups": 16,
+  "stagingPostgresServiceGroups": 16,
+  "edgeAndOfficialMcpGroups": 7,
+  "buyerRegressionGroups": 13,
+  "productionBuild": "PASS",
+  "typeScript": "PASS",
+  "mcpCatalogFreshness": "PASS",
+  "lintNewFiles": "PASS",
+  "candidateChecks": 15,
+  "publicHttpsChecks": 15,
+  "preservedExistingTables": 18,
+  "existingCredentialsPreserved": true,
+  "backupRestoreProof": true,
+  "qaDatabasesCleaned": true,
+  "productionQaAccounts": 0,
+  "realInvitationEmailsSent": 0,
+  "emailTestMode": "IN_MEMORY_MAILER_AND_MOCKED_BREVO_HTTP",
+  "chatGptAccountConnectorInstallation": "NOT_VERIFIED"
+}

@@ -56,3 +56,17 @@ Migration `047-account-provisioning.sql`: thêm activation_status, activated_at,
 - QA: verify-account-provisioning.ts, verify-provision-browser.mjs, provision-demo.ts; báo cáo tách LOCAL/STAGING/PRODUCTION trong `docs/crm/test-results/provisioning/`.
 
 Lệnh: `npm run test:crm:provision`, `npm run test:crm:provision-browser` (server QA riêng), `npm run test:crm:buyer`, `npm run typecheck`, `npm run crm:mcp:catalog`, `npm run test:crm:mcp:catalog`, `npm run build`. Email trong kiểm thử tự động sử dụng transport giả lập hoặc mailer trong bộ nhớ; không phải bằng chứng gửi Brevo thật.
+
+## Kết quả phát hành ngày 25/10/2026
+
+- PRODUCTION: release `f307fd0ed237548e58b00d9dcf380b7c4fd9d512`, đã tích hợp release hóa đơn Admin `ad4eacfa763444ef9312e8b03f6af6901a515ad5` trước khi phát hành. Không ghi đè các cập nhật đang chạy.
+- Hai bản sao lưu trước migration và trước cutover đều được phục hồi thử, đối chiếu manifest và bytea thành công. Backup: `/root/cohamy-backups/20261025T103747Z-f307fd0ed237`.
+- LOCAL: build production + TypeScript + catalog freshness + lint tệp mới; deployment trace không chứa `.local` / mailbox / database QA. Bộ cấp tài khoản 16 nhóm; hồi quy khách/siêu thị 13 nhóm; Edge thực và official MCP SDK 7 nhóm.
+- STAGING PostgreSQL: 16 nhóm qua runtime role DML, gồm tạo cùng key và kích hoạt cùng token đồng thời, cũng như hai siêu thị thực sự khác tổ chức sau khi kích hoạt. Các database và runtime role QA đều được dọn sau kiểm thử.
+- PRODUCTION candidate: 15 nhóm. HTTPS công khai: 15 nhóm, gồm đăng nhập Admin cũ, form cấp tài khoản không mật khẩu, trang kích hoạt, danh sách trạng thái và OAuth/MCP thật. Nguồn blog WordPress hiện có được giữ nguyên.
+- 18 bảng được đối chiếu trước/sau giữ nguyên dữ liệu; users được so sánh theo các cột cũ, bao gồm password_hash, không xuất giá trị hash/mật khẩu ra báo cáo. Đơn hàng, kho, công nợ, chứng từ và quy tắc thông báo PDF giữ nguyên. Hai tiến trình web/worker online, không restart sau cutover.
+- Không tạo tài khoản QA/demo trên production, không gửi lời mời thật trong lượt phát hành. Bằng chứng gửi email là giả lập; việc nhận thư tại hộp thư thật chưa được kiểm chứng cho mẫu lời mời mới.
+- MCP có dùng được không? Có: official SDK đã tạo pending account, gửi/thu hồi lời mời và khóa/mở khóa qua API native trên QA; discovery và đọc native API qua OAuth đã được kiểm tra trên HTTPS production.
+- MCP có đọc được dữ liệu này không? Có: danh sách tài khoản, vai trò/tổ chức, trạng thái kích hoạt, thời điểm kích hoạt và audit/lịch sử mời đã lược trường bí mật. Token, password hash và các bảng auth-private không đọc được qua MCP theo thiết kế.
+
+Bằng chứng: `services-local.json`, `services-staging.json`, `browser-mcp-local.json`, `build-traces-local.json`, `production.json`, `production-smoke.json` trong `docs/crm/test-results/provisioning/`. Các commit tiếp theo chỉ cập nhật harness QA và báo cáo; source ứng dụng production giữ commit nêu trên.

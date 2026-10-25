@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "release": "f307fd0ed237548e58b00d9dcf380b7c4fd9d512",
+  "testedAt": "2026-10-25T10:43:19.216Z",
+  "backups": {
+    "beforeMigration": "/root/cohamy-backups/20261025T103747Z-f307fd0ed237/pre-migration/2026-10-25T103923585Z-3ff8e529",
+    "beforeCutover": "/root/cohamy-backups/20261025T103747Z-f307fd0ed237/before-cutover/2026-10-25T104125319Z-8327d8cb",
+    "bothRestoredAndVerified": true
+  },
+  "candidateChecks": 15,
+  "publicHttpsChecks": 15,
+  "existingData": [
+    {
+      "table": "users",
+      "rows": "8",
+      "unchanged": true
+    },
+    {
+      "table": "organizations",
+      "rows": "13",
+      "unchanged": true
+    },
+    {
+      "table": "memberships",
+      "rows": "8",
+      "unchanged": true
+    },
+    {
+      "table": "products",
+      "rows": "11",
+      "unchanged": true
+    },
+    {
+      "table": "warehouses",
+      "rows": "2",
+      "unchanged": true
+    },
+    {
+      "table": "warehouse_locations",
+      "rows": "5",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_lots",
+      "rows": "15",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_balances",
+      "rows": "22",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_movements",
+      "rows": "103",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_documents",
+      "rows": "20",
+      "unchanged": true
+    },
+    {
+      "table": "inventory_reservations",
+      "rows": "43",
+      "unchanged": true
+    },
+    {
+      "table": "warehouse_handover_invoices",
+      "rows": "1",
+      "unchanged": true
+    },
+    {
+      "table": "factory_invoices",
+      "rows": "5",
+      "unchanged": true
+    },
+    {
+      "table": "accounting_order_clearances",
+      "rows": "10",
+      "unchanged": true
+    },
+    {
+      "table": "sales_orders",
+      "rows": "8",
+      "unchanged": true
+    },
+    {
+      "table": "payment_receipts",
+      "rows": "0",
+      "unchanged": true
+    },
+    {
+      "table": "historical_order_invoices",
+      "rows": "4",
+      "unchanged": true
+    },
+    {
+      "table": "document_mail_rules",
+      "rows": "8",
+      "unchanged": true
+    }
+  ],
+  "existingCredentialsAndBusinessDataUnchanged": true,
+  "newTableRows": [
+    {
+      "table": "account_invitations",
+      "rows": 0
+    },
+    {
+      "table": "account_provision_actions",
+      "rows": 0
+    },
+    {
+      "table": "account_activation_attempts",
+      "rows": 0
+    }
+  ],
+  "productionDemoOrQaAccountsCreated": 0,
+  "externalInvitationsSent": 0,
+  "immutableRuntimePermissions": {
+    "read": true,
+    "insert": true,
+    "update": false,
+    "delete": false
+  },
+  "processes": [
+    {
+      "name": "cohamy",
+      "status": "online",
+      "cwd": "/root/cohamy-releases/f307fd0ed237548e58b00d9dcf380b7c4fd9d512",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "status": "online",
+      "cwd": "/root/cohamy-releases/f307fd0ed237548e58b00d9dcf380b7c4fd9d512",
+      "restarts": 0
+    }
+  ],
+  "stagingDatabaseCleaned": true
+}

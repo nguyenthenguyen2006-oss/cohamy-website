@@ -1,0 +1,67 @@
+{
+  "environment": "https://cohamy.vn",
+  "scope": "Business reads only; administrator login/logout and an isolated OAuth connection authorization/revocation; no order, partner, stock, finance or outbound-message writes",
+  "testedAt": "2026-10-25T10:43:19.142Z",
+  "cases": [
+    {
+      "name": "Health and retained configured blog source",
+      "status": "PASS"
+    },
+    {
+      "name": "Private request API requires authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "Old localized CRM links recover to login",
+      "status": "PASS"
+    },
+    {
+      "name": "Initial administrator authenticates against PostgreSQL",
+      "status": "PASS"
+    },
+    {
+      "name": "CRM pages render actual production data",
+      "status": "PASS"
+    },
+    {
+      "name": "Scoped intake API preserves persisted responses and retired task API is closed",
+      "status": "PASS"
+    },
+    {
+      "name": "All fifteen retired CRM modules and their read APIs return 404",
+      "status": "PASS"
+    },
+    {
+      "name": "Internal-document administrator catalogue is private and unknown files return 404",
+      "status": "PASS"
+    },
+    {
+      "name": "Historical warehouse invoice archive is private and available without ledger writes",
+      "status": "PASS"
+    },
+    {
+      "name": "Document flow and encrypted Brevo settings are available without a provider write or email",
+      "status": "PASS"
+    },
+    {
+      "name": "Buyer account types and private order workspace are available without creating accounts or business data",
+      "status": "PASS"
+    },
+    {
+      "name": "Website and localized products remain available",
+      "status": "PASS"
+    },
+    {
+      "name": "Candidate MCP completes real OAuth PKCE, discovers tools and reads native debt before connection revocation",
+      "status": "PASS"
+    },
+    {
+      "name": "Account provisioning is password-free; activation and safe Admin status API remain reachable",
+      "status": "PASS"
+    },
+    {
+      "name": "Logout revokes server session",
+      "status": "PASS"
+    }
+  ]
+}

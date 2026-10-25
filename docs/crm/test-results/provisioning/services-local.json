@@ -51,6 +51,10 @@
       "status": "PASS"
     },
     {
+      "name": "Provisioned customer cannot read supermarket data; two activated supermarkets remain mutually isolated",
+      "status": "PASS"
+    },
+    {
       "name": "MCP business catalog excludes auth tables; account/history projections expose only safe fields",
       "status": "PASS"
     },
