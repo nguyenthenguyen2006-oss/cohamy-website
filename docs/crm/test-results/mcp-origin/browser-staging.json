@@ -1,0 +1,27 @@
+{
+  "status": "PASS",
+  "environment": "STAGING production build, restored native PostgreSQL; browser public hostname proxied to owned candidate without altering request headers",
+  "scope": "Authentication and business reads only; QA grant revoked; no stock, finance or email writes",
+  "cases": [
+    {
+      "name": "Consent preserves strict Origin and browser nonce checks; opaque, foreign, missing origins and missing proof are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Real Edge form denial sends the correct Origin without injected headers and returns access_denied",
+      "status": "PASS"
+    },
+    {
+      "name": "Anonymous consent rejects an incorrect password before granting any access",
+      "status": "PASS"
+    },
+    {
+      "name": "Restored PostgreSQL Admin with active MFA approves in Edge using only the password, without a CRM browser session",
+      "status": "PASS"
+    },
+    {
+      "name": "The password-authorized connection exposes all five tools and reads real native debt, stock, and the new authentication audit data",
+      "status": "PASS"
+    }
+  ]
+}

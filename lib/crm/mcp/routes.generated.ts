@@ -81,7 +81,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "cdc211843609f1620b5a37d11b9f96b941b48da9def710eedaccbb646857dc2e"
+    "sourceHash": "b56b50044384f357aec81215aca6fd47f4d4e2190e496ab6f3b9c5d218b900f8"
   },
   {
     "id": "POST /api/crm/mcp/oauth/disconnect",
@@ -98,7 +98,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "4b75ce37fd75d5d5",
     "multipart": false,
-    "sourceHash": "cdc211843609f1620b5a37d11b9f96b941b48da9def710eedaccbb646857dc2e"
+    "sourceHash": "b56b50044384f357aec81215aca6fd47f4d4e2190e496ab6f3b9c5d218b900f8"
   },
   {
     "id": "GET /api/crm/partners/[id]",
@@ -3329,7 +3329,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "GET /api/crm/governance/custom-values",
@@ -3346,7 +3346,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "GET /api/crm/governance/field-definitions",
@@ -3363,7 +3363,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "GET /api/crm/governance/permissions",
@@ -3380,7 +3380,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "POST /api/crm/governance/bulk-confirm",
@@ -3397,7 +3397,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a0e428dc97ebde96",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "POST /api/crm/governance/bulk-preview",
@@ -3414,7 +3414,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a0e428dc97ebde96",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "POST /api/crm/governance/custom-value",
@@ -3431,7 +3431,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a0e428dc97ebde96",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "POST /api/crm/governance/field-definition",
@@ -3448,7 +3448,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a0e428dc97ebde96",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "POST /api/crm/governance/role-preview",
@@ -3465,7 +3465,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a0e428dc97ebde96",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "POST /api/crm/governance/session-revoke-others",
@@ -3482,7 +3482,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "a0e428dc97ebde96",
     "multipart": false,
-    "sourceHash": "08b80f57787620eac46b1648ce19fdf8cf3aa88dd1406b15406535547d7c47d8"
+    "sourceHash": "1db2bb2f5a1533ff50e9ce2fdad013c0776fb8bca166e442724e71caa917260c"
   },
   {
     "id": "GET /api/crm/historical-orders/[id]",
@@ -5602,7 +5602,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/bookmarks",
@@ -5619,7 +5619,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/documents",
@@ -5636,7 +5636,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/draft",
@@ -5653,7 +5653,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/filters",
@@ -5670,7 +5670,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/notifications",
@@ -5687,7 +5687,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/preferences",
@@ -5704,7 +5704,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/search",
@@ -5721,7 +5721,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "GET /api/crm/workspace/sessions",
@@ -5738,7 +5738,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "POST /api/crm/workspace/bookmark",
@@ -5755,7 +5755,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "POST /api/crm/workspace/document-read",
@@ -5772,7 +5772,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "POST /api/crm/workspace/draft",
@@ -5789,7 +5789,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "POST /api/crm/workspace/filter",
@@ -5806,7 +5806,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "POST /api/crm/workspace/notification-read",
@@ -5823,7 +5823,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "POST /api/crm/workspace/preferences",
@@ -5840,7 +5840,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   },
   {
     "id": "POST /api/crm/workspace/session-revoke",
@@ -5857,7 +5857,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9944a2bcb35ea93b",
     "multipart": false,
-    "sourceHash": "489cab00f88f573cf153e48f5da021b1a5dce0434f6e0ddbc8d35805322cf449"
+    "sourceHash": "681cca5e1d0471e641b205917fc73c19df0c45cefbf79eee63e210dc2b4921f7"
   }
 ];
 export const mcpRoutes: McpRoute[] = metadata.map(route=>({...route,inputContract:sharedContracts[route.inputContract]??''}));

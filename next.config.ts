@@ -26,6 +26,9 @@ const nextConfig: NextConfig = {
       { source: '/sw.js', headers: [{ key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' }, { key: 'Content-Type', value: 'application/javascript; charset=utf-8' }, { key: 'Service-Worker-Allowed', value: '/' }, { key: 'Content-Security-Policy', value: "default-src 'self'; script-src 'self'" }] },
       { source: '/manifest.webmanifest', headers: [{ key: 'Cache-Control', value: 'public, max-age=3600' }] },
       ...['/crm/:path*', '/portal/:path*', '/api/crm/:path*', '/api/orders'].map(source => ({ source, headers: [...noIndexHeaders, { key: 'Cache-Control', value: 'private, no-store' }, { key: 'Referrer-Policy', value: 'no-referrer' }] })),
+      // Chromium serializes a form navigation's Origin as null under no-referrer.
+      // Keep the consent form same-origin, including this later header override.
+      { source: '/api/crm/mcp/oauth/authorize', headers: [{ key: 'Referrer-Policy', value: 'same-origin' }] },
       {
         source: '/admin/:path*',
         headers: noIndexHeaders,

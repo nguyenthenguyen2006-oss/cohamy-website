@@ -37,7 +37,7 @@ function deviceLabel(agent='') {
 }
 // Constant cost comparison for unknown emails. Never creates an account or fallback session.
 const dummyHash = bcrypt.hashSync("not-a-usable-credential", 12);
-export async function login(email: string, password: string, metadata:{userAgent?:string;secondFactor?:string}={}): Promise<{ token: string; user: Principal }> {
+async function withPasswordIdentity<T>(email: string, password: string, accept: (tx: Sql, user: Principal) => Promise<T>): Promise<T> {
   const db = await database();
   const key = digest(email);
   const attempt = await db.query<{ attempts: number }>(`INSERT INTO cohamy_crm.login_attempts(key_hash,attempts) VALUES ($1,1)
@@ -49,21 +49,36 @@ export async function login(email: string, password: string, metadata:{userAgent
   const matches = await bcrypt.compare(password, candidate?.password_hash ?? dummyHash);
   if (!candidate?.active || !matches) throw new CrmError("INVALID_CREDENTIALS", 401);
   return db.transaction(async tx => {
-    // Recheck the lock state under the same transaction as session creation.
-    const identities = await tx.query<IdentityRow>(`${principalSelect} WHERE u.id=$1 AND u.active AND m.active AND o.active ORDER BY m.id FOR SHARE OF u,m,o`, [candidate.id]);
+    // Hold the current identity and password until this authentication completes.
+    const identities = await tx.query<IdentityRow>(`${principalSelect} WHERE u.id=$1 AND u.password_hash=$2 AND u.active AND m.active AND o.active ORDER BY m.id FOR SHARE OF u,m,o`, [candidate.id,candidate.password_hash]);
     const user = identities.rows.map(principal).find((value): value is Principal => value !== null);
     if (!user) throw new CrmError("INVALID_CREDENTIALS", 401);
+    const accepted = await accept(tx,user);
+    await tx.query('DELETE FROM cohamy_crm.login_attempts WHERE key_hash=$1',[key]);
+    return accepted;
+  });
+}
+export async function login(email: string, password: string, metadata:{userAgent?:string;secondFactor?:string}={}): Promise<{ token: string; user: Principal }> {
+  return withPasswordIdentity(email,password,async(tx,user)=>{
     const mfa=(await tx.query<{id:string}>("SELECT id FROM cohamy_crm.mfa_factors WHERE user_id=$1 AND status='ACTIVE' FOR SHARE",[user.id])).rows[0];
     if(mfa){
       if(!metadata.secondFactor)throw new CrmError('MFA_REQUIRED',428);
       const {verifySecondFactor}=await import('./account-security');
       await verifySecondFactor(tx,user.id,metadata.secondFactor);
     }
-    await tx.query('DELETE FROM cohamy_crm.login_attempts WHERE key_hash=$1',[key]);
     const token = randomBytes(32).toString("base64url");
     await tx.query("INSERT INTO cohamy_crm.sessions(token_hash,membership_id,expires_at,device_label) VALUES ($1,$2,$3,$4)", [digest(token), user.membershipId, new Date(Date.now() + SESSION_SECONDS * 1000),deviceLabel(metadata.userAgent?.slice(0,300))]);
     await audit(tx, user.id, "auth.login", user.membershipId);
     return { token, user };
+  });
+}
+// The user permits password-only MCP consent. This server-only verifier cannot
+// create a browser session or disable MFA on the account's ordinary login.
+export async function verifyMcpAdminPassword(email: string, password: string): Promise<Principal> {
+  return withPasswordIdentity(email,password,async(tx,user)=>{
+    if(user.area!=='crm'||user.role!=='ADMIN')throw new CrmError('FORBIDDEN',403);
+    await audit(tx,user.id,'mcp.password-verified',user.membershipId,{authentication:'password',browserSessionCreated:false});
+    return user;
   });
 }
 export async function authenticate(token?: string): Promise<Principal | null> {
