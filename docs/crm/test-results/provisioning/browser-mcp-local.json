@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite; real Edge and official MCP SDK; mocked Brevo HTTP transport",
+  "cases": [
+    {
+      "name": "Actual authenticated HTTP routes reject anonymous creation and cross-origin requests",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin creates and sends invitation without a password; pending identity cannot log in",
+      "status": "PASS"
+    },
+    {
+      "name": "Real activation page clears fragment, sets password, permits login and refuses reused link",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin statuses and demo labels render on desktop/mobile; Sales cannot provision Admin",
+      "status": "PASS"
+    },
+    {
+      "name": "Official MCP SDK discovers password-free provisioning and invitation contracts",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP provisions once, sends once, reads safe history, revokes invitations and locks/unlocks through native APIs",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP reads roles/scopes/statuses while credentials and authentication tables remain inaccessible",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "externalEmails": 0
+}

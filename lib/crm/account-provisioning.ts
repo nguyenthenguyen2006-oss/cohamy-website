@@ -60,6 +60,7 @@ export async function issueAccountInvitation(user:Principal,input:unknown,mailer
   const latest=(await sql.query<{created_at:string}>('SELECT created_at FROM cohamy_crm.account_invitations WHERE user_id=$1 ORDER BY created_at DESC LIMIT 1',[m.user_id])).rows[0];
   if(d.action==='SEND'&&latest)throw new CrmError('INVITATION_EXISTS_USE_RESEND',409);
   if(latest&&Date.now()-new Date(latest.created_at).getTime()<60000)throw new CrmError('INVITATION_RATE_LIMITED',429);
+  await sql.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',['invitation-rate:'+user.id]);
   const count=(await sql.query<{n:string}>("SELECT count(*)::text AS n FROM cohamy_crm.account_invitations WHERE created_at>now()-interval '1 hour' AND (created_by=$1 OR user_id=$2)",[user.id,m.user_id])).rows[0];
   if(Number(count.n)>=30)throw new CrmError('INVITATION_RATE_LIMITED',429);
   const perUser=(await sql.query<{n:string}>("SELECT count(*)::text AS n FROM cohamy_crm.account_invitations WHERE created_at>now()-interval '1 hour' AND user_id=$1",[m.user_id])).rows[0];if(Number(perUser.n)>=5)throw new CrmError('INVITATION_RATE_LIMITED',429);

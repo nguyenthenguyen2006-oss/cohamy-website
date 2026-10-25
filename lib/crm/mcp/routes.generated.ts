@@ -659,7 +659,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "49eb406c9d2d6b12",
     "multipart": false,
-    "sourceHash": "fd50d61b798404bf071812253ec00e2425f129e7e23f45e41229b92f4c8f5ee5"
+    "sourceHash": "21c041d43a741c5337268aa90d377e4096eb3563b7bafedccebc81712caed5bd"
   },
   {
     "id": "GET /api/crm/accounts/invitations",
@@ -676,7 +676,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fd50d61b798404bf071812253ec00e2425f129e7e23f45e41229b92f4c8f5ee5"
+    "sourceHash": "21c041d43a741c5337268aa90d377e4096eb3563b7bafedccebc81712caed5bd"
   },
   {
     "id": "POST /api/crm/accounts/provision",
@@ -691,7 +691,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "aa42e977bba8920f",
     "multipart": false,
-    "sourceHash": "16f0cd613384f3de2c75af80de1dc176f58c57ea06bd954f10dc76941c54d369"
+    "sourceHash": "2354922894c7854d6e1fd94ca4362753f82ea6955fef043f3d5ddfbb4b1927b4"
   },
   {
     "id": "GET /api/crm/admin-invoices",

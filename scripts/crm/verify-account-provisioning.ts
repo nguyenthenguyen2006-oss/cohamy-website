@@ -13,7 +13,7 @@ import {seedProvisionDemos} from './provision-demo';
 async function main(){
  if(!process.env.CRM_DATABASE_URL){process.env.CRM_DATABASE_MODE='pglite';process.env.CRM_ENVIRONMENT='LOCAL';process.env.CRM_LOCAL_DATA_DIR='.local/crm-qa-provision-'+randomUUID();}
  process.env.CRM_PUBLIC_ORIGIN??='http://127.0.0.1:4355';
- const ids=await createQaFixture(),owner=await database(),admin=(await auth.login('admin@crm-qa.invalid',qaPassword)).user,sales=(await auth.login('sales@crm-qa.invalid',qaPassword)).user;
+ await createQaFixture();const owner=await database(),admin=(await auth.login('admin@crm-qa.invalid',qaPassword)).user,sales=(await auth.login('sales@crm-qa.invalid',qaPassword)).user;
  const customerOrg=await repo.createOrganization(admin,{code:'PROVISION_CUSTOMER',name:'QA Customer',kind:'CUSTOMER'}),marketOrg=await repo.createOrganization(admin,{code:'PROVISION_MARKET',name:'QA Market',kind:'CUSTOMER'}),market2Org=await repo.createOrganization(admin,{code:'PROVISION_MARKET2',name:'QA Market2',kind:'CUSTOMER'});
  const close=await installQaRuntime(owner),db=await database(),cases:{name:string;status:string}[]=[],pass=(name:string)=>{cases.push({name,status:'PASS'});console.log('PASS '+name);};
  const input={email:'pending@provision-qa.invalid',displayName:'QA Pending',role:'CUSTOMER',organizationId:customerOrg.id,idempotencyKey:randomUUID()},password='Qa1!'+randomBytes(20).toString('hex');

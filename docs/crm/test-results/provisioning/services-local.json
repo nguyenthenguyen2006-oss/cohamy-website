@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "environment": "pglite",
+  "cases": [
+    {
+      "name": "Admin provisions once; same idempotency key replays the public response",
+      "status": "PASS"
+    },
+    {
+      "name": "Duplicate email, changed idempotency payload and password input are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Pending account cannot authenticate even with a valid credential hash",
+      "status": "PASS"
+    },
+    {
+      "name": "Sales and forged principals cannot provision; organization and buyer role boundaries hold",
+      "status": "PASS"
+    },
+    {
+      "name": "Invitation stores only SHA256, replay sends no second email and responses expose no activation secret",
+      "status": "PASS"
+    },
+    {
+      "name": "Strong password activates once and normal login succeeds; reused link fails",
+      "status": "PASS"
+    },
+    {
+      "name": "Invitations never replace an already activated account password",
+      "status": "PASS"
+    },
+    {
+      "name": "Resend rotates and invalidates old links; cooldown and explicit revocation work",
+      "status": "PASS"
+    },
+    {
+      "name": "Expired invitations fail server-side and Admin sees Expired status",
+      "status": "PASS"
+    },
+    {
+      "name": "Provider uncertainty is explicit and never exposes provider errors or secrets",
+      "status": "PASS"
+    },
+    {
+      "name": "Failed activation attempts remain counted after rollback and enforce rate limiting",
+      "status": "PASS"
+    },
+    {
+      "name": "Locking revokes sessions; unlocking retains the activation gate",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP business catalog excludes auth tables; account/history projections expose only safe fields",
+      "status": "PASS"
+    },
+    {
+      "name": "Existing Admin, Sales and dealer accounts still authenticate unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "Six labelled demo accounts seed repeatedly without duplication; cleanup only disables demo access",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0
+}
