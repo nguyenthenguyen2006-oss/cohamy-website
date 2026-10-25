@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import {randomUUID,randomBytes} from 'node:crypto';
 import {Pool} from 'pg';
 import type {Database} from '../../lib/crm/db';
+import fs from 'node:fs/promises';
 // Isolated QA only: business service tests must use the same DML ceiling as live.
 export async function installQaRuntime(owner:Database):Promise<()=>Promise<void>>{
  if(process.env.CRM_DATABASE_MODE!=='postgres')return async()=>{};
@@ -11,7 +12,13 @@ export async function installQaRuntime(owner:Database):Promise<()=>Promise<void>
  await owner.exec('GRANT USAGE,SELECT ON ALL SEQUENCES IN SCHEMA cohamy_crm TO '+role);
  const immutable=(await owner.query<{name:string}>("SELECT DISTINCT c.relname AS name FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace WHERE n.nspname='cohamy_crm' AND t.tgfoid='cohamy_crm.deny_audit_mutation'::regproc")).rows;
  for(const table of immutable){assert.match(table.name,/^\w+$/);await owner.exec('REVOKE UPDATE,DELETE ON cohamy_crm.'+table.name+' FROM '+role);}
- url.username=role;url.password=password;const pool=new Pool({connectionString:url.href,max:8});
+ url.username=role;url.password=password;
+ if(process.env.CRM_QA_RUNTIME_ENV_FILE){
+  const file=process.env.CRM_QA_RUNTIME_ENV_FILE;
+  if(!/^\.local\/crm-qa-[a-z0-9-]+\.env$/.test(file))throw Error('QA_RUNTIME_ENV_PATH_REQUIRED');
+  await fs.mkdir('.local',{recursive:true});await fs.writeFile(file,'CRM_DATABASE_URL='+url.href+'\n',{mode:0o600,flag:'wx'});
+ }
+ const pool=new Pool({connectionString:url.href,max:8});
  const adapter:Database={query:async(text,params)=>({rows:(await pool.query(text,params)).rows}),exec:async text=>{await pool.query(text);},transaction:async fn=>{const client=await pool.connect();try{await client.query('BEGIN');const result=await fn({query:async(text,params)=>({rows:(await client.query(text,params)).rows}),exec:async text=>{await client.query(text);}});await client.query('COMMIT');return result;}catch(e){await client.query('ROLLBACK');throw e;}finally{client.release();}},close:()=>pool.end()};
  (globalThis as unknown as {cohamyCrmDatabase:Promise<Database>}).cohamyCrmDatabase=Promise.resolve(adapter);return()=>adapter.close();
 }

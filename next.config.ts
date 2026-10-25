@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   devIndicators: false,
   distDir: process.env.CRM_QA_BUILD === 'true' ? (process.env.CRM_QA_BUILD_VARIANT === 'documents' ? '.local/next-crm-documents' : process.env.CRM_QA_BUILD_VARIANT === 'upgrade' ? '.local/next-crm-upgrade' : '.local/next-crm-work') : process.env.COHAMY_ISOLATED_LOCAL_BUILD === 'true' ? '.local/next-headless' : '.next',
   serverExternalPackages: ['jsdom', 'pg', '@electric-sql/pglite', 'pdfkit'],
-  outputFileTracingIncludes: { '/api/wordpress/analyze': ['./wordpress/rank-math-analysis/**/*'], '/api/crm/**': ['./db/crm/**/*'], '/api/crm/document-flow/**': ['./assets/crm/fonts/**/*','./assets/crm/delivery-template/**/*'], '/api/crm/quotations/**': ['./assets/crm/fonts/**/*', './public/images/logo/cohamy-brand-logo.png'] },
+  outputFileTracingIncludes: { '/api/wordpress/analyze': ['./wordpress/rank-math-analysis/**/*'], '/api/crm/**': ['./db/crm/**/*'], '/api/crm/buyer/**':['./assets/crm/fonts/**/*'], '/api/crm/document-flow/**': ['./assets/crm/fonts/**/*','./assets/crm/delivery-template/**/*'], '/api/crm/quotations/**': ['./assets/crm/fonts/**/*', './public/images/logo/cohamy-brand-logo.png'] },
   outputFileTracingExcludes: { '/*': ['.local/**/*', 'docs/crm/test-results/**/*', '.impeccable/review/**/*'] },
   experimental: { serverComponentsHmrCache: false, cpus: 2 },
   // Resolve metadata before sending HTTP headers: upstream failures must not stream a fake 200.

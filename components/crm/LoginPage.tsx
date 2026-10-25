@@ -53,7 +53,7 @@ export function CrmLoginPage() {
               Đăng nhập hệ thống
             </h1>
             <p className="crm-login-subtitle">
-              Nhập thông tin tài khoản nội bộ hoặc đại lý đã được cấp quyền.
+              Đăng nhập bằng tài khoản nội bộ, khách hàng, siêu thị hoặc đại lý đã được cấp quyền.
             </p>
             <CrmLoginForm />
             <nav className="crm-login-links" aria-label="Liên kết trợ giúp đăng nhập">

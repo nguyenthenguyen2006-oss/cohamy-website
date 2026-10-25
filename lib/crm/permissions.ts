@@ -12,8 +12,12 @@ const permissions: Record<Role, readonly string[]> = {
   ACCOUNTANT: ["partners.read", "catalog.read", "warehouses.read", "orders.read", "consignment.read", "finance.read", "procurement.read", "reports.read"],
   DEALER_OWNER: ["partners.read", "catalog.read", "warehouses.read", "orders.read", "consignment.read", "finance.read", "profile.read"],
   DEALER_STAFF: ["catalog.read", "warehouses.read", "orders.read", "consignment.read", "profile.read"],
+  CUSTOMER: ["buyer.access","profile.read"],
+  SUPERMARKET: ["buyer.access","buyer.supermarket","profile.read"],
 };
 export function can(user: Principal, permission: string): boolean {
+  if(permission==='buyer.manage')return user.area==='crm'&&['ADMIN','MANAGER','SALES'].includes(user.role);
+  if(permission==='buyer.review')return user.area==='crm'&&(['ADMIN','MANAGER','SALES','ACCOUNTANT'].includes(user.role)||isWarehouseRole(user.role));
   if(permission==='historical-orders.import')return user.area==='crm'&&user.role==='ADMIN';
   if(permission==='historical-orders.read')return user.area==='crm'&&(['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role)||isWarehouseRole(user.role));
   if(permission==='internal-documents.manage')return user.area==='crm'&&user.role==='ADMIN';

@@ -17,7 +17,7 @@ import {
   X,
 } from "@phosphor-icons/react";
 import { getVisibleHubs, visibleModules } from "@/lib/crm/modules";
-import { roleLabels, type Principal } from "@/lib/crm/types";
+import { isBuyerRole,roleLabels, type Principal } from "@/lib/crm/types";
 import { CrmModuleIcon } from "./ModuleIcon";
 import { QuickCreate } from "./QuickCreate";
 import './performance.css';
@@ -139,7 +139,7 @@ export function CrmShell({
   // Keep Dealer Portal (/portal) 100% untouched
   if (isPortal) {
     return (
-      <div className="work-shell">
+      <div className={`work-shell${isBuyerRole(user.role)?' buyer-shell':''}`}>
         
         <a className="skip-link" href="#portal-content">
           Đến nội dung chính
@@ -169,9 +169,9 @@ export function CrmShell({
               style={{ width: "auto" }}
               preload
             />
-            <span>Cổng đại lý</span>
+            <span>{user.role==='SUPERMARKET'?'Cổng siêu thị':user.role==='CUSTOMER'?'Cổng khách hàng':'Cổng đại lý'}</span>
           </Link>
-          <QuickCreate user={user} />
+          {!isBuyerRole(user.role)&&<QuickCreate user={user} />}
           <Link
             className="work-user"
             href={`${root}/profile`}

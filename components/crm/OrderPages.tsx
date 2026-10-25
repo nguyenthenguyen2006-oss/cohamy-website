@@ -23,6 +23,7 @@ import {SalesReconciliationSheet} from './spreadsheet/ReconciliationViews';
 import {buildOrderInvoicePayload} from '@/lib/crm/order-invoice-model';
 import {OrderInvoiceTrigger} from './OrderInvoiceModal';
 import {OrderClearanceInlineCard} from './AccountantWorkspace';
+import {BuyerPage} from './BuyerPage';
 const commercialMoney=(v:string)=>new Intl.NumberFormat('vi-VN').format(BigInt(v))+' VND';
 const date=(v:string)=>new Intl.DateTimeFormat('vi-VN',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Ho_Chi_Minh'}).format(new Date(v));
 const requestLabels:Record<string,string>={DRAFT:'Bản nháp',PENDING_OWNER:'Chờ chủ đại lý duyệt',READY:'Sẵn sàng gửi',REJECTED:'Chủ đại lý đã từ chối',SUBMITTED:'Đã gửi đến bên bán'};
@@ -38,6 +39,10 @@ function canEdit(user:Principal,h:CommercialRequest){return writer(user)&&h.stat
 async function partnerChoices(user:Principal,query='',include?:string){if(user.area==='portal')return [{id:user.organizationId,name:user.organizationName}];const rows=await commercialPartners(user,query);if(include&&!rows.some(r=>r.id===include)){const {getOrganization}=await import('@/lib/crm/repository'),o=await getOrganization(user,include);rows.unshift({id:o.id,code:o.code,name:o.name,pricingVersion:0,tierName:null});}return rows;}
 async function Timeline({user,type,id,versions}:{user:Principal;type:'request'|'order';id:string;versions:{id:string;number:number}[]}){const events=await commercialTimeline(user,type,id);return <section className="work-section"><h2>Lịch sử theo phiên bản</h2>{events.length?<ul className="work-timeline">{events.map(e=><li key={e.id}><strong>{eventLabels[e.action]??'Thao tác đã lưu'} · Bản {versions.find(v=>v.id===e.source_version_id)?.number??'đã lưu'}</strong><p>{e.actor_name} · {date(e.created_at)}</p><p>{e.reason}</p></li>)}</ul>:<p>Chưa có thao tác.</p>}</section>;}
 export async function RequestsPage({user,id,query}:{user:Principal;id?:string;query:Record<string,string>}){
+ if(id&&id!=='new'&&user.area==='crm'){
+  const buyer=(await(await database()).query<{id:string}>('SELECT id FROM cohamy_crm.buyer_orders WHERE request_id=$1',[id])).rows[0];
+  if(buyer)return <BuyerPage user={user} id={buyer.id}/>;
+ }
  const root='/'+user.area+'/requests',w=writer(user),self=user.area==='portal'?user.organizationId:undefined;
  if(id==='policy'){const p=await readOrderPolicy(user);return <><Link className="work-back" href={root}>← Yêu cầu mua hàng</Link><Header title="Quy tắc duyệt và xác nhận đơn" description="Lưu từng phiên bản quy tắc; kích hoạt khi Cohamy đã xác nhận chính sách."/><section className="work-section"><h2>{p.current?'Quy tắc hiện tại · Bản '+p.current.number:'Chưa có quy tắc được xác nhận'}</h2><OrderPolicyForm current={p.current}/></section><section className="work-section"><h2>Lịch sử quy tắc</h2>{p.versions.length?<ul className="work-timeline">{p.versions.map(v=><li key={v.id}><strong>Bản {v.number} · {v.definition.enabled?'Kích hoạt':'Chưa kích hoạt'}</strong><p>{date(v.created_at)} · {v.reason}</p></li>)}</ul>:<p>Chưa có phiên bản.</p>}</section></>;}
  if(id==='new'||id==='excel'){

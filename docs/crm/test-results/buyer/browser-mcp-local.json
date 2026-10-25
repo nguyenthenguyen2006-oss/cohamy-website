@@ -1,0 +1,40 @@
+{
+  "environment": "LOCAL isolated PGlite; real Edge and official MCP SDK",
+  "status": "PASS",
+  "cases": [
+    {
+      "test": "Actual customer login reaches own portal; price-free image catalog and legacy pricing/finance/document API isolation",
+      "status": "PASS"
+    },
+    {
+      "test": "Actual forms create request → assigned Sales quote → customer accepts and sends to warehouse",
+      "status": "PASS"
+    },
+    {
+      "test": "Supermarket and accountant see the matching shortage; exact delivery/VAT PDF bytes and other-customer page denial",
+      "status": "PASS"
+    },
+    {
+      "test": "Supermarket uses real branch form, own contract catalog and case-order form",
+      "status": "PASS"
+    },
+    {
+      "test": "Monthly report downloads actual order/receipt quantities and records fingerprint-bound reconciliation",
+      "status": "PASS"
+    },
+    {
+      "test": "Admin account form offers both roles and only matching customer organizations",
+      "status": "PASS"
+    },
+    {
+      "test": "Customer catalog, supermarket delivery and staff screens fit desktop and 390/320 px phones",
+      "status": "PASS"
+    },
+    {
+      "test": "Official MCP OAuth/client reads new records with pagination, shortage and exact PDF; creates branch, deduplicates retry and reads monthly reconciliation",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "externalEmailSends": 0
+}

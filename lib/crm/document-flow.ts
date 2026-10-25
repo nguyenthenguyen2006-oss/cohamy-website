@@ -152,6 +152,16 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
     const goods=lines.reduce((n,l)=>{const src=c.immutable_lines.find(x=>x.productId===l.productId)!;return n+(src.listLineTotal!==undefined?roundRatio(BigInt(String(src.listLineTotal))*fixed(l.quantity),fixed(l.ordered),'HALF_UP'):BigInt(l.amount));},0n);
     const shippingFee=priorIssues.length?'0':sourceTotals.shippingFee??'0';
     totals={goods:goods.toString(),discount:(goods-sum).toString(),shipping:shippingFee,total:(sum+BigInt(shippingFee)).toString(),paid:String(c.paid_amount??'0')};
+    if(c.snapshot?.buyerOrderId){
+      // Buyer quotes store explicit VAT per product. Allocate each line's VAT
+      // against its immutable order quantity, including partial deliveries.
+      const vat=lines.reduce((n,l)=>{
+        const src=c.immutable_lines.find(x=>x.productId===l.productId)!,sourceVat=BigInt(String(src.vatLineAmount??0));
+        const before=priorIssues.reduce((sum,r)=>sum+(r.flow_payload?.lines??r.lines).filter(x=>x.productId===l.productId).reduce((q,x)=>q+fixed(String(x.quantity)),0n),0n);
+        return n+roundRatio(sourceVat*(before+fixed(l.quantity)),fixed(l.ordered),'HALF_UP')-roundRatio(sourceVat*before,fixed(l.ordered),'HALF_UP');
+      },0n);
+      totals.vat=vat.toString();totals.total=(sum+vat+BigInt(shippingFee)).toString();
+    }
     totals.remaining=(BigInt(totals.total)>BigInt(totals.paid)?BigInt(totals.total)-BigInt(totals.paid):0n).toString();
     }
   }

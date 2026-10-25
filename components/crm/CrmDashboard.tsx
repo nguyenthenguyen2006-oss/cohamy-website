@@ -12,8 +12,11 @@ import { CrmModuleIcon } from "./ModuleIcon";
 import { OnboardingChecklist } from "./PartnerLibraryPages";
 import { WorkHeader } from "./WorkPages";
 import { DashboardWorkbench } from "./spreadsheet/DashboardWorkbench";
+import {BuyerPage} from './BuyerPage';
+import {isBuyerRole} from '@/lib/crm/types';
 
 export async function CrmDashboard({ user }: { user: Principal }) {
+  if(user.area==='portal'&&isBuyerRole(user.role))return <BuyerPage user={user}/>;
   if(user.area==='crm'&&(user.role==='ACCOUNTANT'||user.role==='FACTORY'||isWarehouseRole(user.role))){
     return <DocumentFlowWorkspace initialData={await flowWorkspace(user)} user={user} initialTab={user.role==='ACCOUNTANT'?'receipts':isWarehouseRole(user.role)?'stock':'requests'}/>;
   }

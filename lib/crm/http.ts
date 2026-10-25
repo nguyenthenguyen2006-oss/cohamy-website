@@ -8,6 +8,7 @@ import { assertModuleAvailable } from "./module-availability";
 import type { Area, Principal } from "./types";
 import { mcpIdentity } from './mcp/context';
 import { membershipPrincipal } from './auth';
+import {isBuyerRole} from './types';
 
 const privateHeaders = { "Cache-Control": "private, no-store", "X-Robots-Tag": "noindex, nofollow", "Referrer-Policy": "no-referrer" };
 export function json(value: unknown, status = 200) { return Response.json(value, { status, headers: privateHeaders }); }
@@ -40,6 +41,9 @@ export async function apiUser(moduleId?: string): Promise<Principal> {
   const delegated = mcpIdentity.getStore();
   const user = delegated ? await membershipPrincipal(delegated.membershipId) : await authenticate((await cookies()).get(SESSION_COOKIE)?.value);
   if (!user) throw new CrmError("UNAUTHORIZED", 401);
+  // Buyer accounts use a deliberately small API surface. Legacy dealer APIs can
+  // contain organization-wide pricing, contacts and finance payloads.
+  if(isBuyerRole(user.role)&&!['buyer','profile'].includes(moduleId??''))throw new CrmError('FORBIDDEN',403);
   if (delegated && (user.role !== 'ADMIN' || user.area !== 'crm' || user.id !== delegated.id || user.membershipVersion !== delegated.membershipVersion)) throw new CrmError('FORBIDDEN',403);
   if (moduleId) assertModuleAvailable(user, moduleId);
   return user;

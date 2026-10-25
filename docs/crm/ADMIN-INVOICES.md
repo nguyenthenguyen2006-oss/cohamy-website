@@ -20,7 +20,7 @@ Mỗi lệnh khóa tổ chức, kiểm tra phiên bản và lưu kết quả đ�
 
 ## Lịch sử và dữ liệu gốc
 
-Migration `045-admin-invoices.sql` bổ sung `invoice_admin_heads` cho phiên bản hiện tại, `invoice_admin_revisions` và `invoice_allocation_reversals` cho lịch sử bất biến. Runtime không có quyền sửa/xóa hai bảng lịch sử. Giữ nguyên ảnh hóa đơn cũ, snapshot, PDF và bút toán gốc; thêm bản mới và bút toán bù. Hóa đơn thu hồi bị loại khỏi các danh sách và tổng đang hiệu lực, vẫn tra cứu được bằng bộ lọc lịch sử.
+Migration `046-admin-invoices.sql` bổ sung `invoice_admin_heads` cho phiên bản hiện tại, `invoice_admin_revisions` và `invoice_allocation_reversals` cho lịch sử bất biến. Runtime không có quyền sửa/xóa hai bảng lịch sử. Giữ nguyên ảnh hóa đơn cũ, snapshot, PDF và bút toán gốc; thêm bản mới và bút toán bù. Hóa đơn thu hồi bị loại khỏi các danh sách và tổng đang hiệu lực, vẫn tra cứu được bằng bộ lọc lịch sử.
 
 Hóa đơn cũ đã đối chiếu với đơn bán sẽ điều chỉnh đơn bán liên kết. VAT có đơn bán/phiếu nguồn sẽ xử lý nguồn tương ứng. VAT độc lập hoặc hóa đơn cũ chưa có bút toán không tự sinh thêm số tồn.
 

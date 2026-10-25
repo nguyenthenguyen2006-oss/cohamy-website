@@ -39,6 +39,8 @@ import { CrmHubPage } from "./CrmHubPage";
 import {InternalDocumentsPage} from "./InternalDocumentsPage";
 import {PortalNetworkPage,PeriodSalesPage,KpiPage,PortalOrderCatalogPage} from "./ChannelPages";
 import {HistoricalOrdersPage} from "./HistoricalOrdersPage";
+import {BuyerPage} from "./BuyerPage";
+import {isBuyerRole} from "@/lib/crm/types";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
 function Header({title,description}:{title:string;description:string}) {return <header className="portal-page-header"><div><h1>{title}</h1><p>{description}</p></div></header>;}
@@ -47,6 +49,9 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   const user=await pageUser(area);const [slug,id]=segments;
   if(isRemovedCrmModule(area,slug))notFound();
   if(segments.length>2)notFound();
+  const buyerQuery=Object.fromEntries(Object.entries(query).filter((e):e is [string,string]=>typeof e[1]==='string'));
+  if(area==='portal'&&isBuyerRole(user.role))return <BuyerPage user={user} mode={slug} id={id} query={buyerQuery}/>;
+  if(area==='crm'&&slug==='buyer-orders')return <BuyerPage user={user} mode={buyerQuery.view??'orders'} id={id} query={buyerQuery}/>;
   if(slug==='historical-orders'){
     if(area!=='crm'||!can(user,'historical-orders.read'))notFound();
     return <HistoricalOrdersPage user={user} id={id} query={query}/>;

@@ -417,6 +417,7 @@ export async function getOrderInvoicePayloadForRequest(
   const head=await commercialRequestAccess(tx,user,requestId);
   const targetVersionId=versionId||head.latest_version_id;
   const v=await requestVersionAccess(tx,head,targetVersionId);
+  if('buyerOrderId' in v.snapshot)throw new CrmError('BUYER_ORDER_USE_BUYER_WORKFLOW',409);
   let sellerName='CÔNG TY TNHH COHAMY';
   if(head.seller_organization_id){
    const sellerRow=(await tx.query<{name:string;kind:string}>('SELECT name,kind FROM cohamy_crm.organizations WHERE id=$1',[head.seller_organization_id])).rows[0];

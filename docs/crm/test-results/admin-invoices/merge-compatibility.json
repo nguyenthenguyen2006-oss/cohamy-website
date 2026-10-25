@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "preservedProductionSha": "9247dd81fb36c78b4472464021b63f02e93f345c",
+  "environment": "Fresh STAGING restore of the concurrent production release; no production business writes",
+  "sourceTables": 219,
+  "candidateTables": 222,
+  "checks": {
+    "buyerServices": 13,
+    "invoiceServices": 14,
+    "typescript": "PASS",
+    "productionBuild": "PASS",
+    "nativeCandidateSmoke": 14,
+    "browserAndMcp": "Admin UI, source-tax preservation, edit/recall and exact-once retry passed on newly restored native PostgreSQL",
+    "mcpCatalog": {
+      "operations": 336,
+      "available": 228,
+      "retired": 108
+    }
+  },
+  "cutover": "Deploy checks the current SHA again immediately before activation and requires preserved SHA to be an ancestor",
+  "migration": "046-admin-invoices.sql; deployed 045-customer-supermarket.sql preserved"
+}
