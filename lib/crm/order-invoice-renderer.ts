@@ -44,20 +44,21 @@ export async function renderOrderInvoicePdf(p:OrderInvoicePayload):Promise<Buffe
  const words='Số tiền bằng chữ: '+(p.summary.amountInWords||vndToVietnameseWords(p.summary.totalPayable)),approx=p.lines.some(l=>l.unitPriceApproximate)?'Đơn giá cuối có làm tròn. Thành tiền từng dòng là số tiền chính xác đã phân bổ.':'';
  const wordsH=h(words,width,9,true),approxH=approx?h(approx,width,8)+4:0,signatureH=45+Math.max(h(p.signatures.buyerRepresentative||' ',half-12,9,true),h(p.signatures.managerRepresentative||' ',half-12,9,true));
  const tailH=rowHeights.reduce((a,b)=>a+b,0)+wordsH+approxH+signatureH+8;
- const cols=[{label:'STT',w:28},{label:'Ảnh',w:34},{label:'Tên sản phẩm / Quy cách',w:179},{label:'ĐVT',w:32},{label:'SL',w:30},{label:'Đơn giá (VND)',w:144},{label:'Thành tiền cuối (VND)',w:width-447}];
+ const cols=[{label:'STT',w:28},{label:'Ảnh',w:34},{label:'Tên sản phẩm / Quy cách',w:179},{label:'ĐVT',w:32},{label:'SL',w:30},{label:'Giá gốc (VND)',w:72},{label:'Giá sau KM & CK (VND)',w:72},{label:'Thành tiền cuối (VND)',w:width-447}];
  const tableHeaderH=Math.max(...cols.map(c=>h(c.label,c.w-8,8.5,true)))+10;
  function tableHeader(){box(y,tableHeaderH,navy);let x=left;for(const c of cols){text(c.label,x+4,y+5,c.w-8,8.5,true,'#fff','center');x+=c.w;}y+=tableHeaderH;}
  ensure(tableHeaderH+60);text('III. CHI TIẾT HÀNG HÓA · Giá theo ĐVT đã chọn',left,y,width,9,true);y+=17;tableHeader();
  for(let i=0;i<p.lines.length;i++){
-  const l=p.lines[i],priceText=`Gốc: ${money(l.listUnitPrice)}\nSau KM SP: ${money(l.appliedUnitPrice)}\nCuối${l.unitPriceApproximate?' ~':''}: ${money(l.finalUnitPrice)}`,name=l.name+(l.conversionNote?'\n'+l.conversionNote:'')+(l.discountNote?'\n'+l.discountNote:'');
-  const rowH=Math.max(36,h(name,171,8.8,true)+8,h(priceText,136,8.8,true)+8,h(l.unitLabel,24,8.5)+8,h(l.quantity.replace('.',','),22,9)+8,h(money(l.lineTotal),cols[6].w-10,9,true)+8);
+  const l=p.lines[i],listPrice=money(l.listUnitPrice),finalPrice=(l.unitPriceApproximate?'~ ':'')+money(l.finalUnitPrice),intermediate=l.appliedUnitPrice!==l.listUnitPrice&&p.summary.extraDiscountAmount!=='0'?'Trước CK đơn: '+money(l.appliedUnitPrice)+' VND':'';
+  const name=l.name+(l.conversionNote?'\n'+l.conversionNote:'')+(l.discountNote?'\n'+l.discountNote:'')+(intermediate?'\n'+intermediate:'');
+  const rowH=Math.max(36,h(name,171,8.8,true)+8,h(listPrice,64,8.8)+8,h(finalPrice,64,8.8,true)+8,h(l.unitLabel,24,8.8)+8,h(l.quantity.replace('.',','),22,9)+8,h(money(l.lineTotal),cols[7].w-8,9,true)+8);
   if(ensure(rowH+(i===p.lines.length-1?tailH+7:0)))tableHeader();
   if(y+rowH>bottom)throw new CrmError('PDF_ROW_TOO_TALL',400);
   box(y,rowH,i%2?'#f8fafc':undefined);let x=left;
-  const values=[String(i+1),'',name,l.unitLabel,l.quantity.replace('.',','),priceText,money(l.lineTotal)];
+  const values=[String(i+1),'',name,l.unitLabel,l.quantity.replace('.',','),listPrice,finalPrice,money(l.lineTotal)];
   for(let k=0;k<cols.length;k++){const c=cols[k];if(k)doc.moveTo(x,y).lineTo(x,y+rowH).lineWidth(.4).stroke(border);
    if(k===1){const image=thumbs.get(l.imagePath||resolveInvoiceProductImage(l.sku));if(image)doc.image(image,x+3,y+5,{fit:[28,28]});}
-   else text(values[k],x+4,y+5,c.w-8,k===6?9:8.8,k===2||k===5||k===6,k===6?orange:navy,k===0||k===3?'center':k===4||k===6?'right':'left');x+=c.w;
+   else text(values[k],x+4,y+5,c.w-8,k===7?9:8.8,k===2||k===6||k===7,k===6||k===7?orange:navy,k===0||k===3?'center':k>=4?'right':'left');x+=c.w;
   }y+=rowH;
  }
  y+=7;ensure(tailH);

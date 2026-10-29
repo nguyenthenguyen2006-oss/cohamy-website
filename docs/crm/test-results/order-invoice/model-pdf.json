@@ -64,39 +64,39 @@
   "pdfs": [
     {
       "name": "sample-v1-after",
-      "bytes": 177684,
+      "bytes": 177968,
       "pages": 1,
-      "sha256": "49c9284b3bc2fe65941cf4458f52de04fd9d097fb697965cec797751a280e2bd"
+      "sha256": "a09dd0477f6186d0ec2240825be5e9dcdf2cd50d8436746321b57e3da443a587"
     },
     {
       "name": "many-products",
-      "bytes": 1371314,
-      "pages": 5,
-      "sha256": "d529481ae314a529d7887fcf0279d6b2cf40b2b43646370d8ed5b5acd6e1dea3"
+      "bytes": 1369818,
+      "pages": 4,
+      "sha256": "9e74608a21ea1f35eefee961a6c6afc8239c869239d73ff3a74227c87083723d"
     },
     {
       "name": "long-fields",
-      "bytes": 180241,
+      "bytes": 180575,
       "pages": 2,
-      "sha256": "3eb14fa5105866c4adb83743fc8d54c8773ba38ef104793c0650aefc85ba652c"
+      "sha256": "dcbb201ebf76e809cbb03163ab36adbd9e1167b9047d52fe3b4c431c4a341eda"
     },
     {
       "name": "zero-discount",
-      "bytes": 177589,
+      "bytes": 177758,
       "pages": 1,
-      "sha256": "6a99003cdbf0abf79e0691c42dbc6e8ec340807f740555075e988186f7628ed2"
+      "sha256": "93fa56e787c291db90b86d1a74b0440a4f165153e47bae58fdd6c30463d531dd"
     },
     {
       "name": "tax-fees",
-      "bytes": 179385,
-      "pages": 2,
-      "sha256": "2d99495f4abaf7851782d0dfdf6ff55fcd2a46e32e0fe06b220fbef803c70ce6"
+      "bytes": 178307,
+      "pages": 1,
+      "sha256": "2d0e991a6db166dd80ab7bedff2ec3470e0279ed72dab32a5b81825c5edac095"
     },
     {
       "name": "large-amount",
-      "bytes": 66869,
+      "bytes": 67217,
       "pages": 1,
-      "sha256": "0ea303ad2286cc5216408b3d4eb0eca9f1c0118a69d5e9fa662780e84bbc89e9"
+      "sha256": "75b9b49528f08281ef77eead77551e302c9c32dfdf7fcbb40305ffda632beca5"
     }
   ]
 }

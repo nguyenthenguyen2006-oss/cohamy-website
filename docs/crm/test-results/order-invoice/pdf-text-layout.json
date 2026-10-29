@@ -5,61 +5,55 @@
       "name": "long-fields",
       "pages": 2,
       "textLengths": [
-        3005,
-        1034
+        2965,
+        969
       ],
       "noBlankPages": true,
-      "totalsAndSignaturesTogether": true
+      "totalsAndSignaturesTogether": true,
+      "separatePriceColumns": true
     },
     {
       "name": "many-products",
-      "pages": 5,
+      "pages": 4,
       "textLengths": [
-        1860,
-        1590,
-        1640,
-        1590,
-        1072
+        1761,
+        1477,
+        1477,
+        1455
       ],
       "noBlankPages": true,
-      "totalsAndSignaturesTogether": true
+      "totalsAndSignaturesTogether": true,
+      "separatePriceColumns": true
     },
     {
       "name": "zero-discount",
       "pages": 1,
       "textLengths": [
-        1843
+        1691
       ],
       "noBlankPages": true,
-      "totalsAndSignaturesTogether": true
+      "totalsAndSignaturesTogether": true,
+      "separatePriceColumns": true
     },
     {
       "name": "tax-fees",
-      "pages": 2,
+      "pages": 1,
       "textLengths": [
-        1383,
-        723
+        1799
       ],
       "noBlankPages": true,
-      "totalsAndSignaturesTogether": true
+      "totalsAndSignaturesTogether": true,
+      "separatePriceColumns": true
     },
     {
       "name": "large-amount",
       "pages": 1,
       "textLengths": [
-        1582
+        1601
       ],
       "noBlankPages": true,
-      "totalsAndSignaturesTogether": true
-    },
-    {
-      "name": "browser-print",
-      "pages": 1,
-      "textLengths": [
-        1784
-      ],
-      "noBlankPages": true,
-      "totalsAndSignaturesTogether": true
+      "totalsAndSignaturesTogether": true,
+      "separatePriceColumns": true
     }
   ]
 }

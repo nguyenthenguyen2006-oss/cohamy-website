@@ -46,6 +46,8 @@ Mẫu `HD-20261029-52E60EA4` là **phiên bản 1**, gồm 6 dòng / 20 gói:
 | CK đơn 25% | -332.500 |
 | **Tổng thanh toán** | **997.500** |
 
+Theo yêu cầu cập nhật, bảng có hai cột giá riêng: **Giá gốc** và **Giá sau KM & CK** (giá cuối). Nếu cần giải thích giá riêng trước CK đơn, thông tin này nằm dưới tên sản phẩm.
+
 Đơn giá cuối lần lượt: 59.250; 45.000; 61.500; 24.000; 67.500; 59.250. Tổng sáu dòng là 997.500.
 
 Runtime còn có **phiên bản 2**, 8 dòng / 40 gói, CK 30%, tổng **2.030.000**. Không thay bản 2 bằng mẫu bản 1. Hai checksum được kiểm tra lại trước và sau triển khai.
