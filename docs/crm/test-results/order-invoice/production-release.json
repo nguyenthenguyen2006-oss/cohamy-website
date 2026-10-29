@@ -1,0 +1,75 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION https://cohamy.vn",
+  "releaseSha": "048a0f1324b0be2cee9732001f0e19e25af1a45e",
+  "backupPath": "/root/cohamy-backups/20261029T082213Z-048a0f1324b0",
+  "candidateChecks": 16,
+  "publicHttpsChecks": 16,
+  "backups": [
+    {
+      "file": "pre-migration-restore.json",
+      "status": "PASS",
+      "completedAt": "2026-10-29T08:23:51.462Z",
+      "tableCount": 225,
+      "rows": 2342,
+      "fileIntegrityErrors": 0,
+      "documentSourceErrors": 0,
+      "snapshotConsistent": true,
+      "sha256": "1d6562ef296e0000ac7a25f91ebcbd3c875a47d6ec1f5e15517ca9564cffce7d"
+    },
+    {
+      "file": "before-cutover-restore.json",
+      "status": "PASS",
+      "completedAt": "2026-10-29T08:26:18.951Z",
+      "tableCount": 225,
+      "rows": 2342,
+      "fileIntegrityErrors": 0,
+      "documentSourceErrors": 0,
+      "snapshotConsistent": true,
+      "sha256": "8201921773f5dc9268aa28b3d03d04e1d4e70e28d69b407c3f237c5be8dbbea1"
+    }
+  ],
+  "runtime": [
+    {
+      "name": "cohamy",
+      "pid": 810807,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/048a0f1324b0be2cee9732001f0e19e25af1a45e",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 810813,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/048a0f1324b0be2cee9732001f0e19e25af1a45e",
+      "restarts": 0
+    }
+  ],
+  "dataPreservation": {
+    "tableCount": 43,
+    "rows": 377,
+    "unchanged": true
+  },
+  "invoiceEvidence": [
+    {
+      "id": "66c6a784-4912-4278-ac1c-6cf572f09a4e",
+      "number": 1,
+      "total": "997500",
+      "lines": 6,
+      "checksum": "aaff17dc2914832dc34810f8ffd771cefbe76b641efc2f96f69b676ad4dad34f",
+      "pages": 1,
+      "bytes": 177357
+    },
+    {
+      "id": "31df54db-7f7d-4cb5-8e93-d9138d504c3f",
+      "number": 2,
+      "total": "2030000",
+      "lines": 8,
+      "checksum": "93dca32cbe7ce8d1e4954eea7f77ec08a86008c171f30bdff1df6fad0e10586d",
+      "pages": 2,
+      "bytes": 223804
+    }
+  ],
+  "productionOrderWrites": 0,
+  "outboundTestEmails": 0
+}

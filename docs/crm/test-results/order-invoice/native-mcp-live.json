@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION https://cohamy.vn; connected Cohamy MCP",
+  "releaseSha": "048a0f1324b0be2cee9732001f0e19e25af1a45e",
+  "priceColumns": [
+    "Giá gốc (VND)",
+    "Giá sau KM & CK (VND)"
+  ],
+  "versions": {
+    "unchanged": true,
+    "versions": [
+      {
+        "id": "31df54db-7f7d-4cb5-8e93-d9138d504c3f",
+        "number": 2,
+        "checksum": "93dca32cbe7ce8d1e4954eea7f77ec08a86008c171f30bdff1df6fad0e10586d"
+      },
+      {
+        "id": "66c6a784-4912-4278-ac1c-6cf572f09a4e",
+        "number": 1,
+        "checksum": "aaff17dc2914832dc34810f8ffd771cefbe76b641efc2f96f69b676ad4dad34f"
+      }
+    ]
+  },
+  "nativePdfReads": [
+    {
+      "version": 1,
+      "status": 200,
+      "complete": true,
+      "bytes": 177357,
+      "pages": 1
+    },
+    {
+      "version": 2,
+      "status": 200,
+      "complete": true,
+      "bytes": 223804,
+      "pages": 2
+    }
+  ],
+  "nativePdfExport": {
+    "operation": "POST /api/crm/commerce/invoice-pdf",
+    "status": 200,
+    "bytes": 177357,
+    "replayed": false
+  },
+  "productionOrderWrites": 0,
+  "outboundTestEmails": 0,
+  "note": "Production data and PDF payloads were kept in tool memory; this report contains only checksums, counts, amounts and operation statuses."
+}

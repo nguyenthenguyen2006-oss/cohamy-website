@@ -1,0 +1,91 @@
+{
+  "environment": "http://localhost:4312",
+  "scope": "Business reads only; administrator login/logout and an isolated OAuth connection authorization/revocation; no order, partner, stock, finance or outbound-message writes",
+  "testedAt": "2026-10-29T08:26:31.577Z",
+  "cases": [
+    {
+      "name": "Health and retained configured blog source",
+      "status": "PASS"
+    },
+    {
+      "name": "Private request API requires authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "Old localized CRM links recover to login",
+      "status": "PASS"
+    },
+    {
+      "name": "Initial administrator authenticates against PostgreSQL",
+      "status": "PASS"
+    },
+    {
+      "name": "CRM pages render actual production data",
+      "status": "PASS"
+    },
+    {
+      "name": "Scoped intake API preserves persisted responses and retired task API is closed",
+      "status": "PASS"
+    },
+    {
+      "name": "All fifteen retired CRM modules and their read APIs return 404",
+      "status": "PASS"
+    },
+    {
+      "name": "Internal-document administrator catalogue is private and unknown files return 404",
+      "status": "PASS"
+    },
+    {
+      "name": "Historical warehouse invoice archive is private and available without ledger writes",
+      "status": "PASS"
+    },
+    {
+      "name": "Document flow and encrypted Brevo settings are available without a provider write or email",
+      "status": "PASS"
+    },
+    {
+      "name": "Buyer account types and private order workspace are available without creating accounts or business data",
+      "status": "PASS"
+    },
+    {
+      "name": "Website and localized products remain available",
+      "status": "PASS"
+    },
+    {
+      "name": "Candidate MCP completes real OAuth PKCE, discovers tools and reads native debt before connection revocation",
+      "status": "PASS"
+    },
+    {
+      "name": "Account provisioning is password-free; activation and safe Admin status API remain reachable",
+      "status": "PASS"
+    },
+    {
+      "name": "Saved order invoice versions preserve checksums and exact prices; six-line native PDF is one A4 page",
+      "status": "PASS"
+    },
+    {
+      "name": "Logout revokes server session",
+      "status": "PASS"
+    }
+  ],
+  "invoiceEvidence": [
+    {
+      "id": "66c6a784-4912-4278-ac1c-6cf572f09a4e",
+      "number": 1,
+      "total": "997500",
+      "lines": 6,
+      "checksum": "aaff17dc2914832dc34810f8ffd771cefbe76b641efc2f96f69b676ad4dad34f",
+      "pages": 1,
+      "bytes": 177357
+    },
+    {
+      "id": "31df54db-7f7d-4cb5-8e93-d9138d504c3f",
+      "number": 2,
+      "total": "2030000",
+      "lines": 8,
+      "checksum": "93dca32cbe7ce8d1e4954eea7f77ec08a86008c171f30bdff1df6fad0e10586d",
+      "pages": 2,
+      "bytes": 223804
+    }
+  ]
+}
