@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite; real Edge and official MCP SDK",
+  "cases": [
+    {
+      "name": "Actual HTTP data/PDF routes require login and enforce organization scope",
+      "status": "PASS"
+    },
+    {
+      "name": "HTTP rejects forged totals, missing source and cross-origin PDF requests",
+      "status": "PASS"
+    },
+    {
+      "name": "Real browser preview and native download show three price stages, six lines and 997500",
+      "status": "PASS"
+    },
+    {
+      "name": "Print annotations stay local; desktop/mobile controls and modal close work",
+      "status": "PASS"
+    },
+    {
+      "name": "Editing the order discount updates each frontend row and draft PDF from the same authoritative backend allocation",
+      "status": "PASS"
+    },
+    {
+      "name": "Real HTTP endpoint accepts a valid 60-line payload beyond the old 32KiB ceiling",
+      "status": "PASS"
+    },
+    {
+      "name": "Official MCP SDK discovers required source/three-stage contract and reads full native PDF/data",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP generates through the native validated workflow, replays safely and rejects tampered money",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "externalEmails": 0,
+  "productionOrderWrites": 0
+}

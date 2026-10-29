@@ -45,6 +45,8 @@ const sharedContracts: Record<string,string> = {
   "49eb406c9d2d6b12": "const accountInvitationSchema = z.object({membershipId:z.uuid(),action:z.enum(['SEND','RESEND','REVOKE']),idempotencyKey:z.uuid()}).strict()",
   "aa42e977bba8920f": "const roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nconst provisionAccountSchema = z.object({email:z.email().trim().toLowerCase(),displayName:z.string().trim().min(2).max(120),role:z.enum(roles),organizationId:z.uuid(),idempotencyKey:z.uuid()}).strict()",
   "02e062e883e9c013": "z.object({id:z.string().trim().min(1),expectedUpdatedAt:z.string().optional(),reason:z.string().optional(),idempotencyKey:z.uuid().optional()})",
+  "25d3258553d52839": "const money=z.string().regex(/^\\d{1,24}$/),quantity=z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku=z.string().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),basisPoints=z.number().int().min(0).max(10000);\nconst basketSchema = z.object({lines:z.array(z.object({sku,unitCode:z.string().min(1).max(40).regex(/^[A-Za-z0-9_-]+$/),quantity,requestedUnitPrice:money.optional()}).strict()).min(1).max(200),discountBasisPoints:basisPoints,creditTerms:z.boolean()}).strict()\nconst orderInvoiceLineSchema = z.object({\n sku:z.string().trim().max(120),\n imagePath:z.string().trim().max(400).optional(),\n name:z.string().trim().min(1).max(300),\n conversionNote:z.string().trim().max(300),\n unitLabel:z.string().trim().min(1).max(80),\n quantity:z.string().trim().min(1).max(60),\n listUnitPrice:z.string().trim().min(1).max(60),\n appliedUnitPrice:z.string().trim().min(1).max(60),\n discountNote:z.string().trim().max(160),\n listGross:z.string().max(60),finalUnitPrice:z.string().max(60),\n lineSubtotal:z.string().max(60),allocatedDiscount:z.string().max(60),taxAmount:z.string().max(60),payableTotal:z.string().max(60),unitPriceApproximate:z.boolean(),\n lineTotal:z.string().trim().min(1).max(60),\n gift:z.boolean().optional(),\n})\nz.object({\n sku:z.string().trim().max(120),\n imagePath:z.string().trim().max(400).optional(),\n name:z.string().trim().min(1).max(300),\n conversionNote:z.string().trim().max(300),\n unitLabel:z.string().trim().min(1).max(80),\n quantity:z.string().trim().min(1).max(60),\n listUnitPrice:z.string().trim().min(1).max(60),\n appliedUnitPrice:z.string().trim().min(1).max(60),\n discountNote:z.string().trim().max(160),\n listGross:z.string().max(60),finalUnitPrice:z.string().max(60),\n lineSubtotal:z.string().max(60),allocatedDiscount:z.string().max(60),taxAmount:z.string().max(60),payableTotal:z.string().max(60),unitPriceApproximate:z.boolean(),\n lineTotal:z.string().trim().min(1).max(60),\n gift:z.boolean().optional(),\n})\nconst draftInvoicePreviewSchema = z.object({organizationId:z.uuid(),basket:basketSchema,delivery:z.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()}),note:z.string().trim().max(2000).default(''),requestCode:z.string().trim().max(80).optional(),invoiceCode:z.string().trim().max(80).optional()}).strict()\nz.object({organizationId:z.uuid(),basket:basketSchema,delivery:z.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()}),note:z.string().trim().max(2000).default(''),requestCode:z.string().trim().max(80).optional(),invoiceCode:z.string().trim().max(80).optional()})\nz.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()})\nconst invoiceSourceSchema = z.discriminatedUnion('kind',[\n z.object({kind:z.literal('REQUEST'),id:z.uuid(),versionId:z.uuid()}).strict(),\n z.object({kind:z.literal('ORDER'),id:z.uuid(),versionId:z.uuid()}).strict(),\n z.object({kind:z.literal('DRAFT'),input:draftInvoicePreviewSchema}).strict(),\n])\nz.object({kind:z.literal('REQUEST'),id:z.uuid(),versionId:z.uuid()})\nz.object({kind:z.literal('ORDER'),id:z.uuid(),versionId:z.uuid()})\nz.object({kind:z.literal('DRAFT'),input:draftInvoicePreviewSchema})\nconst orderInvoicePayloadSchema = z.object({\n source:invoiceSourceSchema.optional(),\n invoiceCode:z.string().trim().min(1).max(80),\n requestCode:z.string().trim().min(1).max(80),\n issuedAt:z.string().trim().min(1).max(80),\n sellerName:z.string().trim().min(1).max(200),\n buyer:z.object({\n  partnerName:z.string().trim().max(240),\n  partnerCode:z.string().trim().max(80),\n  invoiceCompanyName:z.string().trim().max(240),\n  taxCode:z.string().trim().max(80),\n  invoiceAddress:z.string().trim().max(500),\n  phone:z.string().trim().max(80),\n  email:z.string().trim().max(200),\n }),\n delivery:z.object({\n  recipient:z.string().trim().max(200),\n  phone:z.string().trim().max(80),\n  address:z.string().trim().max(500),\n  expectedDeliveryDate:z.string().trim().max(120),\n }),\n lines:z.array(orderInvoiceLineSchema).min(1).max(200),\n summary:z.object({\n  totalBaseQuantityText:z.string().trim().max(120),\n  totalCasesText:z.string().trim().max(80),\n  listSubtotal:z.string().trim().max(60),\n  subtotalAfterTier:z.string().trim().max(60),\n  productDiscountAmount:z.string().max(60),merchandiseTotal:z.string().max(60),taxAmount:z.string().max(60),feeAmount:z.string().max(60),\n  extraDiscountPercent:z.string().trim().max(40),\n  extraDiscountAmount:z.string().trim().max(60),\n  totalPayable:z.string().trim().max(60),\n  amountInWords:z.string().trim().max(500),\n }),\n signatures:z.object({\n  buyerRepresentative:z.string().trim().max(160),\n  managerRepresentative:z.string().trim().max(160),\n }),\n})\nz.object({\n source:invoiceSourceSchema.optional(),\n invoiceCode:z.string().trim().min(1).max(80),\n requestCode:z.string().trim().min(1).max(80),\n issuedAt:z.string().trim().min(1).max(80),\n sellerName:z.string().trim().min(1).max(200),\n buyer:z.object({\n  partnerName:z.string().trim().max(240),\n  partnerCode:z.string().trim().max(80),\n  invoiceCompanyName:z.string().trim().max(240),\n  taxCode:z.string().trim().max(80),\n  invoiceAddress:z.string().trim().max(500),\n  phone:z.string().trim().max(80),\n  email:z.string().trim().max(200),\n }),\n delivery:z.object({\n  recipient:z.string().trim().max(200),\n  phone:z.string().trim().max(80),\n  address:z.string().trim().max(500),\n  expectedDeliveryDate:z.string().trim().max(120),\n }),\n lines:z.array(orderInvoiceLineSchema).min(1).max(200),\n summary:z.object({\n  totalBaseQuantityText:z.string().trim().max(120),\n  totalCasesText:z.string().trim().max(80),\n  listSubtotal:z.string().trim().max(60),\n  subtotalAfterTier:z.string().trim().max(60),\n  productDiscountAmount:z.string().max(60),merchandiseTotal:z.string().max(60),taxAmount:z.string().max(60),feeAmount:z.string().max(60),\n  extraDiscountPercent:z.string().trim().max(40),\n  extraDiscountAmount:z.string().trim().max(60),\n  totalPayable:z.string().trim().max(60),\n  amountInWords:z.string().trim().max(500),\n }),\n signatures:z.object({\n  buyerRepresentative:z.string().trim().max(160),\n  managerRepresentative:z.string().trim().max(160),\n }),\n})\nz.object({\n  partnerName:z.string().trim().max(240),\n  partnerCode:z.string().trim().max(80),\n  invoiceCompanyName:z.string().trim().max(240),\n  taxCode:z.string().trim().max(80),\n  invoiceAddress:z.string().trim().max(500),\n  phone:z.string().trim().max(80),\n  email:z.string().trim().max(200),\n })\nz.object({\n  recipient:z.string().trim().max(200),\n  phone:z.string().trim().max(80),\n  address:z.string().trim().max(500),\n  expectedDeliveryDate:z.string().trim().max(120),\n })\nz.object({\n  totalBaseQuantityText:z.string().trim().max(120),\n  totalCasesText:z.string().trim().max(80),\n  listSubtotal:z.string().trim().max(60),\n  subtotalAfterTier:z.string().trim().max(60),\n  productDiscountAmount:z.string().max(60),merchandiseTotal:z.string().max(60),taxAmount:z.string().max(60),feeAmount:z.string().max(60),\n  extraDiscountPercent:z.string().trim().max(40),\n  extraDiscountAmount:z.string().trim().max(60),\n  totalPayable:z.string().trim().max(60),\n  amountInWords:z.string().trim().max(500),\n })\nz.object({\n  buyerRepresentative:z.string().trim().max(160),\n  managerRepresentative:z.string().trim().max(160),\n })\norderInvoicePayloadSchema.required({source:true}) // Use authenticated invoice-data or invoice-preview; server revalidates all line prices and totals.",
+  "c5085d72197d340a": "const money=z.string().regex(/^\\d{1,24}$/),quantity=z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku=z.string().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),basisPoints=z.number().int().min(0).max(10000);\nconst basketSchema = z.object({lines:z.array(z.object({sku,unitCode:z.string().min(1).max(40).regex(/^[A-Za-z0-9_-]+$/),quantity,requestedUnitPrice:money.optional()}).strict()).min(1).max(200),discountBasisPoints:basisPoints,creditTerms:z.boolean()}).strict()\nconst draftInvoicePreviewSchema = z.object({organizationId:z.uuid(),basket:basketSchema,delivery:z.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()}),note:z.string().trim().max(2000).default(''),requestCode:z.string().trim().max(80).optional(),invoiceCode:z.string().trim().max(80).optional()}).strict()",
   "42c78b8845773eec": "z.object({})",
   "35e942bb2a930ba0": "z.object({id:z.uuid()})",
   "eb18e2fa220be416": "z.object({id:z.uuid(),data:z.unknown().optional()})",
@@ -1977,7 +1979,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/invoice-data",
@@ -2001,7 +2003,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/invoice-pdf",
@@ -2025,7 +2027,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/order",
@@ -2049,7 +2051,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/order-events",
@@ -2073,7 +2075,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/order-route",
@@ -2097,7 +2099,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/order-versions",
@@ -2121,7 +2123,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/orders",
@@ -2145,7 +2147,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/policy",
@@ -2169,7 +2171,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/reorder",
@@ -2193,7 +2195,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/request",
@@ -2217,7 +2219,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/request-events",
@@ -2241,7 +2243,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/request-versions",
@@ -2265,7 +2267,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/commerce/requests",
@@ -2289,7 +2291,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/cancel-order",
@@ -2306,7 +2308,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/change-confirm",
@@ -2323,7 +2325,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/change-preview",
@@ -2340,7 +2342,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/duplicates",
@@ -2357,7 +2359,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/escalate-request",
@@ -2374,7 +2376,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/excel-confirm",
@@ -2391,7 +2393,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/excel-preview",
@@ -2408,7 +2410,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": true,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/invoice-pdf",
@@ -2423,9 +2425,9 @@ const metadata: McpRoute[] = [
       "action": "invoice-pdf"
     },
     "query": [],
-    "inputContract": "",
+    "inputContract": "25d3258553d52839",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/invoice-preview",
@@ -2440,9 +2442,9 @@ const metadata: McpRoute[] = [
       "action": "invoice-preview"
     },
     "query": [],
-    "inputContract": "",
+    "inputContract": "c5085d72197d340a",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/order-action",
@@ -2459,7 +2461,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/request-action",
@@ -2476,7 +2478,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/save-policy",
@@ -2493,7 +2495,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/save-request",
@@ -2510,7 +2512,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "POST /api/crm/commerce/submit-request",
@@ -2527,7 +2529,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "78b00428cdfc597ce72a3c664ccb1fcc7d21677703995f3bbe9c7ee65e4dc9da"
+    "sourceHash": "7fe8c505d431ecd48a5885e4cae7f927c8a9a1ee0b2f434f1f83f7147769ab88"
   },
   {
     "id": "GET /api/crm/consignment/operations",

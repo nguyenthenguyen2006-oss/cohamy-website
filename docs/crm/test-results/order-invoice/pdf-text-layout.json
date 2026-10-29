@@ -1,0 +1,65 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "long-fields",
+      "pages": 2,
+      "textLengths": [
+        3005,
+        1034
+      ],
+      "noBlankPages": true,
+      "totalsAndSignaturesTogether": true
+    },
+    {
+      "name": "many-products",
+      "pages": 5,
+      "textLengths": [
+        1860,
+        1590,
+        1640,
+        1590,
+        1072
+      ],
+      "noBlankPages": true,
+      "totalsAndSignaturesTogether": true
+    },
+    {
+      "name": "zero-discount",
+      "pages": 1,
+      "textLengths": [
+        1843
+      ],
+      "noBlankPages": true,
+      "totalsAndSignaturesTogether": true
+    },
+    {
+      "name": "tax-fees",
+      "pages": 2,
+      "textLengths": [
+        1383,
+        723
+      ],
+      "noBlankPages": true,
+      "totalsAndSignaturesTogether": true
+    },
+    {
+      "name": "large-amount",
+      "pages": 1,
+      "textLengths": [
+        1582
+      ],
+      "noBlankPages": true,
+      "totalsAndSignaturesTogether": true
+    },
+    {
+      "name": "browser-print",
+      "pages": 1,
+      "textLengths": [
+        1784
+      ],
+      "noBlankPages": true,
+      "totalsAndSignaturesTogether": true
+    }
+  ]
+}

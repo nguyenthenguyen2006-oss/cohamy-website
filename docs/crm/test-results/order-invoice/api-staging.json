@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "environment": "postgres",
+  "cases": [
+    {
+      "name": "Saved request PDF uses authenticated immutable version and backend line pricing",
+      "status": "PASS"
+    },
+    {
+      "name": "Client-tampered prices/totals and unbound raw PDF payloads fail closed",
+      "status": "PASS"
+    },
+    {
+      "name": "Another organization cannot read or export the invoice, even by replaying its source reference",
+      "status": "PASS"
+    },
+    {
+      "name": "Permitted print annotations never update the saved order or tax profile",
+      "status": "PASS"
+    },
+    {
+      "name": "Unsaved cart preview and PDF recompute with the same current backend policy",
+      "status": "PASS"
+    },
+    {
+      "name": "Long 60-line PDF payload is valid beyond the previous 32KiB route ceiling",
+      "status": "PASS"
+    },
+    {
+      "name": "Changed live prices invalidate an unsaved preview while old stored snapshots retain 997500 and their checksum",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirmed sales invoice uses the frozen source after live price changes; native export is scoped and preserves its checksum",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionOrderWrites": 0
+}

@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-12T08:10:29.299Z",
+  "testedAt": "2026-10-29T07:48:42.699Z",
   "environment": "LOCAL isolated fictitious PGlite; no real order/stock/money/provider mutation",
   "status": "PASS",
   "cases": [

@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-10-12T07:48:57.404Z",
+  "testedAt": "2026-10-29T07:48:27.951Z",
   "environment": "LOCAL deterministic pure arithmetic; no database or commercial posting",
   "status": "PASS",
   "cases": [

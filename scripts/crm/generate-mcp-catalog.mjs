@@ -28,6 +28,11 @@ function contracts(file,only){
  const roleDefinition=/\bz\.enum\(roles\)/.test(text)?readSource('lib/crm/types.ts').match(/^export const roles = .+$/m)?.[0].replace(/^export /,'')+'\n':'';
  return (roleDefinition+text).slice(0,26000);
 }
+function invoiceContract(full){
+ const primitives=readSource('lib/crm/pricing-model.ts').match(/^const money=.+$/m)[0];
+ const basket=contracts('lib/crm/pricing-model.ts','basketSchema');
+ return primitives+'\n'+basket+'\n'+(full?contracts('lib/crm/order-invoice-model.ts')+'\norderInvoicePayloadSchema.required({source:true}) // Use authenticated invoice-data or invoice-preview; server revalidates all line prices and totals.':contracts('lib/crm/order-invoice-model.ts','draftInvoicePreviewSchema'));
+}
 const routes=[],imports=[],dispatch=[],skipped=[];
 const managementSource='app/api/crm/mcp/oauth/[action]/route.ts';
 imports.push(`import * as mcpManagement from '@/app/api/crm/mcp/oauth/[action]/route';`);dispatch.push(`${JSON.stringify(managementSource)}: mcpManagement`);
@@ -54,7 +59,7 @@ for(const file of walk(root).sort()){
     if(['POST /api/crm/accounts','POST /api/crm/work/password'].includes(id)){skipped.push({route:template,reason:'Credential administration stays in the browser; use accounts/provision and accounts/invitations for MCP provisioning'});continue;}
     if(id==='POST /api/crm/buyer/password'){skipped.push({route:template,reason:'Password changes remain in the authenticated browser'});continue;}
     let moduleId;visit(node,n=>{if(ts.isCallExpression(n)&&n.expression.getText()==='apiUser')moduleId=evaluate(n.arguments[0],selection);});
-    const safeContract=id==='POST /api/crm/accounts/provision'?contracts('lib/crm/account-provision-contracts.ts','provisionAccountSchema'):id==='POST /api/crm/accounts/invitations'?contracts('lib/crm/account-provision-contracts.ts','accountInvitationSchema'):id==='PATCH /api/crm/accounts/[id]'?'z.object({active:z.boolean()}).strict()':id==='POST /api/crm/work/account'?readSource('lib/crm/types.ts').match(/^export const roles = .+$/m)[0].replace(/^export /,'')+'\nz.object({id:z.uuid(),data:z.object({action:z.enum(["revoke","role"]),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()}).strict()}).strict()':contract;
+    const safeContract=id==='POST /api/crm/commerce/invoice-pdf'?invoiceContract(true):id==='POST /api/crm/commerce/invoice-preview'?invoiceContract(false):id==='POST /api/crm/accounts/provision'?contracts('lib/crm/account-provision-contracts.ts','provisionAccountSchema'):id==='POST /api/crm/accounts/invitations'?contracts('lib/crm/account-provision-contracts.ts','accountInvitationSchema'):id==='PATCH /api/crm/accounts/[id]'?'z.object({active:z.boolean()}).strict()':id==='POST /api/crm/work/account'?readSource('lib/crm/types.ts').match(/^export const roles = .+$/m)[0].replace(/^export /,'')+'\nz.object({id:z.uuid(),data:z.object({action:z.enum(["revoke","role"]),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()}).strict()}).strict()':contract;
     routes.push({id,method,template,source:file,group:group.startsWith('[')?'directory':group,status:typeof moduleId==='string'&&removed.has(moduleId)?'RETIRED':'AVAILABLE',moduleId:moduleId??null,params:keys.filter(k=>k!==selector),selector:selector?{[selector]:selection}:{},query,inputContract:method==='GET'?'':safeContract,multipart:['POST /api/crm/documents','POST /api/crm/internal-documents','POST /api/crm/jobs/preview','POST /api/crm/commerce/excel-preview','POST /api/crm/consignment/sale-preview'].includes(id),sourceHash:createHash('sha256').update(text+serviceFiles.map(readSource).join('\n')).digest('hex')});
   }
  }

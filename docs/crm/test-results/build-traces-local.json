@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-10-24T21:16:50.889Z",
+  "testedAt": "2026-10-29T08:05:57.816Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -15,7 +15,7 @@
       "status": "PASS"
     }
   ],
-  "traceCount": 97,
+  "traceCount": 108,
   "includedMigrations": [
     "db/crm/001-access-catalog.sql",
     "db/crm/002-website-order-intake.sql",
@@ -60,7 +60,11 @@
     "db/crm/040-internal-documents.sql",
     "db/crm/041-document-vat-source-revision.sql",
     "db/crm/042-brevo-server-settings.sql",
-    "db/crm/043-historical-order-invoices.sql"
+    "db/crm/043-historical-order-invoices.sql",
+    "db/crm/044-remote-mcp.sql",
+    "db/crm/045-customer-supermarket.sql",
+    "db/crm/046-admin-invoices.sql",
+    "db/crm/047-account-provisioning.sql"
   ],
   "includedPdfAssets": [
     "assets/crm/fonts/BeVietnamPro-Regular.ttf",

@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL; anonymized six-product snapshot, no production writes",
+  "sourceVersion": 1,
+  "sourceChecksum": "aaff17dc2914832dc34810f8ffd771cefbe76b641efc2f96f69b676ad4dad34f",
+  "cases": [
+    {
+      "name": "Price layers list + 0 basis points = 237000",
+      "status": "PASS"
+    },
+    {
+      "name": "Price layers list + 2500 basis points = 177750",
+      "status": "PASS"
+    },
+    {
+      "name": "Price layers special + 0 basis points = 180000",
+      "status": "PASS"
+    },
+    {
+      "name": "Price layers special + 2500 basis points = 135000",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual version-1 pricing snapshot projects 997500, twenty bags and all six exact final prices without mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "Quantity trailing zeros are preserved and internal identifiers never render as tax IDs",
+      "status": "PASS"
+    },
+    {
+      "name": "160 mixed-unit/fractional-quantity/odd-percentage baskets allocate every dong exactly",
+      "status": "PASS"
+    },
+    {
+      "name": "Amounts above JavaScript safe integer range remain exact",
+      "status": "PASS"
+    },
+    {
+      "name": "Order taxes and fees are retained and added once to net line totals",
+      "status": "PASS"
+    },
+    {
+      "name": "Corrupt saved pricing snapshots fail closed instead of silently rewriting money",
+      "status": "PASS"
+    },
+    {
+      "name": "Frontend provisional table uses the same calculator and per-line allocation as backend/PDF",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy tier metadata recovers original list price from its own captured policy without changing totals or snapshots",
+      "status": "PASS"
+    },
+    {
+      "name": "Six-product invoice fits one A4 page including totals and signatures",
+      "status": "PASS"
+    },
+    {
+      "name": "Long invoices, long codes/addresses, zero discounts, taxes/fees and large amounts render without empty trailing pages",
+      "status": "PASS"
+    }
+  ],
+  "pdfs": [
+    {
+      "name": "sample-v1-after",
+      "bytes": 177684,
+      "pages": 1,
+      "sha256": "49c9284b3bc2fe65941cf4458f52de04fd9d097fb697965cec797751a280e2bd"
+    },
+    {
+      "name": "many-products",
+      "bytes": 1371314,
+      "pages": 5,
+      "sha256": "d529481ae314a529d7887fcf0279d6b2cf40b2b43646370d8ed5b5acd6e1dea3"
+    },
+    {
+      "name": "long-fields",
+      "bytes": 180241,
+      "pages": 2,
+      "sha256": "3eb14fa5105866c4adb83743fc8d54c8773ba38ef104793c0650aefc85ba652c"
+    },
+    {
+      "name": "zero-discount",
+      "bytes": 177589,
+      "pages": 1,
+      "sha256": "6a99003cdbf0abf79e0691c42dbc6e8ec340807f740555075e988186f7628ed2"
+    },
+    {
+      "name": "tax-fees",
+      "bytes": 179385,
+      "pages": 2,
+      "sha256": "2d99495f4abaf7851782d0dfdf6ff55fcd2a46e32e0fe06b220fbef803c70ce6"
+    },
+    {
+      "name": "large-amount",
+      "bytes": 66869,
+      "pages": 1,
+      "sha256": "0ea303ad2286cc5216408b3d4eb0eca9f1c0118a69d5e9fa662780e84bbc89e9"
+    }
+  ]
+}

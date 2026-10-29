@@ -46,7 +46,7 @@ export async function GET(request:Request,context:Context){try{
 export async function POST(request:Request,context:Context){try{
  sameOrigin(request);const user=await apiUser(),{action}=await context.params;
  if(action==='excel-preview'){const {bytes,input}=await readCommercialMultipart(request);return json(await excel.previewExcelRequest(user,bytes,input));}
- const input=await readJson(request);
+ const input=await readJson(request,action==='invoice-pdf'?1048576:action==='invoice-preview'?131072:32768);
  if(action==='invoice-preview')return json(await invoicePdf.previewDraftInvoicePayload(user,input));
  if(action==='invoice-pdf'){
   const result=await invoicePdf.generateCustomInvoicePdf(user,input);
