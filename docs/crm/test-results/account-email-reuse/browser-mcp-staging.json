@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "environment": "STAGING production build; native PostgreSQL restricted runtime role; fictitious .invalid accounts only",
+  "cases": [
+    {
+      "name": "The exact Admin account-provisioning form recreates a deleted email in HN scope without an existing-email error or an outbound invitation",
+      "status": "PASS"
+    },
+    {
+      "name": "Official MCP SDK recreates a deleted email through the native Admin API and both retry layers return the original result",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP reads retained deleted history and one current account; duplicate live emails still fail without leaking credentials",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionAccountWrites": 0,
+  "qaGrantRevoked": true
+}

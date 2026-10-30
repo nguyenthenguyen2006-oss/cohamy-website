@@ -47,7 +47,7 @@ export async function provisionAccount(user:Principal,input:unknown,demo=false):
   const org=(await sql.query<{kind:string;active:boolean}>('SELECT kind,active FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[d.organizationId])).rows[0];
   if(!org?.active||org.kind!==roleOrganizationKind(d.role))throw new CrmError('ROLE_ORGANIZATION_MISMATCH',400);
   if(isBuyerRole(d.role)&&(await sql.query("SELECT id FROM cohamy_crm.memberships WHERE organization_id=$1 AND role IN('CUSTOMER','SUPERMARKET') AND role<>$2 AND active",[d.organizationId,d.role])).rows.length)throw new CrmError('BUYER_ROLE_CONFLICT',409);
-  if((await sql.query('SELECT id FROM cohamy_crm.users WHERE lower(email)=$1',[d.email])).rows.length)throw new CrmError('ACCOUNT_ALREADY_EXISTS',409);
+  if((await sql.query('SELECT id FROM cohamy_crm.users WHERE lower(email)=$1 AND deleted_at IS NULL',[d.email])).rows.length)throw new CrmError('ACCOUNT_ALREADY_EXISTS',409);
   const status=generatedPassword?'ACTIVE':'PENDING_ACTIVATION';
   const {id,membershipId}=await insertProvisionedIdentity(sql,d,passwordHash,status,demo);
   const result={id,membershipId,email:d.email,displayName:d.displayName,role:d.role,organizationId:d.organizationId,status,...(generatedPassword?{loginMethod:'GENERATED',initialLoginIssued:true,loginPath:isBuyerRole(d.role)?'/portal/login':'/crm/login'}:{})};

@@ -138,7 +138,7 @@ async function testResetSentinel() {
     await sql.query(
       `INSERT INTO cohamy_crm.users(id, email, display_name, password_hash)
        VALUES($1, $2, 'Sentinel Executive User', $3)
-       ON CONFLICT (email) DO NOTHING`,
+       ON CONFLICT (lower(email)) WHERE deleted_at IS NULL DO NOTHING`,
       [sentinelUserId, sentinelUserEmail, dummyHash]
     );
 
@@ -208,7 +208,7 @@ async function testResetSentinel() {
     await sql.query(
       `INSERT INTO cohamy_crm.users(id, email, display_name, password_hash)
        VALUES($1, $2, 'DEMO · Test User For Reset', $3)
-       ON CONFLICT (email) DO NOTHING`,
+       ON CONFLICT (lower(email)) WHERE deleted_at IS NULL DO NOTHING`,
       [demoUserId, demoUserEmail, dummyHash]
     );
 
