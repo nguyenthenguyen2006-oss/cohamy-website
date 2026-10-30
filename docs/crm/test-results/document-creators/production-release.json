@@ -1,0 +1,60 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION https://cohamy.vn",
+  "testedAt": "2026-10-30T07:48:22.679Z",
+  "releaseSha": "96cb3d10ab1b3810d65668b9dfca0e2d8747dee4",
+  "backupPath": "/root/cohamy-backups/20261030T074257Z-96cb3d10ab1b",
+  "backups": [
+    {
+      "name": "pre-migration-restore.json",
+      "status": "PASS",
+      "tableCount": 225,
+      "sha256": "fe28731ac886aceeaa36ca22d2d93fc1be8b36ad4ff33960aa7906f5da6a851e",
+      "snapshotConsistent": true
+    },
+    {
+      "name": "before-cutover-restore.json",
+      "status": "PASS",
+      "tableCount": 226,
+      "sha256": "b0f1e19daf166ba2280a09ca61df768cd01b998c32c8f5bf8005bf38855e1486",
+      "snapshotConsistent": true
+    }
+  ],
+  "candidateChecks": 18,
+  "publicHttpsChecks": 18,
+  "view": {
+    "status": "PASS",
+    "environment": "PRODUCTION authenticated HTTPS; no business writes or email",
+    "testedAt": "2026-10-30T07:48:22.141Z",
+    "releaseSha": "96cb3d10ab1b3810d65668b9dfca0e2d8747dee4",
+    "documentCount": 11,
+    "allVisibleDocumentsHaveCreator": true,
+    "workspaceAndDetailAgree": true,
+    "creatorVisibleOnActualPage": true,
+    "sources": [
+      "SAVED_NAME"
+    ],
+    "newCreatorCapture": "Proven in isolated LOCAL/PostgreSQL native writes; no production test order created",
+    "businessWrites": 0
+  },
+  "runtime": [
+    {
+      "name": "cohamy",
+      "pid": 1373186,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/96cb3d10ab1b3810d65668b9dfca0e2d8747dee4",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 1373187,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/96cb3d10ab1b3810d65668b9dfca0e2d8747dee4",
+      "restarts": 0
+    }
+  ],
+  "preservedExistingBusinessTables": 50,
+  "preservedExistingBusinessRows": 520,
+  "productionTestOrdersCreated": 0,
+  "externalTestEmails": 0
+}
