@@ -45,7 +45,7 @@ async function withPasswordIdentity<T>(email: string, password: string, accept: 
     ON CONFLICT(key_hash) DO UPDATE SET attempts=CASE WHEN cohamy_crm.login_attempts.window_start < now()-interval '15 minutes' THEN 1 ELSE cohamy_crm.login_attempts.attempts+1 END,
     window_start=CASE WHEN cohamy_crm.login_attempts.window_start < now()-interval '15 minutes' THEN now() ELSE cohamy_crm.login_attempts.window_start END RETURNING attempts`, [key]);
   if (attempt.rows[0].attempts > 8) throw new CrmError("LOGIN_RATE_LIMITED", 429);
-  const result = await db.query<{ id: string; password_hash: string; active: boolean; activation_status:string }>("SELECT id,password_hash,active,activation_status FROM cohamy_crm.users WHERE email=$1", [email]);
+  const result = await db.query<{ id: string; password_hash: string; active: boolean; activation_status:string }>("SELECT id,password_hash,active,activation_status FROM cohamy_crm.users WHERE email=$1 AND deleted_at IS NULL", [email]);
   const candidate = result.rows[0];
   const matches = await bcrypt.compare(password, candidate?.password_hash ?? dummyHash);
   if (!candidate?.active || candidate.activation_status!=='ACTIVE' || !matches) throw new CrmError("INVALID_CREDENTIALS", 401);

@@ -1,0 +1,44 @@
+{
+  "status": "PASS",
+  "environment": "STAGING native PostgreSQL runtime role",
+  "cases": [
+    {
+      "name": "Deleted email provisions a new identity and membership while the original identity, password and membership history stay byte-equivalent",
+      "status": "PASS"
+    },
+    {
+      "name": "Old sessions, old passwords and old memberships remain revoked; a live pending identity still reserves the email and retries do not create a duplicate",
+      "status": "PASS"
+    },
+    {
+      "name": "A new invitation activates and authenticates the new account in the requested HN role without inheriting the deleted HCM access",
+      "status": "PASS"
+    },
+    {
+      "name": "Password recovery selects only the new live identity, never the archived row sharing its email",
+      "status": "PASS"
+    },
+    {
+      "name": "Locked accounts retain email ownership; Admin-only and organization boundaries remain enforced",
+      "status": "PASS"
+    },
+    {
+      "name": "Generated login also recreates a fresh identity and a deleted account activation link cannot affect it",
+      "status": "PASS"
+    },
+    {
+      "name": "Repeated delete and recreate cycles retain every archived identity and still authenticate the single current account",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent requests for the same deleted email produce exactly one current account, including case normalization",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP provisions and replays the same command, reads both safe history and the new identity, while the current account list excludes the archived one",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionAccountWrites": 0
+}

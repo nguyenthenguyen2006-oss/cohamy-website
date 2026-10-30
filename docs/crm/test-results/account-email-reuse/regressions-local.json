@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated fixtures",
+  "checks": {
+    "deletion": {
+      "status": "PASS",
+      "cases": 12
+    },
+    "provision": {
+      "status": "PASS",
+      "cases": 16
+    }
+  },
+  "typescript": "PASS",
+  "eslint": "PASS",
+  "catalog": {
+    "operations": 339,
+    "available": 231,
+    "retired": 108
+  }
+}

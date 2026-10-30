@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test:crm:account-email-reuse": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-account-email-reuse.ts",
+    "test:crm:account-email-reuse-browser": "node scripts/crm/verify-account-email-reuse-browser.mjs",
     "test:crm:account-deletion": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-account-deletion.ts",
     "test:crm:account-deletion-browser": "node scripts/crm/verify-account-deletion-browser.mjs",
     "test:crm:generated-accounts": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-generated-accounts.ts",
