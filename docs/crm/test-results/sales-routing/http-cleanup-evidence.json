@@ -1,0 +1,20 @@
+{
+  "commitSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "status": "PASS",
+  "scope": "Exact seven b5 owned QA database names; exact retained HTTP runtime role and own recorded PIDs",
+  "ownedQaDatabaseCount": 0,
+  "retainedRuntimeRoleCount": 0,
+  "checkedOwnedQaDatabases": 7,
+  "pids": {
+    "web": 1438712,
+    "worker": 1438713
+  },
+  "ownPidsStopped": true,
+  "loopbackPort4363Listening": false,
+  "privateRuntimeEnvRemoved": true,
+  "privateFixtureMetadataRemoved": true,
+  "sourceAndBuildEvidencePreserved": true,
+  "productionWrites": 0,
+  "externalEmails": 0,
+  "checkedAt": "2026-10-30T10:17:54.101Z"
+}

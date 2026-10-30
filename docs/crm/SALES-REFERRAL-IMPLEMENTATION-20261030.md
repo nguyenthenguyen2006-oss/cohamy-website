@@ -1,5 +1,7 @@
 # Sales, referral, thông báo đúng kho và điều kiện xuất
 
+**Đã triển khai production trên https://cohamy.vn.** Release đang chạy: `a84dd93caa0ac8612bb23d009e48da8b77cbbf9d`; xác minh sau triển khai lúc 17:23:44 ngày 30/10/2026 (Việt Nam). Code nghiệp vụ giống bản STAGING b5a39f6; commit release bổ sung báo cáo và script kiểm tra chỉ đọc. Tài liệu/bằng chứng bổ sung sau triển khai không đổi code đang chạy.
+
 Phạm vi lớn, gồm tài khoản, sở hữu khách, đơn Portal, RBAC, thông báo, tài chính và kho. Yêu cầu người dùng cho phép triển khai trực tiếp, kiểm thử riêng và production theo backup/rollback; không tạo khách/đơn thật hoặc gửi mail khách thật trong test.
 
 ## Task list và giao diện tích hợp
@@ -129,6 +131,11 @@ Source nghiệp vụ đã khóa tại `b5a39f6a273a3390c2c22e26f3e7f86002a00926`
 | LOCAL hồi quy | Buyer 13; document flow 20; finance 10; provisioning 16; generated accounts 10; account email reuse 9; partner merge 10 | **PASS**; giữ cơ chế Admin tự sinh mật khẩu hiện có, còn Sales dùng lời mời |
 | LOCAL MCP qua HTTP/OAuth PKCE + official SDK | Tạo khách/referral, chuyển Sales, quote/gates, PDF, dữ liệu phân trang, từ chối trường bí mật | **8/8 PASS**; không thay thế bằng thử trực tiếp giao diện ChatGPT web |
 | STAGING build + worker + MCP | Chạy bản production build và worker thật trên DB giả, kiểm tra bổ sung tồn muộn và dedup qua nhiều lượt quét | **Build PASS; tracing 3/3 PASS**, 111 traces, 0 QA leaks; **MCP 9/9 PASS**, gồm worker độc lập gửi đúng Sales/HCM/khách và không trùng qua lượt quét tiếp theo |
+| Production candidate | Native CRM/Portal/PDF/OAuth và các module đã nghỉ | **18/18 PASS** trước cutover |
+| Production HTTPS | Kiểm tra hồi quy native | **18/18 PASS** |
+| Production HTTPS | Sales pages/API, scope thông báo, phân trang, referral lỗi và đơn thật không đủ điều kiện xuất | **6/6 PASS**, không ghi nghiệp vụ |
+| Production VPS | SHA/PM2/Node, 55 migration đúng checksum, backup timer và bản backup gần nhất | **6/6 PASS**; web và worker đúng release, online, 0 restart |
+| Production MCP đang kết nối | Khám phá lệnh, đọc dashboard/thông báo, 9 bảng mới, đối chiếu đơn thật, kiểm tra chốt kho và tải PDF | **7/7 PASS**; PDF thật 24.611 byte; không thực hiện lệnh ghi nghiệp vụ trên production |
 
 Đo tốc độ STAGING dùng production build, PostgreSQL giả và loopback trên VPS: 36/36 HTTP 200, không retry hoặc bỏ mẫu. Sau lần đọc đầu, p95 của 5 mẫu ấm lần lượt: Sales workspace 155 ms, đơn hàng 84 ms, thông báo 51 ms, trang Sales SSR 77 ms, bảng kho HN SSR 49 ms, API kho HN 33 ms. Lần mở trang Sales đầu tiên 2.269 ms; các lần đầu còn lại 35–247 ms. Đây là mẫu nhỏ trên dữ liệu thử và không gồm độ trễ mạng/trình duyệt người dùng, không khẳng định toàn CRM production đạt các số này.
 
@@ -140,12 +147,28 @@ Map với 10 yêu cầu kiểm thử: (1–2) acquisition; (3–4) routing HN/HC
 
 - Không tạo tài khoản/đơn thật, không xuất hàng thật, không gửi mail khách thật để test.
 - Mail mới được thử bằng provider giả có lỗi/retry; không dùng đó làm bằng chứng Brevo đã giao email mới tới hộp thư khách.
-- Không phát lại thông báo lịch sử hoặc thao tác báo giá/chốt/xuất với `DH-20261030-74735EC7`; trước cập nhật: `WAITING_QUOTE`, v1, 7 dòng, chưa có phiếu giao.
+- Không phát lại thông báo lịch sử hoặc thao tác báo giá/chốt/xuất với `DH-20261030-74735EC7`. Sau cập nhật vẫn `WAITING_QUOTE`, v1, 7 dòng/7 gói, 0 phiếu giao. Đối chiếu tất cả trường nghiệp vụ cũ và các mảng phiếu/nhận hàng/sự kiện/VAT/file khớp hoàn toàn cả lần đọc gốc và lần đọc ngay trước triển khai; bỏ qua các trường trình bày mới do schema bổ sung.
 - Không tự gắn khách cũ chưa có owner. Snapshot đơn cũ chưa ghi Sales được hiển thị đúng là chưa ghi nhận, không suy đoán từ Sales hiện tại.
 - Gộp hồ sơ có ownership Sales hoặc lịch sử đơn Portal bị chặn có giải thích; chỉ gộp hồ sơ thường chưa có các liên kết này. Đây là giới hạn có chủ đích để không di chuyển lịch sử đơn/tài khoản bất biến sang tổ chức khác. Admin dùng hồ sơ đang có và phân công có audit.
 - Bộ công cụ MCP đã qua runtime OAuth/SDK; thao tác trực tiếp trên giao diện ChatGPT web của người dùng chưa được thực nghiệm trong lần chạy này.
 
-**MCP có dùng được không? MCP có đọc được dữ liệu này không?** LOCAL đã xác nhận dùng được và đọc được API/bảng nghiệp vụ mới, PDF và lịch sử. Luồng Sales không lộ mật khẩu/token; bảng auth, rate limit và receipt retry không được công khai. Kết quả production sẽ bổ sung sau triển khai SHA đã kiểm thử. Catalog đã sinh lại và kiểm tra: 355 operations, 247 đang dùng, 108 đã nghỉ; 136 GET và 219 lệnh ghi trong tổng catalog. Không thêm SQL/shell/filesystem execution.
+**MCP có dùng được không?** Có. Đã chạy OAuth PKCE + official SDK trên STAGING và các công cụ Cohamy đang kết nối trên production. MCP có các lệnh native tạo khách chờ kích hoạt, referral, gửi/thu hồi lời mời, phân công Sales, báo giá và tiến độ xử lý; vẫn phải qua quyền, phiên bản, idempotency và các điều kiện nghiệp vụ. Lệnh ghi được thử trên dữ liệu giả, không tạo tài khoản/đơn/phiếu thật để test production.
+
+**MCP có đọc được dữ liệu này không?** Có. Runtime production đã đọc dashboard, thông báo, 9 bảng nghiệp vụ mới, điều kiện xử lý và PDF của đơn thật. Các bảng mới đang trống là đúng vì không backfill hoặc tạo dữ liệu test vào production; Admin cần phân công khách cũ đúng Sales. Luồng Sales không lộ mật khẩu/token; bảng auth, rate limit và receipt retry không được công khai. Catalog đã sinh lại và kiểm tra: 355 operations, 247 đang dùng, 108 đã nghỉ; 136 GET và 219 lệnh ghi trong tổng catalog. Không thêm SQL/shell/filesystem execution. Giao diện ChatGPT web chưa được thao tác trực tiếp trong lần kiểm tra này.
+
+Không còn lỗi kiểm thử đang mở trong phạm vi triển khai. Các giới hạn chưa được kiểm chứng: thư mới đến hộp thư khách thật, thao tác bấm giao diện ChatGPT web, visual regression thiếu baseline và tốc độ dưới tải lớn. Không dùng số liệu loopback trên dữ liệu giả để cam kết tốc độ toàn hệ thống.
+
+## Bằng chứng triển khai production
+
+- Release: `/root/cohamy-releases/a84dd93caa0ac8612bb23d009e48da8b77cbbf9d`. SHA production cũ `13ab133b…` đã được merge và kiểm tra là tổ tiên trước triển khai; gate kiểm tra lại marker hiện tại ngay trước cutover.
+- Backup và source rollback: `/root/cohamy-backups/20261030T101727Z-a84dd93caa0a`.
+- Backup trước migration: **226 bảng**, cùng snapshot với pg_dump, phục hồi thử và đối chiếu manifest/checksum **PASS**.
+- Backup trước cutover: **238 bảng**, phục hồi thử và đối chiếu manifest/checksum **PASS**; 12 bảng bổ sung, chỉ 4 migration mới được áp dụng trong một transaction.
+- Manifest trước/sau migration: **17 bảng nghiệp vụ quan trọng giữ nguyên hash và số dòng**, gồm tổ chức/sản phẩm, tồn/biến động/giữ hàng, chứng từ kho/kế toán, chứng từ tệp, tài liệu nội bộ, hóa đơn lịch sử và sự kiện đơn. Hai bảng cũ đổi fingerprint là `buyer_orders` (thêm cột phí mặc định 0) và registry `migrations` (thêm 4 mục); không có thay đổi bất thường ở bảng nghiệp vụ cũ.
+- Backup hằng ngày: timer active, lần backup gần nhất PASS và dùng đúng release mới. Hai tiến trình Node 22.23.2 online, 0 restart khi kiểm tra.
+- Môi trường STAGING đã dọn: 7 database QA còn 0, role runtime thử còn 0, web/worker thử đã dừng và xóa env/metadata riêng. Source/build và bằng chứng vẫn giữ để rà soát.
+
+Các file: `test-results/sales-routing/production-release.json`, `production-state.json`, `candidate-smoke-production.json`, `public-smoke-production.json`, `sales-smoke-production.json`, `connected-mcp-production.json`, `http-cleanup-evidence.json`. Báo cáo được lọc để không đưa email/mật khẩu/token hay dữ liệu hồ sơ khách thật vào tài liệu theo dõi.
 
 ## Backup và rollback
 

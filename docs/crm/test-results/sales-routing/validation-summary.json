@@ -134,9 +134,30 @@
       "environment": "LOCAL isolated PGlite; fictitious businesses and explicitly fake closed balance fixture"
     }
   ],
-  "production": "PENDING deployment and post-cutover verification",
+  "production": {
+    "status": "PASS",
+    "sourceSha": "a84dd93caa0ac8612bb23d009e48da8b77cbbf9d",
+    "backup": "/root/cohamy-backups/20261030T101727Z-a84dd93caa0a",
+    "candidateSmoke": 18,
+    "httpsSmoke": 18,
+    "salesReadOnly": 6,
+    "state": 6,
+    "connectedMcp": 7,
+    "targetUnchanged": true,
+    "preservedCriticalBusinessTables": 17,
+    "newMigrationCount": 4,
+    "newTables": 12,
+    "businessTestWrites": 0,
+    "externalTestEmails": 0
+  },
   "chatGptWebUi": "NOT_RUN; official SDK and OAuth verified",
   "visualRegression": "INCONCLUSIVE; no prior image baseline",
   "externalTestEmails": 0,
-  "productionTestAccountsOrdersOrStockWrites": 0
+  "productionTestAccountsOrdersOrStockWrites": 0,
+  "stagingCleanup": {
+    "status": "PASS",
+    "ownedQaDatabasesRemaining": 0,
+    "retainedRuntimeRolesRemaining": 0,
+    "webAndWorkerStopped": true
+  }
 }

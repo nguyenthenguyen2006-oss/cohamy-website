@@ -1,0 +1,107 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION connected Cohamy MCP; native business reads and contract discovery only",
+  "testedAt": "2026-10-30T10:25:33.077Z",
+  "sourceSha": "a84dd93caa0ac8612bb23d009e48da8b77cbbf9d",
+  "cases": [
+    {
+      "name": "Live MCP discovers complete native Sales write contracts without issuing a production business command",
+      "status": "PASS"
+    },
+    {
+      "name": "Live MCP reads Sales dashboard and scoped paginated notifications",
+      "status": "PASS"
+    },
+    {
+      "name": "New business catalog includes all nine supported tables and excludes auth, rate-limit and retry internals",
+      "status": "PASS"
+    },
+    {
+      "name": "Live data tool executes paginated reads against all nine new production business tables",
+      "status": "PASS"
+    },
+    {
+      "name": "Reference order is byte-for-byte equal under its existing business model to both original and immediate pre-deployment reads",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual unquoted reference order cannot prepare or issue under the live fulfillment view",
+      "status": "PASS"
+    },
+    {
+      "name": "Live MCP downloads a real native buyer PDF without changing the order",
+      "status": "PASS"
+    }
+  ],
+  "operations": [
+    "POST /api/crm/sales-customers/create",
+    "POST /api/crm/sales-customers/referral",
+    "POST /api/crm/sales-customers/reassign",
+    "POST /api/crm/sales-customers/invite",
+    "POST /api/crm/sales-customers/fulfillment"
+  ],
+  "tableReads": [
+    {
+      "table": "sales_referral_codes",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "customer_sales_ownership",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "customer_sales_assignment_history",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "sales_customer_review_requests",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "buyer_fulfillment_state",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "buyer_fulfillment_events",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "buyer_order_sales",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "sales_notification_events",
+      "total": 0,
+      "returned": 0
+    },
+    {
+      "table": "buyer_quote_price_checks",
+      "total": 0,
+      "returned": 0
+    }
+  ],
+  "targetPreservation": {
+    "code": "DH-20261030-74735EC7",
+    "status": "WAITING_QUOTE",
+    "version": 1,
+    "lines": 7,
+    "issues": 0,
+    "sameAsBeforeDeployment": true,
+    "sameAsOriginal": true
+  },
+  "pdf": {
+    "totalBytes": 24611,
+    "signature": "%PDF",
+    "complete": true
+  },
+  "productionBusinessWrites": 0,
+  "externalTestEmails": 0,
+  "chatGptWebUi": "NOT_RUN; production connected tools plus STAGING official SDK/OAuth verified"
+}

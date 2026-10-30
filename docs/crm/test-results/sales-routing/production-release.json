@@ -1,0 +1,166 @@
+{
+  "status": "PASS",
+  "verifiedAt": "2026-10-30T10:23:44.472Z",
+  "sourceSha": "a84dd93caa0ac8612bb23d009e48da8b77cbbf9d",
+  "businessSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "previousSha": "13ab133bf8c6385127e8d19ae229a2f8e47a9c7c",
+  "backup": "/root/cohamy-backups/20261030T101727Z-a84dd93caa0a",
+  "migration": {
+    "status": "PASS",
+    "total": 55,
+    "applied": [
+      "050-sales-customer-ownership.sql",
+      "051-buyer-fulfillment.sql",
+      "052-sales-order-notifications.sql",
+      "053-buyer-quote-price-checks.sql"
+    ]
+  },
+  "backups": {
+    "preMigration": {
+      "status": "PASS",
+      "sha256": "b787efa18b20fa4dd5af15d344d86a11293c1a535b2f5a4004cf0459d36d0527",
+      "tableCount": 226,
+      "snapshotConsistent": true,
+      "restoreRetained": false,
+      "fileIntegrityErrors": "0",
+      "documentSourceErrors": "0",
+      "directory": "/root/cohamy-backups/20261030T101727Z-a84dd93caa0a/pre-migration/2026-10-30T101845056Z-d2c722c0"
+    },
+    "beforeCutover": {
+      "status": "PASS",
+      "sha256": "14cf88427d08a63bfbe305dd987f80131217fcb8ec049a6096d53477951de7b7",
+      "tableCount": 238,
+      "snapshotConsistent": true,
+      "restoreRetained": false,
+      "fileIntegrityErrors": "0",
+      "documentSourceErrors": "0",
+      "directory": "/root/cohamy-backups/20261030T101727Z-a84dd93caa0a/before-cutover/2026-10-30T102113843Z-c037815a"
+    }
+  },
+  "preservedBusinessTables": [
+    {
+      "name": "organizations",
+      "rows": "16",
+      "unchanged": true
+    },
+    {
+      "name": "products",
+      "rows": "11",
+      "unchanged": true
+    },
+    {
+      "name": "inventory_balances",
+      "rows": "24",
+      "unchanged": true
+    },
+    {
+      "name": "inventory_movements",
+      "rows": "126",
+      "unchanged": true
+    },
+    {
+      "name": "inventory_reservations",
+      "rows": "43",
+      "unchanged": true
+    },
+    {
+      "name": "warehouse_handover_invoices",
+      "rows": "2",
+      "unchanged": true
+    },
+    {
+      "name": "accounting_order_clearances",
+      "rows": "12",
+      "unchanged": true
+    },
+    {
+      "name": "payment_receipts",
+      "rows": "0",
+      "unchanged": true
+    },
+    {
+      "name": "payment_allocations",
+      "rows": "0",
+      "unchanged": true
+    },
+    {
+      "name": "receivables",
+      "rows": "8",
+      "unchanged": true
+    },
+    {
+      "name": "bank_transactions",
+      "rows": "0",
+      "unchanged": true
+    },
+    {
+      "name": "private_documents",
+      "rows": "0",
+      "unchanged": true
+    },
+    {
+      "name": "document_versions",
+      "rows": "0",
+      "unchanged": true
+    },
+    {
+      "name": "historical_order_invoices",
+      "rows": "4",
+      "unchanged": true
+    },
+    {
+      "name": "internal_documents",
+      "rows": "9",
+      "unchanged": true
+    },
+    {
+      "name": "buyer_order_events",
+      "rows": "1",
+      "unchanged": true
+    },
+    {
+      "name": "buyer_delivery_receipts",
+      "rows": "0",
+      "unchanged": true
+    }
+  ],
+  "changedExistingTables": [
+    "buyer_orders",
+    "migrations"
+  ],
+  "addedTables": [
+    "buyer_fulfillment_actions",
+    "buyer_fulfillment_events",
+    "buyer_fulfillment_state",
+    "buyer_order_sales",
+    "buyer_quote_price_checks",
+    "customer_sales_assignment_history",
+    "customer_sales_ownership",
+    "sales_customer_actions",
+    "sales_customer_review_requests",
+    "sales_notification_events",
+    "sales_referral_codes",
+    "sales_registration_limits"
+  ],
+  "candidateSmokeChecks": 18,
+  "publicSmokeChecks": 18,
+  "salesSmokeChecks": 6,
+  "runtime": [
+    {
+      "name": "cohamy",
+      "pid": 1445195,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/a84dd93caa0ac8612bb23d009e48da8b77cbbf9d",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 1445201,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/a84dd93caa0ac8612bb23d009e48da8b77cbbf9d",
+      "restarts": 0
+    }
+  ],
+  "productionTestAccountsOrdersStockOrMessages": 0,
+  "note": "Manifest comparison is pre-migration to before-cutover. buyer_orders adds a zero-default fee column; migration registry adds four entries. Public smoke performs session/OAuth authorization and revocation, no business commands."
+}

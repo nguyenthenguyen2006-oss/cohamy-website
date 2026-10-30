@@ -1,5 +1,5 @@
 Changed paths against production 13ab133bf8c6385127e8d19ae229a2f8e47a9c7c
-Business source b5a39f6; final documentation and evidence included.
+Deployed runtime a84dd93caa0ac8612bb23d009e48da8b77cbbf9d; final documentation and evidence included.
 
 app/(operations)/crm/activate/page.tsx
 app/(operations)/portal/register/page.tsx
@@ -48,16 +48,23 @@ docs/crm/test-results/sales-metrics/services-staging.json
 docs/crm/test-results/sales-routing/accounting-order-desktop.png
 docs/crm/test-results/sales-routing/accounting-ui-local.json
 docs/crm/test-results/sales-routing/browser-local.json
+docs/crm/test-results/sales-routing/candidate-smoke-production.json
+docs/crm/test-results/sales-routing/connected-mcp-production.json
 docs/crm/test-results/sales-routing/http-build-evidence.json
+docs/crm/test-results/sales-routing/http-cleanup-evidence.json
 docs/crm/test-results/sales-routing/http-health-evidence.json
 docs/crm/test-results/sales-routing/http-latency-staging.json
 docs/crm/test-results/sales-routing/mcp-local.json
 docs/crm/test-results/sales-routing/mcp-staging.json
+docs/crm/test-results/sales-routing/production-release.json
+docs/crm/test-results/sales-routing/production-state.json
 docs/crm/test-results/sales-routing/public-referral-mobile.png
+docs/crm/test-results/sales-routing/public-smoke-production.json
 docs/crm/test-results/sales-routing/referral-desktop.png
 docs/crm/test-results/sales-routing/responsive-ui-local.json
 docs/crm/test-results/sales-routing/rollback-local.json
 docs/crm/test-results/sales-routing/rollback-staging.json
+docs/crm/test-results/sales-routing/sales-smoke-production.json
 docs/crm/test-results/sales-routing/services-local.json
 docs/crm/test-results/sales-routing/services-staging.json
 docs/crm/test-results/sales-routing/validation-summary.json
