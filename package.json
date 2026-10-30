@@ -114,7 +114,15 @@
     "test:crm:mcp:catalog": "node scripts/crm/generate-mcp-catalog.mjs --check",
     "test:crm:mcp:browser": "node scripts/crm/verify-mcp-browser.mjs",
     "test:crm:mcp:password": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-mcp-password.ts",
-    "test:crm:mcp:consent": "node scripts/crm/verify-mcp-consent-browser.mjs"
+    "test:crm:mcp:consent": "node scripts/crm/verify-mcp-consent-browser.mjs",
+    "test:crm:sales-customers": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-customers.ts",
+    "test:crm:sales-routing": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-order-routing.ts",
+    "test:crm:sales-metrics": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-metrics.ts",
+    "test:crm:buyer-fulfillment": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-buyer-fulfillment.ts",
+    "test:crm:sales-ui": "node scripts/crm/verify-sales-ui-browser.mjs",
+    "test:crm:sales-mcp": "node scripts/crm/verify-sales-mcp.mjs",
+    "test:crm:sales-guards": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-guards.ts",
+    "test:crm:sales-rollback": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-rollback.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",
@@ -141,6 +149,7 @@
     "pdfkit": "^0.20.2",
     "pg": "^8.23.0",
     "postcss": "8.5.23",
+    "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "sanitize-html": "^2.17.6",
@@ -157,6 +166,7 @@
     "@types/papaparse": "^5.5.2",
     "@types/pdfkit": "^0.17.6",
     "@types/pg": "^8.23.1",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sanitize-html": "^2.16.1",

@@ -5,7 +5,6 @@ import { CrmNavLink as Link } from './CrmNavLink';
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
-  Bell,
   CaretRight,
   House,
   List,
@@ -21,6 +20,7 @@ import { isBuyerRole,roleLabels, type Principal } from "@/lib/crm/types";
 import { CrmModuleIcon } from "./ModuleIcon";
 import { QuickCreate } from "./QuickCreate";
 import './performance.css';
+import {SalesNotificationBell} from './SalesNotificationControls';
 
 const subLabels: Record<string, string> = {
   new: "Tạo mới",
@@ -365,14 +365,7 @@ export function CrmShell({
             </Link>
           )}
 
-          {connected.some(module => module.id === "notifications") && <Link
-            href="/crm/notifications"
-            className="crm-topbar__icon-btn"
-            aria-label="Thông báo hóa đơn & hệ thống"
-            title="Thông báo hóa đơn & hệ thống"
-          >
-            <Bell size={18} weight="bold" aria-hidden="true" />
-          </Link>}
+          {connected.some(module => module.id === "sales-notifications")&&<SalesNotificationBell/>}
 
           {user.role !== "ACCOUNTANT" && (
             <div className="crm-topbar__quick-create">

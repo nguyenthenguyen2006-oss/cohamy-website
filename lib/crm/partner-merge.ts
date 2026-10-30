@@ -36,6 +36,10 @@ async function manifest(sql:Sql,user:Principal,sourceId:string,targetId:string,c
   if(sourceId===targetId||!source.active||!target.active||source.merged_into_id||target.merged_into_id||!['CUSTOMER','DEALER','SUPPLIER'].includes(source.kind)||source.kind!==target.kind)throw new CrmError('MERGE_INVALID_PAIR',409);
   if((await sql.query(`SELECT s.id FROM cohamy_crm.memberships s JOIN cohamy_crm.memberships t ON t.user_id=s.user_id AND t.role=s.role WHERE s.organization_id=$1 AND t.organization_id=$2`,[sourceId,targetId])).rows.length)throw new CrmError('MERGE_MEMBERSHIP_CONFLICT',409);
   const sourceIds=await partnerFamily(sql,sourceId),allIds=[...sourceIds,...await partnerFamily(sql,targetId)],groups:LinkGroup[]=[],hash=createHash('sha256');
+  // Canonical merging does not yet migrate primary ownership or immutable
+  // Portal orders. Recheck in preview and confirmation before moving identities.
+  const protectedWorkflow=await sql.query('SELECT 1 WHERE EXISTS(SELECT 1 FROM cohamy_crm.customer_sales_ownership WHERE customer_organization_id=ANY($1::uuid[])) OR EXISTS(SELECT 1 FROM cohamy_crm.buyer_orders WHERE organization_id=ANY($1::uuid[]))',[allIds]);
+  if(protectedWorkflow.rows.length)throw new CrmError('PARTNER_MERGE_PROTECTED_SALES_WORKFLOW',409);
   hash.update(JSON.stringify({source,target,choices}));
   const refs=(await sql.query<{table_name:string;column_name:string}>(`SELECT t.relname AS table_name,a.attname AS column_name FROM pg_constraint c JOIN pg_class t ON t.oid=c.conrelid JOIN pg_namespace n ON n.oid=t.relnamespace CROSS JOIN LATERAL unnest(c.conkey) k(attnum) JOIN pg_attribute a ON a.attrelid=t.oid AND a.attnum=k.attnum WHERE c.contype='f' AND c.confrelid='cohamy_crm.organizations'::regclass AND n.nspname='cohamy_crm'`)).rows;
   for(const table of tables){if(['organizations','partner_merge_history','partner_merge_previews'].includes(table))continue;

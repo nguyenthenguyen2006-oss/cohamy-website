@@ -6,7 +6,7 @@ import {requireMcpAdmin} from './oauth';
 import type {Principal} from '../types';
 
 // Auth material is never business data. Status is available through native settings/account APIs.
-const privateTables=/^(mcp_|account_invitations$|account_activation_attempts$|account_provision_actions$|sessions$|login_attempts$|password_reset_tokens$|mfa_|migrations$)/i;
+const privateTables=/^(mcp_|account_invitations$|account_activation_attempts$|account_provision_actions$|sales_customer_actions$|sales_registration_limits$|buyer_fulfillment_actions$|sessions$|login_attempts$|password_reset_tokens$|mfa_|migrations$)/i;
 const privateColumns=/(password|token|secret|credential|ciphertext|api.?key|authorization|cookie|registration_hash|approval_hash|storage.?path|absolute.?path|file.?path)/i;
 const ident=(value:string)=>'"'+value.replaceAll('"','""')+'"';
 export function redactMcp(value:unknown,depth=0):unknown{

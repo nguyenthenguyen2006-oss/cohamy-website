@@ -1,7 +1,9 @@
 import 'server-only';
 import {randomUUID} from 'node:crypto';
 import {database, type Sql} from './db';
-import {audit as baseAudit} from './auth';
+import {audit as baseAudit,assertCurrentPrincipal} from './auth';
+import {z} from 'zod';
+import {assertBuyerClearanceReady} from './buyer-fulfillment';
 import {CrmError, warehouseRoleRegion} from './permissions';
 import {enqueueNotification} from './workspace';
 import {commercialDigest, vietnamBusinessDate} from './commercial-common';
@@ -429,7 +431,8 @@ export async function ensureAccountantWorkflowSchema(sql: Sql) {
         CHECK (entity_type IN (
           'partner','order','product','account','ticket','commercial-request','sales-order',
           'delivery','return-request','receivable','payment','cash-request','report','deal','request',
-          'factory-invoice','warehouse-reconciliation','order-clearance','vat-invoice','warehouse-handover'
+          'factory-invoice','warehouse-reconciliation','order-clearance','vat-invoice','warehouse-handover',
+          'buyer-order','sales-customer'
         ));
 
       ALTER TABLE cohamy_crm.private_documents DROP CONSTRAINT IF EXISTS private_documents_entity_type_check;
@@ -714,6 +717,12 @@ export async function notifyRoles(
     extraUserIds?: string[];
   }
 ) {
+  // Portal orders use the primary Sales + exact warehouse recipient resolver.
+  // Keep older standalone workflows on their existing notification path.
+  if(input.entityType==='order-clearance'||input.entityType==='payment'){
+    const mapped=(await sql.query("SELECT b.id FROM cohamy_crm.buyer_orders b WHERE b.clearance_id="+(input.entityType==='payment'?"(SELECT t.clearance_id FROM cohamy_crm.order_payment_transactions t WHERE t.id=$1)":"$1")+' LIMIT 1',[input.entityId])).rows[0];
+    if(mapped)return;
+  }
   const rows = (
     await sql.query<{user_id: string}>(
       `SELECT DISTINCT m.user_id
@@ -763,6 +772,8 @@ export function extractSnapshotTotals(snapshot: Record<string, unknown> | null |
     }>;
   };
   const basket = (snapshot?.basket ?? {}) as {discountBasisPoints?: number};
+  const buyerSource=Boolean(snapshot?.buyerOrderId),shippingFee=buyerSource?Number((snapshot?.totals as {shippingFee?:string}|undefined)?.shippingFee??'0'):0;
+  if(buyerSource&&(!Number.isSafeInteger(shippingFee)||shippingFee<0))throw new CrmError('MONEY_LIMIT',400);
   const vatRateSnap = Math.max(0, Number((snapshot as {vatRate?: number})?.vatRate ?? 0));
   const listSubtotalNum = Number(calc.channel?.listSubtotal ?? calc.subtotal ?? 0);
   const netTotalNum = Number(calc.total ?? 0);
@@ -784,7 +795,8 @@ export function extractSnapshotTotals(snapshot: Record<string, unknown> | null |
     const lineDiscPct = listLine > 0 ? Number(((discLine / listLine) * 100).toFixed(2)) : discountPct;
     const netUnit = baseQty > 0 ? Math.round(netLine / baseQty) : listUnit;
     const lineVatRate = l.vatRate !== undefined ? Number(l.vatRate) : vatRateSnap;
-    const lineVatAmt = Math.round((netLine * lineVatRate) / 100);
+    if(buyerSource&&(!Number.isSafeInteger(netLine)||!Number.isSafeInteger(listLine)||!Number.isSafeInteger(baseQty)))throw new CrmError('MONEY_LIMIT',400);
+    const lineVatAmt = buyerSource?Number((BigInt(l.total??'0')*BigInt(Math.round(lineVatRate*100))+5000n)/10000n):Math.round((netLine * lineVatRate) / 100);
     const costUnit = Number(l.costUnitPrice ?? Math.round(listUnit * 0.7));
     return {
       productId: l.productId ? String(l.productId) : undefined,
@@ -806,9 +818,10 @@ export function extractSnapshotTotals(snapshot: Record<string, unknown> | null |
       grossLineTotal: netLine + lineVatAmt,
     };
   });
-  const netRounded = Math.round(netTotalNum);
+  const netRounded = Math.round(netTotalNum)+shippingFee;
   const vatAmountRounded = lines.reduce((s, x) => s + (x.vatLineAmount ?? 0), 0);
   const grossTotalRounded = netRounded + vatAmountRounded;
+  if(buyerSource&&(!Number.isSafeInteger(netRounded)||!Number.isSafeInteger(grossTotalRounded)))throw new CrmError('MONEY_LIMIT',400);
   return {
     listSubtotal: Math.round(listSubtotalNum),
     discountPercent: discountPct,
@@ -2139,11 +2152,34 @@ export async function handleAccountantWorkflowAction(
     });
   }
   if(user.role!=='ADMIN'&&['accountant-clear-order','accountant-verify-factory-invoice','update-reconciliation-status','save-vat-invoice','update-handover-delivery'].includes(action))throw new CrmError('FORBIDDEN',403);
-  if (['ACCOUNTANT','FACTORY'].includes(user.role)||(['WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM'].includes(user.role)&&action!=='register-warehouse-order')) throw new CrmError('FORBIDDEN',403);
+  const buyerPaymentActions=['record-order-payment','confirm-order-payment','accountant-verify-clearance','staff-submit-payment'];
+  if(['confirm-order-payment','accountant-verify-clearance'].includes(action)&&!['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role))throw new CrmError('FORBIDDEN',403);
+  if ((user.role==='ACCOUNTANT'&&!buyerPaymentActions.includes(action))||user.role==='FACTORY'||(['WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM'].includes(user.role)&&action!=='register-warehouse-order')) throw new CrmError('FORBIDDEN',403);
   if (['WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM'].includes(user.role)&&action==='register-warehouse-order') throw new CrmError('FORBIDDEN',403);
   const db = await database();
   return db.transaction(async sql => {
     await ensureAccountantWorkflowSchema(sql);
+    await assertCurrentPrincipal(sql,user);
+    const financial=buyerPaymentActions.includes(action);
+    let paymentKey:string|null=null,paymentHash='',scopedClearance='';
+    if(financial){
+      const parsed=z.uuid().safeParse(input.idempotencyKey);if(!parsed.success)throw new CrmError('IDEMPOTENCY_KEY_REQUIRED',400);paymentKey=parsed.data;paymentHash=commercialDigest({action,input});
+      await sql.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))',[user.id+':buyer-fulfillment:'+paymentKey]);
+      const old=(await sql.query<{request_hash:string;result:unknown}>('SELECT request_hash,result FROM cohamy_crm.buyer_fulfillment_actions WHERE actor_id=$1 AND key=$2',[user.id,paymentKey])).rows[0];if(old){if(old.request_hash!==paymentHash)throw new CrmError('IDEMPOTENCY_CONFLICT',409);return old.result;}
+      scopedClearance=String(input.clearanceId??'');
+      if(action==='confirm-order-payment'){const transactionId=z.uuid().safeParse(input.transactionId);if(!transactionId.success)throw new CrmError('INVALID_FIELDS',400);const tx=(await sql.query<{clearance_id:string}>('SELECT clearance_id FROM cohamy_crm.order_payment_transactions WHERE id=$1',[transactionId.data])).rows[0];if(!tx)throw new CrmError('NOT_FOUND',404);scopedClearance=tx.clearance_id;}
+      if(!z.uuid().safeParse(scopedClearance).success)throw new CrmError('INVALID_FIELDS',400);
+      if(user.area==='crm'&&user.role==='SALES'){
+        const b=(await sql.query<{id:string}>('SELECT id FROM cohamy_crm.buyer_orders WHERE clearance_id=$1',[scopedClearance])).rows[0];
+        if(b)await(await import('./buyer')).buyerOrder(sql,user,b.id);
+        else{
+          const scope=(await import('./repository')).partnerScope(user);
+          if(!(await sql.query(`SELECT c.id FROM cohamy_crm.accounting_order_clearances c JOIN cohamy_crm.organizations o ON o.id=c.organization_id JOIN cohamy_crm.warehouses w ON w.id=c.warehouse_id WHERE c.id=$${scope.params.length+1} AND w.organization_id=$${scope.params.length+2} AND (${scope.sql})`,[...scope.params,scopedClearance,user.organizationId])).rows.length)throw new CrmError('NOT_FOUND',404);
+        }
+      }else{const {flowEntityAccess}=await import('./document-flow');await flowEntityAccess(sql,user,'order-clearance',scopedClearance);}
+    }
+    const execute=async()=>{
+
 
     if (action === 'register-warehouse-order') {
       if (!['ADMIN', 'MANAGER', 'SALES', 'ACCOUNTANT', 'WAREHOUSE', 'WAREHOUSE_HCM', 'WAREHOUSE_HN'].includes(user.role)) {
@@ -2178,6 +2214,11 @@ export async function handleAccountantWorkflowAction(
       const rawLines = Array.isArray(input.lines) ? (input.lines as Array<Record<string, unknown>>) : [];
 
       let orgId = String(input.organizationId ?? '').trim();
+      if(user.role==='SALES'){
+        if(!z.uuid().safeParse(orgId).success)throw new CrmError('EXISTING_ASSIGNED_CUSTOMER_REQUIRED',400);
+        const scope=(await import('./repository')).partnerScope(user);
+        if(!(await sql.query(`SELECT o.id FROM cohamy_crm.organizations o WHERE (${scope.sql}) AND o.id=$${scope.params.length+1} AND o.active AND o.merged_into_id IS NULL`,[...scope.params,orgId])).rows.length)throw new CrmError('NOT_FOUND',404);
+      }
       let orgRow: {id: string; code: string; name: string; phone: string; email: string; address: string} | undefined;
       if (orgId) {
         orgRow = (
@@ -3012,6 +3053,7 @@ export async function handleAccountantWorkflowAction(
         0,
         Math.round(Number(input.amount ?? input.submittedAmount ?? 0))
       );
+      if(!Number.isSafeInteger(amount)||amount<=0)throw new CrmError('INVALID_FIELDS',400);
       const paymentMethod = String(input.paymentMethod ?? 'BANK_TRANSFER').trim();
       const bankAccount = String(input.bankAccount ?? '').trim();
       const referenceCode = String(input.referenceCode ?? input.reference ?? '').trim();
@@ -3098,10 +3140,8 @@ export async function handleAccountantWorkflowAction(
       );
 
       if (warehouseId) {
-        await sql.query(
-          'UPDATE cohamy_crm.accounting_order_clearances SET warehouse_id = COALESCE($1, warehouse_id) WHERE id = $2',
-          [warehouseId, row.id]
-        );
+        const sourceWarehouse=(await sql.query<{warehouse_id:string|null}>('SELECT warehouse_id FROM cohamy_crm.accounting_order_clearances WHERE id=$1',[row.id])).rows[0];
+        if(sourceWarehouse.warehouse_id!==warehouseId)throw new CrmError('SOURCE_WAREHOUSE_MISMATCH',409);
       }
 
       const totals = await recalculateClearancePaymentTotals(sql, row.id);
@@ -3148,12 +3188,13 @@ export async function handleAccountantWorkflowAction(
       if (!transactionId) throw new CrmError('INVALID_FIELDS', 400);
 
       const tx = (
-        await sql.query<{id: string; clearance_id: string; amount: string}>(
-          'SELECT id, clearance_id, amount::text FROM cohamy_crm.order_payment_transactions WHERE id = $1 FOR UPDATE',
+        await sql.query<{id: string; clearance_id: string; amount: string;status:string}>(
+          'SELECT id, clearance_id, amount::text,status FROM cohamy_crm.order_payment_transactions WHERE id = $1 FOR UPDATE',
           [transactionId]
         )
       ).rows[0];
       if (!tx) throw new CrmError('NOT_FOUND', 404);
+      if(tx.status!=='PENDING')throw new CrmError('PAYMENT_ALREADY_REVIEWED',409);
 
       await sql.query(
         `UPDATE cohamy_crm.order_payment_transactions
@@ -3193,6 +3234,7 @@ export async function handleAccountantWorkflowAction(
         input.submittedAmountOverride !== undefined
           ? Math.max(0, Math.round(Number(input.submittedAmountOverride || 0)))
           : null;
+      if(submittedOverride!==null&&(!Number.isSafeInteger(submittedOverride)||submittedOverride<0))throw new CrmError('INVALID_FIELDS',400);
 
       const row = (
         await sql.query<{
@@ -3239,7 +3281,8 @@ export async function handleAccountantWorkflowAction(
         const payAmt =
           submittedOverride !== null
             ? submittedOverride
-            : Number(row.staff_submitted_amount || row.gross_total || row.net_total || 0);
+            : Number(row.staff_submitted_amount || 0);
+        if(!Number.isSafeInteger(payAmt)||payAmt<0)throw new CrmError('INVALID_FIELDS',400);
         if (existingTxCount === 0 && payAmt > 0) {
           const txId = randomUUID();
           const txCode = `TT-${vietnamBusinessDate(new Date())}-${txId.slice(0, 6).toUpperCase()}`;
@@ -3340,6 +3383,7 @@ export async function handleAccountantWorkflowAction(
         )
       ).rows[0];
       if (!row) throw new CrmError('NOT_FOUND', 404);
+      if(row.warehouse_id)await assertBuyerClearanceReady(sql,user,row.id,row.warehouse_id);
       if (row.warehouse_issue_status === 'ISSUED' || row.status === 'PICKED_UP_DELIVERED') {
         throw new CrmError('ORDER_ALREADY_ISSUED', 409);
       }
@@ -4512,6 +4556,11 @@ export async function handleAccountantWorkflowAction(
       }
       const organizationId = String(input.organizationId ?? '').trim();
       if (!organizationId) throw new CrmError('INVALID_FIELDS', 400);
+      if(user.role==='SALES'){
+        if(!z.uuid().safeParse(organizationId).success)throw new CrmError('INVALID_FIELDS',400);
+        const scope=(await import('./repository')).partnerScope(user);
+        if(!(await sql.query(`SELECT o.id FROM cohamy_crm.organizations o WHERE (${scope.sql}) AND o.id=$${scope.params.length+1} AND o.active AND o.merged_into_id IS NULL`,[...scope.params,organizationId])).rows.length)throw new CrmError('NOT_FOUND',404);
+      }
 
       const buyerType = String(input.buyerType ?? 'COMPANY') === 'INDIVIDUAL' ? 'INDIVIDUAL' : 'COMPANY';
       const legalName = String(input.legalName ?? '').trim();
@@ -4617,5 +4666,21 @@ export async function handleAccountantWorkflowAction(
     }
 
     throw new CrmError('INVALID_ACTION', 400);
+    };
+    const result=await execute();
+    if(paymentKey)await sql.query('INSERT INTO cohamy_crm.buyer_fulfillment_actions(actor_id,key,request_hash,result) VALUES($1,$2,$3,$4::jsonb)',[user.id,paymentKey,paymentHash,JSON.stringify(result)]);
+    if(paymentKey&&scopedClearance){
+      const b=(await sql.query<{id:string}>('SELECT id FROM cohamy_crm.buyer_orders WHERE clearance_id=$1',[scopedClearance])).rows[0];
+      if(b){
+        const n=await import('./sales-notifications');
+        if(['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role)&&input.decision!=='REJECT'){
+          const confirmed=(await sql.query<{id:string;amount:string}>("SELECT id,amount::text FROM cohamy_crm.order_payment_transactions WHERE clearance_id=$1 AND status='CONFIRMED' ORDER BY id",[scopedClearance])).rows;
+          if(confirmed.length)await n.notifyBuyerEvent(sql,user,b.id,'buyer.order.payment_confirmed',commercialDigest(confirmed));
+        }
+        await n.notifyBuyerReady(sql,user,b.id);
+      }
+    }
+    return result;
+
   });
 }

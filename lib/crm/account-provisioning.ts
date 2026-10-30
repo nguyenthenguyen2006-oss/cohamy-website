@@ -20,6 +20,21 @@ async function previous(sql:Sql,user:Principal,key:string,hash:string){
  if(row&&row.request_hash!==hash)throw new CrmError('IDEMPOTENCY_CONFLICT',409);return row?.result;
 }
 async function remember(sql:Sql,user:Principal,key:string,hash:string,result:unknown){await sql.query('INSERT INTO cohamy_crm.account_provision_actions(actor_id,key,request_hash,result) VALUES($1,$2,$3,$4::jsonb)',[user.id,key,hash,JSON.stringify(result)]);}
+async function insertProvisionedIdentity(sql:Sql,d:{email:string;displayName:string;role:string;organizationId:string},passwordHash:string,status:'ACTIVE'|'PENDING_ACTIVATION',demo=false){
+ const id=randomUUID(),membershipId=randomUUID();
+ await sql.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash,activation_status,activated_at,is_demo) VALUES($1,$2,$3,$4,$5,CASE WHEN $5='ACTIVE' THEN now() ELSE NULL END,$6)",[id,d.email,d.displayName,passwordHash,status,demo]);
+ await sql.query('INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,$4)',[membershipId,id,d.organizationId,d.role]);
+ await ensureRegionalWarehouseAssignments(sql,d.organizationId,membershipId,d.role);return {id,membershipId};
+}
+// Narrow internal entrypoint used only after customer acquisition has created
+// and locked the ownership row. It cannot create employee/Admin identities.
+export async function provisionPendingSalesBuyer(sql:Sql,user:Principal,input:{email:string;displayName:string;role:'CUSTOMER'|'SUPERMARKET';organizationId:string},passwordHash:string){
+ if(user.area!=='crm'||!['ADMIN','MANAGER','SALES'].includes(user.role))throw new CrmError('FORBIDDEN',403);await assertCurrentPrincipal(sql,user);
+ const ownership=(await sql.query<{sales_membership_id:string}>(`SELECT c.sales_membership_id FROM cohamy_crm.customer_sales_ownership c JOIN cohamy_crm.memberships m ON m.id=c.sales_membership_id JOIN cohamy_crm.organizations o ON o.id=c.customer_organization_id WHERE c.customer_organization_id=$1 AND m.organization_id=$2 AND o.kind='CUSTOMER' AND o.active`,[input.organizationId,user.organizationId])).rows[0];
+ if(!ownership||(user.role==='SALES'&&ownership.sales_membership_id!==user.membershipId)||!['CUSTOMER','SUPERMARKET'].includes(input.role))throw new CrmError('FORBIDDEN',403);
+ if((await sql.query('SELECT id FROM cohamy_crm.users WHERE lower(email)=$1 AND deleted_at IS NULL',[input.email])).rows.length)throw new CrmError('ACCOUNT_ALREADY_EXISTS',409);
+ const ids=await insertProvisionedIdentity(sql,input,passwordHash,'PENDING_ACTIVATION');await audit(sql,user.id,'account.provisioned',ids.membershipId,{userId:ids.id,email:input.email,role:input.role,organizationId:input.organizationId,loginMethod:'INVITATION',source:'SALES_CUSTOMER'});return ids;
+}
 export async function provisionAccount(user:Principal,input:unknown,demo=false):Promise<Record<string,unknown>>{
  admin(user);const d=parse(provisionAccountSchema,input),{loginMethod,...legacyInput}=d,hash=digest(JSON.stringify({action:'PROVISION',...(loginMethod==='GENERATED'?d:legacyInput)}));
  if(demo&&!['LOCAL','STAGING'].includes(process.env.CRM_ENVIRONMENT??''))throw new CrmError('DEMO_PROVISION_FORBIDDEN',403);
@@ -33,11 +48,8 @@ export async function provisionAccount(user:Principal,input:unknown,demo=false):
   if(!org?.active||org.kind!==roleOrganizationKind(d.role))throw new CrmError('ROLE_ORGANIZATION_MISMATCH',400);
   if(isBuyerRole(d.role)&&(await sql.query("SELECT id FROM cohamy_crm.memberships WHERE organization_id=$1 AND role IN('CUSTOMER','SUPERMARKET') AND role<>$2 AND active",[d.organizationId,d.role])).rows.length)throw new CrmError('BUYER_ROLE_CONFLICT',409);
   if((await sql.query('SELECT id FROM cohamy_crm.users WHERE lower(email)=$1',[d.email])).rows.length)throw new CrmError('ACCOUNT_ALREADY_EXISTS',409);
-  const id=randomUUID(),membershipId=randomUUID();
   const status=generatedPassword?'ACTIVE':'PENDING_ACTIVATION';
-  await sql.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash,activation_status,activated_at,is_demo) VALUES($1,$2,$3,$4,$5,CASE WHEN $5='ACTIVE' THEN now() ELSE NULL END,$6)",[id,d.email,d.displayName,passwordHash,status,demo]);
-  await sql.query('INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,$4)',[membershipId,id,d.organizationId,d.role]);
-  await ensureRegionalWarehouseAssignments(sql,d.organizationId,membershipId,d.role);
+  const {id,membershipId}=await insertProvisionedIdentity(sql,d,passwordHash,status,demo);
   const result={id,membershipId,email:d.email,displayName:d.displayName,role:d.role,organizationId:d.organizationId,status,...(generatedPassword?{loginMethod:'GENERATED',initialLoginIssued:true,loginPath:isBuyerRole(d.role)?'/portal/login':'/crm/login'}:{})};
   await remember(sql,user,d.idempotencyKey,hash,result);await audit(sql,user.id,'account.provisioned',membershipId,{userId:id,email:d.email,role:d.role,organizationId:d.organizationId,loginMethod});
   return generatedPassword?{...result,generatedPassword}:result;
@@ -50,9 +62,17 @@ function activationOrigin(){
  if((!local&&url.protocol!=='https:')||url.username||url.password||url.pathname!=='/'||url.search||url.hash)throw new CrmError('CRM_HTTPS_ORIGIN_REQUIRED',503);return url.origin;
 }
 export async function issueAccountInvitation(user:Principal,input:unknown,mailer:ActivationMailer=sendTransactionalEmail):Promise<Record<string,unknown>>{
- admin(user);const d=parse(accountInvitationSchema,input),hash=digest(JSON.stringify(d)),origin=d.action==='REVOKE'?'':activationOrigin(),db=await database();
+ admin(user);return issueInvitationCore(user,input,mailer,false);
+}
+export async function issuePendingSalesBuyerInvitation(user:Principal,input:unknown,mailer:ActivationMailer=sendTransactionalEmail):Promise<Record<string,unknown>>{
+ if(user.area!=='crm'||!['ADMIN','MANAGER','SALES'].includes(user.role))throw new CrmError('FORBIDDEN',403);return issueInvitationCore(user,input,mailer,true);
+}
+async function issueInvitationCore(user:Principal,input:unknown,mailer:ActivationMailer,customerOnly:boolean):Promise<Record<string,unknown>>{
+ const d=parse(accountInvitationSchema,input),hash=digest(JSON.stringify(d)),origin=d.action==='REVOKE'?'':activationOrigin(),db=await database();
  const prepared=await db.transaction(async sql=>{
-  await sql.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');await assertCurrentPrincipal(sql,user);const old=await previous(sql,user,d.idempotencyKey,hash);if(old)return {result:old};
+  await sql.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');await assertCurrentPrincipal(sql,user);
+  if(customerOnly){const allowed=(await sql.query<{sales_membership_id:string}>(`SELECT c.sales_membership_id FROM cohamy_crm.customer_sales_ownership c JOIN cohamy_crm.memberships buyer ON buyer.id=c.customer_membership_id JOIN cohamy_crm.memberships seller ON seller.id=c.sales_membership_id WHERE buyer.id=$1 AND buyer.role IN('CUSTOMER','SUPERMARKET') AND seller.organization_id=$2`,[d.membershipId,user.organizationId])).rows[0];if(!allowed||(user.role==='SALES'&&allowed.sales_membership_id!==user.membershipId))throw new CrmError('FORBIDDEN',403);}
+  const old=await previous(sql,user,d.idempotencyKey,hash);if(old)return {result:old};
   const m=(await sql.query<{user_id:string;email:string;activation_status:string;active:boolean;kind:string;role:string;deleted_at:string|null}>(`SELECT m.user_id,u.email,u.activation_status,u.deleted_at,(u.active AND m.active AND o.active) AS active,o.kind,m.role
    FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id WHERE m.id=$1 FOR UPDATE OF u,m,o`,[d.membershipId])).rows[0];
   if(!m)throw new CrmError('NOT_FOUND',404);if(m.deleted_at)throw new CrmError('ACCOUNT_DELETED',409);if(m.activation_status!=='PENDING_ACTIVATION')throw new CrmError('ACCOUNT_ALREADY_ACTIVE',409);
@@ -90,12 +110,14 @@ export async function activateProvisionedAccount(input:unknown,clientKey:string)
  if(limited.rows[0].attempts>15)throw new CrmError('ACTIVATION_RATE_LIMITED',429);
  const d=parse(activationSchema,input),passwordHash=await bcrypt.hash(d.password,12);
  return db.transaction(async sql=>{
+  await sql.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');
   const hint=(await sql.query<{user_id:string}>('SELECT user_id FROM cohamy_crm.account_invitations WHERE token_hash=$1',[digest(d.token)])).rows[0];if(!hint)throw new CrmError('ACTIVATION_INVALID_OR_EXPIRED',400);
   // Match invitation issuance lock order. Disabling an identity also prevents activation.
   const account=(await sql.query<{activation_status:string;active:boolean}>('SELECT activation_status,active FROM cohamy_crm.users WHERE id=$1 FOR UPDATE',[hint.user_id])).rows[0];
   const invitation=(await sql.query<{id:string;membership_id:string}>(`SELECT i.id,i.membership_id FROM cohamy_crm.account_invitations i JOIN cohamy_crm.memberships m ON m.id=i.membership_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id
    WHERE i.token_hash=$1 AND i.expires_at>now() AND i.consumed_at IS NULL AND i.revoked_at IS NULL AND i.delivery_status='SENT' AND m.active AND o.active FOR UPDATE OF i,m`,[digest(d.token)])).rows[0];
   if(!account?.active||account.activation_status!=='PENDING_ACTIVATION'||!invitation)throw new CrmError('ACTIVATION_INVALID_OR_EXPIRED',400);
+  await(await import('./sales-customers')).activateSalesCustomer(sql,invitation.membership_id);
   await sql.query("UPDATE cohamy_crm.users SET password_hash=$1,activation_status='ACTIVE',activated_at=now() WHERE id=$2",[passwordHash,hint.user_id]);
   await sql.query('UPDATE cohamy_crm.account_invitations SET consumed_at=now() WHERE id=$1',[invitation.id]);
   await sql.query('UPDATE cohamy_crm.account_invitations SET revoked_at=now() WHERE user_id=$1 AND id<>$2 AND revoked_at IS NULL AND consumed_at IS NULL',[hint.user_id,invitation.id]);

@@ -12,6 +12,7 @@ export type BuyerOrder={
  contract_snapshot:BuyerContract|null;request_id:string|null;clearance_id:string|null;version:number;
  created_at:string;updated_at:string;
  delivery_status?:string;
+ quote_fee_amount?:string;
 };
 export type BuyerBranch={id:string;organization_id:string;code:string;name:string;address:string;recipient:string;phone:string;active:boolean;version:number};
 export type ContractLine={productId:string;unitPrice:string;vatRate:number};

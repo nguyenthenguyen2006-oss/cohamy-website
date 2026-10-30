@@ -1,0 +1,22 @@
+.cohamy-crm .sales-customers,.upgrade-public .sales-customers{min-width:0}
+.sales-tabs,.sales-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+.sales-customer-form{min-width:0;display:grid;gap:14px}
+.sales-form-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:14px}
+.sales-customer-form label,.sales-referral label{display:grid;gap:6px;font-size:13px;font-weight:600;min-width:0}
+.sales-customer-form input,.sales-customer-form select,.sales-customer-form textarea,.sales-referral input{width:100%;min-width:0;max-width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--work-rule,#ddcdb7);border-radius:6px;background:var(--crm-bg-surface,#fff);color:inherit;font:inherit}
+.sales-customer-form textarea{min-height:90px;resize:vertical}.sales-form-wide{grid-column:1/-1}
+.sales-customer-form .button{justify-self:start;min-height:40px}
+.sales-filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}.sales-filters label{min-width:150px;flex:1}
+.sales-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:0;margin:18px 0;border:1px solid var(--work-rule,#ddcdb7);border-radius:8px;overflow:hidden;background:var(--crm-bg-surface,#fff)}
+.sales-metrics>div{padding:14px 16px;border-right:1px solid var(--work-rule,#ddcdb7);border-bottom:1px solid var(--work-rule,#ddcdb7)}
+.sales-metrics dt{font-size:12px;color:var(--work-muted,#6b6259)}.sales-metrics dd{font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;margin:6px 0 0;overflow-wrap:anywhere}
+.sales-table-scroll{width:100%;max-width:100%;overflow:auto;margin:14px 0}.sales-table-scroll table{width:100%;min-width:1050px;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px}
+.sales-table-scroll th,.sales-table-scroll td{padding:10px 12px;border:1px solid var(--work-rule,#ddcdb7);text-align:left;vertical-align:top}.sales-table-scroll th{white-space:nowrap;background:var(--crm-bg-subtle,#fef9ef)}.sales-table-scroll small{display:block;margin-top:4px;color:var(--work-muted,#6b6259)}
+.sales-facts{display:grid;grid-template-columns:minmax(150px,1fr) minmax(0,3fr);gap:10px 20px;padding:18px;border:1px solid var(--work-rule,#ddcdb7);border-radius:8px;background:var(--crm-bg-surface,#fff)}.sales-facts dt{font-weight:600}.sales-facts dd{margin:0;overflow-wrap:anywhere}
+.sales-referral{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start}.sales-referral figure{margin:0;text-align:center;font-size:12px}.sales-referral img{display:block;max-width:100%;background:#fff}.sales-referral figcaption{margin-top:6px}
+.sales-reassign-form{max-width:650px;margin-top:16px}
+.sales-notification-bell{position:relative}.sales-notification-count{position:absolute;right:-4px;top:-5px;min-width:19px;height:19px;border-radius:10px;background:#b9420c;color:#fff;font-size:10px;line-height:19px;font-weight:700;text-align:center;padding:0 4px}
+.sales-notifications .notification-unread td{background:var(--crm-bg-subtle,#fef9ef)}.sales-notification-priority{white-space:nowrap;font-size:12px;font-weight:600}.sales-notification-body{white-space:pre-line;min-width:240px;max-width:620px}.sales-notifications table{min-width:850px}.sales-notifications .table-toolbar label{min-width:160px}
+.buyer-fulfillment{display:grid;gap:14px;margin:18px 0}.buyer-fulfillment .sales-facts{margin:0}.buyer-fulfillment ul{margin:0;padding-left:20px}.buyer-fulfillment-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:end}.buyer-fulfillment-action{display:grid;gap:8px;flex:1;min-width:190px;max-width:420px}.buyer-fulfillment-action label{display:grid;gap:6px}.buyer-fulfillment-action textarea{min-height:65px;max-width:100%;font:inherit;padding:8px;border:1px solid var(--work-rule,#ddcdb7);border-radius:6px}
+.buyer-fulfillment .sales-table-scroll table{min-width:600px}
+@media(max-width:640px){.sales-facts{grid-template-columns:1fr;gap:4px}.sales-facts dd{margin:0 0 10px}.sales-referral{grid-template-columns:1fr}.sales-referral figure{justify-self:start}.sales-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.sales-tabs{flex-wrap:nowrap;max-width:100%;overflow-x:auto;padding-bottom:6px}.sales-tabs .button{flex:0 0 auto;white-space:nowrap}.sales-customer-form .button{width:100%}}

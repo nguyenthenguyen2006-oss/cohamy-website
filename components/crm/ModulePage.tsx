@@ -1,4 +1,6 @@
 import {DocumentFlowWorkspace} from './DocumentFlowWorkspace';
+import {SalesCustomersPage} from './SalesCustomersPage';
+import {SalesNotificationsPage} from './SalesNotificationsPage';
 import {DocumentMailSettings} from './DocumentMailSettings';
 import {flowWorkspace} from '@/lib/crm/document-flow';
 import {mailSettings} from '@/lib/crm/document-mail';
@@ -55,6 +57,9 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(isRemovedCrmModule(area,slug))notFound();
   if(segments.length>2)notFound();
   const buyerQuery=Object.fromEntries(Object.entries(query).filter((e):e is [string,string]=>typeof e[1]==='string'));
+  if(area==='crm'&&slug==='sales-customers')return <SalesCustomersPage user={user} id={id} query={buyerQuery}/>;
+  if(area==='crm'&&slug==='sales-notifications'){if(id)notFound();return <SalesNotificationsPage user={user} query={buyerQuery}/>;}
+  if(area==='crm'&&['debts','payments'].includes(slug)&&!id){if(!visibleModules(user).some(m=>m.id===slug))notFound();return <FinancePage user={user} mode={slug} query={buyerQuery}/>;}
   if(area==='portal'&&isBuyerRole(user.role))return <BuyerPage user={user} mode={slug} id={id} query={buyerQuery}/>;
   if(area==='crm'&&slug==='buyer-orders')return <BuyerPage user={user} mode={buyerQuery.view??'orders'} id={id} query={buyerQuery}/>;
   if(slug==='historical-orders'){

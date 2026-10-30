@@ -8,13 +8,16 @@ import {isBuyerRole,type Principal} from './types';
 import {partnerScope} from './repository';
 import {warehouseScope} from './warehouse-scope';
 import {withDocumentCreators} from './document-creators';
+import {captureBuyerSales,notifyBuyerEvent,notifyBuyerReady} from './sales-notifications';
+import {ensureBuyerFulfillment,evaluateBuyerFulfillment,resetBuyerFulfillmentReviews,markBuyerReceived,buyerFulfillmentStageSql} from './buyer-fulfillment';
+import {captureBuyerQuotePricing} from './buyer-quote-pricing';
 import {commercialDigest as hash,vietnamBusinessDate} from './commercial-common';
 import {syncOrderClearanceOnRequestSave} from './accountant-workflow';
 import type {BuyerOrder,BuyerLine,BuyerBranch,BuyerContract,BuyerRole,ContractLine,BuyerDelivery} from './buyer-model';
 import type {FlowSnapshot} from './document-flow-model';
 
 const uuid=z.uuid(),text=z.string().trim(),money=z.string().regex(/^\d{1,10}$/);
-const priceLineSchema=z.object({productId:uuid,unitPrice:money,vatRate:z.number().int().min(0).max(100)}).strict();
+const priceLineSchema=z.object({productId:uuid,unitPrice:money,vatRate:z.number().min(0).max(100).multipleOf(.01)}).strict();
 const deliverySchema=z.object({recipient:text.min(2).max(120),phone:text.min(5).max(40),address:text.min(3).max(500)}).strict();
 const createSchema=z.object({organizationId:uuid.optional(),buyerRole:z.enum(['CUSTOMER','SUPERMARKET']).optional(),warehouseId:uuid,
  branchId:uuid.optional(),contractId:uuid.optional(),delivery:deliverySchema.optional(),note:text.max(2000).default(''),
@@ -57,6 +60,9 @@ async function command<T>(user:Principal,action:string,d:{idempotencyKey:string}
 async function event(sql:Sql,user:Principal,order:BuyerOrder,action:string,extra:unknown={}){
  await sql.query('INSERT INTO cohamy_crm.buyer_order_events(id,order_id,actor_id,action,snapshot) VALUES($1,$2,$3,$4,$5::jsonb)',[randomUUID(),order.id,user.id,action,JSON.stringify({order,...(extra as object)})]);
  await audit(sql,user.id,'buyer.'+action,order.id,{version:order.version,status:order.status});
+ const notificationEvent=action==='order-created'?'buyer.order.created':action==='quoted'?'buyer.order.quote_sent':action==='confirmed'?'buyer.order.quote_accepted':action==='quote-revision-requested'?'buyer.order.quote_rejected':action==='cancelled'?'buyer.order.cancelled':null;
+ if(notificationEvent)await notifyBuyerEvent(sql,user,order.id,notificationEvent);
+ if(order.status==='CONFIRMED'&&['order-created','confirmed'].includes(action))await notifyBuyerReady(sql,user,order.id);
 }
 export async function buyerOrder(sql:Sql,user:Principal,id:string,lock=false){
  const s=orderScope(user);parse(uuid,id);
@@ -70,7 +76,7 @@ async function contract(sql:Sql,orgId:string,id:string){
 function withPrices(lines:BuyerLine[],prices:ContractLine[]):BuyerLine[]{
  distinct(prices.map(x=>x.productId));if(prices.length!==lines.length)throw new CrmError('ALL_PRICES_REQUIRED',400);
  const result=lines.map(l=>{const p=prices.find(p=>p.productId===l.productId);if(!p)throw new CrmError('ALL_PRICES_REQUIRED',400);
-  const net=BigInt(p.unitPrice)*BigInt(l.baseQuantity),vat=(net*BigInt(p.vatRate)+50n)/100n;
+  const net=BigInt(p.unitPrice)*BigInt(l.baseQuantity),vat=(net*BigInt(Math.round(p.vatRate*100))+5000n)/10000n;
   return {...l,unitPrice:p.unitPrice,vatRate:p.vatRate,net:String(net),vat:String(vat),total:String(net+vat)};
  });
  if(result.reduce((n,l)=>n+BigInt(l.total!),0n)>9000000000000n)throw new CrmError('ORDER_VALUE_TOO_LARGE',400);
@@ -88,7 +94,7 @@ async function releaseToWarehouse(sql:Sql,user:Principal,b:BuyerOrder){
  const snapshot={buyerOrderId:b.id,organization:{id:org.id,code:org.code,name:org.name,phone:org.phone,email:org.email,businessId:org.business_id,address:org.address},delivery:b.delivery,
   basket:{discountBasisPoints:0,lines:b.lines.map(l=>({productId:l.productId,quantity:String(l.baseQuantity),unitCode:l.unitLabel}))},
   calculation:{subtotal:String(subtotal),discount:'0',total:String(subtotal),lines:b.lines.map(l=>({productId:l.productId,sku:l.sku,name:l.name,unitLabel:l.unitLabel,quantity:String(l.baseQuantity),baseQuantity:String(l.baseQuantity),listUnitPrice:l.unitPrice,unitPrice:l.unitPrice,discount:'0',vatRate:l.vatRate,total:l.net,costUnitPrice:0}))},
-  totals:{shippingFee:'0',vat:String(b.lines.reduce((n,l)=>n+BigInt(l.vat!),0n))},vatRate:b.lines.every(l=>l.vatRate===b.lines[0].vatRate)?b.lines[0].vatRate:0,note:b.note,currency:'VND',issuedAt:new Date().toISOString(),validUntil:b.quote_expires_on,buyerContract:b.contract_snapshot};
+  totals:{shippingFee:b.quote_fee_amount??'0',vat:String(b.lines.reduce((n,l)=>n+BigInt(l.vat!),0n))},vatRate:b.lines.every(l=>l.vatRate===b.lines[0].vatRate)?b.lines[0].vatRate:0,note:b.note,currency:'VND',issuedAt:new Date().toISOString(),validUntil:b.quote_expires_on,buyerContract:b.contract_snapshot};
  await sql.query("INSERT INTO cohamy_crm.commercial_requests(id,code,organization_id,creator_id,creator_membership_id,creator_area,creator_role,channel,status,seller_organization_id,assigned_approver_org_id) VALUES($1,$2,$3,$4,$5,'portal',$6,'PORTAL','SUBMITTED',$7,$7)",[id,b.code,b.organization_id,b.creator_id,(await sql.query<{id:string}>('SELECT id FROM cohamy_crm.memberships WHERE user_id=$1 AND organization_id=$2 AND role=$3 ORDER BY id LIMIT 1',[b.creator_id,b.organization_id,b.buyer_role])).rows[0]?.id??user.membershipId,b.buyer_role,(await sql.query<{organization_id:string}>('SELECT organization_id FROM cohamy_crm.warehouses WHERE id=$1',[b.warehouse_id])).rows[0].organization_id]);
  await sql.query('INSERT INTO cohamy_crm.commercial_request_versions(id,request_id,number,snapshot,checksum,actor_id,idempotency_key,request_hash) VALUES($1,$2,1,$3::jsonb,$4,$5,$6,$4)',[versionId,id,JSON.stringify(snapshot),hash(snapshot),user.id,key]);
  await sql.query('UPDATE cohamy_crm.commercial_requests SET latest_version_id=$1,owner_approved_version_id=$1 WHERE id=$2',[versionId,id]);
@@ -123,6 +129,7 @@ export async function createBuyerOrder(user:Principal,input:unknown){
   if(c)lines=withPrices(lines,lines.map(l=>{const p=c.lines.find(p=>p.productId===l.productId);if(!p)throw new CrmError('PRODUCT_OUTSIDE_CONTRACT',409);return p;}));
   const id=randomUUID(),code='DH-'+vietnamBusinessDate(new Date())+'-'+id.slice(0,8).toUpperCase();
   await sql.query("INSERT INTO cohamy_crm.buyer_orders(id,code,organization_id,buyer_role,creator_id,warehouse_id,branch_id,delivery,lines,note,status,quote_expires_on,contract_snapshot) VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb,$10,$11,$12,$13::jsonb)",[id,code,org.id,role,user.id,wh.id,branchId,JSON.stringify(delivery),JSON.stringify(lines),d.note,c?'QUOTED':'WAITING_QUOTE',c?.ends_on??null,c?JSON.stringify(c):null]);
+  await captureBuyerSales(sql,id,org.id);await ensureBuyerFulfillment(sql,user,id);
   let b=await buyerOrder(sql,user,id);if(c)b=await releaseToWarehouse(sql,user,b);await event(sql,user,b,'order-created');return {id:b.id,code:b.code,version:b.version,status:b.status};
  });
 }
@@ -132,7 +139,14 @@ export async function quoteBuyerOrder(user:Principal,input:unknown){
   if(b.buyer_role!=='CUSTOMER'||!['WAITING_QUOTE','QUOTED'].includes(b.status))throw new CrmError('ORDER_LOCKED',409);
   if(d.expiresOn<await today(sql))throw new CrmError('QUOTE_EXPIRED',409);
   const lines=withPrices(b.lines,d.lines);
-  await sql.query("UPDATE cohamy_crm.buyer_orders SET lines=$1::jsonb,status='QUOTED',quote_expires_on=$2,version=version+1,updated_at=now() WHERE id=$3",[JSON.stringify(lines),d.expiresOn,b.id]);
+  // A deliberate new quote may adopt fulfillment policy for an old unquoted
+  // request. Confirmed historical documents are never retrofitted.
+  await ensureBuyerFulfillment(sql,user,b.id);
+  const priceCheck=await captureBuyerQuotePricing(sql,user,b,b.version+1,lines);
+  if(priceCheck.minimumShortfalls.length)throw new CrmError('ORDER_MINIMUM_NOT_MET',409);
+  if(lines.reduce((n,l)=>n+BigInt(l.total!),BigInt(priceCheck.feeAmount))>9000000000000n)throw new CrmError('ORDER_VALUE_TOO_LARGE',400);
+  await sql.query("UPDATE cohamy_crm.buyer_orders SET lines=$1::jsonb,status='QUOTED',quote_expires_on=$2,quote_fee_amount=$4,version=version+1,updated_at=now() WHERE id=$3",[JSON.stringify(lines),d.expiresOn,b.id,priceCheck.feeAmount]);
+  await resetBuyerFulfillmentReviews(sql,user,b.id,'Báo giá mới: '+d.note);
   const updated=await buyerOrder(sql,user,b.id);await event(sql,user,updated,'quoted',{note:d.note});return {id:b.id,version:updated.version};
  });
 }
@@ -143,6 +157,13 @@ export async function confirmBuyerOrder(user:Principal,input:unknown){
   if(b.status!=='QUOTED')throw new CrmError('QUOTE_REQUIRED',409);
   if(!b.quote_expires_on||b.quote_expires_on<await today(sql))throw new CrmError('QUOTE_EXPIRED',409);
   const updated=await releaseToWarehouse(sql,user,b);await event(sql,user,updated,'confirmed');return {id:b.id,version:updated.version};
+ });
+}
+export async function requestBuyerQuoteRevision(user:Principal,input:unknown){
+ if(user.area!=='portal'||user.role!=='CUSTOMER')throw new CrmError('FORBIDDEN',403);
+ const d=parse(orderActionSchema.extend({note:text.min(3).max(2000)}),input);return command(user,'quote-revision-requested',d,async sql=>{
+  const b=await buyerOrder(sql,user,d.id,true);if(b.version!==d.version)throw new CrmError('VERSION_CONFLICT',409);if(b.status!=='QUOTED')throw new CrmError('ORDER_LOCKED',409);
+  await sql.query("UPDATE cohamy_crm.buyer_orders SET status='WAITING_QUOTE',version=version+1,updated_at=now() WHERE id=$1",[b.id]);await resetBuyerFulfillmentReviews(sql,user,b.id,d.note);const updated=await buyerOrder(sql,user,b.id);await event(sql,user,updated,'quote-revision-requested',{note:d.note});return {id:b.id,version:updated.version};
  });
 }
 export async function cancelBuyerOrder(user:Principal,input:unknown){
@@ -188,16 +209,25 @@ export async function buyerSetup(user:Principal,organizationId?:string,q=''){
  ]);
  return {organization:org,products:products.rows.map(({translations,...p})=>({...p,image:safeImage(translations?.images?.[0])})),warehouses:warehouses.rows,branches:branches.rows,contracts:contracts.rows};
 }
-export async function listBuyerOrders(user:Principal,query:{page?:number;q?:string;status?:string;organizationId?:string}={}){
+export async function buyerWarehouseOptions(user:Principal){
+ access(user);const db=await database();await assertCurrentPrincipal(db,user);
+ const s=isWarehouseRole(user.role)?warehouseScope(user):{sql:user.area==='crm'?'w.organization_id=$1':"o.kind='COHAMY'",params:user.area==='crm'?[user.organizationId]:[]};
+ return(await db.query<{id:string;name:string}>(`SELECT w.id,w.name FROM cohamy_crm.warehouses w JOIN cohamy_crm.organizations o ON o.id=w.organization_id WHERE w.active AND o.active AND (${s.sql}) ORDER BY w.code,w.id`,s.params)).rows;
+}
+export async function listBuyerOrders(user:Principal,query:{page?:number;q?:string;status?:string;organizationId?:string;warehouseId?:string;from?:string;to?:string;stage?:string;quoteRevision?:string}={}){
  const s=orderScope(user),page=Math.max(1,Math.min(100000,Math.floor(query.page??1)||1)),params=[...s.params,'%'+(query.q??'').slice(0,120)+'%'];
  let where=`(${s.sql}) AND (b.code ILIKE $${params.length} OR o.name ILIKE $${params.length})`;
  if(query.organizationId){params.push(parse(uuid,query.organizationId));where+=` AND b.organization_id=$${params.length}`;}
  if(query.status){params.push(parse(z.enum(['WAITING_QUOTE','QUOTED','CONFIRMED','CANCELLED']),query.status));where+=` AND b.status=$${params.length}`;}
+ if(query.warehouseId){params.push(parse(uuid,query.warehouseId));where+=` AND b.warehouse_id=$${params.length}`;}
+ for(const [value,op]of [[query.from,'>='],[query.to,'<=']] as const)if(value){params.push(parse(z.iso.date(),value));where+=` AND(b.created_at AT TIME ZONE 'Asia/Ho_Chi_Minh')::date${op}$${params.length}::date`;}
+ if(query.stage){params.push(parse(z.enum(['WAITING_QUOTE','WAITING_CUSTOMER','WAITING_APPROVAL','WAITING_PAYMENT','WAITING_STOCK','READY','PICKING','PACKED','SHIPPED','DELIVERED','DELIVERY_FAILED','CANCELLED']),query.stage));where+=` AND ${buyerFulfillmentStageSql('b')}=$${params.length}`;}
+ if(query.quoteRevision){parse(z.literal('REQUESTED'),query.quoteRevision);where+=" AND b.status='WAITING_QUOTE' AND(SELECT e.action FROM cohamy_crm.buyer_order_events e WHERE e.order_id=b.id ORDER BY e.created_at DESC,e.id DESC LIMIT 1)='quote-revision-requested'";}
  const db=await database();await assertCurrentPrincipal(db,user);
  const from='FROM cohamy_crm.buyer_orders b JOIN cohamy_crm.organizations o ON o.id=b.organization_id JOIN cohamy_crm.warehouses w ON w.id=b.warehouse_id WHERE '+where;
  const [count,rows]=await Promise.all([db.query<{n:string}>('SELECT count(*)::text AS n '+from,params),db.query<BuyerOrder>(`SELECT b.*,o.name AS organization_name,w.name AS warehouse_name,b.quote_expires_on::text ${from} ORDER BY b.created_at DESC,b.id LIMIT 20 OFFSET $${params.length+1}`,[...params,(page-1)*20])]);
  const deliveries=rows.rows.length?(await db.query<{clearance_id:string;flow_payload:FlowSnapshot;received:boolean;shortage:boolean}>("SELECT i.clearance_id,i.flow_payload,EXISTS(SELECT 1 FROM cohamy_crm.buyer_delivery_receipts r WHERE r.issue_id=i.id AND r.issue_revision=i.workflow_version) AS received,EXISTS(SELECT 1 FROM cohamy_crm.buyer_delivery_receipts r WHERE r.issue_id=i.id AND r.issue_revision=i.workflow_version AND r.shortage) AS shortage FROM cohamy_crm.warehouse_handover_invoices i WHERE i.clearance_id=ANY($1::uuid[]) AND i.workflow_state='CONFIRMED'",[rows.rows.map(b=>b.clearance_id).filter(Boolean)])).rows:[];
- return {items:await withDocumentCreators(db,user,'buyer_orders',rows.rows.map(b=>({...b,delivery_status:deliveryStatus(b,deliveries.filter(i=>i.clearance_id===b.clearance_id))}))),total:Number(count.rows[0].n),page,pageSize:20};
+ return {items:await buyerOperationViews(db,user,await withDocumentCreators(db,user,'buyer_orders',rows.rows.map(b=>({...b,delivery_status:deliveryStatus(b,deliveries.filter(i=>i.clearance_id===b.clearance_id))})))),total:Number(count.rows[0].n),page,pageSize:20};
 }
 function deliveryStatus(b:BuyerOrder,issues:{flow_payload:FlowSnapshot;received:boolean;shortage:boolean}[]){
  if(!issues.length)return 'Chưa giao hàng';
@@ -217,7 +247,17 @@ async function detail(sql:Sql,user:Principal,id:string){
  ]);
  return {order:{...b,delivery_status:deliveryStatus(b,issues.rows.map(i=>({...i,received:receipts.rows.some(r=>r.issue_id===i.id&&r.issue_revision===i.workflow_version),shortage:receipts.rows.some(r=>r.issue_id===i.id&&r.issue_revision===i.workflow_version&&r.shortage)})))},issues:issues.rows.map(i=>({id:i.id,code:i.code,revision:i.workflow_version,confirmedAt:i.flow_payload.confirmedAt,lines:i.flow_payload.lines.map(l=>({productId:l.productId,sku:l.sku,name:l.name,unit:l.unit,quantity:l.quantity}))})),receipts:receipts.rows,events:events.rows,vats:vats.rows,files};
 }
-export async function buyerOrderDetail(user:Principal,id:string){const db=await database();await assertCurrentPrincipal(db,user);const d=await detail(db,user,id);return {...d,order:(await withDocumentCreators(db,user,'buyer_orders',[d.order]))[0]};}
+export async function buyerOrderDetail(user:Principal,id:string){
+ const db=await database();await assertCurrentPrincipal(db,user);const d=await detail(db,user,id);
+ const fulfillmentEvents=user.area==='crm'?(await db.query<{id:string;action:string;actor_name:string;note:string;created_at:string}>('SELECT e.id,e.action,u.display_name AS actor_name,e.note,e.created_at::text FROM cohamy_crm.buyer_fulfillment_events e JOIN cohamy_crm.users u ON u.id=e.actor_id WHERE e.order_id=$1 ORDER BY e.created_at DESC,e.id LIMIT 200',[d.order.id])).rows:[];
+ const financial=user.area==='crm'&&d.order.clearance_id?(await db.query<{grossTotal:string;paidAmount:string;remainingDebt:string;paymentStatus:string;vatStatus:string}>('SELECT gross_total::text AS "grossTotal",paid_amount::text AS "paidAmount",remaining_debt::text AS "remainingDebt",payment_status AS "paymentStatus",vat_invoice_status AS "vatStatus" FROM cohamy_crm.accounting_order_clearances WHERE id=$1',[d.order.clearance_id])).rows[0]??null:null;
+ return {...d,fulfillmentEvents,financial,order:(await buyerOperationViews(db,user,await withDocumentCreators(db,user,'buyer_orders',[d.order])))[0]};
+}
+async function buyerOperationViews<T extends BuyerOrder>(sql:Sql,user:Principal,rows:T[]){
+ if(!rows.length)return [] as (T&{primarySales:{membershipId:string|null;displayName:string;email:string|null;source:string};fulfillment:Awaited<ReturnType<typeof evaluateBuyerFulfillment>>})[];
+ const snapshots=(await sql.query<{order_id:string;sales_membership_id:string|null;sales_name:string;sales_email:string;source:string}>('SELECT order_id,sales_membership_id,sales_name,sales_email,source FROM cohamy_crm.buyer_order_sales WHERE order_id=ANY($1::uuid[])',[rows.map(r=>r.id)])).rows;
+ return Promise.all(rows.map(async b=>{const s=snapshots.find(s=>s.order_id===b.id);return {...b,primarySales:{membershipId:s?.sales_membership_id??null,displayName:s?.sales_name||'Chưa ghi nhận Sales tại thời điểm đặt',email:user.area==='crm'?s?.sales_email||null:null,source:s?.source??'LEGACY_UNCAPTURED'},fulfillment:await evaluateBuyerFulfillment(sql,user,b.id)};}));
+}
 async function buyerFiles(sql:Sql,b:BuyerOrder){
  return (await sql.query<{id:string;filename:string;mime:string;size:number;checksum:string}>("SELECT v.id,v.filename,v.mime,v.size,v.checksum FROM cohamy_crm.private_documents d JOIN cohamy_crm.document_versions v ON v.document_id=d.id WHERE d.doc_category LIKE 'VAT%' AND ((d.entity_type='order-clearance' AND d.entity_id=$1) OR (d.entity_type='warehouse-handover' AND EXISTS(SELECT 1 FROM cohamy_crm.warehouse_handover_invoices i WHERE i.id=d.entity_id AND i.clearance_id=$1 AND i.workflow_state='CONFIRMED')) OR (d.entity_type='vat-invoice' AND EXISTS(SELECT 1 FROM cohamy_crm.vat_invoices i WHERE i.id=d.entity_id AND i.clearance_id=$1))) ORDER BY v.created_at DESC,v.id LIMIT 200",[b.clearance_id])).rows;
 }
@@ -249,6 +289,8 @@ export async function receiveBuyerDelivery(user:Principal,input:unknown){
   if((await sql.query('SELECT id FROM cohamy_crm.buyer_delivery_receipts WHERE issue_id=$1 AND issue_revision=$2',[d.issueId,d.issueRevision])).rows.length)throw new CrmError('DELIVERY_ALREADY_RECEIVED',409);
   const id=randomUUID();await sql.query('INSERT INTO cohamy_crm.buyer_delivery_receipts(id,order_id,issue_id,issue_revision,actor_id,lines,note,shortage) VALUES($1,$2,$3,$4,$5,$6::jsonb,$7,$8)',[id,b.id,d.issueId,d.issueRevision,user.id,JSON.stringify(lines),d.note,shortage]);
   await event(sql,user,b,'delivery-received',{issueId:d.issueId,revision:d.issueRevision,lines,note:d.note,shortage});
+  await markBuyerReceived(sql,user,b.id,d.note);const fulfillment=await evaluateBuyerFulfillment(sql,user,b.id);
+  if(['DELIVERED','DELIVERY_FAILED'].includes(fulfillment.stage))await notifyBuyerEvent(sql,user,b.id,fulfillment.stage==='DELIVERED'?'buyer.order.delivered':'buyer.order.delivery_failed',String(fulfillment.version));
   // An acknowledgement is evidence for accountants; it never posts inventory or rewrites the issue.
   return {id,shortage};
  });
@@ -259,11 +301,11 @@ export async function buyerMonthlyStatement(user:Principal,month:string,organiza
  const org=await organization(db,user,organizationId);
  // One database statement captures orders, confirmed issue revisions and receipts
  // consistently. No per-order network/query loop as monthly volume grows.
- type Item={id:string;code:string;date:string;branch:string;warehouse:string;lines:BuyerLine[];
+ type Item={id:string;code:string;date:string;branch:string;warehouse:string;lines:BuyerLine[];fee?:string;
   deliveries:{id:string;code:string;revision:number;lines:{productId:string;quantity:string}[]}[];
   receipts:{id:string;issue_id:string;issue_revision:number;lines:{productId:string;received:number;sent:string;difference:string}[];shortage:boolean;note:string}[];
   vats:{id:string;code:string;invoice_number:string}[]};
- const items=(await db.query<Item>(`SELECT b.id,b.code,b.created_at::text AS date,COALESCE(b.delivery->>'branchName','') AS branch,w.name AS warehouse,b.lines,
+ const items=(await db.query<Item>(`SELECT b.id,b.code,b.created_at::text AS date,COALESCE(b.delivery->>'branchName','') AS branch,w.name AS warehouse,b.lines,b.quote_fee_amount::text AS fee,
   COALESCE((SELECT jsonb_agg(jsonb_build_object('id',i.id,'code',i.code,'revision',i.workflow_version,'lines',i.flow_payload->'lines') ORDER BY i.created_at,i.id) FROM cohamy_crm.warehouse_handover_invoices i WHERE i.clearance_id=b.clearance_id AND i.workflow_state='CONFIRMED'),'[]'::jsonb) AS deliveries,
   COALESCE((SELECT jsonb_agg(jsonb_build_object('id',r.id,'issue_id',r.issue_id,'issue_revision',r.issue_revision,'lines',r.lines,'shortage',r.shortage,'note',r.note) ORDER BY r.created_at,r.id) FROM cohamy_crm.buyer_delivery_receipts r WHERE r.order_id=b.id),'[]'::jsonb) AS receipts,
   COALESCE((SELECT jsonb_agg(jsonb_build_object('id',v.id,'code',v.code,'invoice_number',v.invoice_number) ORDER BY v.created_at,v.id) FROM cohamy_crm.vat_invoices v WHERE v.clearance_id=b.clearance_id AND v.status NOT IN('UNISSUED','CANCELLED')),'[]'::jsonb) AS vats
@@ -273,7 +315,10 @@ export async function buyerMonthlyStatement(user:Principal,month:string,organiza
   AND b.created_at<((($2||'-01')::date+interval '1 month')::timestamp AT TIME ZONE 'Asia/Ho_Chi_Minh')
   ORDER BY b.created_at,b.id LIMIT 10001`,[org.id,month])).rows;
  if(items.length>10000)throw new CrmError('REPORT_TOO_LARGE',413);
- const snapshot={organizationId:org.id,organizationName:org.name,month,items,total:String(items.reduce((n,b)=>n+b.lines.reduce((s,l)=>s+BigInt(l.total!),0n),0n))};
+ // Omit a zero fee from the report shape so old acknowledged fingerprints stay
+ // valid for unchanged historical orders.
+ const normalizedItems:Item[]=items.map(({fee,...b})=>BigInt(fee??'0')>0n?{...b,fee}:b);
+ const snapshot={organizationId:org.id,organizationName:org.name,month,items:normalizedItems,total:String(items.reduce((n,b)=>n+b.lines.reduce((s,l)=>s+BigInt(l.total!),BigInt(b.fee??'0')),0n))};
  const checksum=hash(snapshot),ack=(await db.query<{id:string;note:string;created_at:string}>('SELECT id,note,created_at FROM cohamy_crm.buyer_statement_acknowledgements WHERE organization_id=$1 AND month=$2 AND checksum=$3',[org.id,month,checksum])).rows[0]??null;
  return {...snapshot,checksum,acknowledgement:ack};
 }

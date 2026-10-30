@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 const pg=process.env.CRM_DATABASE_MODE==='postgres';
 if(!pg){process.env.CRM_DATABASE_MODE='pglite';process.env.CRM_ENVIRONMENT='LOCAL';process.env.CRM_LOCAL_DATA_DIR='.local/crm-qa-documentflow-'+randomUUID();}
 process.env.CRM_EMAIL_ENABLED='false';
+process.env.CRM_PUBLIC_ORIGIN??='https://document-flow-qa.invalid';
 const result:{test:string;status:string}[]=[];
 async function test(name:string,fn:()=>Promise<void>){await fn();result.push({test:name,status:'PASS'});console.log('PASS',name);}
 async function main(){
@@ -55,9 +56,10 @@ async function main(){
   const r=await createRequest('100'),first=await dispatch(r.id,'60');const outcomes=await Promise.allSettled([dispatch(r.id,'40'),dispatch(r.id,'40')]);assert.equal(outcomes.filter(x=>x.status==='fulfilled').length,1);
   const amendment=await flow.amendFlowDocument(admin,{id:r.id,kind:'REQUEST',version:1,lines:[{productId:product.id,quantity:'120'}],note:'Bổ sung 20',reason:'Bổ sung nhu cầu kho Hà Nội',idempotencyKey:randomUUID()});assert.equal(amendment.version,2);const data=await flow.flowWorkspace(admin);assert.equal(data.documents.find(x=>x.id===first.id)!.sourceRevision,1);await dispatch(r.id,'20');await assert.rejects(dispatch(r.id,'1'),/REQUEST_QUANTITY_EXCEEDED/);
  });
- await test('Accountant has no legacy money, inventory, or factory approval mutation',async()=>{
-  for(const action of ['record-order-payment','confirm-order-payment','accountant-clear-order','accountant-verify-factory-invoice','save-vat-invoice','update-reconciliation-status','register-warehouse-order'])await assert.rejects(old.handleAccountantWorkflowAction(accountant,action,{}),/FORBIDDEN/);
-  await assert.rejects(inventory.postReceipt(accountant,{}),/FORBIDDEN/);await assert.rejects(finance.createPaymentReceipt(accountant,{}),/FORBIDDEN/);
+ await test('Accountant payment access requires a valid command; inventory and factory approval stay forbidden',async()=>{
+  for(const action of ['accountant-clear-order','accountant-verify-factory-invoice','save-vat-invoice','update-reconciliation-status','register-warehouse-order'])await assert.rejects(old.handleAccountantWorkflowAction(accountant,action,{}),/FORBIDDEN/);
+  for(const action of ['record-order-payment','confirm-order-payment'])await assert.rejects(old.handleAccountantWorkflowAction(accountant,action,{}),/IDEMPOTENCY_KEY_REQUIRED/);
+  await assert.rejects(inventory.postReceipt(accountant,{}),/FORBIDDEN/);await assert.rejects(finance.createPaymentReceipt(accountant,{}),/INVALID_FIELDS/);
  });
  await test('VAT bytes in DB, exact version, immutable metadata/upload versions, scoped download',async()=>{
   const content=Buffer.from('%PDF-1.4\n% LOCAL QA VAT\n%%EOF');vat=await workspace.uploadDocument(accountant,{entityType:'factory-invoice',entityId:disp.id,title:'LOCAL QA VAT',docCategory:'VAT_ORIGINAL',filename:'VAT-LOCAL.pdf',mime:'application/pdf',content});const file=await workspace.downloadDocument(accountant,vat.versionId);assert.deepEqual(Buffer.from(file.content),content);assert.equal((await db.query<{checksum:string}>('SELECT checksum FROM cohamy_crm.document_versions WHERE id=$1',[vat.versionId])).rows[0].checksum,createHash('sha256').update(content).digest('hex'));await assert.rejects(workspace.downloadDocument(factory,vat.versionId),/NOT_FOUND/);

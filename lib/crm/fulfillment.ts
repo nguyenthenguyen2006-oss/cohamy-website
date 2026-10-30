@@ -9,6 +9,7 @@ import {fixed,fixedText} from './decimal';
 import {salesOrderAccess,salesVersionAccess} from './sales-orders';
 import {commercialNotification} from './order-notifications';
 import {warehouseScope} from './warehouse-scope';
+import {assertBuyerSalesOrderReady} from './buyer-fulfillment';
 import type {Principal} from './types';
 const quantity=z.string().regex(/^\d{1,18}(?:\.\d{1,6})?$/).refine(v=>fixed(v)>0n),reason=z.string().trim().min(3).max(2000),key=z.uuid();
 type Reservation={id:string;order_id:string;warehouse_id:string;location_id:string;product_id:string;lot_id:string;quantity:string;consumed:string;released:string;status:string;on_hand:string;reserved:string;sku:string;product_name:string;lot_code:string;stock_unit:string};
@@ -90,7 +91,7 @@ export async function dispatchTrip(user:Principal,input:unknown){writer(user);co
 // Serialize both issue paths on the same source orders before locking stock.
 const deliveries=(await sql.query<{id:string;order_id:string}>('SELECT DISTINCT d.id,d.order_id FROM cohamy_crm.delivery_trip_parcels tp JOIN cohamy_crm.delivery_parcels p ON p.id=tp.parcel_id JOIN cohamy_crm.deliveries d ON d.id=p.delivery_id WHERE tp.trip_id=$1 AND tp.active ORDER BY d.order_id,d.id',[trip.id])).rows;
 for(const orderId of [...new Set(deliveries.map(x=>x.order_id))].sort()){
- await salesOrderAccess(sql,user,orderId,true);
+ await salesOrderAccess(sql,user,orderId,true);await assertBuyerSalesOrderReady(sql,user,orderId);
  if((await sql.query("SELECT id FROM cohamy_crm.warehouse_handover_invoices WHERE sales_order_id=$1 AND workflow_state='CONFIRMED' LIMIT 1",[orderId])).rows.length)throw new CrmError('ORDER_ISSUED_BY_DOCUMENT_FLOW',409);
 }
 for(const delivery of deliveries)await deliveryAccess(sql,user,delivery.id,true);

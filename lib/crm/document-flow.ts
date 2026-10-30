@@ -12,6 +12,7 @@ import {flowEntity,type FlowKind,type FlowLine,type FlowSnapshot,type FlowRow} f
 import type {Principal} from './types';
 import {warehouseScope} from './warehouse-scope';
 import {documentCreators} from './document-creators';
+import {assertBuyerClearanceReady} from './buyer-fulfillment';
 
 const uuid=z.uuid();
 const quantity=z.string().regex(/^\d{1,14}(?:\.\d{1,2})?$/);
@@ -127,6 +128,7 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
     }else{
     const c=(await sql.query<{id:string;document_code:string;warehouse_id:string;order_id:string|null;request_id:string|null;immutable_lines:Array<Record<string,unknown>>;snapshot:Record<string,unknown>;organization_name:string;orderer_name:string;orderer_phone:string;paid_amount:string;discount_amount:string}>("SELECT c.*,o.name AS organization_name,COALESCE(sv.snapshot->'quote',v.snapshot) AS snapshot FROM cohamy_crm.accounting_order_clearances c JOIN cohamy_crm.organizations o ON o.id=c.organization_id LEFT JOIN cohamy_crm.commercial_requests r ON r.id=c.request_id LEFT JOIN cohamy_crm.commercial_request_versions v ON v.id=r.latest_version_id LEFT JOIN cohamy_crm.sales_orders so ON so.id=c.order_id LEFT JOIN cohamy_crm.sales_order_versions sv ON sv.id=COALESCE(so.confirmed_version_id,so.latest_version_id) WHERE c.id=$1 FOR UPDATE OF c",[d.clearanceId])).rows[0];
     if(!c||c.warehouse_id!==warehouseId)throw new CrmError('NOT_FOUND',404);
+    await assertBuyerClearanceReady(sql,user,c.id,warehouseId);
     sourceId=c.id;sourceCode=c.document_code;salesOrderId=c.order_id;requestId=c.request_id;
     if(salesOrderId){
       await sql.query('SELECT id FROM cohamy_crm.sales_orders WHERE id=$1 FOR UPDATE',[salesOrderId]);
@@ -260,7 +262,9 @@ async function confirm(sql:Sql,user:Principal,row:FlowRow){
   await enqueueDocumentMail(sql,{event,snapshot:s,files:[{type:'FLOW',id:file.revisionId,filename:file.filename,checksum:file.checksum}]});
   await notifyFlowInApp(sql,user,s,event);
   if(s.kind==='RECEIPT'&&s.lines.some(l=>fixed(l.difference,6,true)!==0n))await enqueueDocumentMail(sql,{event:'factory.receipt.discrepancy',snapshot:s,files:[{type:'FLOW',id:file.revisionId,filename:file.filename,checksum:file.checksum}]});
-  await audit(sql,user.id,'document-flow.confirmed',s.id,{kind:s.kind,revision:s.revision,inventoryId});return s;
+  await audit(sql,user.id,'document-flow.confirmed',s.id,{kind:s.kind,revision:s.revision,inventoryId});
+  if(s.kind==='ISSUE'&&s.sourceId){const b=(await sql.query<{id:string}>('SELECT id FROM cohamy_crm.buyer_orders WHERE clearance_id=$1',[s.sourceId])).rows[0];if(b){const n=await import('./sales-notifications');await n.notifyBuyerEvent(sql,user,b.id,'buyer.order.shipped',s.id);await n.notifyBuyerReady(sql,user,b.id);}}
+  return s;
 }
 export async function saveFlowDocument(user:Principal,input:unknown){
   if(user.area!=='crm'||!['ADMIN','FACTORY','WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM'].includes(user.role))throw new CrmError('FORBIDDEN',403);
