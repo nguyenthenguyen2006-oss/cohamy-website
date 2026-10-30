@@ -46,7 +46,7 @@ export function PaymentProofCreateForm({organizations,portalOrganizationId}:{org
    if(retry.current?.fingerprint!==fingerprint)retry.current={fingerprint,key:crypto.randomUUID()};
    const attempt=retry.current;
    if(!attempt.documentVersionId){
-    const upload=new FormData();upload.set('entityType','partner');upload.set('entityId',organizationId);upload.set('title','Chứng từ chuyển khoản '+input.reference);upload.set('file',file);
+    const upload=new FormData();upload.set('entityType','partner');upload.set('entityId',organizationId);upload.set('title','Chứng từ chuyển khoản '+input.reference);upload.set('docCategory','PAYMENT_PROOF');upload.set('file',file);
     const up=await fetch('/api/crm/documents',{method:'POST',body:upload}),document=await up.json();
     if(!up.ok)throw Error(document.error==='FORBIDDEN'?'Bạn không có quyền tải chứng từ cho đối tác này.':'Chưa tải được tệp chứng từ. Kiểm tra định dạng và dung lượng rồi thử lại.');
     attempt.documentVersionId=document.versionId;

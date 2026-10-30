@@ -54,6 +54,17 @@ try{
  const page=content(await client.callTool({name:'cohamy_data',arguments:{table:'sales_notification_events',limit:1,offset:0}}));assert.ok(page.total>1);assert.equal(page.items.length,1);assert.equal(page.nextOffset,1);
  const pdf=await read('GET /api/crm/buyer/download',{orderId,type:'order'});assert.equal(Buffer.from(pdf.file.base64,'base64').subarray(0,4).toString(),'%PDF');pass('MCP reads Sales attribution, fulfillment audit, paginated notification data and the real native buyer PDF');
  const credentials=await client.callTool({name:'cohamy_write',arguments:{operation:'POST /api/crm/sales-customers/create',requestId:randomUUID(),input:{...customerInput,password:'not-a-supported-input'}}});assert.equal(credentials.isError,true);pass('MCP rejects credential fields and keeps account passwords/activation tokens outside this workflow');
+ if(process.env.CRM_SALES_QA_ENV==='STAGING'){
+  const late=await write('POST /api/crm/buyer/create',{...orderInput,warehouseId:fixture.southId,idempotencyKey:randomUUID()});assert.equal(late.result.status,201);const lateId=late.result.data.id;
+  const quote=await write('POST /api/crm/buyer/quote',{id:lateId,version:late.result.data.version,expiresOn:'2099-12-31',lines:[{productId:product.id,unitPrice:'1000',vatRate:8}],note:'QA actual worker late stock',idempotencyKey:randomUUID()});assert.equal(quote.result.status,200);
+  assert.equal((await http.post('/api/crm/buyer/confirm',{headers:{origin,cookie:customerCookie},data:{id:lateId,version:quote.result.data.version,idempotencyKey:randomUUID()}})).status(),200);
+  assert.equal((await read('GET /api/crm/sales-customers/fulfillment',{id:lateId})).data.stage,'WAITING_STOCK');
+  const notice=async()=>content(await client.callTool({name:'cohamy_data',arguments:{table:'sales_notification_events',filters:[{column:'buyer_order_id',op:'eq',value:lateId},{column:'event',op:'eq',value:'buyer.order.ready_for_fulfillment'}],limit:100}}));assert.equal((await notice()).total,0);
+  const locations=(await read('GET /api/crm/inventory/locations')).data,location=locations.find(l=>l.warehouse_id===fixture.southId&&l.kind==='PICK');assert.ok(location);
+  const receipt=await write('POST /api/crm/inventory/receipt',{locationId:location.id,lines:[{productId:product.id,lotCode:'QA-MCP-LATE-'+randomUUID().slice(0,8),manufacturedOn:null,expiresOn:null,quantity:'2'}],referenceType:'QA_OPENING',referenceId:'QA_MCP_LATE_STOCK',reason:'Isolated actual worker readiness test',idempotencyKey:randomUUID()});assert.equal(receipt.result.status,200);
+  let notifications;for(let i=0;i<15;i++){notifications=await notice();if(notifications.total)break;await new Promise(resolve=>setTimeout(resolve,2000));}
+  assert.equal(notifications.total,3,'The independent worker must notify Sales, HCM and the actual customer once');assert.equal(new Set(notifications.items.map(i=>i.user_id)).size,3);await new Promise(resolve=>setTimeout(resolve,11000));assert.equal((await notice()).total,3);pass('Actual independent worker detects later HCM stock, emits one readiness event per correct recipient and stays deduplicated through another sweep');
+ }
  finished=true;
 }finally{
  if(refresh&&clientId)await http.post('/api/crm/mcp/oauth/revoke',{form:{token:refresh,client_id:clientId}}).catch(()=>{});

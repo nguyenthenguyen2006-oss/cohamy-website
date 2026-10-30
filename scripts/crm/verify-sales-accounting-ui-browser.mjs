@@ -6,7 +6,7 @@ const base=process.env.SALES_QA_ORIGIN??'http://127.0.0.1:4362';
 assert.ok(['localhost','127.0.0.1'].includes(new URL(base).hostname));
 const run=JSON.parse(await fs.readFile(process.env.CRM_SALES_QA_FIXTURE??process.env.SALES_QA_FIXTURE??'.local/sales-routing-qa.json','utf8'));
 assert.match(run.dataDir,/^\.local[\/]crm-qa-sales-/);
-const metadataResponse=await fetch(base+'/.well-known/oauth-authorization-server',{signal:AbortSignal.timeout(60000)});assert.ok(metadataResponse.ok(),'Cannot verify isolated QA runtime issuer');const metadata=await metadataResponse.json();assert.ok(['http://127.0.0.1:4362','https://sales-qa.invalid'].includes(metadata.issuer),'Refusing browser QA against a non-test runtime issuer');
+const metadataResponse=await fetch(base+'/.well-known/oauth-authorization-server',{signal:AbortSignal.timeout(60000)});assert.ok(metadataResponse.ok,'Cannot verify isolated QA runtime issuer');const metadata=await metadataResponse.json();assert.ok(['http://127.0.0.1:4362','https://sales-qa.invalid'].includes(metadata.issuer),'Refusing browser QA against a non-test runtime issuer');
 const folder='docs/crm/test-results/sales-routing',expect=baseExpect.configure({timeout:60000});
 await fs.mkdir(folder,{recursive:true});
 const browser=await chromium.launch({channel:'msedge',headless:true}),context=await browser.newContext({viewport:{width:1440,height:1000}}),page=await context.newPage();
