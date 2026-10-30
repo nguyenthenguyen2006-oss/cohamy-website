@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "environment": "STAGING PostgreSQL runtime role",
+  "testedAt": "2026-10-30T04:57:21.184Z",
+  "cases": [
+    {
+      "name": "Native confirmed request, dispatch and HCM receipt create real stock and an immutable PDF before deletion",
+      "status": "PASS"
+    },
+    {
+      "name": "Server enforces Admin-only deletion and blocks self-deletion through any sibling membership",
+      "status": "PASS"
+    },
+    {
+      "name": "Exact email, reason, membership version and preview fingerprint reject mismatched or stale targets",
+      "status": "PASS"
+    },
+    {
+      "name": "Deletion retries commit exactly once with one immutable receipt and audit event",
+      "status": "PASS"
+    },
+    {
+      "name": "All identity memberships and sessions are revoked; deleted accounts leave current Admin/dealer lists and remain in deleted history",
+      "status": "PASS"
+    },
+    {
+      "name": "Unlock, role edits, Admin reset, dealer reactivation and forgotten-password flows cannot resurrect a deleted identity",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirmed snapshots and PDF bytes, stock movements/balances, receivables and partner rows remain byte-for-byte unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "Pending invitation is revoked, cannot activate, and cannot be resent after deletion",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent Admin deletions serialize, recheck the actor and preserve an active administrator",
+      "status": "PASS"
+    },
+    {
+      "name": "Password-reset versus deletion race completes without deadlock or login resurrection",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP native preview and DELETE use the same validation, business retention and retry-safe result",
+      "status": "PASS"
+    },
+    {
+      "name": "All pre-existing QA credentials remain unchanged",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionAccountWrites": 0
+}

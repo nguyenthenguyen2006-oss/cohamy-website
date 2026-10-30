@@ -1,1 +1,1 @@
-export const accountStateLabels:Record<string,string>={PENDING_ACTIVATION:'Chờ kích hoạt',ACTIVE:'Đang hoạt động',DISABLED:'Đã khóa',EXPIRED:'Lời mời hết hạn',REVOKED:'Đã thu hồi',SENT:'Đã gửi',PENDING:'Đang xử lý',UNKNOWN:'Chưa xác định kết quả gửi',FAILED:'Gửi thất bại'};
+export const accountStateLabels:Record<string,string>={DELETED:'Đã xóa',PENDING_ACTIVATION:'Chờ kích hoạt',ACTIVE:'Đang hoạt động',DISABLED:'Đã khóa',EXPIRED:'Lời mời hết hạn',REVOKED:'Đã thu hồi',SENT:'Đã gửi',PENDING:'Đang xử lý',UNKNOWN:'Chưa xác định kết quả gửi',FAILED:'Gửi thất bại'};

@@ -80,7 +80,7 @@ export async function manageAccount(user:Principal,id:string,input:unknown){
  return(await database()).transaction(async tx=>{
   await tx.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');await assertCurrentPrincipal(tx,user);
   const m=(await tx.query<{user_id:string;organization_id:string;kind:string;role:string;version:number}>('SELECT m.user_id,m.organization_id,m.role,m.version,o.kind FROM cohamy_crm.memberships m JOIN cohamy_crm.organizations o ON o.id=m.organization_id WHERE m.id=$1 FOR UPDATE OF m',[id])).rows[0];
-  if(!m)throw new CrmError('NOT_FOUND',404);if(m.user_id===user.id)throw new CrmError('CANNOT_CHANGE_SELF',409);
+  if(!m)throw new CrmError('NOT_FOUND',404);if((await tx.query<{deleted_at:string|null}>('SELECT deleted_at FROM cohamy_crm.users WHERE id=$1',[m.user_id])).rows[0]?.deleted_at)throw new CrmError('ACCOUNT_DELETED',409);if(m.user_id===user.id)throw new CrmError('CANNOT_CHANGE_SELF',409);
   if(d.action==='password'){if(!d.password)throw new CrmError('INVALID_FIELDS',400);await tx.query('UPDATE cohamy_crm.users SET password_hash=$1 WHERE id=$2',[await bcrypt.hash(d.password,12),m.user_id]);}
   if(d.action==='role'){
    if(!d.role||m.kind!==roleOrganizationKind(d.role))throw new CrmError('ROLE_ORGANIZATION_MISMATCH',400);

@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL; real Edge + official OAuth MCP SDK",
+  "testedAt": "2026-10-30T04:57:40.903Z",
+  "cases": [
+    {
+      "name": "HTTP requires authentication, same origin, valid input and current Admin permissions for preview and deletion",
+      "status": "PASS"
+    },
+    {
+      "name": "Real Edge Admin form confirms exact target and reason; deleted list/history persist while the target session stops working",
+      "status": "PASS"
+    },
+    {
+      "name": "Official OAuth MCP SDK discovers and executes Admin deletion; MCP/native retries preserve the same single result",
+      "status": "PASS"
+    },
+    {
+      "name": "Deleted Admin loses its browser session, OAuth access and refresh grant immediately",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP reads current/deleted account status and retained audit safely without exposing stored credentials",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "externalEmails": 0,
+  "productionAccountWrites": 0
+}

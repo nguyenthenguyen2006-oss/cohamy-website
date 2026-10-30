@@ -1,6 +1,6 @@
 {
   "environment": "LOCAL",
-  "testedAt": "2026-10-30T04:14:57.401Z",
+  "testedAt": "2026-10-30T04:59:00.135Z",
   "cases": [
     {
       "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
@@ -15,7 +15,7 @@
       "status": "PASS"
     }
   ],
-  "traceCount": 108,
+  "traceCount": 109,
   "includedMigrations": [
     "db/crm/001-access-catalog.sql",
     "db/crm/002-website-order-intake.sql",
@@ -64,7 +64,8 @@
     "db/crm/044-remote-mcp.sql",
     "db/crm/045-customer-supermarket.sql",
     "db/crm/046-admin-invoices.sql",
-    "db/crm/047-account-provisioning.sql"
+    "db/crm/047-account-provisioning.sql",
+    "db/crm/048-account-deletion.sql"
   ],
   "includedPdfAssets": [
     "assets/crm/fonts/BeVietnamPro-Regular.ttf",

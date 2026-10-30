@@ -28,7 +28,7 @@ export async function provisionAccount(user:Principal,input:unknown,demo=false):
  const generatedPassword=loginMethod==='GENERATED'?'A7!z'+randomBytes(24).toString('base64url'):undefined;
  const passwordHash=await bcrypt.hash(generatedPassword??randomBytes(48).toString('base64url'),12);
  return(await database()).transaction(async sql=>{
-  await assertCurrentPrincipal(sql,user);const old=await previous(sql,user,d.idempotencyKey,hash);if(old)return old;
+  await sql.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');await assertCurrentPrincipal(sql,user);const old=await previous(sql,user,d.idempotencyKey,hash);if(old)return old;
   const org=(await sql.query<{kind:string;active:boolean}>('SELECT kind,active FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[d.organizationId])).rows[0];
   if(!org?.active||org.kind!==roleOrganizationKind(d.role))throw new CrmError('ROLE_ORGANIZATION_MISMATCH',400);
   if(isBuyerRole(d.role)&&(await sql.query("SELECT id FROM cohamy_crm.memberships WHERE organization_id=$1 AND role IN('CUSTOMER','SUPERMARKET') AND role<>$2 AND active",[d.organizationId,d.role])).rows.length)throw new CrmError('BUYER_ROLE_CONFLICT',409);
@@ -52,10 +52,10 @@ function activationOrigin(){
 export async function issueAccountInvitation(user:Principal,input:unknown,mailer:ActivationMailer=sendTransactionalEmail):Promise<Record<string,unknown>>{
  admin(user);const d=parse(accountInvitationSchema,input),hash=digest(JSON.stringify(d)),origin=d.action==='REVOKE'?'':activationOrigin(),db=await database();
  const prepared=await db.transaction(async sql=>{
-  await assertCurrentPrincipal(sql,user);const old=await previous(sql,user,d.idempotencyKey,hash);if(old)return {result:old};
-  const m=(await sql.query<{user_id:string;email:string;activation_status:string;active:boolean;kind:string;role:string}>(`SELECT m.user_id,u.email,u.activation_status,(u.active AND m.active AND o.active) AS active,o.kind,m.role
+  await sql.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');await assertCurrentPrincipal(sql,user);const old=await previous(sql,user,d.idempotencyKey,hash);if(old)return {result:old};
+  const m=(await sql.query<{user_id:string;email:string;activation_status:string;active:boolean;kind:string;role:string;deleted_at:string|null}>(`SELECT m.user_id,u.email,u.activation_status,u.deleted_at,(u.active AND m.active AND o.active) AS active,o.kind,m.role
    FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id WHERE m.id=$1 FOR UPDATE OF u,m,o`,[d.membershipId])).rows[0];
-  if(!m)throw new CrmError('NOT_FOUND',404);if(m.activation_status!=='PENDING_ACTIVATION')throw new CrmError('ACCOUNT_ALREADY_ACTIVE',409);
+  if(!m)throw new CrmError('NOT_FOUND',404);if(m.deleted_at)throw new CrmError('ACCOUNT_DELETED',409);if(m.activation_status!=='PENDING_ACTIVATION')throw new CrmError('ACCOUNT_ALREADY_ACTIVE',409);
   if(d.action!=='REVOKE'&&(!m.active||m.kind!==roleOrganizationKind(m.role)))throw new CrmError('ACCOUNT_DISABLED',409);
   if(d.action==='REVOKE'){
    await sql.query('UPDATE cohamy_crm.account_invitations SET revoked_at=now() WHERE user_id=$1 AND consumed_at IS NULL AND revoked_at IS NULL',[m.user_id]);
