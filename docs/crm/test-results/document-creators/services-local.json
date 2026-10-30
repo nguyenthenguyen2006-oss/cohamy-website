@@ -1,0 +1,86 @@
+{
+  "environment": "LOCAL PGlite",
+  "provider": "FAKE_ONLY",
+  "tests": [
+    {
+      "test": "Draft, source allocation, PDF preview and 100 dispatched without stock change",
+      "status": "PASS"
+    },
+    {
+      "test": "Receipt 100 creates balance and immutable pair + inventory movements atomically",
+      "status": "PASS"
+    },
+    {
+      "test": "100 sent / 98 received, original remains 100, discrepancy -2",
+      "status": "PASS"
+    },
+    {
+      "test": "Same/different idempotency keys and concurrent receives cannot post stock twice",
+      "status": "PASS"
+    },
+    {
+      "test": "Cross-warehouse reads, receipts, preview and downloaded VAT are denied on server",
+      "status": "PASS"
+    },
+    {
+      "test": "Factory cannot forge request, missing/wrong source, warehouse or SKU",
+      "status": "PASS"
+    },
+    {
+      "test": "Installments serialize against total requested; amendments preserve prior source revisions",
+      "status": "PASS"
+    },
+    {
+      "test": "Accountant has no legacy money, inventory, or factory approval mutation",
+      "status": "PASS"
+    },
+    {
+      "test": "VAT bytes in DB, exact version, immutable metadata/upload versions, scoped download",
+      "status": "PASS"
+    },
+    {
+      "test": "Confirmed data cannot mutate; ADMIN correction creates offset movement + revision",
+      "status": "PASS"
+    },
+    {
+      "test": "Snapshot and PDF bytes stay stable after catalog and account changes",
+      "status": "PASS"
+    },
+    {
+      "test": "Delivery draft autofills source money, preview is read-only, confirm issues exactly once",
+      "status": "PASS"
+    },
+    {
+      "test": "Standalone delivery preserves unknown money, stock, customer and editable Admin metadata",
+      "status": "PASS"
+    },
+    {
+      "test": "Dispatch correction after receipt preserves exact original pair revision and actual stock",
+      "status": "PASS"
+    },
+    {
+      "test": "Failure inside receipt transaction rolls back invoice, ledger, balance and email",
+      "status": "PASS"
+    },
+    {
+      "test": "Mail settings persist; recipients deduplicate; no retroactive or draft jobs",
+      "status": "PASS"
+    },
+    {
+      "test": "Email jobs have exact recipients/files; two workers claim once; accepted differs from delivered",
+      "status": "PASS"
+    },
+    {
+      "test": "Provider timeout stays UNKNOWN, worker crash does not auto-send, retry is audited",
+      "status": "PASS"
+    },
+    {
+      "test": "All nine core notification events use real committed services and immutable exact files",
+      "status": "PASS"
+    },
+    {
+      "test": "Creator snapshot survives another confirmer, rename and deletion; immutable audit and PDF retain identity",
+      "status": "PASS"
+    }
+  ]
+}

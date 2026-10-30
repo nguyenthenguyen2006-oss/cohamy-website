@@ -1,3 +1,4 @@
+import {withDocumentCreators} from './document-creators';
 import 'server-only';
 import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
@@ -44,7 +45,8 @@ export async function salesVersionAccess(sql:Sql,head:SalesOrder,id:string){
 }
 export async function listSalesOrders(user:Principal,q=''){
  assertPermission(user,'orders.read');const scope=salesOrderScope(user),params=[...scope.params,'%'+q.trim().slice(0,120)+'%'];
- return(await(await database()).query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) AND NOT EXISTS(SELECT 1 FROM cohamy_crm.invoice_admin_heads ia WHERE ia.kind='SALES' AND ia.entity_id=s.id AND ia.cancelled_at IS NOT NULL) ${user.area==='portal'?`AND(s.organization_id=$1 OR s.seller_organization_id=$1)`:''} AND(s.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY s.updated_at DESC,s.id LIMIT 100`,params)).rows;
+ const rows=(await(await database()).query<SalesOrder>(`SELECT s.*,o.name AS organization_name FROM cohamy_crm.sales_orders s JOIN cohamy_crm.organizations o ON o.id=s.organization_id WHERE (${scope.sql}) AND NOT EXISTS(SELECT 1 FROM cohamy_crm.invoice_admin_heads ia WHERE ia.kind='SALES' AND ia.entity_id=s.id AND ia.cancelled_at IS NOT NULL) ${user.area==='portal'?`AND(s.organization_id=$1 OR s.seller_organization_id=$1)`:''} AND(s.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY s.updated_at DESC,s.id LIMIT 100`,params)).rows;
+ return withDocumentCreators(await database(),user,'sales_orders',rows);
 }
 export async function salesOrderVersions(user:Principal,id:string){return(await database()).transaction(async sql=>{
  await assertCurrentPrincipal(sql,user);const head=await salesOrderAccess(sql,user,id),versions=(await sql.query<SalesVersion>('SELECT * FROM cohamy_crm.sales_order_versions WHERE order_id=$1 ORDER BY number DESC LIMIT 100',[head.id])).rows;

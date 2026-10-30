@@ -1,0 +1,2 @@
+import type {DocumentCreator as Creator} from '@/lib/crm/document-creator-model';
+export function DocumentCreator({creator,fallback}:{creator?:Creator;fallback?:string}){return <span className="crm-document-creator"><span>{creator?.displayName||fallback||'Chưa ghi nhận'}</span>{creator?.email&&<small>{creator.email}</small>}{creator?.source==='CURRENT_ACCOUNT'&&<small>Tên tài khoản hiện tại</small>}</span>;}

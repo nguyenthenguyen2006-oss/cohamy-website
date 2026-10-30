@@ -11,6 +11,7 @@ import {enqueueDocumentMail} from './document-mail';
 import {flowEntity,type FlowKind,type FlowLine,type FlowSnapshot,type FlowRow} from './document-flow-model';
 import type {Principal} from './types';
 import {warehouseScope} from './warehouse-scope';
+import {documentCreators} from './document-creators';
 
 const uuid=z.uuid();
 const quantity=z.string().regex(/^\d{1,14}(?:\.\d{1,2})?$/);
@@ -308,8 +309,10 @@ export async function flowWorkspace(user:Principal){
     !ids.length?[]:rows<{id:string;message:string;entity_id:string;created_at:string}>("SELECT id,message,entity_id,created_at::text FROM cohamy_crm.notifications WHERE user_id=$1 AND entity_id::text=ANY($2::text[]) ORDER BY created_at DESC LIMIT 100",[user.id,ids]),
     !ids.length?[]:rows<{entity_id:string;revision:number;reason:string;created_at:string;checksum:string}>('SELECT entity_id,revision,reason,created_at::text,checksum FROM cohamy_crm.document_flow_revisions WHERE entity_id=ANY($1::uuid[]) ORDER BY revision DESC',[ids]),
   ]);
-  const legacy=visible.filter(x=>!x.flow_payload).map(x=>({id:x.id,code:x.code,kind:x.stage??'ISSUE',warehouseId:x.warehouse_id,state:'LEGACY'}));
-  return {documents:visible.flatMap(x=>x.flow_payload?[x.flow_payload]:[]),legacy,vats,warehouses,products,factories,stocks,orders,accepted:accepted.map(x=>x.entity_id),notifications,revisions};
+  const [factoryCreators,issueCreators]=await Promise.all([documentCreators(db,user,'factory_invoices',factory.map(x=>({id:x.id,userId:x.created_by,savedName:x.flow_payload?.createdBy||x.created_by_name}))),documentCreators(db,user,'warehouse_handover_invoices',issues.map(x=>({id:x.id,userId:x.created_by,savedName:x.flow_payload?.createdBy||x.created_by_name})))]);
+  const creators=new Map([...factoryCreators,...issueCreators]);
+  const legacy=visible.filter(x=>!x.flow_payload).map(x=>({id:x.id,code:x.code,kind:x.stage??'ISSUE',warehouseId:x.warehouse_id,state:'LEGACY',creator:creators.get(x.id)}));
+  return {documents:visible.flatMap(x=>x.flow_payload?[{...x.flow_payload,creator:creators.get(x.id)}]:[]),legacy,vats,warehouses,products,factories,stocks,orders,accepted:accepted.map(x=>x.entity_id),notifications,revisions};
 }
 export async function downloadFlowPdf(user:Principal,id:string,revision?:number){
   const db=await database();const row=await flowAccess(db,user,id);if(row.workflow_state==='DRAFT'&&revision===undefined&&row.flow_payload)return {bytes:await renderFlowPdf(row.flow_payload),filename:row.code+'-nhap.pdf',snapshot:row.flow_payload,checksum:''};const r=(await db.query<{pdf:Uint8Array;filename:string;checksum:string;snapshot:FlowSnapshot}>('SELECT * FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND ($2::integer IS NULL OR revision=$2) ORDER BY revision DESC LIMIT 1',[row.id,revision??null])).rows[0];
@@ -326,9 +329,10 @@ export async function legacyFlowSnapshot(sql:Sql,row:FlowRow):Promise<FlowSnapsh
 }
 export async function viewFlowDocument(user:Principal,id:string,revision?:number){
   const sql=await database(),row=await flowAccess(sql,user,id);
-  if(!row.flow_payload)return legacyFlowSnapshot(sql,row);
-  if(!revision||revision===row.workflow_version)return row.flow_payload;
-  const r=(await sql.query<{snapshot:FlowSnapshot}>('SELECT snapshot FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND revision=$2',[row.id,revision])).rows[0];if(!r)throw new CrmError('NOT_FOUND',404);return r.snapshot;
+  let snapshot=row.flow_payload??await legacyFlowSnapshot(sql,row);
+  if(revision&&revision!==row.workflow_version&&row.flow_payload){const r=(await sql.query<{snapshot:FlowSnapshot}>('SELECT snapshot FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND revision=$2',[row.id,revision])).rows[0];if(!r)throw new CrmError('NOT_FOUND',404);snapshot=r.snapshot;}
+  const creator=(await documentCreators(sql,user,table(snapshot.kind),[{id:row.id,userId:row.created_by,savedName:snapshot.createdBy||row.created_by_name}])).get(row.id);
+  return {...snapshot,creator};
 }
 
 export async function amendFlowDocument(user:Principal,input:unknown){

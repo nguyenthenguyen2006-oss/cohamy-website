@@ -7,6 +7,7 @@ import {can,CrmError,isWarehouseRole} from './permissions';
 import {isBuyerRole,type Principal} from './types';
 import {partnerScope} from './repository';
 import {warehouseScope} from './warehouse-scope';
+import {withDocumentCreators} from './document-creators';
 import {commercialDigest as hash,vietnamBusinessDate} from './commercial-common';
 import {syncOrderClearanceOnRequestSave} from './accountant-workflow';
 import type {BuyerOrder,BuyerLine,BuyerBranch,BuyerContract,BuyerRole,ContractLine,BuyerDelivery} from './buyer-model';
@@ -196,7 +197,7 @@ export async function listBuyerOrders(user:Principal,query:{page?:number;q?:stri
  const from='FROM cohamy_crm.buyer_orders b JOIN cohamy_crm.organizations o ON o.id=b.organization_id JOIN cohamy_crm.warehouses w ON w.id=b.warehouse_id WHERE '+where;
  const [count,rows]=await Promise.all([db.query<{n:string}>('SELECT count(*)::text AS n '+from,params),db.query<BuyerOrder>(`SELECT b.*,o.name AS organization_name,w.name AS warehouse_name,b.quote_expires_on::text ${from} ORDER BY b.created_at DESC,b.id LIMIT 20 OFFSET $${params.length+1}`,[...params,(page-1)*20])]);
  const deliveries=rows.rows.length?(await db.query<{clearance_id:string;flow_payload:FlowSnapshot;received:boolean;shortage:boolean}>("SELECT i.clearance_id,i.flow_payload,EXISTS(SELECT 1 FROM cohamy_crm.buyer_delivery_receipts r WHERE r.issue_id=i.id AND r.issue_revision=i.workflow_version) AS received,EXISTS(SELECT 1 FROM cohamy_crm.buyer_delivery_receipts r WHERE r.issue_id=i.id AND r.issue_revision=i.workflow_version AND r.shortage) AS shortage FROM cohamy_crm.warehouse_handover_invoices i WHERE i.clearance_id=ANY($1::uuid[]) AND i.workflow_state='CONFIRMED'",[rows.rows.map(b=>b.clearance_id).filter(Boolean)])).rows:[];
- return {items:rows.rows.map(b=>({...b,delivery_status:deliveryStatus(b,deliveries.filter(i=>i.clearance_id===b.clearance_id))})),total:Number(count.rows[0].n),page,pageSize:20};
+ return {items:await withDocumentCreators(db,user,'buyer_orders',rows.rows.map(b=>({...b,delivery_status:deliveryStatus(b,deliveries.filter(i=>i.clearance_id===b.clearance_id))}))),total:Number(count.rows[0].n),page,pageSize:20};
 }
 function deliveryStatus(b:BuyerOrder,issues:{flow_payload:FlowSnapshot;received:boolean;shortage:boolean}[]){
  if(!issues.length)return 'Chưa giao hàng';
@@ -216,7 +217,7 @@ async function detail(sql:Sql,user:Principal,id:string){
  ]);
  return {order:{...b,delivery_status:deliveryStatus(b,issues.rows.map(i=>({...i,received:receipts.rows.some(r=>r.issue_id===i.id&&r.issue_revision===i.workflow_version),shortage:receipts.rows.some(r=>r.issue_id===i.id&&r.issue_revision===i.workflow_version&&r.shortage)})))},issues:issues.rows.map(i=>({id:i.id,code:i.code,revision:i.workflow_version,confirmedAt:i.flow_payload.confirmedAt,lines:i.flow_payload.lines.map(l=>({productId:l.productId,sku:l.sku,name:l.name,unit:l.unit,quantity:l.quantity}))})),receipts:receipts.rows,events:events.rows,vats:vats.rows,files};
 }
-export async function buyerOrderDetail(user:Principal,id:string){const db=await database();await assertCurrentPrincipal(db,user);return detail(db,user,id);}
+export async function buyerOrderDetail(user:Principal,id:string){const db=await database();await assertCurrentPrincipal(db,user);const d=await detail(db,user,id);return {...d,order:(await withDocumentCreators(db,user,'buyer_orders',[d.order]))[0]};}
 async function buyerFiles(sql:Sql,b:BuyerOrder){
  return (await sql.query<{id:string;filename:string;mime:string;size:number;checksum:string}>("SELECT v.id,v.filename,v.mime,v.size,v.checksum FROM cohamy_crm.private_documents d JOIN cohamy_crm.document_versions v ON v.document_id=d.id WHERE d.doc_category LIKE 'VAT%' AND ((d.entity_type='order-clearance' AND d.entity_id=$1) OR (d.entity_type='warehouse-handover' AND EXISTS(SELECT 1 FROM cohamy_crm.warehouse_handover_invoices i WHERE i.id=d.entity_id AND i.clearance_id=$1 AND i.workflow_state='CONFIRMED')) OR (d.entity_type='vat-invoice' AND EXISTS(SELECT 1 FROM cohamy_crm.vat_invoices i WHERE i.id=d.entity_id AND i.clearance_id=$1))) ORDER BY v.created_at DESC,v.id LIMIT 200",[b.clearance_id])).rows;
 }
