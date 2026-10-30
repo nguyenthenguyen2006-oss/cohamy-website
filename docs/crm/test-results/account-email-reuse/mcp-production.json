@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION connected Cohamy MCP",
+  "operation": "POST /api/crm/accounts/provision",
+  "operationAvailable": true,
+  "nativeAccountReadStatus": 200,
+  "archivedIdentityRetained": true,
+  "targetLiveIdentities": 0,
+  "sourceEmailAvailableForNewIdentity": true,
+  "writeAndRetryVerified": "STAGING native PostgreSQL, official SDK and actual Admin form",
+  "productionAccountWrites": 0
+}

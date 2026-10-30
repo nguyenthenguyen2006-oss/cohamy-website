@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "ownedStagingServerStopped": true,
+  "ownedQaDatabaseAndRoleRemoved": true,
+  "backupsRetained": true,
+  "productionBusinessWrites": 0
+}

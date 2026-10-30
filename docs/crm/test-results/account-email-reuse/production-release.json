@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "sha": "13ab133bf8c6385127e8d19ae229a2f8e47a9c7c",
+  "restoreProofs": [
+    {
+      "phase": "pre-migration-restore.json",
+      "status": "PASS",
+      "tables": 226
+    },
+    {
+      "phase": "before-cutover-restore.json",
+      "status": "PASS",
+      "tables": 226
+    }
+  ],
+  "candidateChecks": 18,
+  "runtime": "Web and worker online, exact release, zero restarts",
+  "archivedIdentityUnchanged": true,
+  "liveEmailUniqueIndex": true,
+  "healthOk": true,
+  "blogSource": "wordpress",
+  "productionAccountWrites": 0
+}
