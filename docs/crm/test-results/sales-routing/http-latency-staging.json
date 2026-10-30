@@ -1,0 +1,299 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated native PostgreSQL, production Next build, loopback HTTP plus actual worker",
+  "commitSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "runtimeDigest": "5adab077e09877d2d56651645bc320cb65c44444772203ab8c365c4a4ffc28c4",
+  "buildId": "vCm83Q-Bxgn-SYyHa2IxD",
+  "measuredAt": "2026-10-30T10:10:34.534Z",
+  "method": "One first read per endpoint followed by five warm reads; full body consumed; no retries or discarded samples; nearest-rank warm percentiles",
+  "retries": 0,
+  "requestsPerEndpoint": 6,
+  "requestCount": 36,
+  "failures": 0,
+  "serverErrors": 0,
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "canonicalIssuer": "https://sales-qa.invalid",
+  "pids": {
+    "web": 1438712,
+    "worker": 1438713
+  },
+  "endpoints": [
+    {
+      "name": "Admin Sales workspace",
+      "path": "/api/crm/sales-customers/workspace",
+      "samples": [
+        {
+          "request": "cold-first-read",
+          "status": 200,
+          "milliseconds": 246.599,
+          "bytes": 2811
+        },
+        {
+          "request": "warm-1",
+          "status": 200,
+          "milliseconds": 155.152,
+          "bytes": 2811
+        },
+        {
+          "request": "warm-2",
+          "status": 200,
+          "milliseconds": 131.452,
+          "bytes": 2811
+        },
+        {
+          "request": "warm-3",
+          "status": 200,
+          "milliseconds": 111.471,
+          "bytes": 2811
+        },
+        {
+          "request": "warm-4",
+          "status": 200,
+          "milliseconds": 127.695,
+          "bytes": 2811
+        },
+        {
+          "request": "warm-5",
+          "status": 200,
+          "milliseconds": 117.488,
+          "bytes": 2811
+        }
+      ],
+      "coldMilliseconds": 246.599,
+      "warmP50Milliseconds": 127.695,
+      "warmP95Milliseconds": 155.152,
+      "serverErrors": 0
+    },
+    {
+      "name": "Admin buyer order board data",
+      "path": "/api/crm/buyer/orders?page=1",
+      "samples": [
+        {
+          "request": "cold-first-read",
+          "status": 200,
+          "milliseconds": 109.498,
+          "bytes": 7379
+        },
+        {
+          "request": "warm-1",
+          "status": 200,
+          "milliseconds": 54.709,
+          "bytes": 7379
+        },
+        {
+          "request": "warm-2",
+          "status": 200,
+          "milliseconds": 46.244,
+          "bytes": 7379
+        },
+        {
+          "request": "warm-3",
+          "status": 200,
+          "milliseconds": 69.049,
+          "bytes": 7379
+        },
+        {
+          "request": "warm-4",
+          "status": 200,
+          "milliseconds": 84.174,
+          "bytes": 7379
+        },
+        {
+          "request": "warm-5",
+          "status": 200,
+          "milliseconds": 60.641,
+          "bytes": 7379
+        }
+      ],
+      "coldMilliseconds": 109.498,
+      "warmP50Milliseconds": 60.641,
+      "warmP95Milliseconds": 84.174,
+      "serverErrors": 0
+    },
+    {
+      "name": "Admin notification list",
+      "path": "/api/crm/sales-customers/notifications",
+      "samples": [
+        {
+          "request": "cold-first-read",
+          "status": 200,
+          "milliseconds": 52.298,
+          "bytes": 56
+        },
+        {
+          "request": "warm-1",
+          "status": 200,
+          "milliseconds": 21.085,
+          "bytes": 56
+        },
+        {
+          "request": "warm-2",
+          "status": 200,
+          "milliseconds": 35.652,
+          "bytes": 56
+        },
+        {
+          "request": "warm-3",
+          "status": 200,
+          "milliseconds": 34.7,
+          "bytes": 56
+        },
+        {
+          "request": "warm-4",
+          "status": 200,
+          "milliseconds": 40.995,
+          "bytes": 56
+        },
+        {
+          "request": "warm-5",
+          "status": 200,
+          "milliseconds": 51.079,
+          "bytes": 56
+        }
+      ],
+      "coldMilliseconds": 52.298,
+      "warmP50Milliseconds": 35.652,
+      "warmP95Milliseconds": 51.079,
+      "serverErrors": 0
+    },
+    {
+      "name": "Admin Sales page SSR",
+      "path": "/crm/sales-customers",
+      "samples": [
+        {
+          "request": "cold-first-read",
+          "status": 200,
+          "milliseconds": 2268.56,
+          "bytes": 61789
+        },
+        {
+          "request": "warm-1",
+          "status": 200,
+          "milliseconds": 77.266,
+          "bytes": 61789
+        },
+        {
+          "request": "warm-2",
+          "status": 200,
+          "milliseconds": 69.162,
+          "bytes": 61789
+        },
+        {
+          "request": "warm-3",
+          "status": 200,
+          "milliseconds": 60.884,
+          "bytes": 61789
+        },
+        {
+          "request": "warm-4",
+          "status": 200,
+          "milliseconds": 55.881,
+          "bytes": 61789
+        },
+        {
+          "request": "warm-5",
+          "status": 200,
+          "milliseconds": 56.28,
+          "bytes": 61789
+        }
+      ],
+      "coldMilliseconds": 2268.56,
+      "warmP50Milliseconds": 60.884,
+      "warmP95Milliseconds": 77.266,
+      "serverErrors": 0
+    },
+    {
+      "name": "HN warehouse board SSR",
+      "path": "/crm/buyer-orders",
+      "samples": [
+        {
+          "request": "cold-first-read",
+          "status": 200,
+          "milliseconds": 54.142,
+          "bytes": 45287
+        },
+        {
+          "request": "warm-1",
+          "status": 200,
+          "milliseconds": 48.618,
+          "bytes": 45287
+        },
+        {
+          "request": "warm-2",
+          "status": 200,
+          "milliseconds": 47.811,
+          "bytes": 45287
+        },
+        {
+          "request": "warm-3",
+          "status": 200,
+          "milliseconds": 49.197,
+          "bytes": 45287
+        },
+        {
+          "request": "warm-4",
+          "status": 200,
+          "milliseconds": 48.446,
+          "bytes": 45287
+        },
+        {
+          "request": "warm-5",
+          "status": 200,
+          "milliseconds": 43.232,
+          "bytes": 45287
+        }
+      ],
+      "coldMilliseconds": 54.142,
+      "warmP50Milliseconds": 48.446,
+      "warmP95Milliseconds": 49.197,
+      "serverErrors": 0
+    },
+    {
+      "name": "HN scoped warehouse board data",
+      "path": "/api/crm/buyer/orders?page=1&warehouseId=8521cdb2-c888-4d97-aea3-e6b65fabd9b9",
+      "samples": [
+        {
+          "request": "cold-first-read",
+          "status": 200,
+          "milliseconds": 35.104,
+          "bytes": 5386
+        },
+        {
+          "request": "warm-1",
+          "status": 200,
+          "milliseconds": 32.482,
+          "bytes": 5386
+        },
+        {
+          "request": "warm-2",
+          "status": 200,
+          "milliseconds": 32.887,
+          "bytes": 5386
+        },
+        {
+          "request": "warm-3",
+          "status": 200,
+          "milliseconds": 28.093,
+          "bytes": 5386
+        },
+        {
+          "request": "warm-4",
+          "status": 200,
+          "milliseconds": 21.067,
+          "bytes": 5386
+        },
+        {
+          "request": "warm-5",
+          "status": 200,
+          "milliseconds": 27.058,
+          "bytes": 5386
+        }
+      ],
+      "coldMilliseconds": 35.104,
+      "warmP50Milliseconds": 28.093,
+      "warmP95Milliseconds": 32.887,
+      "serverErrors": 0
+    }
+  ]
+}

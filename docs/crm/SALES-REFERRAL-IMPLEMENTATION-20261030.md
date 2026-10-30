@@ -21,7 +21,7 @@ Phạm vi lớn, gồm tài khoản, sở hữu khách, đơn Portal, RBAC, thô
 - Mã referral được xác thực server; account Sales khóa, mã hết hạn hoặc không hợp lệ phải báo lỗi, không tự gán người khác.
 - Chuông/thông báo dùng module mới có scope, giữ các route generic đã retired trả 404.
 
-Các kết quả và hướng dẫn sử dụng sẽ được bổ sung sau khi kiểm thử, không coi mô tả thiết kế là bằng chứng production.
+Các mục dưới đây phân biệt kiểm chứng LOCAL, PostgreSQL STAGING và production. Kết quả thử bằng provider giả không được coi là email đã đến hộp thư khách.
 
 ## Chức năng và phạm vi dữ liệu
 
@@ -70,7 +70,7 @@ flowchart TD
 
 `buyer.order.created` có cảnh báo chưa được xuất. `payment_confirmed` chỉ phát sinh từ nghiệp vụ xác nhận khoản tiền thật; kế toán cho phép công nợ không được diễn giải thành đã nhận tiền. Khi tồn được bổ sung sau khi khách chốt đơn, worker phát hiện lần đầu đơn đủ điều kiện và không phát thông báo trùng.
 
-Thông báo nội bộ được lưu trong cùng transaction với nghiệp vụ, không phụ thuộc Brevo. Email thông báo gửi nội dung và liên kết; email PDF theo sự kiện xác nhận chứng từ hiện có. Worker giữ trạng thái `UNKNOWN` nếu không biết provider đã nhận hay chưa, không gửi lại mù.
+Thông báo nội bộ được lưu trong cùng transaction với nghiệp vụ, không phụ thuộc Brevo. Chuông tải ngay khi mở trang, cập nhật mỗi 20 giây khi tab đang hiển thị và cập nhật lại khi đánh dấu đã đọc; đây là polling, không phải WebSocket. Email thông báo gửi nội dung và liên kết; email PDF theo sự kiện xác nhận chứng từ hiện có. Worker giữ trạng thái `UNKNOWN` nếu không biết provider đã nhận hay chưa, không gửi lại mù.
 
 ## Phân quyền
 
@@ -119,15 +119,33 @@ API cập nhật: buyer orders/detail/quote/confirm/receive/report, native xuấ
 
 ## Kiểm chứng và giới hạn
 
-Kết quả LOCAL hiện tại: acquisition 12 nhóm, routing/notification 9, metrics 9, fulfillment 16, finance 10, document flow 20, buyer 13 và OAuth/MCP 8 nhóm đạt. Acquisition/metrics có kiểm chứng PostgreSQL riêng; kết quả chính xác sau hợp nhất SHA và staging cuối sẽ ghi dưới đây. UI Edge 8 vai trò và production đang kiểm tra; chưa coi là hoàn thành.
+Source nghiệp vụ đã khóa tại `b5a39f6a273a3390c2c22e26f3e7f86002a00926`, chứa bản sửa email tài khoản đang chạy ở production `13ab133bf8c6385127e8d19ae229a2f8e47a9c7c`. Runtime digest của bản STAGING: `5adab077e09877d2d56651645bc320cb65c44444772203ab8c365c4a4ffc28c4`.
+
+| Môi trường | Nhóm kiểm tra | Kết quả |
+| --- | --- | --- |
+| PostgreSQL 17 STAGING, DB/role riêng | Tạo khách/referral/kích hoạt: 13; routing/dedup: 10; metrics: 11; fulfillment: 16; guards: 8; rollback: 1 | **59/59 PASS**, source b5a39f6; cả sáu DB/role của suites đã dọn sau kiểm tra |
+| LOCAL Edge, dữ liệu giả | 12 nhóm UI trên cùng fixture qua các đợt kiểm tra: tám vai trò, tạo/chuyển khách, referral/QR, báo giá/yêu cầu sửa, scope kho, thông báo và retry phiếu thu | **12/12 PASS**; bước cuối kiểm lại phần bị ảnh hưởng bởi b5a39f6. Mất phản hồi: hai lần gọi, cùng khóa/id chứng từ, một phiếu thu PENDING và một bản tải minh chứng |
+| LOCAL Edge | Responsive 375/768/1440; trang đối chiếu giá của kế toán | **3/3 PASS** không tràn trang; trang kế toán PASS; không có lỗi JavaScript. Visual regression **INCONCLUSIVE** vì chưa có ảnh baseline |
+| LOCAL hồi quy | Buyer 13; document flow 20; finance 10; provisioning 16; generated accounts 10; account email reuse 9; partner merge 10 | **PASS**; giữ cơ chế Admin tự sinh mật khẩu hiện có, còn Sales dùng lời mời |
+| LOCAL MCP qua HTTP/OAuth PKCE + official SDK | Tạo khách/referral, chuyển Sales, quote/gates, PDF, dữ liệu phân trang, từ chối trường bí mật | **8/8 PASS**; không thay thế bằng thử trực tiếp giao diện ChatGPT web |
+| STAGING build + worker + MCP | Chạy bản production build và worker thật trên DB giả, kiểm tra bổ sung tồn muộn và dedup qua nhiều lượt quét | **Build PASS; tracing 3/3 PASS**, 111 traces, 0 QA leaks; **MCP 9/9 PASS**, gồm worker độc lập gửi đúng Sales/HCM/khách và không trùng qua lượt quét tiếp theo |
+
+Đo tốc độ STAGING dùng production build, PostgreSQL giả và loopback trên VPS: 36/36 HTTP 200, không retry hoặc bỏ mẫu. Sau lần đọc đầu, p95 của 5 mẫu ấm lần lượt: Sales workspace 155 ms, đơn hàng 84 ms, thông báo 51 ms, trang Sales SSR 77 ms, bảng kho HN SSR 49 ms, API kho HN 33 ms. Lần mở trang Sales đầu tiên 2.269 ms; các lần đầu còn lại 35–247 ms. Đây là mẫu nhỏ trên dữ liệu thử và không gồm độ trễ mạng/trình duyệt người dùng, không khẳng định toàn CRM production đạt các số này.
+
+Bằng chứng chi tiết: `test-results/sales-routing/` (UI/MCP/build/latency/rollback), `sales-customers/`, `sales-metrics/`, `sales-guards/` và `buyer-fulfillment/`. Lỗi thiết lập tunnel ban đầu xảy ra trước OAuth/nghiệp vụ; sửa bind IPv4 rồi bộ STAGING MCP hoàn tất 9/9.
+
+Danh sách đầy đủ file thay đổi so với production trước cập nhật: [SALES-REFERRAL-FILES-20261030.txt](SALES-REFERRAL-FILES-20261030.txt). Tổng hợp máy đọc được: [validation-summary.json](test-results/sales-routing/validation-summary.json).
+
+Map với 10 yêu cầu kiểm thử: (1–2) acquisition; (3–4) routing HN/HCM; (5) fulfillment + MCP; (6) ownership history + snapshot; (7) retry/outbox/lost-response; (8) guards + Edge tám vai trò; (9) suites hồi quy và backup manifest; (10) đơn thật chỉ đọc trước/sau, không phát lại thông báo.
 
 - Không tạo tài khoản/đơn thật, không xuất hàng thật, không gửi mail khách thật để test.
 - Mail mới được thử bằng provider giả có lỗi/retry; không dùng đó làm bằng chứng Brevo đã giao email mới tới hộp thư khách.
 - Không phát lại thông báo lịch sử hoặc thao tác báo giá/chốt/xuất với `DH-20261030-74735EC7`; trước cập nhật: `WAITING_QUOTE`, v1, 7 dòng, chưa có phiếu giao.
 - Không tự gắn khách cũ chưa có owner. Snapshot đơn cũ chưa ghi Sales được hiển thị đúng là chưa ghi nhận, không suy đoán từ Sales hiện tại.
+- Gộp hồ sơ có ownership Sales hoặc lịch sử đơn Portal bị chặn có giải thích; chỉ gộp hồ sơ thường chưa có các liên kết này. Đây là giới hạn có chủ đích để không di chuyển lịch sử đơn/tài khoản bất biến sang tổ chức khác. Admin dùng hồ sơ đang có và phân công có audit.
 - Bộ công cụ MCP đã qua runtime OAuth/SDK; thao tác trực tiếp trên giao diện ChatGPT web của người dùng chưa được thực nghiệm trong lần chạy này.
 
-**MCP có dùng được không? MCP có đọc được dữ liệu này không?** LOCAL đã xác nhận dùng được và đọc được API/bảng nghiệp vụ mới, PDF và lịch sử. Khoá/mật khẩu/token, rate limit và receipt retry không được công khai. Kết quả production sẽ bổ sung sau triển khai SHA đã kiểm thử.
+**MCP có dùng được không? MCP có đọc được dữ liệu này không?** LOCAL đã xác nhận dùng được và đọc được API/bảng nghiệp vụ mới, PDF và lịch sử. Luồng Sales không lộ mật khẩu/token; bảng auth, rate limit và receipt retry không được công khai. Kết quả production sẽ bổ sung sau triển khai SHA đã kiểm thử. Catalog đã sinh lại và kiểm tra: 355 operations, 247 đang dùng, 108 đã nghỉ; 136 GET và 219 lệnh ghi trong tổng catalog. Không thêm SQL/shell/filesystem execution.
 
 ## Backup và rollback
 

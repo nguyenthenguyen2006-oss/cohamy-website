@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite, real Edge",
+  "results": [
+    {
+      "width": 375,
+      "noOverflow": true,
+      "sidebarRight": -11.44000244140625,
+      "status": "PASS"
+    },
+    {
+      "width": 768,
+      "noOverflow": true,
+      "sidebarRight": -11.44000244140625,
+      "status": "PASS"
+    },
+    {
+      "width": 1440,
+      "noOverflow": true,
+      "sidebarRight": 260,
+      "status": "PASS"
+    }
+  ],
+  "failure": null,
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "visualBaseline": "INCONCLUSIVE: no previous baseline"
+}

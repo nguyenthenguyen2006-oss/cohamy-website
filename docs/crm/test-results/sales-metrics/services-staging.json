@@ -1,0 +1,60 @@
+{
+  "commitSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "runtimeDigest": "5adab077e09877d2d56651645bc320cb65c44444772203ab8c365c4a4ffc28c4",
+  "suite": "metrics",
+  "databaseName": "cohamy_qa_sales_1793354667018_8429ca93",
+  "status": "PASS",
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "runtimeDmlRole": true,
+  "startedAt": "2026-10-30T10:04:27.019Z",
+  "cases": [
+    {
+      "name": "Accepted but unshipped projection has zero realized revenue",
+      "status": "PASS"
+    },
+    {
+      "name": "Date, warehouse and selected Sales isolate pending work and immutable order attribution",
+      "status": "PASS"
+    },
+    {
+      "name": "Two current confirmed issue documents count once each while draft invoices and another warehouse are excluded",
+      "status": "PASS"
+    },
+    {
+      "name": "Handover changes current customer access while old and new sales remain attributed to their captured Sales and dates",
+      "status": "PASS"
+    },
+    {
+      "name": "Referral conversion and revenue use the selected registration cohort, order period and warehouse without exceeding 100%",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin-all and each Sales use the same original-referral cohort denominator after a handover",
+      "status": "PASS"
+    },
+    {
+      "name": "Locked Sales remain in Admin historical reports while assignment lists exclude unavailable identities",
+      "status": "PASS"
+    },
+    {
+      "name": "A requested but unreceived return does not reduce realized revenue",
+      "status": "PASS"
+    },
+    {
+      "name": "Only actually received return dispositions reduce the original Sales gross once per returned unit",
+      "status": "PASS"
+    },
+    {
+      "name": "Multiple payment receipts do not multiply invoice or return projection amounts",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin aggregate order revenue stays inside the current internal organization warehouse scope",
+      "status": "PASS"
+    }
+  ],
+  "caseCount": 11,
+  "finishedAt": "2026-10-30T10:04:43.595Z",
+  "databaseCleaned": true
+}

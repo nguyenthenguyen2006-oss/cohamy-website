@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite",
+  "cases": [
+    {
+      "name": "Native Sales customer creation captures primary ownership in its creation transaction and cannot claim a pre-existing organization",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy access-grant replacement cannot silently remove current primary Sales authority or change ownership",
+      "status": "PASS"
+    },
+    {
+      "name": "Sales customer, pending account, ownership and invitation are atomic and replay-safe without exposing credentials",
+      "status": "PASS"
+    },
+    {
+      "name": "Duplicate identity/phone/business and role escalation cannot claim another Sales customer",
+      "status": "PASS"
+    },
+    {
+      "name": "Existing invitation activation makes the customer usable and preserves assigned primary Sales",
+      "status": "PASS"
+    },
+    {
+      "name": "Server-validated referral survives registration and binds the correct Sales only after email activation",
+      "status": "PASS"
+    },
+    {
+      "name": "Locked Sales and expired referral never silently assign registrations",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin handover is versioned, audited and exact-once; old managed access is revoked",
+      "status": "PASS"
+    },
+    {
+      "name": "Company name normalization blocks whitespace/case duplicates without changing the existing owner",
+      "status": "PASS"
+    },
+    {
+      "name": "Provider uncertainty keeps a single pending account and reports UNKNOWN without rolling back customer or exposing secrets",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent distinct requests for one identity create one customer only",
+      "status": "PASS"
+    },
+    {
+      "name": "Pending referral cannot activate under a locked Sales; audited Admin handover resolves it without changing token or assigning silently",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionWrites": 0
+}

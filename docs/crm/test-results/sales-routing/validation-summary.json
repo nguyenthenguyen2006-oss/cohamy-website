@@ -1,0 +1,142 @@
+{
+  "status": "PASS",
+  "assembledAt": "2026-10-30T10:16:04.729832+00:00",
+  "businessSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "runtimeDigest": "5adab077e09877d2d56651645bc320cb65c44444772203ab8c365c4a4ffc28c4",
+  "nativePostgresGroupCount": 59,
+  "evidence": [
+    {
+      "label": "PG acquisition",
+      "artifact": "sales-customers/services-staging.json",
+      "status": "PASS",
+      "passed": 13,
+      "testedSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+      "environment": null
+    },
+    {
+      "label": "PG routing",
+      "artifact": "sales-routing/services-staging.json",
+      "status": "PASS",
+      "passed": 10,
+      "testedSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+      "environment": null
+    },
+    {
+      "label": "PG metrics",
+      "artifact": "sales-metrics/services-staging.json",
+      "status": "PASS",
+      "passed": 11,
+      "testedSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+      "environment": null
+    },
+    {
+      "label": "PG fulfillment",
+      "artifact": "buyer-fulfillment/services-staging.json",
+      "status": "PASS",
+      "passed": 16,
+      "testedSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+      "environment": null
+    },
+    {
+      "label": "PG guards",
+      "artifact": "sales-guards/services-staging.json",
+      "status": "PASS",
+      "passed": 8,
+      "testedSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+      "environment": null
+    },
+    {
+      "label": "PG rollback",
+      "artifact": "sales-routing/rollback-staging.json",
+      "status": "PASS",
+      "passed": 1,
+      "testedSourceSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+      "environment": null
+    },
+    {
+      "label": "Edge UI",
+      "artifact": "sales-routing/browser-local.json",
+      "status": "PASS",
+      "passed": 12,
+      "testedSourceSha": null,
+      "environment": "LOCAL isolated PGlite, real Edge"
+    },
+    {
+      "label": "Official SDK STAGING",
+      "artifact": "sales-routing/mcp-staging.json",
+      "status": "PASS",
+      "passed": 9,
+      "testedSourceSha": null,
+      "environment": "STAGING isolated native PostgreSQL over local tunnel"
+    },
+    {
+      "label": "Official SDK LOCAL",
+      "artifact": "sales-routing/mcp-local.json",
+      "status": "PASS",
+      "passed": 8,
+      "testedSourceSha": null,
+      "environment": "LOCAL isolated PGlite HTTP runtime"
+    },
+    {
+      "label": "Buyer regression",
+      "artifact": "buyer/services-local.json",
+      "status": "PASS",
+      "passed": 13,
+      "testedSourceSha": null,
+      "environment": "LOCAL isolated PGlite"
+    },
+    {
+      "label": "Document flow regression",
+      "artifact": "document-flow/integration-pglite.json",
+      "status": "PASS",
+      "passed": 20,
+      "testedSourceSha": null,
+      "environment": "LOCAL PGlite"
+    },
+    {
+      "label": "Finance regression",
+      "artifact": "finance-local.json",
+      "status": "PASS",
+      "passed": 10,
+      "testedSourceSha": null,
+      "environment": "LOCAL isolated fictitious PGlite; no real money/order/provider mutation"
+    },
+    {
+      "label": "Account provisioning regression",
+      "artifact": "provisioning/services-local.json",
+      "status": "PASS",
+      "passed": 16,
+      "testedSourceSha": null,
+      "environment": "pglite"
+    },
+    {
+      "label": "Generated account regression",
+      "artifact": "generated-accounts/services-local.json",
+      "status": "PASS",
+      "passed": 10,
+      "testedSourceSha": null,
+      "environment": "pglite"
+    },
+    {
+      "label": "Email reuse regression",
+      "artifact": "account-email-reuse/services-local.json",
+      "status": "PASS",
+      "passed": 9,
+      "testedSourceSha": null,
+      "environment": "LOCAL isolated PGlite"
+    },
+    {
+      "label": "Partner merge regression",
+      "artifact": "partner-merge-local.json",
+      "status": "PASS",
+      "passed": 10,
+      "testedSourceSha": null,
+      "environment": "LOCAL isolated PGlite; fictitious businesses and explicitly fake closed balance fixture"
+    }
+  ],
+  "production": "PENDING deployment and post-cutover verification",
+  "chatGptWebUi": "NOT_RUN; official SDK and OAuth verified",
+  "visualRegression": "INCONCLUSIVE; no prior image baseline",
+  "externalTestEmails": 0,
+  "productionTestAccountsOrdersOrStockWrites": 0
+}

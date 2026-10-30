@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite, real Edge",
+  "failure": null,
+  "pageErrors": [],
+  "externalEmails": 0,
+  "productionWrites": 0
+}

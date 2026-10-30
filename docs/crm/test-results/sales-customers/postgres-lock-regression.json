@@ -1,0 +1,22 @@
+{
+  "environment": "STAGING native PostgreSQL isolated database and restricted runtime role",
+  "scenario": "Sales quote notification holds primary ownership SHARE while Admin handover waits, then notification inserts its customer foreign key",
+  "before": {
+    "customerLock": "FOR UPDATE",
+    "result": "RED_REPRODUCED",
+    "failure": "deadlock detected"
+  },
+  "after": {
+    "customerLock": "FOR SHARE",
+    "ownershipLock": "FOR UPDATE",
+    "result": "PASS",
+    "invariants": [
+      "Quote notification and handover both commit",
+      "Order Sales snapshot is unchanged",
+      "Current primary Sales changes only through audited handover"
+    ]
+  },
+  "cleanup": "Fresh QA databases and restricted runtime roles removed after both runs",
+  "externalEmails": 0,
+  "productionWrites": 0
+}

@@ -1,0 +1,20 @@
+{
+  "commitSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "runtimeDigest": "5adab077e09877d2d56651645bc320cb65c44444772203ab8c365c4a4ffc28c4",
+  "suite": "rollback",
+  "databaseName": "cohamy_qa_sales_1793354729729_d11d31fc",
+  "status": "PASS",
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "runtimeDmlRole": false,
+  "startedAt": "2026-10-30T10:05:29.730Z",
+  "cases": [
+    {
+      "name": "Guarded rollback and migration forward",
+      "status": "PASS"
+    }
+  ],
+  "caseCount": 1,
+  "finishedAt": "2026-10-30T10:05:36.283Z",
+  "databaseCleaned": true
+}

@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite owner migration harness",
+  "existingBusinessRowsPreserved": true,
+  "featureDataMustBeEmpty": true,
+  "externalEmails": 0,
+  "productionWrites": 0
+}

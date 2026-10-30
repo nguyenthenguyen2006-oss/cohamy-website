@@ -1,0 +1,46 @@
+{
+  "commitSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "runtimeDigest": "5adab077e09877d2d56651645bc320cb65c44444772203ab8c365c4a4ffc28c4",
+  "buildId": "vCm83Q-Bxgn-SYyHa2IxD",
+  "canonicalIssuer": "https://sales-qa.invalid",
+  "issuerStatus": 200,
+  "healthStatus": 200,
+  "health": {
+    "ok": true,
+    "app": "cohamy",
+    "blogSource": "legacy",
+    "blogReady": true,
+    "sheetsConfigured": false,
+    "uploadDirectoryWritable": false,
+    "timestamp": "2026-10-30T10:11:41.889Z"
+  },
+  "pids": {
+    "web": 1438712,
+    "worker": 1438713
+  },
+  "ownProcessesAlive": true,
+  "loopbackPort": 4363,
+  "environment": "STAGING",
+  "runtimeDatabaseQaOnly": true,
+  "runtimeRoleRestricted": true,
+  "externalEmailEnabled": false,
+  "runtimeEnvMode": "0600",
+  "metadataMode": "0600",
+  "tracingCases": [
+    {
+      "name": "Production build traces exclude local QA databases, backups, screenshots and HumanBank reference",
+      "status": "PASS"
+    },
+    {
+      "name": "All CRM migration files included in API tracing",
+      "status": "PASS"
+    },
+    {
+      "name": "Full Vietnamese PDF fonts/logo and PDFKit AFM data included",
+      "status": "PASS"
+    }
+  ],
+  "traceCount": 111,
+  "traceLeaks": 0,
+  "checkedAt": "2026-10-30T10:11:41.895033+00:00"
+}

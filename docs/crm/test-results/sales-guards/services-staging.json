@@ -1,0 +1,48 @@
+{
+  "commitSha": "b5a39f6a273a3390c2c22e26f3e7f86002a00926",
+  "runtimeDigest": "5adab077e09877d2d56651645bc320cb65c44444772203ab8c365c4a4ffc28c4",
+  "suite": "guards",
+  "databaseName": "cohamy_qa_sales_1793354717461_7e1e76f1",
+  "status": "PASS",
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "runtimeDmlRole": true,
+  "startedAt": "2026-10-30T10:05:17.463Z",
+  "cases": [
+    {
+      "name": "Native Sales creation cannot enable credit, choose a price tier or create a privileged partner classification",
+      "status": "PASS"
+    },
+    {
+      "name": "Ordinary customer defaults and explicit STORE creation remain available to Sales",
+      "status": "PASS"
+    },
+    {
+      "name": "Sales cannot change existing credit, pricing tier or classification and rejected updates leave no state or audit changes",
+      "status": "PASS"
+    },
+    {
+      "name": "Contact edits and unchanged protected fields from a full form round trip remain valid",
+      "status": "PASS"
+    },
+    {
+      "name": "Merge preview protects ownership on either source or target without changing customers or history",
+      "status": "PASS"
+    },
+    {
+      "name": "Merge confirmation rechecks newly assigned ownership after preview and rolls back every mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "Portal orders without a primary owner protect preview and stale confirmation on either side without moving memberships or immutable order snapshots",
+      "status": "PASS"
+    },
+    {
+      "name": "An ordinary customer pair without protected Sales or Portal records still follows the native audited merge workflow",
+      "status": "PASS"
+    }
+  ],
+  "caseCount": 8,
+  "finishedAt": "2026-10-30T10:05:28.720Z",
+  "databaseCleaned": true
+}
