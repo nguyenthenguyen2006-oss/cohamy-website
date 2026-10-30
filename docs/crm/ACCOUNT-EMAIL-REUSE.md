@@ -18,3 +18,5 @@ Dữ liệu kiểm thử dùng database LOCAL/STAGING độc lập và email .in
 - npm run test:crm:mcp:catalog
 
 Biên bản: docs/crm/test-results/account-email-reuse/; phân biệt rõ LOCAL, STAGING và PRODUCTION. Quy trình phát hành tạo và kiểm tra khôi phục backup trước migration và trước chuyển bản; kiểm tra SHA hiện tại trước kích hoạt để giữ mọi bản cập nhật khác.
+
+Bản phát hành giữ bản cập nhật danh tính người lập chứng từ đang chạy trên server. Hai migration 049-document-creators.sql và 049-reuse-deleted-account-email.sql giữ nguyên tên đầy đủ: migration registry dùng tên file, và cả hai đã được áp dụng độc lập trước chuyển bản. Không đổi tên migration đã áp dụng hoặc sửa checksum của chúng.

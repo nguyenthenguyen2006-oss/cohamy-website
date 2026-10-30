@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "preservedProductionSha": "96cb3d10ab1b3810d65668b9dfca0e2d8747dee4",
+  "checks": {
+    "emailReuseLocal": 9,
+    "deletionRegressionLocal": 12,
+    "typescript": "PASS",
+    "productionModeStagingBuild": "PASS",
+    "officialMcpAndBrowser": "PASS"
+  },
+  "migrationRegistry": "Both deployed 049 filenames retained with unchanged contents; full filenames are migration identifiers",
+  "productionBusinessWritesDuringTests": 0
+}

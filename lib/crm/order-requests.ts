@@ -1,3 +1,4 @@
+import {withDocumentCreators} from './document-creators';
 import 'server-only';
 import {randomUUID} from 'node:crypto';
 import {z} from 'zod';
@@ -55,7 +56,8 @@ export async function requestVersionAccess(sql:Sql,head:CommercialRequest,id:str
 }
 export async function listCommercialRequests(user:Principal,q=''){
  assertPermission(user,'orders.read');const s=partnerScope(user),params=[...s.params,'%'+q.trim().slice(0,120)+'%'];
- return(await(await database()).query<CommercialRequest>(`SELECT r.*,o.name AS organization_name FROM cohamy_crm.commercial_requests r JOIN cohamy_crm.organizations o ON o.id=r.organization_id WHERE (${s.sql}) ${user.area==='crm'?"AND(r.creator_area='crm' OR r.status='SUBMITTED')":`AND(r.organization_id=$1 OR(r.seller_organization_id=$1 AND r.status='SUBMITTED'))`} AND(r.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY r.updated_at DESC,r.id LIMIT 100`,params)).rows;
+ const rows=(await(await database()).query<CommercialRequest>(`SELECT r.*,o.name AS organization_name FROM cohamy_crm.commercial_requests r JOIN cohamy_crm.organizations o ON o.id=r.organization_id WHERE (${s.sql}) ${user.area==='crm'?"AND(r.creator_area='crm' OR r.status='SUBMITTED')":`AND(r.organization_id=$1 OR(r.seller_organization_id=$1 AND r.status='SUBMITTED'))`} AND(r.code ILIKE $${params.length} OR o.name ILIKE $${params.length}) ORDER BY r.updated_at DESC,r.id LIMIT 100`,params)).rows;
+ return withDocumentCreators(await database(),user,'commercial_requests',rows);
 }
 export async function commercialRequestVersions(user:Principal,id:string){
  return(await database()).transaction(async sql=>{await assertCurrentPrincipal(sql,user);const head=await commercialRequestAccess(sql,user,id),versions=(await sql.query<RequestVersion>('SELECT * FROM cohamy_crm.commercial_request_versions WHERE request_id=$1 ORDER BY number DESC LIMIT 100',[head.id])).rows;

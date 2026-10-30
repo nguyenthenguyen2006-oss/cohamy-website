@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL real Edge; isolated fictitious database",
+  "creatorPreservedAfterRenameDeletion": true,
+  "creatorDistinctFromConfirmer": true,
+  "pageErrors": [],
+  "productionWrites": 0,
+  "externalEmails": 0
+}

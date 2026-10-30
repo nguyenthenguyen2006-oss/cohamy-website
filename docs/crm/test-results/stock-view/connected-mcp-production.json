@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "testedAt": "2026-10-30T07:13:20.711Z",
+  "environment": "PRODUCTION connected Cohamy MCP",
+  "operation": "GET /api/crm/document-flow/workspace",
+  "operationAvailable": "AVAILABLE",
+  "totalCatalogOperations": 339,
+  "httpStatus": 200,
+  "stockRows": 16,
+  "quantityFields": [
+    "opening",
+    "received",
+    "issued",
+    "on_hand",
+    "reserved"
+  ],
+  "quantitiesUnchangedFromBefore": true,
+  "rawDecimalPrecisionRetained": true,
+  "stt": "Presentation-only row number; recalculated after UI filtering",
+  "businessWrites": 0
+}
