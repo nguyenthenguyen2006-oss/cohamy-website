@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION https://cohamy.vn",
+  "testedAt": "2026-10-30T07:12:53.711Z",
+  "releaseSha": "6b69d35e7b7733dc45cf00c9d185fc0be0885ff3",
+  "backupPath": "/root/cohamy-backups/20261030T070402Z-6b69d35e7b77",
+  "candidateChecks": 18,
+  "publicHttpsChecks": 18,
+  "stockView": {
+    "status": "PASS",
+    "testedAt": "2026-10-30T07:10:24.467Z",
+    "environment": "PRODUCTION authenticated HTTPS read-only; Admin stock page uses same component as warehouse accounts",
+    "releaseSha": "6b69d35e7b7733dc45cf00c9d185fc0be0885ff3",
+    "stockRows": 16,
+    "columns": 10,
+    "sequentialStt": true,
+    "exactQuantitiesMatchApi": true,
+    "unnecessaryTrailingZerosRemoved": true,
+    "businessWrites": 0,
+    "externalEmails": 0
+  },
+  "backups": [
+    {
+      "file": "pre-migration-restore.json",
+      "status": "PASS",
+      "tableCount": 225,
+      "snapshotConsistent": true,
+      "sha256": "e376479f215386086a6eb2b490bd384c2182a7d26defb1a087a5755b28a4a553"
+    },
+    {
+      "file": "before-cutover-restore.json",
+      "status": "PASS",
+      "tableCount": 225,
+      "snapshotConsistent": true,
+      "sha256": "e1d13ce9c7691f2813f7cf6249bb654ef5f9bed8a416f4b5dd4211e4e818aa61"
+    }
+  ],
+  "runtime": [
+    {
+      "name": "cohamy",
+      "pid": 1353906,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/6b69d35e7b7733dc45cf00c9d185fc0be0885ff3",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 1353907,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/6b69d35e7b7733dc45cf00c9d185fc0be0885ff3",
+      "restarts": 0
+    }
+  ],
+  "dataPreservation": {
+    "checkedTables": 50,
+    "unchangedBusinessTables": 48,
+    "unchangedBusinessRows": 458,
+    "stockFinanceDocumentsUnchanged": true,
+    "concurrentAccountChanges": {
+      "tables": [
+        "memberships",
+        "users"
+      ],
+      "baselineAt": "2026-10-30T06:59:50.223Z",
+      "comparedAt": "2026-10-30T07:10:24.862Z",
+      "actions": {
+        "account.locked": 3,
+        "account.unlocked": 3,
+        "account.deleted": 1
+      },
+      "deletedSinceBaseline": 1,
+      "note": "Account lock/unlock/deletion audit events occurred during the comparison window. UI-only release changes no account backend; no account restoration or overwrite was performed."
+    }
+  },
+  "businessWritesByThisChange": 0,
+  "outboundTestEmails": 0
+}
