@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "testedAt": "2026-10-30T07:03:11.017Z",
+  "environment": "LOCAL isolated PGlite; real Edge HN/HCM warehouse accounts; native receipt fixtures",
+  "cases": [
+    {
+      "name": "HN actual scoped stock view has STT, exact trimmed quantities and nonwrapping aligned numeric cells",
+      "status": "PASS"
+    },
+    {
+      "name": "Fractional and 18-digit quantities retain exact precision; filtered STT resets, empty row spans ten columns, mobile scroll stays inside table",
+      "status": "PASS"
+    },
+    {
+      "name": "HCM actual scoped stock view has STT, exact trimmed quantities and nonwrapping aligned numeric cells",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "productionWrites": 0,
+  "externalEmails": 0
+}

@@ -2,6 +2,12 @@
 .cohamy-crm .crm-document-flow .work-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
 .cohamy-crm .crm-document-flow .work-table th,.cohamy-crm .crm-document-flow .work-table td{padding:9px 10px;border:1px solid #eadbc5;vertical-align:top;text-align:left}
 .cohamy-crm .crm-document-flow .work-table th{background:#faf3e6;color:#44403c;white-space:nowrap}
+.cohamy-crm .crm-document-flow .crm-stock-table th{width:auto}
+.cohamy-crm .crm-document-flow .crm-stock-table th:first-child,.cohamy-crm .crm-document-flow .crm-stock-table td:first-child{width:48px;text-align:center;white-space:nowrap}
+.cohamy-crm .crm-document-flow .crm-stock-table th:nth-child(2),.cohamy-crm .crm-document-flow .crm-stock-table td:nth-child(2){min-width:140px}
+.cohamy-crm .crm-document-flow .crm-stock-table th:nth-child(3),.cohamy-crm .crm-document-flow .crm-stock-table td:nth-child(3){min-width:240px;overflow-wrap:normal;word-break:normal}
+.cohamy-crm .crm-document-flow .crm-stock-table th:nth-child(4),.cohamy-crm .crm-document-flow .crm-stock-table td:nth-child(4){min-width:60px}
+.cohamy-crm .crm-document-flow .crm-stock-table th:nth-child(n+5),.cohamy-crm .crm-document-flow .crm-stock-table td:nth-child(n+5){text-align:right;white-space:nowrap;overflow-wrap:normal;word-break:normal}
 .cohamy-crm .crm-document-flow .work-table td button{margin:2px 4px 2px 0;font-size:12px}
 .cohamy-crm .crm-document-flow .work-table input{max-width:180px;min-width:80px}
 .cohamy-crm .crm-document-scroll{overflow:auto;max-width:100%;margin-top:12px}
