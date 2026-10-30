@@ -20,11 +20,13 @@ async function previous(sql:Sql,user:Principal,key:string,hash:string){
  if(row&&row.request_hash!==hash)throw new CrmError('IDEMPOTENCY_CONFLICT',409);return row?.result;
 }
 async function remember(sql:Sql,user:Principal,key:string,hash:string,result:unknown){await sql.query('INSERT INTO cohamy_crm.account_provision_actions(actor_id,key,request_hash,result) VALUES($1,$2,$3,$4::jsonb)',[user.id,key,hash,JSON.stringify(result)]);}
-export async function provisionAccount(user:Principal,input:unknown,demo=false){
- admin(user);const d=parse(provisionAccountSchema,input),hash=digest(JSON.stringify({action:'PROVISION',...d}));
+export async function provisionAccount(user:Principal,input:unknown,demo=false):Promise<Record<string,unknown>>{
+ admin(user);const d=parse(provisionAccountSchema,input),{loginMethod,...legacyInput}=d,hash=digest(JSON.stringify({action:'PROVISION',...(loginMethod==='GENERATED'?d:legacyInput)}));
  if(demo&&!['LOCAL','STAGING'].includes(process.env.CRM_ENVIRONMENT??''))throw new CrmError('DEMO_PROVISION_FORBIDDEN',403);
- // This random credential is discarded immediately and never returned or emailed.
- const unreachableHash=await bcrypt.hash(randomBytes(48).toString('base64url'),12);
+ // Explicit GENERATED mode returns a new random credential once. Never persist
+ // its plaintext in receipts/audit or change a pre-existing account's credential.
+ const generatedPassword=loginMethod==='GENERATED'?'A7!z'+randomBytes(24).toString('base64url'):undefined;
+ const passwordHash=await bcrypt.hash(generatedPassword??randomBytes(48).toString('base64url'),12);
  return(await database()).transaction(async sql=>{
   await assertCurrentPrincipal(sql,user);const old=await previous(sql,user,d.idempotencyKey,hash);if(old)return old;
   const org=(await sql.query<{kind:string;active:boolean}>('SELECT kind,active FROM cohamy_crm.organizations WHERE id=$1 FOR UPDATE',[d.organizationId])).rows[0];
@@ -32,11 +34,13 @@ export async function provisionAccount(user:Principal,input:unknown,demo=false){
   if(isBuyerRole(d.role)&&(await sql.query("SELECT id FROM cohamy_crm.memberships WHERE organization_id=$1 AND role IN('CUSTOMER','SUPERMARKET') AND role<>$2 AND active",[d.organizationId,d.role])).rows.length)throw new CrmError('BUYER_ROLE_CONFLICT',409);
   if((await sql.query('SELECT id FROM cohamy_crm.users WHERE lower(email)=$1',[d.email])).rows.length)throw new CrmError('ACCOUNT_ALREADY_EXISTS',409);
   const id=randomUUID(),membershipId=randomUUID();
-  await sql.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash,activation_status,is_demo) VALUES($1,$2,$3,$4,'PENDING_ACTIVATION',$5)",[id,d.email,d.displayName,unreachableHash,demo]);
+  const status=generatedPassword?'ACTIVE':'PENDING_ACTIVATION';
+  await sql.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash,activation_status,activated_at,is_demo) VALUES($1,$2,$3,$4,$5,CASE WHEN $5='ACTIVE' THEN now() ELSE NULL END,$6)",[id,d.email,d.displayName,passwordHash,status,demo]);
   await sql.query('INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,$4)',[membershipId,id,d.organizationId,d.role]);
   await ensureRegionalWarehouseAssignments(sql,d.organizationId,membershipId,d.role);
-  const result={id,membershipId,email:d.email,displayName:d.displayName,role:d.role,organizationId:d.organizationId,status:'PENDING_ACTIVATION'};
-  await remember(sql,user,d.idempotencyKey,hash,result);await audit(sql,user.id,'account.provisioned',membershipId,{userId:id,email:d.email,role:d.role,organizationId:d.organizationId});return result;
+  const result={id,membershipId,email:d.email,displayName:d.displayName,role:d.role,organizationId:d.organizationId,status,...(generatedPassword?{loginMethod:'GENERATED',initialLoginIssued:true,loginPath:isBuyerRole(d.role)?'/portal/login':'/crm/login'}:{})};
+  await remember(sql,user,d.idempotencyKey,hash,result);await audit(sql,user.id,'account.provisioned',membershipId,{userId:id,email:d.email,role:d.role,organizationId:d.organizationId,loginMethod});
+  return generatedPassword?{...result,generatedPassword}:result;
  });
 }
 export type ActivationMailer=(email:string,subject:string,body:string,idempotencyKey:string)=>Promise<unknown>;

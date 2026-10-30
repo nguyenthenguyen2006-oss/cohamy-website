@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL; real Edge + official OAuth MCP SDK; no external email",
+  "cases": [
+    {
+      "name": "Generated provision HTTP routes retain authentication, same-origin and Admin-only boundaries",
+      "status": "PASS"
+    },
+    {
+      "name": "Real Admin form reveals a new password once; user logs in immediately without a mandatory change",
+      "status": "PASS"
+    },
+    {
+      "name": "Closing the one-time display clears it; account lists and history contain no recoverable password",
+      "status": "PASS"
+    },
+    {
+      "name": "Official OAuth MCP SDK discovers the opt-in contract and receives the new generated password in its first creation response",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP and native retries do not redisclose secrets; broad secret reads and supplied password inputs remain blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP-created customer can use their own portal immediately and may voluntarily change the password afterward",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "externalEmails": 0,
+  "productionAccountWrites": 0
+}

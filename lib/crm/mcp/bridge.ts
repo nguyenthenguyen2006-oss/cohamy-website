@@ -13,7 +13,7 @@ import {redactMcp} from './data';
 export function operationCatalog(filter='',operation=''){
  if(!filter&&!operation){const groups:Record<string,{available:number;retired:number}>={};for(const r of mcpRoutes){const group=groups[r.group]??={available:0,retired:0};if(r.status==='AVAILABLE')group.available++;else group.retired++;}return {total:mcpRoutes.length,available:mcpRoutes.filter(r=>r.status==='AVAILABLE').length,groups,next:'Pass filter with a group name to list its operations. Pass operation with an exact id for its native validation contract.'};}
  const selected=mcpRoutes.filter(r=>(!operation||r.id===operation)&&(!filter||(r.id+' '+r.group).toLowerCase().includes(filter.toLowerCase())));
- return {count:selected.length,total:mcpRoutes.length,available:mcpRoutes.filter(r=>r.status==='AVAILABLE').length,operations:selected.map(r=>operation?r:{id:r.id,group:r.group,status:r.status,params:r.params,multipart:r.multipart}),excluded:mcpExcludedRoutes,policy:'Current CRM permissions and retired-module restrictions apply. Read retained historical data with cohamy_data. Authentication secrets and infrastructure control are excluded.'};
+ return {count:selected.length,total:mcpRoutes.length,available:mcpRoutes.filter(r=>r.status==='AVAILABLE').length,operations:selected.map(r=>operation?r:{id:r.id,group:r.group,status:r.status,params:r.params,multipart:r.multipart}),excluded:mcpExcludedRoutes,...(operation==='POST /api/crm/accounts/provision'?{generatedLogin:'Set loginMethod GENERATED only when the requesting Admin wants a new immediately usable random password in chat. The first creation response includes generatedPassword once. Neither native nor MCP retries return it again. Existing passwords, hashes and tokens are never readable. Changing this password is optional.'}:{}),policy:'Current CRM permissions and retired-module restrictions apply. Read retained historical data with cohamy_data. Stored authentication secrets and infrastructure control are excluded. Explicit GENERATED provisioning returns only its new password once.'};
 }
 const invokeSchema=z.object({operation:z.string().min(1).max(200),params:z.record(z.string(),z.string().max(200)).default({}),query:z.record(z.string(),z.string().max(4000)).default({}),input:z.unknown().optional(),file:z.object({name:z.string().min(1).max(200),mime:z.string().min(1).max(150),base64:z.string().max(29_000_000)}).optional(),fileOffset:z.number().int().min(0).max(100_000_000).default(0),fileLength:z.number().int().min(1).max(262144).default(131072)}).strict();
 type Handler=(request:Request,context:{params:Promise<Record<string,string>>})=>Promise<Response>;
@@ -40,7 +40,17 @@ export async function invokeOperation(user:Principal,input:unknown,write:boolean
  const handler=(mcpHandlers[r.source] as Record<string,Handler>)[r.method];
  const response=await mcpIdentity.run(user,()=>handler(new Request(url,{method:r.method,headers,body}),{params:Promise.resolve({...r.selector,...d.params})}));
  const mime=response.headers.get('content-type')??'application/octet-stream';
- if(mime.includes('json'))return {status:response.status,ok:response.ok,data:redactMcp(await response.json())};
+ if(mime.includes('json')){
+  const payload=await response.json(),safe=redactMcp(payload);
+  // The human explicitly requested newly generated account passwords in chat.
+  // Only the first opt-in provision response is eligible. All stored credentials,
+  // arbitrary secret fields, GET views and all other operations remain redacted.
+  const requested=d.input&&typeof d.input==='object'&&!Array.isArray(d.input)&&(d.input as Record<string,unknown>).loginMethod==='GENERATED';
+  if(r.id==='POST /api/crm/accounts/provision'&&requested&&response.status===201&&payload.status==='ACTIVE'&&payload.loginMethod==='GENERATED'&&payload.initialLoginIssued===true&&z.uuid().safeParse(payload.id).success&&typeof payload.generatedPassword==='string'&&/^A7!z[A-Za-z0-9_-]{32}$/.test(payload.generatedPassword)){
+   return {status:response.status,ok:response.ok,data:{...safe as Record<string,unknown>,generatedPassword:payload.generatedPassword}};
+  }
+  return {status:response.status,ok:response.ok,data:safe};
+ }
  const bytes=Buffer.from(await response.arrayBuffer()),end=Math.min(bytes.length,d.fileOffset+d.fileLength);
  return {status:response.status,ok:response.ok,file:{mime,disposition:response.headers.get('content-disposition'),totalBytes:bytes.length,offset:d.fileOffset,nextOffset:end<bytes.length?end:null,base64:bytes.subarray(d.fileOffset,end).toString('base64')}};
 }
@@ -56,7 +66,11 @@ export async function auditedWrite(user:Principal,grantId:string,requestId:strin
  // A process crash between the native commit and this receipt never automatically repeats the command.
  const result=await invokeOperation(user,input,true);
  if(Buffer.byteLength(JSON.stringify(result))>2_000_000)throw new CrmError('MCP_OUTCOME_REQUIRES_NATIVE_REVIEW',409);
- await db.query('UPDATE cohamy_crm.mcp_calls SET result=$3::jsonb WHERE grant_id=$1 AND request_id=$2',[grantId,requestId,JSON.stringify(result)]);
+ let receipt=result;
+ if(operation==='POST /api/crm/accounts/provision'&&'data' in result&&result.data&&typeof result.data==='object'&&'generatedPassword' in result.data){
+  const publicData={...result.data};delete publicData.generatedPassword;receipt={...result,data:publicData};
+ }
+ await db.query('UPDATE cohamy_crm.mcp_calls SET result=$3::jsonb WHERE grant_id=$1 AND request_id=$2',[grantId,requestId,JSON.stringify(receipt)]);
  await audit(db,user.id,'mcp.write.completed',requestId,{operation,status:result.status});
  return {replayed:false,result};
 }

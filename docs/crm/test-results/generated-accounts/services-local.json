@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "environment": "pglite",
+  "cases": [
+    {
+      "name": "Invitation remains default and preserves legacy idempotency hashes without exposing a credential",
+      "status": "PASS"
+    },
+    {
+      "name": "Generated account logs in immediately and can keep using the same independent strong password",
+      "status": "PASS"
+    },
+    {
+      "name": "Native retries never return or replace an issued password; duplicate email cannot reset an existing identity",
+      "status": "PASS"
+    },
+    {
+      "name": "Separate accounts receive distinct random credentials and the correct portal/internal login scope",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin authorization, organization/role boundaries and rejection of supplied password inputs remain intact",
+      "status": "PASS"
+    },
+    {
+      "name": "Only bcrypt hashes are stored; native receipts, audit and ordinary MCP redaction never expose the generated plaintext",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP exposes only the opt-in first creation password; native retries and account reads cannot retrieve it",
+      "status": "PASS"
+    },
+    {
+      "name": "Generated accounts need no activation email; history stays safe and invitations cannot overwrite them",
+      "status": "PASS"
+    },
+    {
+      "name": "User may voluntarily change the generated password through the existing flow; old password then stops working",
+      "status": "PASS"
+    },
+    {
+      "name": "Every pre-existing identity retains its credential hash and normal login",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionAccountWrites": 0
+}
