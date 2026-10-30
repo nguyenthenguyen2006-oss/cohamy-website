@@ -1,5 +1,7 @@
 # Cấp tài khoản bằng mật khẩu tự sinh — 30/10/2026
 
+**Đã triển khai production** commit `6583b1e7de3b223843c08ad224c4d0a34560fe5d` lên https://cohamy.vn. Candidate và HTTPS đều PASS 17/17. Backup/restore 2 lần PASS, 225 bảng / 2.495 dòng; 0 lỗi file/chứng từ. Đối chiếu 50 bảng / 448 dòng giữ nguyên, gồm thông tin định danh và mật khẩu cũ.
+
 ## Hành vi
 
 Theo yêu cầu mới, ChatGPT có thể yêu cầu CRM sinh mật khẩu riêng cho tài khoản mới và đưa mật khẩu đó vào đoạn chat. Tài khoản **dùng được ngay**, không cần email kích hoạt, không bắt buộc đổi mật khẩu ở lần đầu và không có hạn dùng tạm. Người dùng có thể giữ mật khẩu hoặc đổi sau bằng chức năng hiện có.
@@ -38,7 +40,7 @@ Admin → Cấp tài khoản → Cách cấp đăng nhập → **Tự sinh mật
 - Edge + HTTP + OAuth MCP SDK thật: 6 nhóm PASS, bao gồm output mật khẩu lần đầu, retry không trả lại, đăng nhập không ép đổi, đổi mật khẩu tự nguyện.
 - Luồng lời mời hiện tại: 16 nhóm PASS, giữ hash idempotency cũ.
 - Hồi quy khách hàng/siêu thị: 13 nhóm PASS.
-- TypeScript và lint: PASS. Build/traces và triển khai được kiểm chứng riêng trước khi kích hoạt.
+- TypeScript, lint, build và traces: PASS. Backup, candidate, HTTPS và runtime web/worker được kiểm chứng riêng trước/sau cutover.
 - Không tạo tài khoản production hay gửi email thật trong bộ kiểm thử. Mật khẩu tự sinh trong QA chỉ được giữ trong bộ nhớ khi cần kiểm tra, không ghi vào báo cáo/ảnh.
 
 Bằng chứng: `docs/crm/test-results/generated-accounts/`. Chỉ chụp màn hình sau khi đã đóng phần mật khẩu. Không dùng dữ liệu của tài khoản thật để thử chức năng cấp mật khẩu.
@@ -56,10 +58,10 @@ Bằng chứng: `docs/crm/test-results/generated-accounts/`. Chỉ chụp màn h
 
 ## Triển khai
 
-Chỉ đưa lên production sau build, backup mới + thử restore, candidate smoke. Kiểm tra SHA/tổ tiên và giữ release trước để rollback. Đối chiếu số dòng/dấu băm của 50 bảng, gồm users/memberships, để kiểm tra tài khoản/mật khẩu cũ và dữ liệu nghiệp vụ không đổi. Báo cáo production sẽ ghi commit và backup thực tế sau kiểm tra.
+Chỉ đưa lên production sau build, backup mới + thử restore, candidate smoke. Kiểm tra SHA/tổ tiên và giữ release trước để rollback. Đối chiếu số dòng/dấu băm của 50 bảng, gồm users/memberships, để kiểm tra tài khoản/mật khẩu cũ và dữ liệu nghiệp vụ không đổi. Backup thực tế: `/root/cohamy-backups/20261030T041948Z-6583b1e7de3b`. Web và worker online đúng commit, 0 restart khi kiểm tra. Release trước `048a0f1324b0be2cee9732001f0e19e25af1a45e` được giữ để rollback. Xem `production-release.json`, `candidate-smoke.json`, `public-smoke.json` và `native-mcp-live.json` trong thư mục kết quả.
 
 ## MCP
 
-**MCP có dùng được không?** Có trên runtime QA: SDK thật tạo tài khoản và nhận mật khẩu mới một lần, retry không trả lại.
+**MCP có dùng được không?** Có. Runtime QA đã dùng SDK thật tạo tài khoản và nhận mật khẩu mới một lần, retry không trả lại. Connector Cohamy đang kết nối production đã đọc được hợp đồng GENERATED và hướng dẫn output một lần; không cần thêm tool hay mở quyền SQL/secret lookup.
 
-**MCP có đọc được dữ liệu này không?** Có thể đọc trạng thái, role và tổ chức qua accounts. Mật khẩu chỉ có trong response tạo mới lần đầu theo lựa chọn GENERATED; không thể tra lại bằng dữ liệu/lịch sử. Production kiểm tra capabilities và các API an toàn; không tự tạo tài khoản thật khi chưa có thông tin người nhận.
+**MCP có đọc được dữ liệu này không?** Có thể đọc trạng thái, role và tổ chức qua accounts. Mật khẩu chỉ có trong response tạo mới lần đầu theo lựa chọn GENERATED; không thể tra lại bằng dữ liệu/lịch sử. Production đã kiểm tra capabilities và các API an toàn, thấy 14 tài khoản hiện có và không có password hash/mật khẩu trong dữ liệu đọc. Chưa cấp tài khoản thật hay thử trả mật khẩu cho người thật vì chưa có thông tin người nhận; không tự tạo dữ liệu demo trên production.

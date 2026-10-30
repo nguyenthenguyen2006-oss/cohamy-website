@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION https://cohamy.vn",
+  "releaseSha": "6583b1e7de3b223843c08ad224c4d0a34560fe5d",
+  "capabilities": {
+    "operation": "POST /api/crm/accounts/provision",
+    "hasGeneratedMode": true,
+    "describesOneTimeReply": true
+  },
+  "safeAccountReads": {
+    "status": 200,
+    "accountCount": 14,
+    "generatedSecretInReads": false,
+    "passwordHashInReads": false
+  },
+  "generatedCredentialIssuance": {
+    "validated": "LOCAL real Edge + official OAuth MCP SDK; STAGING PostgreSQL services",
+    "forcedFirstChange": false,
+    "voluntaryChange": true,
+    "productionAccountCreated": false,
+    "reason": "No recipient account details were supplied; production checks do not invent accounts or credentials."
+  }
+}
