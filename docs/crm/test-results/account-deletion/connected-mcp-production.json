@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION connected Cohamy MCP",
+  "testedAt": "2026-10-30T05:05:20.571Z",
+  "operations": {
+    "deleteContract": "AVAILABLE",
+    "previewContract": "AVAILABLE"
+  },
+  "accountRead": {
+    "status": 200,
+    "accounts": 14,
+    "deleted": 0
+  },
+  "preview": {
+    "status": 200,
+    "scope": "ALL_MEMBERSHIPS_OF_THIS_IDENTITY",
+    "retainedBusinessHistory": true,
+    "blockedReason": "CANNOT_DELETE_SELF"
+  },
+  "history": {
+    "status": 200,
+    "eventCount": 1
+  },
+  "dataCatalog": {
+    "table": "users",
+    "deletionColumnsReadable": [
+      "deleted_at",
+      "deleted_by",
+      "deletion_reason"
+    ],
+    "storedCredentialColumnsExposed": false
+  },
+  "accountWrites": 0,
+  "actualDelete": "Isolated QA only; no production target requested"
+}

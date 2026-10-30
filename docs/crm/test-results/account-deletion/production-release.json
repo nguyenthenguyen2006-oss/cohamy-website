@@ -1,0 +1,61 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION https://cohamy.vn",
+  "testedAt": "2026-10-30T05:04:41.111Z",
+  "releaseSha": "faa908fee590a51d9bca66408eb66e84739a609b",
+  "backupPath": "/root/cohamy-backups/20261030T050004Z-faa908fee590",
+  "candidateChecks": 18,
+  "publicHttpsChecks": 18,
+  "backups": [
+    {
+      "file": "pre-migration-restore.json",
+      "status": "PASS",
+      "completedAt": "2026-10-30T05:01:51.258Z",
+      "tableCount": 225,
+      "rows": 2536,
+      "fileIntegrityErrors": 0,
+      "documentSourceErrors": 0,
+      "snapshotConsistent": true,
+      "sha256": "1e74bcab61dea17e7610b97c13be1d2ff5731461fc85f20874db0338ebcca978"
+    },
+    {
+      "file": "before-cutover-restore.json",
+      "status": "PASS",
+      "completedAt": "2026-10-30T05:03:50.152Z",
+      "tableCount": 225,
+      "rows": 2537,
+      "fileIntegrityErrors": 0,
+      "documentSourceErrors": 0,
+      "snapshotConsistent": true,
+      "sha256": "474fa53dce62dbc05bfd5ee2886290c24302ed15078eabfd066c04c5788d2e04"
+    }
+  ],
+  "runtime": [
+    {
+      "name": "cohamy",
+      "pid": 1302054,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/faa908fee590a51d9bca66408eb66e84739a609b",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 1302055,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/faa908fee590a51d9bca66408eb66e84739a609b",
+      "restarts": 0
+    }
+  ],
+  "dataPreservation": {
+    "tableCount": 50,
+    "rows": 448,
+    "unchanged": true,
+    "accounts": {
+      "total": 14,
+      "tombstones": 0
+    }
+  },
+  "productionAccountWrites": 0,
+  "outboundTestEmails": 0,
+  "productionDeletionTest": "NOT RUN: no real account target was requested; deletion proven on isolated PGlite/PostgreSQL and Edge/OAuth MCP"
+}

@@ -25,4 +25,14 @@ Catalog đã tạo lại và kiểm tra: 339 operations, 231 hoạt động, 108
 - Hồi quy: provisioning 16, mật khẩu tự sinh 10, MFA/reset 5, khách hàng/siêu thị 13 nhóm PASS. Tài khoản hiện có giữ nguyên hash mật khẩu.
 - Không gửi mail ra ngoài và không xóa tài khoản production trong các phép thử.
 
-Kết quả máy đọc nằm trong `test-results/account-deletion/`. Bằng chứng triển khai production sẽ được bổ sung sau khi kiểm tra bản phát hành trên HTTPS.
+Kết quả máy đọc nằm trong `test-results/account-deletion/`.
+
+## PRODUCTION đã xác minh
+
+- Release `faa908fee590a51d9bca66408eb66e84739a609b` đã lên `https://cohamy.vn` ngày 30/10/2026. Bản sao lưu: `/root/cohamy-backups/20261030T050004Z-faa908fee590`.
+- Hai lần backup/restore đều PASS, mỗi lần 225 bảng; không lỗi file hay nguồn chứng từ. Bản ứng viên và HTTPS công khai đều qua 18 kiểm tra. Web/worker online, không restart trong kiểm tra triển khai.
+- Đối chiếu 50 bảng/448 dòng nghiệp vụ và trường tài khoản có từ trước cho kết quả không đổi. Cả 14 tài khoản thật giữ nguyên dữ liệu/quyền/mật khẩu; ba cột mới đều NULL, không có tài khoản thật bị xóa. Không gửi mail thử.
+- Kết nối Cohamy MCP hiện có phát hiện đúng DELETE và preview; đọc danh sách 14 tài khoản, bản xem trước thật có fingerprint và chặn tự xóa; đọc lịch sử tài khoản HTTP 200. Catalog dữ liệu cho phép đọc `deleted_at`, `deleted_by`, `deletion_reason`, vẫn loại hash/mật khẩu/token.
+- Không chạy DELETE thành công với tài khoản production vì người dùng chưa chỉ định mục tiêu. Hiệu lực xóa, thu hồi đăng nhập/OAuth và retry đã được chứng minh trên dữ liệu kiểm thử riêng ở LOCAL/STAGING.
+
+Chi tiết: `test-results/account-deletion/production-release.json` và `connected-mcp-production.json`. Thay đổi tài liệu sau triển khai không đổi source đang chạy trên production.
