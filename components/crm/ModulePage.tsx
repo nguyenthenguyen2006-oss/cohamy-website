@@ -1,3 +1,4 @@
+import {WarehouseTransfersPage} from './WarehouseTransfersPage';
 import {DocumentFlowWorkspace} from './DocumentFlowWorkspace';
 import {SalesCustomersPage} from './SalesCustomersPage';
 import {SalesNotificationsPage} from './SalesNotificationsPage';
@@ -58,6 +59,7 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(segments.length>2)notFound();
   const buyerQuery=Object.fromEntries(Object.entries(query).filter((e):e is [string,string]=>typeof e[1]==='string'));
   if(area==='crm'&&slug==='sales-customers')return <SalesCustomersPage user={user} id={id} query={buyerQuery}/>;
+  if(area==='crm'&&slug==='warehouse-transfers'){if(id||!visibleModules(user).some(m=>m.id===slug))notFound();return <WarehouseTransfersPage user={user} query={query}/>;}
   if(area==='crm'&&slug==='sales-notifications'){if(id)notFound();return <SalesNotificationsPage user={user} query={buyerQuery}/>;}
   if(area==='crm'&&['debts','payments'].includes(slug)&&!id){if(!visibleModules(user).some(m=>m.id===slug))notFound();return <FinancePage user={user} mode={slug} query={buyerQuery}/>;}
   if(area==='portal'&&isBuyerRole(user.role))return <BuyerPage user={user} mode={slug} id={id} query={buyerQuery}/>;

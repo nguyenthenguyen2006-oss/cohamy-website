@@ -432,7 +432,7 @@ export async function ensureAccountantWorkflowSchema(sql: Sql) {
           'partner','order','product','account','ticket','commercial-request','sales-order',
           'delivery','return-request','receivable','payment','cash-request','report','deal','request',
           'factory-invoice','warehouse-reconciliation','order-clearance','vat-invoice','warehouse-handover',
-          'buyer-order','sales-customer'
+          'buyer-order','sales-customer','inventory-transfer'
         ));
 
       ALTER TABLE cohamy_crm.private_documents DROP CONSTRAINT IF EXISTS private_documents_entity_type_check;

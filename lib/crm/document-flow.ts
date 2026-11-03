@@ -1,3 +1,4 @@
+import {inventoryTransferNotifications} from './inventory-transfer-notifications';
 import 'server-only';
 import {randomUUID,createHash} from 'node:crypto';
 import {z} from 'zod';
@@ -307,16 +308,17 @@ export async function flowWorkspace(user:Principal){
     isFactory||user.role==='ACCOUNTANT'?[]:rows<{id:string;document_code:string;warehouse_id:string;immutable_lines:Array<Record<string,unknown>>;snapshot:Record<string,unknown>;orderer_name:string;orderer_phone:string}>(`SELECT c.id,c.document_code,c.warehouse_id,c.immutable_lines,jsonb_build_object('delivery',v.snapshot->'delivery') AS snapshot,c.orderer_name,c.orderer_phone FROM cohamy_crm.accounting_order_clearances c JOIN cohamy_crm.warehouses w ON w.id=c.warehouse_id LEFT JOIN cohamy_crm.commercial_requests r ON r.id=c.request_id LEFT JOIN cohamy_crm.commercial_request_versions v ON v.id=r.latest_version_id WHERE (${scope.sql}) ORDER BY c.created_at DESC LIMIT 200`,scope.params),
   ]);
   const visible=[...factory,...issues],ids=visible.map(x=>x.id);
-  const [vats,accepted,notifications,revisions]=await Promise.all([
+  const [vats,accepted,notifications,revisions,transferNotices]=await Promise.all([
     isFactory||!ids.length?[]:rows<{id:string;entity_id:string;version_id:string;revision:number;filename:string;mime:string;checksum:string;created_at:string}>('SELECT l.*,v.filename,v.mime,v.checksum FROM cohamy_crm.document_vat_links l JOIN cohamy_crm.document_versions v ON v.id=l.version_id WHERE l.entity_id=ANY($1::uuid[]) ORDER BY l.revision DESC',[ids]),
     !ids.length?[]:rows<{entity_id:string}>("SELECT DISTINCT a.entity_id FROM cohamy_crm.audit_events a JOIN cohamy_crm.factory_invoices f ON f.id::text=a.entity_id WHERE a.entity_id=ANY($1::text[]) AND a.action='document-flow.accepted' AND a.payload->>'revision'=f.workflow_version::text",[ids]),
     !ids.length?[]:rows<{id:string;message:string;entity_id:string;created_at:string}>("SELECT id,message,entity_id,created_at::text FROM cohamy_crm.notifications WHERE user_id=$1 AND entity_id::text=ANY($2::text[]) ORDER BY created_at DESC LIMIT 100",[user.id,ids]),
     !ids.length?[]:rows<{entity_id:string;revision:number;reason:string;created_at:string;checksum:string}>('SELECT entity_id,revision,reason,created_at::text,checksum FROM cohamy_crm.document_flow_revisions WHERE entity_id=ANY($1::uuid[]) ORDER BY revision DESC',[ids]),
+    inventoryTransferNotifications(db,user),
   ]);
   const [factoryCreators,issueCreators]=await Promise.all([documentCreators(db,user,'factory_invoices',factory.map(x=>({id:x.id,userId:x.created_by,savedName:x.flow_payload?.createdBy||x.created_by_name}))),documentCreators(db,user,'warehouse_handover_invoices',issues.map(x=>({id:x.id,userId:x.created_by,savedName:x.flow_payload?.createdBy||x.created_by_name})))]);
   const creators=new Map([...factoryCreators,...issueCreators]);
   const legacy=visible.filter(x=>!x.flow_payload).map(x=>({id:x.id,code:x.code,kind:x.stage??'ISSUE',warehouseId:x.warehouse_id,state:'LEGACY',creator:creators.get(x.id)}));
-  return {documents:visible.flatMap(x=>x.flow_payload?[{...x.flow_payload,creator:creators.get(x.id)}]:[]),legacy,vats,warehouses,products,factories,stocks,orders,accepted:accepted.map(x=>x.entity_id),notifications,revisions};
+  return {documents:visible.flatMap(x=>x.flow_payload?[{...x.flow_payload,creator:creators.get(x.id)}]:[]),legacy,vats,warehouses,products,factories,stocks,orders,accepted:accepted.map(x=>x.entity_id),notifications:[...notifications.map(n=>({...n,href:''})),...transferNotices].sort((a,b)=>b.created_at.localeCompare(a.created_at)).slice(0,100),revisions};
 }
 export async function downloadFlowPdf(user:Principal,id:string,revision?:number){
   const db=await database();const row=await flowAccess(db,user,id);if(row.workflow_state==='DRAFT'&&revision===undefined&&row.flow_payload)return {bytes:await renderFlowPdf(row.flow_payload),filename:row.code+'-nhap.pdf',snapshot:row.flow_payload,checksum:''};const r=(await db.query<{pdf:Uint8Array;filename:string;checksum:string;snapshot:FlowSnapshot}>('SELECT * FROM cohamy_crm.document_flow_revisions WHERE entity_id=$1 AND ($2::integer IS NULL OR revision=$2) ORDER BY revision DESC LIMIT 1',[row.id,revision??null])).rows[0];

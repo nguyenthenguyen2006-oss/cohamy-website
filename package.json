@@ -124,7 +124,9 @@
     "test:crm:sales-ui": "node scripts/crm/verify-sales-ui-browser.mjs",
     "test:crm:sales-mcp": "node scripts/crm/verify-sales-mcp.mjs",
     "test:crm:sales-guards": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-guards.ts",
-    "test:crm:sales-rollback": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-rollback.ts"
+    "test:crm:sales-rollback": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-sales-rollback.ts",
+    "test:crm:warehouse-transfers": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-warehouse-transfers.ts",
+    "test:crm:warehouse-transfers-browser": "node scripts/crm/verify-warehouse-transfers-browser.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.8",

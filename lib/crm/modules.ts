@@ -29,6 +29,7 @@ export type ModuleIcon =
   | "members";
 
 export interface CrmModule { id: string; label: string; shortLabel: string; icon: ModuleIcon; tone: string; permission: string; status: "CONNECTED" | "PENDING"; bottom?: number }
+const warehouseTransfersModule:CrmModule={id:'warehouse-transfers',label:'Chuyển kho',shortLabel:'Chuyển kho',icon:'warehouse',tone:'primary',permission:'warehouses.read',status:'CONNECTED'};
 const internalDocumentsModule: CrmModule = { id: 'internal-documents', label: 'Tài liệu nội bộ', shortLabel: 'Tài liệu', icon: 'library', tone: 'primary', permission: 'internal-documents.access', status: 'CONNECTED' };
 const historicalOrdersModule: CrmModule = { id: 'historical-orders', label: 'Đơn hàng cũ', shortLabel: 'Đơn cũ', icon: 'order', tone: 'primary', permission: 'historical-orders.read', status: 'CONNECTED' };
 const buyerOrdersModule:CrmModule={id:'buyer-orders',label:'Đơn khách hàng / siêu thị',shortLabel:'Đơn khách / siêu thị',icon:'order',tone:'primary',permission:'buyer.review',status:'CONNECTED'};
@@ -62,6 +63,7 @@ const internal: CrmModule[] = [
   { id: "goods", label: "Hàng hóa", shortLabel: "Hàng hóa", icon: "goods", tone: "primary", permission: "catalog.read", status: "CONNECTED", bottom: 2 },
   { id: "orders", label: "Yêu cầu đặt hàng", shortLabel: "Đơn hàng", icon: "order", tone: "info", permission: "orders.read", status: "CONNECTED", bottom: 3 },
   { id: "tasks", label: "Việc cần làm", shortLabel: "Công việc", icon: "tasks", tone: "primary", permission: "partners.write", status: "CONNECTED" },
+  warehouseTransfersModule,
   { id: "inventory", label: "Danh mục kho", shortLabel: "Kho", icon: "warehouse", tone: "indigo", permission: "warehouses.read", status: "CONNECTED" },
   { id: "debts", label: "Công nợ", shortLabel: "Công nợ", icon: "debt", tone: "danger", permission: "finance.read", status: "CONNECTED" },
   { id: "cash", label: "Thu chi", shortLabel: "Thu chi", icon: "cash", tone: "orange", permission: "finance.read", status: "CONNECTED" },
@@ -87,6 +89,7 @@ const factoryModules: CrmModule[] = [
   { id: "notifications", label: "2. Thông báo Kho tiếp nhận", shortLabel: "Thông báo", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED", bottom: 2 },
 ];
 const warehouseKeeperModules: CrmModule[] = [
+  warehouseTransfersModule,
   buyerOrdersModule,
   historicalOrdersModule,
   internalDocumentsModule,
@@ -165,7 +168,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "warehouse",
     color: "#2563eb",
     gradient: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-    moduleIds: ["warehouse-stock", "warehouse-orders", "warehouse-factory", "warehouse-handover", "warehouse-notifications"],
+    moduleIds: ["warehouse-stock", "warehouse-orders", "warehouse-factory", "warehouse-handover", "warehouse-transfers", "warehouse-notifications"],
   },
   {
     id: "accounting",

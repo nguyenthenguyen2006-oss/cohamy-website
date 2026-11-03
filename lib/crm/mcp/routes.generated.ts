@@ -51,6 +51,8 @@ const sharedContracts: Record<string,string> = {
   "25d3258553d52839": "const money=z.string().regex(/^\\d{1,24}$/),quantity=z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku=z.string().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),basisPoints=z.number().int().min(0).max(10000);\nconst basketSchema = z.object({lines:z.array(z.object({sku,unitCode:z.string().min(1).max(40).regex(/^[A-Za-z0-9_-]+$/),quantity,requestedUnitPrice:money.optional()}).strict()).min(1).max(200),discountBasisPoints:basisPoints,creditTerms:z.boolean()}).strict()\nconst orderInvoiceLineSchema = z.object({\n sku:z.string().trim().max(120),\n imagePath:z.string().trim().max(400).optional(),\n name:z.string().trim().min(1).max(300),\n conversionNote:z.string().trim().max(300),\n unitLabel:z.string().trim().min(1).max(80),\n quantity:z.string().trim().min(1).max(60),\n listUnitPrice:z.string().trim().min(1).max(60),\n appliedUnitPrice:z.string().trim().min(1).max(60),\n discountNote:z.string().trim().max(160),\n listGross:z.string().max(60),finalUnitPrice:z.string().max(60),\n lineSubtotal:z.string().max(60),allocatedDiscount:z.string().max(60),taxAmount:z.string().max(60),payableTotal:z.string().max(60),unitPriceApproximate:z.boolean(),\n lineTotal:z.string().trim().min(1).max(60),\n gift:z.boolean().optional(),\n})\nz.object({\n sku:z.string().trim().max(120),\n imagePath:z.string().trim().max(400).optional(),\n name:z.string().trim().min(1).max(300),\n conversionNote:z.string().trim().max(300),\n unitLabel:z.string().trim().min(1).max(80),\n quantity:z.string().trim().min(1).max(60),\n listUnitPrice:z.string().trim().min(1).max(60),\n appliedUnitPrice:z.string().trim().min(1).max(60),\n discountNote:z.string().trim().max(160),\n listGross:z.string().max(60),finalUnitPrice:z.string().max(60),\n lineSubtotal:z.string().max(60),allocatedDiscount:z.string().max(60),taxAmount:z.string().max(60),payableTotal:z.string().max(60),unitPriceApproximate:z.boolean(),\n lineTotal:z.string().trim().min(1).max(60),\n gift:z.boolean().optional(),\n})\nconst draftInvoicePreviewSchema = z.object({organizationId:z.uuid(),basket:basketSchema,delivery:z.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()}),note:z.string().trim().max(2000).default(''),requestCode:z.string().trim().max(80).optional(),invoiceCode:z.string().trim().max(80).optional()}).strict()\nz.object({organizationId:z.uuid(),basket:basketSchema,delivery:z.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()}),note:z.string().trim().max(2000).default(''),requestCode:z.string().trim().max(80).optional(),invoiceCode:z.string().trim().max(80).optional()})\nz.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()})\nconst invoiceSourceSchema = z.discriminatedUnion('kind',[\n z.object({kind:z.literal('REQUEST'),id:z.uuid(),versionId:z.uuid()}).strict(),\n z.object({kind:z.literal('ORDER'),id:z.uuid(),versionId:z.uuid()}).strict(),\n z.object({kind:z.literal('DRAFT'),input:draftInvoicePreviewSchema}).strict(),\n])\nz.object({kind:z.literal('REQUEST'),id:z.uuid(),versionId:z.uuid()})\nz.object({kind:z.literal('ORDER'),id:z.uuid(),versionId:z.uuid()})\nz.object({kind:z.literal('DRAFT'),input:draftInvoicePreviewSchema})\nconst orderInvoicePayloadSchema = z.object({\n source:invoiceSourceSchema.optional(),\n invoiceCode:z.string().trim().min(1).max(80),\n requestCode:z.string().trim().min(1).max(80),\n issuedAt:z.string().trim().min(1).max(80),\n sellerName:z.string().trim().min(1).max(200),\n buyer:z.object({\n  partnerName:z.string().trim().max(240),\n  partnerCode:z.string().trim().max(80),\n  invoiceCompanyName:z.string().trim().max(240),\n  taxCode:z.string().trim().max(80),\n  invoiceAddress:z.string().trim().max(500),\n  phone:z.string().trim().max(80),\n  email:z.string().trim().max(200),\n }),\n delivery:z.object({\n  recipient:z.string().trim().max(200),\n  phone:z.string().trim().max(80),\n  address:z.string().trim().max(500),\n  expectedDeliveryDate:z.string().trim().max(120),\n }),\n lines:z.array(orderInvoiceLineSchema).min(1).max(200),\n summary:z.object({\n  totalBaseQuantityText:z.string().trim().max(120),\n  totalCasesText:z.string().trim().max(80),\n  listSubtotal:z.string().trim().max(60),\n  subtotalAfterTier:z.string().trim().max(60),\n  productDiscountAmount:z.string().max(60),merchandiseTotal:z.string().max(60),taxAmount:z.string().max(60),feeAmount:z.string().max(60),\n  extraDiscountPercent:z.string().trim().max(40),\n  extraDiscountAmount:z.string().trim().max(60),\n  totalPayable:z.string().trim().max(60),\n  amountInWords:z.string().trim().max(500),\n }),\n signatures:z.object({\n  buyerRepresentative:z.string().trim().max(160),\n  managerRepresentative:z.string().trim().max(160),\n }),\n})\nz.object({\n source:invoiceSourceSchema.optional(),\n invoiceCode:z.string().trim().min(1).max(80),\n requestCode:z.string().trim().min(1).max(80),\n issuedAt:z.string().trim().min(1).max(80),\n sellerName:z.string().trim().min(1).max(200),\n buyer:z.object({\n  partnerName:z.string().trim().max(240),\n  partnerCode:z.string().trim().max(80),\n  invoiceCompanyName:z.string().trim().max(240),\n  taxCode:z.string().trim().max(80),\n  invoiceAddress:z.string().trim().max(500),\n  phone:z.string().trim().max(80),\n  email:z.string().trim().max(200),\n }),\n delivery:z.object({\n  recipient:z.string().trim().max(200),\n  phone:z.string().trim().max(80),\n  address:z.string().trim().max(500),\n  expectedDeliveryDate:z.string().trim().max(120),\n }),\n lines:z.array(orderInvoiceLineSchema).min(1).max(200),\n summary:z.object({\n  totalBaseQuantityText:z.string().trim().max(120),\n  totalCasesText:z.string().trim().max(80),\n  listSubtotal:z.string().trim().max(60),\n  subtotalAfterTier:z.string().trim().max(60),\n  productDiscountAmount:z.string().max(60),merchandiseTotal:z.string().max(60),taxAmount:z.string().max(60),feeAmount:z.string().max(60),\n  extraDiscountPercent:z.string().trim().max(40),\n  extraDiscountAmount:z.string().trim().max(60),\n  totalPayable:z.string().trim().max(60),\n  amountInWords:z.string().trim().max(500),\n }),\n signatures:z.object({\n  buyerRepresentative:z.string().trim().max(160),\n  managerRepresentative:z.string().trim().max(160),\n }),\n})\nz.object({\n  partnerName:z.string().trim().max(240),\n  partnerCode:z.string().trim().max(80),\n  invoiceCompanyName:z.string().trim().max(240),\n  taxCode:z.string().trim().max(80),\n  invoiceAddress:z.string().trim().max(500),\n  phone:z.string().trim().max(80),\n  email:z.string().trim().max(200),\n })\nz.object({\n  recipient:z.string().trim().max(200),\n  phone:z.string().trim().max(80),\n  address:z.string().trim().max(500),\n  expectedDeliveryDate:z.string().trim().max(120),\n })\nz.object({\n  totalBaseQuantityText:z.string().trim().max(120),\n  totalCasesText:z.string().trim().max(80),\n  listSubtotal:z.string().trim().max(60),\n  subtotalAfterTier:z.string().trim().max(60),\n  productDiscountAmount:z.string().max(60),merchandiseTotal:z.string().max(60),taxAmount:z.string().max(60),feeAmount:z.string().max(60),\n  extraDiscountPercent:z.string().trim().max(40),\n  extraDiscountAmount:z.string().trim().max(60),\n  totalPayable:z.string().trim().max(60),\n  amountInWords:z.string().trim().max(500),\n })\nz.object({\n  buyerRepresentative:z.string().trim().max(160),\n  managerRepresentative:z.string().trim().max(160),\n })\norderInvoicePayloadSchema.required({source:true}) // Use authenticated invoice-data or invoice-preview; server revalidates all line prices and totals.",
   "c5085d72197d340a": "const money=z.string().regex(/^\\d{1,24}$/),quantity=z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),sku=z.string().min(2).max(80).regex(/^[A-Za-z0-9_-]+$/),basisPoints=z.number().int().min(0).max(10000);\nconst basketSchema = z.object({lines:z.array(z.object({sku,unitCode:z.string().min(1).max(40).regex(/^[A-Za-z0-9_-]+$/),quantity,requestedUnitPrice:money.optional()}).strict()).min(1).max(200),discountBasisPoints:basisPoints,creditTerms:z.boolean()}).strict()\nconst draftInvoicePreviewSchema = z.object({organizationId:z.uuid(),basket:basketSchema,delivery:z.object({recipient:z.string().trim().max(200).default(''),phone:z.string().trim().max(80).default(''),address:z.string().trim().max(500).default(''),expectedDeliveryDate:z.string().trim().max(120).optional()}),note:z.string().trim().max(2000).default(''),requestCode:z.string().trim().max(80).optional(),invoiceCode:z.string().trim().max(80).optional()}).strict()",
   "42c78b8845773eec": "z.object({})",
+  "519d97d317ff3696": "const quantity=z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).refine(v=>fixed(v)>0n);\nconst reason=z.string().trim().min(3).max(2000);\nconst key=z.uuid();\nconst transferLine=z.object({productId:z.uuid(),lotId:z.uuid(),quantity,destinationLocationId:z.uuid()}).strict();\nconst receiveTransferSchema = z.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({index:z.number().int().min(0).max(199),quantity:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/),shortage:z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).default('0')}).strict()).min(1).max(200),final:z.boolean(),reason,idempotencyKey:key}).strict()",
+  "c7a321202b1971d9": "const quantity=z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).refine(v=>fixed(v)>0n);\nconst reason=z.string().trim().min(3).max(2000);\nconst key=z.uuid();\nconst transferLine=z.object({productId:z.uuid(),lotId:z.uuid(),quantity,destinationLocationId:z.uuid()}).strict();\nconst shipTransferSchema = z.object({sourceLocationId:z.uuid(),lines:z.array(transferLine).min(1).max(200),reason,idempotencyKey:key}).strict()",
   "35e942bb2a930ba0": "z.object({id:z.uuid()})",
   "eb18e2fa220be416": "z.object({id:z.uuid(),data:z.unknown().optional()})",
   "56c8cfe84480a495": "const fields={representativeName:z.string().trim().min(2).max(120),companyName:z.string().trim().min(2).max(200),phone:z.string().trim().min(8).max(40).regex(/^[+()\\d .-]+$/).refine(v=>{const n=v.replace(/\\D/g,'').length;return n>=8&&n<=15;}),email:z.email().trim().toLowerCase(),province:z.string().trim().min(2).max(120),address:z.string().trim().min(3).max(500),customerType:z.enum(['CUSTOMER','SUPERMARKET']),businessId:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(''),note:z.string().trim().max(2000).default(''),warehouseId:z.uuid(),idempotencyKey:z.uuid()};\nconst createSalesCustomerSchema = z.object({...fields,salesMembershipId:z.uuid().optional()}).strict()",
@@ -318,7 +320,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "GET /api/crm/accountant/workspace",
@@ -338,7 +340,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/accountant-clear-order",
@@ -355,7 +357,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/accountant-verify-clearance",
@@ -372,7 +374,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/accountant-verify-factory-invoice",
@@ -389,7 +391,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/adjust-warehouse-stock",
@@ -406,7 +408,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/attach-vat-document",
@@ -423,7 +425,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/confirm-order-payment",
@@ -440,7 +442,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/confirm-warehouse-pickup",
@@ -457,7 +459,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/create-factory-dispatch",
@@ -474,7 +476,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/create-factory-order",
@@ -491,7 +493,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/create-handover-invoice",
@@ -508,7 +510,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/create-warehouse-reconciliation",
@@ -525,7 +527,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/record-order-payment",
@@ -542,7 +544,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/register-warehouse-order",
@@ -559,7 +561,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/request-vat-adjustment",
@@ -576,7 +578,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/save-customer-tax-profile",
@@ -593,7 +595,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/save-vat-invoice",
@@ -610,7 +612,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/staff-submit-payment",
@@ -627,7 +629,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/update-handover-delivery",
@@ -644,7 +646,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/update-product-price",
@@ -661,7 +663,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "POST /api/crm/accountant/update-reconciliation-status",
@@ -678,7 +680,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "05bfef090f9ba7865d665f4bc5fc2704082dc481f976f46e0abed4031b144cd9"
+    "sourceHash": "621aa8fa8055a39cea4e587f4606466415c77fcbc635943f55eb6a23fed01b37"
   },
   {
     "id": "GET /api/crm/accounts/[id]/deletion-preview",
@@ -3010,7 +3012,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "GET /api/crm/document-flow/pdf",
@@ -3031,7 +3033,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "GET /api/crm/document-flow/provider-settings",
@@ -3052,7 +3054,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "GET /api/crm/document-flow/view",
@@ -3073,7 +3075,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "GET /api/crm/document-flow/workspace",
@@ -3094,7 +3096,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/accept",
@@ -3111,7 +3113,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/amend",
@@ -3128,7 +3130,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/confirm",
@@ -3145,7 +3147,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail",
@@ -3162,7 +3164,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail-rule",
@@ -3179,7 +3181,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/remove-mail-rule",
@@ -3196,7 +3198,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/retry-mail",
@@ -3213,7 +3215,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/save",
@@ -3230,7 +3232,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/save-mail-rule",
@@ -3247,7 +3249,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/save-provider",
@@ -3264,7 +3266,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "POST /api/crm/document-flow/test-mail",
@@ -3281,7 +3283,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "1a8cebbed30c4e52ba95f496d58a4645303948299dd0c9843c2e544eeaf6b7fc"
+    "sourceHash": "08396ae97f199bb18604befc517b1c8a1009a63ae67031bc90426f682e759cef"
   },
   {
     "id": "GET /api/crm/documents/[id]",
@@ -4138,11 +4140,15 @@ const metadata: McpRoute[] = [
       "action": "alerts"
     },
     "query": [
-      "id"
+      "direction",
+      "id",
+      "page",
+      "q",
+      "status"
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "GET /api/crm/inventory/balances",
@@ -4157,11 +4163,15 @@ const metadata: McpRoute[] = [
       "action": "balances"
     },
     "query": [
-      "id"
+      "direction",
+      "id",
+      "page",
+      "q",
+      "status"
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "GET /api/crm/inventory/count-preview",
@@ -4176,11 +4186,15 @@ const metadata: McpRoute[] = [
       "action": "count-preview"
     },
     "query": [
-      "id"
+      "direction",
+      "id",
+      "page",
+      "q",
+      "status"
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "GET /api/crm/inventory/locations",
@@ -4195,11 +4209,15 @@ const metadata: McpRoute[] = [
       "action": "locations"
     },
     "query": [
-      "id"
+      "direction",
+      "id",
+      "page",
+      "q",
+      "status"
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "GET /api/crm/inventory/lot-trace",
@@ -4214,11 +4232,38 @@ const metadata: McpRoute[] = [
       "action": "lot-trace"
     },
     "query": [
-      "id"
+      "direction",
+      "id",
+      "page",
+      "q",
+      "status"
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+  },
+  {
+    "id": "GET /api/crm/inventory/transfers",
+    "method": "GET",
+    "template": "/api/crm/inventory/transfers",
+    "source": "app/api/crm/inventory/[action]/route.ts",
+    "group": "inventory",
+    "status": "AVAILABLE",
+    "moduleId": null,
+    "params": [],
+    "selector": {
+      "action": "transfers"
+    },
+    "query": [
+      "direction",
+      "id",
+      "page",
+      "q",
+      "status"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/alert-rule",
@@ -4235,7 +4280,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/consume",
@@ -4252,7 +4297,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/count-approve",
@@ -4269,7 +4314,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/count-record",
@@ -4286,7 +4331,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/count-start",
@@ -4303,7 +4348,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/create-location",
@@ -4320,7 +4365,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/recall-open",
@@ -4337,7 +4382,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/recall-update",
@@ -4354,7 +4399,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/receipt",
@@ -4371,7 +4416,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/release",
@@ -4388,7 +4433,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/reserve",
@@ -4405,7 +4450,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/reverse",
@@ -4422,7 +4467,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/transfer-receive",
@@ -4437,9 +4482,9 @@ const metadata: McpRoute[] = [
       "action": "transfer-receive"
     },
     "query": [],
-    "inputContract": "",
+    "inputContract": "519d97d317ff3696",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "POST /api/crm/inventory/transfer-ship",
@@ -4454,9 +4499,9 @@ const metadata: McpRoute[] = [
       "action": "transfer-ship"
     },
     "query": [],
-    "inputContract": "",
+    "inputContract": "c7a321202b1971d9",
     "multipart": false,
-    "sourceHash": "acfa890e5dd7e35b011318c3360367fa988ca3ceeb7e3cecd4986a307026db85"
+    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
   },
   {
     "id": "GET /api/crm/jobs/detail",
