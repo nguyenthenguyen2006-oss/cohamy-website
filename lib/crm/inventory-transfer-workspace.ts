@@ -7,6 +7,7 @@ import {parseCommercial as parse} from './commercial-common';
 import {warehouseScope} from './warehouse-scope';
 import {listInventory,listLocations,listTransferDestinationLocations} from './inventory';
 import {inventoryTransferNotifications} from './inventory-transfer-notifications';
+import {transferProductRows} from './inventory-transfer-lines';
 import type {Principal} from './types';
 
 const querySchema=z.object({page:z.coerce.number().int().min(1).max(100000).default(1),q:z.string().trim().max(100).default(''),direction:z.enum(['ALL','INCOMING','OUTGOING']).default('ALL'),status:z.enum(['ALL','IN_TRANSIT','PARTIAL','SHORT','RECEIVED']).default('ALL')}).strict();
@@ -25,5 +26,5 @@ export async function inventoryTransferWorkspace(user:Principal,input:unknown={}
   inventoryTransferNotifications(db,user),
  ]);
  const count=Number(total.rows[0].total);
- return {query,warehouses,locations,destinationLocations:destinations,balances,items:rows.rows,total:count,pageSize:50,nextPage:query.page*50<count?query.page+1:null,counts:counts.rows[0],notifications};
+ return {query,warehouses,locations:locations.filter(l=>l.active&&l.kind==='PICK'),destinationLocations:destinations,balances,products:transferProductRows(balances),items:rows.rows,total:count,pageSize:50,nextPage:query.page*50<count?query.page+1:null,counts:counts.rows[0],notifications};
 }

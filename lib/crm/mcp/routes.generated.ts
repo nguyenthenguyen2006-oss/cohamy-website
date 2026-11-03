@@ -4148,7 +4148,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "GET /api/crm/inventory/balances",
@@ -4171,7 +4171,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "GET /api/crm/inventory/count-preview",
@@ -4194,7 +4194,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "GET /api/crm/inventory/locations",
@@ -4217,7 +4217,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "GET /api/crm/inventory/lot-trace",
@@ -4240,7 +4240,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "GET /api/crm/inventory/transfers",
@@ -4263,7 +4263,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/alert-rule",
@@ -4280,7 +4280,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/consume",
@@ -4297,7 +4297,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/count-approve",
@@ -4314,7 +4314,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/count-record",
@@ -4331,7 +4331,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/count-start",
@@ -4348,7 +4348,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/create-location",
@@ -4365,7 +4365,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/recall-open",
@@ -4382,7 +4382,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/recall-update",
@@ -4399,7 +4399,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/receipt",
@@ -4416,7 +4416,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/release",
@@ -4433,7 +4433,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/reserve",
@@ -4450,7 +4450,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/reverse",
@@ -4467,7 +4467,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/transfer-receive",
@@ -4484,7 +4484,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "519d97d317ff3696",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "POST /api/crm/inventory/transfer-ship",
@@ -4501,7 +4501,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "c7a321202b1971d9",
     "multipart": false,
-    "sourceHash": "573667efc74a3fe49903cbbf988f2eba8935b0a0d1eb03673e526f5cb6ad5714"
+    "sourceHash": "098a4f63d39fba3afc36aa13822b9de16ad19dc47783bf6d1426ec540580c7f6"
   },
   {
     "id": "GET /api/crm/jobs/detail",
