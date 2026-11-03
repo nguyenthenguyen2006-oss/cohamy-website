@@ -48,7 +48,7 @@ async function main(){
  await test('Factory cannot forge request, missing/wrong source, warehouse or SKU',async()=>{
   for(const u of [factory,hn,accountant,manager])await assert.rejects(flow.saveFlowDocument(u,{kind:'REQUEST',warehouseId:hnWh.id,factoryMembershipId:factory.membershipId,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/FORBIDDEN/);
   await assert.rejects(old.handleAccountantWorkflowAction(factory,'create-factory-dispatch',{warehouseId:hnWh.id,lines:[{productId:product.id,dispatchedQty:1}]}),/SOURCE_REQUIRED/);
-  await assert.rejects(flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:req.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/NOT_FOUND/);
+  const shared=await createRequest('2');await flow.acceptFactoryRequest(factory,{id:shared.id,idempotencyKey:randomUUID()});const otherDraft=await flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:shared.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()});assert.equal((await flow.viewFlowDocument(other,otherDraft.id)).kind,'DISPATCH');
   const r=await createRequest();await flow.acceptFactoryRequest(factory,{id:r.id,idempotencyKey:randomUUID()});await assert.rejects(flow.saveFlowDocument(factory,{kind:'DISPATCH',parentId:r.id,warehouseId:hcmWh.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/SOURCE_WAREHOUSE_MISMATCH/);
   await assert.rejects(flow.saveFlowDocument(factory,{kind:'DISPATCH',parentId:r.id,lines:[{productId:productB.id,quantity:'1'}],idempotencyKey:randomUUID()}),/PRODUCT_OUTSIDE_REQUEST/);
  });
@@ -144,6 +144,43 @@ async function main(){
   await assert.rejects(db.query('UPDATE cohamy_crm.document_creators SET display_name=$1 WHERE entity_id=$2',['Spoof',issue.id]),/immutable|permission denied|AUDIT/i);
   const identity=(await db.query<{actor_identity:{displayName:string}}> ("SELECT actor_identity FROM cohamy_crm.audit_events WHERE actor_id=$1 AND action='auth.login' ORDER BY created_at LIMIT 1",[creator.id])).rows[0].actor_identity;assert.equal(identity.displayName,'Người tạo gốc QA');
   const {invokeOperation}=await import('../../lib/crm/mcp/bridge');const read=await invokeOperation(admin,{operation:'GET /api/crm/document-flow/view',query:{id:issue.id}},false);assert.equal(read.status,200);assert.ok('data' in read);assert.equal((read.data as typeof saved).creator?.displayName,'Người tạo gốc QA');
+ });
+
+ await test('Shared factory: default request reaches every active factory account without stock effects',async()=>{
+  const before=await countStock(),r=await flow.saveFlowDocument(admin,{kind:'REQUEST',warehouseId:hnWh.id,lines:[{productId:product.id,quantity:'5'}],confirm:true,idempotencyKey:randomUUID()});
+  assert.equal((await flow.viewFlowDocument(admin,r.id)).factoryName,'Nhà máy Cohamy');
+  for(const u of [factory,other]){assert.ok((await flow.flowWorkspace(u)).documents.some(x=>x.id===r.id));assert.equal((await flow.downloadFlowPdf(u,r.id)).bytes.subarray(0,5).toString(),'%PDF-');assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND event_key=$2',[u.id,`factory.request.sent:${r.id}:1`])).rows.length,1);}
+  assert.equal(await countStock(),before);
+ });
+ await test('Shared factory: Admin drafts and another employee transfer drafts remain private',async()=>{
+  const r=await flow.saveFlowDocument(admin,{kind:'REQUEST',warehouseId:hnWh.id,lines:[{productId:product.id,quantity:'5'}],idempotencyKey:randomUUID()});
+  for(const u of [factory,other]){assert.ok(!(await flow.flowWorkspace(u)).documents.some(x=>x.id===r.id));await assert.rejects(flow.viewFlowDocument(u,r.id),/NOT_FOUND/);}
+  await flow.confirmFlowDocument(admin,{id:r.id,kind:'REQUEST',version:r.version,idempotencyKey:randomUUID()});
+  await assert.rejects(flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:r.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/FACTORY_ACCEPTANCE_REQUIRED/);
+  await flow.acceptFactoryRequest(other,{id:r.id,idempotencyKey:randomUUID()});
+  const d=await flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:r.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()});
+  assert.ok((await flow.flowWorkspace(other)).documents.some(x=>x.id===d.id));assert.ok(!(await flow.flowWorkspace(factory)).documents.some(x=>x.id===d.id));await assert.rejects(flow.viewFlowDocument(factory,d.id),/NOT_FOUND/);
+  await flow.confirmFlowDocument(other,{id:d.id,kind:'DISPATCH',version:d.version,idempotencyKey:randomUUID()});
+  const view=await flow.viewFlowDocument(factory,d.id);assert.equal(view.creator?.userId,other.id);assert.equal(view.confirmedBy,other.displayName);
+ });
+ await test('Shared factory: acceptance and cross-account partial dispatches serialize once',async()=>{
+  const before=await countStock(),r=await createRequest('5');
+  await Promise.all([factory,other].map(u=>flow.acceptFactoryRequest(u,{id:r.id,idempotencyKey:randomUUID()})));
+  assert.equal((await db.query("SELECT id FROM cohamy_crm.audit_events WHERE entity_id=$1 AND action='document-flow.accepted'",[r.id])).rows.length,1);
+  const values=await Promise.allSettled([factory,other].map(u=>flow.saveFlowDocument(u,{kind:'DISPATCH',parentId:r.id,lines:[{productId:product.id,quantity:'3'}],confirm:true,idempotencyKey:randomUUID()})));
+  assert.equal(values.filter(x=>x.status==='fulfilled').length,1);assert.equal(values.filter(x=>x.status==='rejected').length,1);assert.equal(await countStock(),before);
+ });
+ await test('Shared factory: another organization, disabled identities and warehouse issues stay denied',async()=>{
+  const org=randomUUID(),userId=randomUUID(),membership=randomUUID();
+  await owner.query("INSERT INTO cohamy_crm.organizations(id,code,name,kind) VALUES($1,$2,'QA foreign factory','COHAMY')",[org,'QA_FACTORY_'+org.slice(0,8)]);
+  await owner.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash) SELECT $1,'foreign-factory@crm-qa.invalid','QA foreign factory',password_hash FROM cohamy_crm.users WHERE id=$2",[userId,factory.id]);
+  await owner.query("INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,'FACTORY')",[membership,userId,org]);
+  const foreign=(await auth.login('foreign-factory@crm-qa.invalid',qaPassword)).user;
+  assert.equal((await flow.flowWorkspace(foreign)).documents.length,0);await assert.rejects(flow.downloadFlowPdf(foreign,req.id),/NOT_FOUND/);await assert.rejects(flow.acceptFactoryRequest(foreign,{id:req.id,idempotencyKey:randomUUID()}),/NOT_FOUND/);
+  const r=await createRequest('1');assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE entity_id=$1 AND user_id=$2',[r.id,userId])).rows.length,0);
+  await owner.query('UPDATE cohamy_crm.memberships SET active=false,version=version+1 WHERE id=$1',[other.membershipId]);
+  try{await assert.rejects(flow.flowWorkspace(other),/SESSION|FORBIDDEN|PRINCIPAL|REAUTH|AUTH/);const r2=await createRequest('1');assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE entity_id=$1 AND user_id=$2',[r2.id,other.id])).rows.length,0);}finally{await owner.query('UPDATE cohamy_crm.memberships SET active=true,version=version+1 WHERE id=$1',[other.membershipId]);}
+  const issue=(await flow.flowWorkspace(admin)).documents.find(x=>x.kind==='ISSUE')!;assert.ok(issue);await assert.rejects(flow.viewFlowDocument(factory,issue.id),/NOT_FOUND/);
  });
  await fs.mkdir('.local',{recursive:true});await fs.writeFile('.local/crm-document-flow-run.json',JSON.stringify({dataDir:process.env.CRM_LOCAL_DATA_DIR,mode:pg?'postgres':'pglite',emails:{admin:admin.email,factory:factory.email,hn:hn.email,hcm:hcm.email,accountant:accountant.email},requestId:req!.id,dispatchId:disp!.id,receiptId:rec!.id,vatVersionId:vat!.versionId},null,2));
  await fs.writeFile('docs/crm/test-results/document-flow/integration-'+(pg?'postgres':'pglite')+'.json',JSON.stringify({environment:pg?'LOCAL native PostgreSQL 17.11 / isolated DML role':'LOCAL PGlite',provider:'FAKE_ONLY',tests:result},null,2));

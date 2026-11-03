@@ -3010,7 +3010,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "GET /api/crm/document-flow/pdf",
@@ -3031,7 +3031,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "GET /api/crm/document-flow/provider-settings",
@@ -3052,7 +3052,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "GET /api/crm/document-flow/view",
@@ -3073,7 +3073,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "GET /api/crm/document-flow/workspace",
@@ -3094,7 +3094,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/accept",
@@ -3111,7 +3111,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/amend",
@@ -3128,7 +3128,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/confirm",
@@ -3145,7 +3145,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail",
@@ -3162,7 +3162,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail-rule",
@@ -3179,7 +3179,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/remove-mail-rule",
@@ -3196,7 +3196,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/retry-mail",
@@ -3213,7 +3213,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/save",
@@ -3230,7 +3230,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/save-mail-rule",
@@ -3247,7 +3247,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/save-provider",
@@ -3264,7 +3264,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "POST /api/crm/document-flow/test-mail",
@@ -3281,7 +3281,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "59d10d98d00e3afc507c0a43104f1948e08ceb17156e8c72b69771b917b44b66"
+    "sourceHash": "3383a895afbdb9bf61b6fbd7c0b3744bbc68b90d3adf140b9c2f2090724ad648"
   },
   {
     "id": "GET /api/crm/documents/[id]",

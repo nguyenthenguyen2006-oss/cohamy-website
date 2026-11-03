@@ -35,6 +35,9 @@ async function warehouse(sql:Sql,user:Principal,id:string,factory=false){
   const row=(await sql.query<{id:string;code:string;name:string;organization_id:string}>(`SELECT w.* FROM cohamy_crm.warehouses w WHERE w.id=$${scope.params.length+1} AND w.active AND (${scope.sql})`,[...scope.params,id])).rows[0];
   if(!row)throw new CrmError('NOT_FOUND',404);return row;
 }
+// One production factory per organization; the legacy membership remains snapshot metadata.
+// Admin request drafts and another employee's unconfirmed transfer stay private.
+function factoryScope(user:Principal,offset=0){return {sql:`w.organization_id=$${offset+1} AND (f.workflow_state<>'DRAFT' OR f.created_by=$${offset+2})`,params:[user.organizationId,user.id]};}
 function table(kind:FlowKind){return kind==='ISSUE'?'warehouse_handover_invoices':'factory_invoices';}
 export async function flowAccess(sql:Sql,user:Principal,id:string,kind?:FlowKind,lock=false):Promise<FlowRow>{
   parse(uuid,id);if(user.area!=='crm')throw new CrmError('NOT_FOUND',404);
@@ -42,8 +45,9 @@ export async function flowAccess(sql:Sql,user:Principal,id:string,kind?:FlowKind
   for(const t of tables){
     const scope=flowWarehouseScope(user,'w',1);
     const isFactory=user.role==='FACTORY';
-    const condition=isFactory?(t==='factory_invoices'?`f.factory_membership_id=$2 AND (f.workflow_state<>'DRAFT' OR f.created_by=(SELECT user_id FROM cohamy_crm.memberships WHERE id=$2))`:'false'):scope.sql;
-    const params=isFactory?(t==='factory_invoices'?[id,user.membershipId]:[id]):[id,...scope.params];
+    const shared=factoryScope(user,1);
+    const condition=isFactory?(t==='factory_invoices'?shared.sql:'false'):scope.sql;
+    const params=isFactory?(t==='factory_invoices'?[id,...shared.params]:[id]):[id,...scope.params];
     const row=(await sql.query<FlowRow>(`SELECT f.* FROM cohamy_crm.${t} f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE f.id=$1 AND (${condition}) ${lock?'FOR UPDATE OF f':''}`,params)).rows[0];
     if(row){if(kind&&row.flow_payload&&row.flow_payload.kind!==kind)throw new CrmError('NOT_FOUND',404);return row;}
   }
@@ -96,7 +100,6 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
     source=await sourceSnapshot(sql,user,d.parentId,d.kind==='DISPATCH'?'REQUEST':'DISPATCH');
     warehouseId=source.warehouseId;factoryMembershipId=source.factoryMembershipId;factoryName=source.factoryName;
     if(d.warehouseId&&d.warehouseId!==warehouseId)throw new CrmError('SOURCE_WAREHOUSE_MISMATCH',409);
-    if(d.kind==='DISPATCH'&&user.role==='FACTORY'&&factoryMembershipId!==user.membershipId)throw new CrmError('NOT_FOUND',404);
     if(d.kind==='DISPATCH'&&user.role==='FACTORY'&&!(await sql.query("SELECT id FROM cohamy_crm.audit_events WHERE entity_id=$1 AND action='document-flow.accepted' AND payload->>'revision'=$2 LIMIT 1",[source.id,String(source.revision)])).rows.length)throw new CrmError('FACTORY_ACCEPTANCE_REQUIRED',409);
   }
   if(!warehouseId)throw new CrmError('WAREHOUSE_REQUIRED',400);
@@ -105,9 +108,9 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
   const sourceRevision=source?.revision??null;let sourceId=source?.id??null,sourceCode=source?.code??'',salesOrderId=old?.salesOrderId??null,requestId=old?.requestId??null;
   let totals:Record<string,string>={},delivery:Record<string,string>={};
   if(d.kind==='REQUEST'){
-    if(!factoryMembershipId)throw new CrmError('FACTORY_REQUIRED',400);
-    const member=(await sql.query<{display_name:string}>("SELECT u.display_name FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id WHERE m.id=$1 AND m.organization_id=$2 AND m.active AND u.active AND m.role='FACTORY'",[factoryMembershipId,user.organizationId])).rows[0];
-    if(!member)throw new CrmError('FACTORY_INVALID',400);factoryName=member.display_name;
+    const member=(await sql.query<{id:string}>("SELECT m.id FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id WHERE ($1::uuid IS NULL OR m.id=$1) AND m.organization_id=$2 AND m.active AND u.active AND u.deleted_at IS NULL AND m.role='FACTORY' ORDER BY u.created_at,m.id LIMIT 1",[factoryMembershipId,user.organizationId])).rows[0];
+    if(!member)throw new CrmError(factoryMembershipId?'FACTORY_INVALID':'FACTORY_REQUIRED',400);
+    factoryMembershipId=member.id;factoryName=old?.factoryName||'Nhà máy Cohamy';
     for(const l of d.lines){const p=(await sql.query<{id:string;sku:string;name:string;stock_unit:string}>('SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE id=$1 AND active',[l.productId])).rows[0];if(!p)throw new CrmError('PRODUCT_INVALID',400);if(!p.stock_unit)throw new CrmError('PRODUCT_STOCK_UNIT_REQUIRED',409);lines.push({...plainLine(p,l.quantity),note:l.note});}
   }else if(source){
     const sums=d.kind==='DISPATCH'?await shippedQuantities(sql,source.id):new Map<string,bigint>();
@@ -237,10 +240,10 @@ async function archive(sql:Sql,user:Principal,s:FlowSnapshot,reason:string){
 }
 async function notifyFlowInApp(sql:Sql,user:Principal,s:FlowSnapshot,event:string){
   const users=(await sql.query<{user_id:string}>(`SELECT DISTINCT m.user_id FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.warehouses w ON w.id=$2 WHERE m.organization_id=$1 AND m.active AND u.active AND (
-    m.role='ADMIN' OR (m.id=$3 AND m.role='FACTORY') OR ($4<>'REQUEST' AND (m.role='ACCOUNTANT' OR (m.role IN('WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM') AND (
+    m.role='ADMIN' OR m.role='FACTORY' OR ($3<>'REQUEST' AND (m.role='ACCOUNTANT' OR (m.role IN('WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM') AND (
       EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.membership_id=m.id AND a.warehouse_id=w.id) OR
       (NOT EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.membership_id=m.id) AND ((m.role='WAREHOUSE_HN' AND w.region='NORTH') OR (m.role='WAREHOUSE_HCM' AND w.region='SOUTH')))
-    )))))`,[user.organizationId,s.warehouseId,s.factoryMembershipId,s.kind])).rows;
+    )))))`,[user.organizationId,s.warehouseId,s.kind])).rows;
   for(const r of users)await sql.query("INSERT INTO cohamy_crm.notifications(id,user_id,event_key,kind,entity_type,entity_id,message,available_at) VALUES($1,$2,$3,'SYSTEM',$4,$5,$6,now()) ON CONFLICT(user_id,event_key) DO NOTHING",[randomUUID(),r.user_id,`${event}:${s.id}:${s.revision}`,flowEntity(s.kind),s.id,`${s.code} · ${s.warehouseName} · ${s.kind==='REQUEST'?'Đề nghị đã gửi nhà máy':s.kind==='DISPATCH'?'Nhà máy đã gửi hàng':s.kind==='RECEIPT'?'Kho đã xác nhận thực nhận':'Kho đã xác nhận xuất'}`]);
 }
 async function confirm(sql:Sql,user:Principal,row:FlowRow){
@@ -292,8 +295,8 @@ export async function flowWorkspace(user:Principal){
   if(user.area!=='crm'||!['ADMIN','MANAGER','FACTORY','ACCOUNTANT','WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM'].includes(user.role))throw new CrmError('FORBIDDEN',403);
   const db=await database();await assertCurrentPrincipal(db,user);
   const scope=flowWarehouseScope(user),isFactory=user.role==='FACTORY';
-  const params=isFactory?[user.membershipId]:scope.params;
-  const factoryWhere=isFactory?"f.factory_membership_id=$1 AND (f.workflow_state<>'DRAFT' OR f.created_by=(SELECT user_id FROM cohamy_crm.memberships WHERE id=$1))":scope.sql;
+  const shared=factoryScope(user),params=isFactory?shared.params:scope.params;
+  const factoryWhere=isFactory?shared.sql:scope.sql;
   const rows=async<T>(text:string,params:unknown[]=[]) => (await db.query<T>(text,params)).rows;
   // Independent scoped reads share the bounded connection pool; no cross-request cache.
   const [factory,issues,warehouses,products,factories,stocks,orders]=await Promise.all([
