@@ -5,7 +5,7 @@ import {database,type Sql} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
 import {CrmError} from './permissions';
 import {partnerScope} from './repository';
-import {warehouseScope} from './warehouse-scope';
+import {warehouseScope,warehouseMemberScope} from './warehouse-scope';
 import {isWarehouseRole,isBuyerRole,type Principal} from './types';
 import {getPrimarySales} from './sales-customers';
 import {enqueueDocumentMail} from './document-mail';
@@ -24,7 +24,7 @@ export async function captureBuyerSales(sql:Sql,orderId:string,organizationId:st
 }
 async function recipients(sql:Sql,b:Order,event:BuyerNotificationEvent){
  const result:Recipient[]=[],owner=await getPrimarySales(sql,b.organization_id);if(owner)result.push({userId:owner.userId,membershipId:owner.membershipId,audience:'SALES'});
- const staff=(await sql.query<{user_id:string;id:string}>(`SELECT m.user_id,m.id FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id JOIN cohamy_crm.warehouses w ON w.id=$1 WHERE m.active AND u.active AND u.deleted_at IS NULL AND u.activation_status='ACTIVE' AND o.active AND o.kind='COHAMY' AND m.organization_id=w.organization_id AND m.role IN('WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM') AND (EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.membership_id=m.id AND a.warehouse_id=w.id) OR(NOT EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.membership_id=m.id) AND ((m.role='WAREHOUSE_HN' AND w.region='NORTH') OR(m.role='WAREHOUSE_HCM' AND w.region='SOUTH'))))`,[b.warehouse_id])).rows;
+ const staff=(await sql.query<{user_id:string;id:string}>(`SELECT m.user_id,m.id FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id JOIN cohamy_crm.warehouses w ON w.id=$1 WHERE m.active AND u.active AND u.deleted_at IS NULL AND u.activation_status='ACTIVE' AND o.active AND o.kind='COHAMY' AND m.organization_id=w.organization_id AND (${warehouseMemberScope('m','w')})`,[b.warehouse_id])).rows;
  for(const s of staff)result.push({userId:s.user_id,membershipId:s.id,audience:'WAREHOUSE'});
  if(event!=='buyer.order.created')for(const u of (await sql.query<{user_id:string;id:string}>("SELECT m.user_id,m.id FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.organizations o ON o.id=m.organization_id WHERE m.organization_id=$1 AND m.role IN('CUSTOMER','SUPERMARKET') AND m.active AND u.active AND u.deleted_at IS NULL AND u.activation_status='ACTIVE' AND o.active",[b.organization_id])).rows)result.push({userId:u.user_id,membershipId:u.id,audience:'BUYER'});
  return [...new Map(result.map(r=>[r.userId,r])).values()];

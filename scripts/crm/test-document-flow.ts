@@ -182,6 +182,39 @@ async function main(){
   try{await assert.rejects(flow.flowWorkspace(other),/SESSION|FORBIDDEN|PRINCIPAL|REAUTH|AUTH/);const r2=await createRequest('1');assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE entity_id=$1 AND user_id=$2',[r2.id,other.id])).rows.length,0);}finally{await owner.query('UPDATE cohamy_crm.memberships SET active=true,version=version+1 WHERE id=$1',[other.membershipId]);}
   const issue=(await flow.flowWorkspace(admin)).documents.find(x=>x.kind==='ISSUE')!;assert.ok(issue);await assert.rejects(flow.viewFlowDocument(factory,issue.id),/NOT_FOUND/);
  });
+
+ await test('Regional teams share all local warehouses despite partial or stale opposite assignments',async()=>{
+  for(const [email,role] of [['hn-peer@crm-qa.invalid','WAREHOUSE_HN'],['hcm-peer@crm-qa.invalid','WAREHOUSE_HCM']] as const)await repo.createAccount(admin,{email,role,displayName:'QA team '+role,password:qaPassword,organizationId:admin.organizationId});
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,extra=randomUUID();
+  await owner.query("INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id,region) VALUES($1,$2,'QA second North location',$3,'NORTH')",[extra,'QA_NORTH_'+extra.slice(0,8),admin.organizationId]);
+  await owner.query('DELETE FROM cohamy_crm.warehouse_assignments WHERE membership_id=$1',[peer.membershipId]);await owner.query('INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) VALUES($1,$2)',[peer.membershipId,hcmWh.id]);
+  for(const u of [hn,peer]){const ws=await flow.flowWorkspace(u);assert.ok(ws.warehouses.some(w=>w.id===hnWh.id));assert.ok(ws.warehouses.some(w=>w.id===extra));assert.ok(!ws.warehouses.some(w=>w.id===hcmWh.id));}
+  await assert.rejects(flow.downloadFlowPdf(peer,(await createRequest('1',hcmWh.id)).id),/NOT_FOUND/);
+ });
+ await test('Every regional teammate receives request/dispatch events only at the selected location; planning leaves stock unchanged',async()=>{
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,southPeer=(await auth.login('hcm-peer@crm-qa.invalid',qaPassword)).user,before=await countStock();
+  for(const [warehouse,recipients,excluded] of [[hnWh.id,[hn,peer],[hcm,southPeer]],[hcmWh.id,[hcm,southPeer],[hn,peer]]] as const){
+   const r=await createRequest('5',warehouse);for(const u of recipients)assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND event_key=$2',[u.id,`factory.request.sent:${r.id}:1`])).rows.length,1);
+   for(const u of excluded){assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND entity_id=$2',[u.id,r.id])).rows.length,0);await assert.rejects(flow.viewFlowDocument(u,r.id),/NOT_FOUND/);}
+   await assert.rejects(flow.saveFlowDocument(recipients[0],{kind:'RECEIPT',parentId:r.id,lines:[{productId:product.id,quantity:'5'}],confirm:true,idempotencyKey:randomUUID()}),/NOT_FOUND/);
+   const d=await dispatch(r.id,'5');for(const u of recipients){assert.ok((await flow.flowWorkspace(u)).documents.some(x=>x.id===d.id));assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND event_key=$2',[u.id,`factory.dispatch.confirmed:${d.id}:1`])).rows.length,1);}
+  }
+  assert.equal(await countStock(),before);
+ });
+ await test('Two same-warehouse employees confirm one shared receipt once and retain the real creator',async()=>{
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,r=await createRequest('5'),d=await dispatch(r.id,'5'),before=await countStock();
+  const receipt=await flow.saveFlowDocument(hn,{kind:'RECEIPT',parentId:d.id,lines:[{productId:product.id,quantity:'5'}],idempotencyKey:randomUUID()});
+  assert.equal((await flow.viewFlowDocument(peer,receipt.id)).creator?.userId,hn.id);
+  const inputs=[hn,peer].map(()=>({id:receipt.id,kind:'RECEIPT',version:receipt.version,idempotencyKey:randomUUID()})),values=await Promise.allSettled([hn,peer].map((u,i)=>flow.confirmFlowDocument(u,inputs[i])));
+  assert.equal(values.filter(x=>x.status==='fulfilled').length,1);assert.equal(await countStock(),before+5);const winner=values.findIndex(x=>x.status==='fulfilled');await flow.confirmFlowDocument([hn,peer][winner],inputs[winner]);assert.equal(await countStock(),before+5);
+  assert.equal((await flow.viewFlowDocument(peer,receipt.id)).creator?.userId,hn.id);await assert.rejects(flow.downloadFlowPdf(hcm,receipt.id),/NOT_FOUND/);
+ });
+ await test('Warehouse peers can finish a shared issue draft, while opposite and foreign locations remain denied',async()=>{
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,delivery={giver:'QA team',recipient:'QA recipient',recipientPhone:'0900000000',address:'QA address',deliveryDate:'2026-11-03',carrier:'QA',customer:'QA'},before=await countStock();
+  const issue=await flow.saveFlowDocument(peer,{kind:'ISSUE',warehouseId:hnWh.id,lines:[{productId:product.id,quantity:'1'}],delivery,idempotencyKey:randomUUID()});
+  await assert.rejects(flow.confirmFlowDocument(hcm,{id:issue.id,kind:'ISSUE',version:issue.version,idempotencyKey:randomUUID()}),/NOT_FOUND/);
+  await flow.confirmFlowDocument(hn,{id:issue.id,kind:'ISSUE',version:issue.version,idempotencyKey:randomUUID()});assert.equal(await countStock(),before-1);const view=await flow.viewFlowDocument(peer,issue.id);assert.equal(view.creator?.userId,peer.id);assert.equal(view.confirmedBy,hn.displayName);
+ });
  await fs.mkdir('.local',{recursive:true});await fs.writeFile('.local/crm-document-flow-run.json',JSON.stringify({dataDir:process.env.CRM_LOCAL_DATA_DIR,mode:pg?'postgres':'pglite',emails:{admin:admin.email,factory:factory.email,hn:hn.email,hcm:hcm.email,accountant:accountant.email},requestId:req!.id,dispatchId:disp!.id,receiptId:rec!.id,vatVersionId:vat!.versionId},null,2));
  await fs.writeFile('docs/crm/test-results/document-flow/integration-'+(pg?'postgres':'pglite')+'.json',JSON.stringify({environment:pg?'LOCAL native PostgreSQL 17.11 / isolated DML role':'LOCAL PGlite',provider:'FAKE_ONLY',tests:result},null,2));
  }finally{await close();await owner.close();}

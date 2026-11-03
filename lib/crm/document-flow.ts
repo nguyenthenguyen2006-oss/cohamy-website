@@ -10,7 +10,7 @@ import {renderFlowPdf} from './document-flow-pdf';
 import {enqueueDocumentMail} from './document-mail';
 import {flowEntity,type FlowKind,type FlowLine,type FlowSnapshot,type FlowRow} from './document-flow-model';
 import type {Principal} from './types';
-import {warehouseScope} from './warehouse-scope';
+import {warehouseScope,warehouseMemberScope} from './warehouse-scope';
 import {documentCreators} from './document-creators';
 import {assertBuyerClearanceReady} from './buyer-fulfillment';
 
@@ -240,10 +240,7 @@ async function archive(sql:Sql,user:Principal,s:FlowSnapshot,reason:string){
 }
 async function notifyFlowInApp(sql:Sql,user:Principal,s:FlowSnapshot,event:string){
   const users=(await sql.query<{user_id:string}>(`SELECT DISTINCT m.user_id FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id JOIN cohamy_crm.warehouses w ON w.id=$2 WHERE m.organization_id=$1 AND m.active AND u.active AND (
-    m.role='ADMIN' OR m.role='FACTORY' OR ($3<>'REQUEST' AND (m.role='ACCOUNTANT' OR (m.role IN('WAREHOUSE','WAREHOUSE_HN','WAREHOUSE_HCM') AND (
-      EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.membership_id=m.id AND a.warehouse_id=w.id) OR
-      (NOT EXISTS(SELECT 1 FROM cohamy_crm.warehouse_assignments a WHERE a.membership_id=m.id) AND ((m.role='WAREHOUSE_HN' AND w.region='NORTH') OR (m.role='WAREHOUSE_HCM' AND w.region='SOUTH')))
-    )))))`,[user.organizationId,s.warehouseId,s.kind])).rows;
+    m.role='ADMIN' OR m.role='FACTORY' OR ($3<>'REQUEST' AND m.role='ACCOUNTANT') OR (${warehouseMemberScope('m','w')}))`,[user.organizationId,s.warehouseId,s.kind])).rows;
   for(const r of users)await sql.query("INSERT INTO cohamy_crm.notifications(id,user_id,event_key,kind,entity_type,entity_id,message,available_at) VALUES($1,$2,$3,'SYSTEM',$4,$5,$6,now()) ON CONFLICT(user_id,event_key) DO NOTHING",[randomUUID(),r.user_id,`${event}:${s.id}:${s.revision}`,flowEntity(s.kind),s.id,`${s.code} · ${s.warehouseName} · ${s.kind==='REQUEST'?'Đề nghị đã gửi nhà máy':s.kind==='DISPATCH'?'Nhà máy đã gửi hàng':s.kind==='RECEIPT'?'Kho đã xác nhận thực nhận':'Kho đã xác nhận xuất'}`]);
 }
 async function confirm(sql:Sql,user:Principal,row:FlowRow){
