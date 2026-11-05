@@ -1,0 +1,86 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION direct HTTPS authenticated reads only; unique empty-filter screenshots contain no customer PII",
+  "testedAt": "2026-11-05T08:49:49.366Z",
+  "cases": [
+    {
+      "name": "Production Admin API reads actual paginated data without exposing customer values",
+      "status": "PASS",
+      "hasLiveOrders": false
+    },
+    {
+      "name": "Production sidebar and real no-match filter render Admin module with zero customer PII",
+      "status": "PASS"
+    },
+    {
+      "name": "Production390and320 screens keep document within viewport",
+      "status": "PASS"
+    },
+    {
+      "name": "Route handling settles and final first-party errors/write guards remain clear",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/online-orders/browser-production/admin-empty-filter-desktop.png",
+    "docs/crm/test-results/online-orders/browser-production/admin-empty-filter-mobile.png",
+    "docs/crm/test-results/online-orders/browser-production/admin-empty-filter-narrow.png"
+  ],
+  "measurements": [
+    {
+      "label": "admin-empty-filter-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "admin-empty-filter-mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "admin-empty-filter-narrow",
+      "width": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    }
+  ],
+  "accessibility": [
+    {
+      "label": "production-admin-desktop",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ],
+      "passes": 20
+    },
+    {
+      "label": "production-admin-mobile",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ],
+      "passes": 20
+    }
+  ],
+  "errors": [],
+  "expectedEvents": [],
+  "blockedRequests": [],
+  "teardown": {
+    "milliseconds": 552,
+    "pending": 0,
+    "quietMs": 1000
+  },
+  "notes": [
+    "Production screenshots use an actual unique empty search filter, not hidden or fabricated rows. Live contact/code/address values are retained only in memory. Rich detail, actions, warehouse scope and queued email were exercised only in isolated staging."
+  ],
+  "productionWrites": 0,
+  "realEmailsSent": 0,
+  "productionOrderSubmissions": 0,
+  "stageOrderCreated": 0,
+  "stageDroppedResponse": false,
+  "liveOrderAvailableForReadOnlyShapeCheck": false,
+  "mcp": "Not invoked in browser suite. Parent verifies native remote MCP separately.",
+  "scope": "UI navigation, role scope, actual browser headers, warehouse handoff/acceptance, version conflicts, exact retry, snapshot display and responsive/accessibility sampling. Stock and finance ledger fingerprints are verified separately by service tests. No exhaustive screen-reader or pixel-baseline claim."
+}

@@ -22,7 +22,7 @@ The server publishes protected-resource metadata and authorization-server discov
 | `cohamy_read` | Invoke native GET views, stock/debt summaries, original documents, PDF downloads and MCP connection management. Files are returned as bounded base64 chunks with continuation offsets. |
 | `cohamy_write` | Invoke native Admin commands, multipart uploads and connection revocation, using the original validation, version checks, audit and transactional business rules. |
 
-The generated catalog currently inventories 336 route operations: 228 available through current CRM module policy and 108 explicitly retired. Retired modules stay retired; retained business history remains readable through the data tools. Catalog coverage is not a claim that every financial or stock mutation has been executed against production. Native role-specific checks still apply.
+The generated catalog currently inventories 363 route operations: 255 available through current CRM module policy and 108 explicitly retired (141 reads and 222 writes). Retired modules stay retired; retained business history remains readable through the data tools. Catalog coverage is not a claim that every financial or stock mutation has been executed against production. Native role-specific checks still apply.
 
 Passwords, tokens, MFA secrets, encrypted API keys, physical storage paths, arbitrary SQL, arbitrary URLs, shell commands and filesystem execution are excluded. Internal Admins can inspect original internal documents as requested; accountant and warehouse access remains in place. Model-facing record text and attachments are untrusted data, never instructions.
 
@@ -59,3 +59,22 @@ For current invoice content/status, read `GET /api/crm/admin-invoices` through `
 `cohamy_read` với `operation: "GET /api/crm/storefront/policies"` trả về bảy chính sách và `companyProfile`: tên pháp lý, MST, ngày đăng ký lần đầu, ngày thay đổi đăng ký, nơi cấp, địa chỉ trụ sở, liên hệ, văn phòng và tài khoản chuyển khoản được công bố trên website. Thông tin đăng ký theo giấy chứng nhận người dùng cung cấp; tài khoản MB Bank theo chỉ dẫn công bố của người dùng.
 
 Nguồn dùng chung là `lib/contact.ts` và `data/store-policies.ts`. Chân trang tất cả trang công khai dùng cùng `Footer`; không có biến thể riêng cho trang chính. Dữ liệu này chỉ đọc qua endpoint chính sách (`editable: false`), vẫn yêu cầu Admin CRM. Không có công cụ chỉnh sửa trực tiếp các hằng số hoặc thao tác tài khoản ngân hàng; công bố số tài khoản không xác nhận đã thu tiền.
+
+## Online customer orders and warehouse dispatch
+
+The new Admin queue at `/crm/online-customers` exposes four native operations through the remote MCP. Operation identifiers retain the literal `[id]`; supply the actual UUID in path parameters:
+
+- `GET /api/crm/online-orders`: `q`, `status`, `dispatchStatus`, `warehouseId`, Vietnam-date `from`/`to`, and `page` filters.
+- `GET /api/crm/online-orders/[id]`: original order/contact/lines/amount, current dispatch, paginated handoff history, and Admin-only notification history; optional `historyPage` and `mailPage`.
+- `POST /api/crm/online-orders/[id]/dispatch`: Admin-only assignment/reassignment using `version`, `warehouseId`, required `reason` and native UUID `idempotencyKey`.
+- `POST /api/crm/online-orders/[id]/accept`: acknowledgement using `version`, optional `reason` and native UUID `idempotencyKey`. Warehouse access is restricted to its current assigned scope; Admin retains full access.
+
+Preserve the MCP `requestId` and native `idempotencyKey` on retry. The services retain current-principal validation, optimistic version checks, transactional authorization locks and append-only action receipts. Dispatch does not reprice the immutable checkout snapshot, convert it to a sale, reserve/deduct stock, create debt or mark payment received. List/history/mail pages contain at most 20 records with totals.
+
+Successful new checkout intake also enqueues `website.order.received` through the existing durable outbox. The enabled global seed addresses `kangminamhd@gmail.com` and `nguyenptkthd@gmail.com`, with empty CC/BCC, preserves existing Admin rule choices and does not backfill historical orders. Existing document-mail tools manage the rule and expose queue/provider/delivery state. `ACCEPTED` is not proof of inbox delivery.
+
+**MCP có dùng được không?** Yes. At deployed application SHA `30f31336b7c3ad7ab5f6127b12d827dfe3fceb96`, production exposes all four operations as `AVAILABLE` and its native list read returned HTTP 200. Dispatch/acceptance mutations and retries passed in isolated staging; no production test order or business action was created.
+
+**MCP có đọc được dữ liệu này không?** Yes. Production read the actual empty queue, two eligible warehouses, live order/action table metadata and paginated data, plus the enabled global notification rule and provider configuration. Zero website requests/actions existed during verification, so detailed customer/order reads and write behavior were proven on isolated staging. [Production MCP proof](test-results/online-orders/mcp-production.json) records that boundary. The configured sender is `nguyenthenguyen15hp@gmail.com`; no delivery webhook is configured, the existing 14 mail jobs remained unchanged, and no real delivery of the new notification is claimed.
+
+See [Online customer workflow and environment-specific evidence](ONLINE-CUSTOMERS.md) for the backup/restore and deployed runtime receipts, production read-only browser checks, isolated service/race/action tests and fake-provider boundary. The deployed application SHA is separate from the final documentation/proof HEAD. This addition does not extend the CRM connector to WordPress or expose credentials, SQL, shell or filesystem execution.

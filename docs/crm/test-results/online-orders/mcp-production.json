@@ -1,0 +1,311 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION connected OAuth Cohamy MCP, read-only business verification",
+  "testedAt": "2026-11-05T08:50:42.780Z",
+  "deployedSha": "30f31336b7c3ad7ab5f6127b12d827dfe3fceb96",
+  "catalog": {
+    "total": 363,
+    "available": 255,
+    "operations": [
+      {
+        "id": "GET /api/crm/online-orders",
+        "method": "GET",
+        "template": "/api/crm/online-orders",
+        "source": "app/api/crm/online-orders/route.ts",
+        "group": "online-orders",
+        "status": "AVAILABLE",
+        "moduleId": "online-customers",
+        "params": [],
+        "selector": {},
+        "query": [
+          "dispatchStatus",
+          "from",
+          "page",
+          "q",
+          "status",
+          "to",
+          "warehouseId"
+        ],
+        "inputContract": "",
+        "multipart": false,
+        "sourceHash": "63ae27446bf0d6d4c5bd452052a71500a4a31378b06951ffc9dcfb91a1ff25c9"
+      },
+      {
+        "id": "GET /api/crm/online-orders/[id]",
+        "method": "GET",
+        "template": "/api/crm/online-orders/[id]",
+        "source": "app/api/crm/online-orders/[id]/route.ts",
+        "group": "online-orders",
+        "status": "AVAILABLE",
+        "moduleId": "online-customers",
+        "params": [
+          "id"
+        ],
+        "selector": {},
+        "query": [
+          "historyPage",
+          "mailPage"
+        ],
+        "inputContract": "",
+        "multipart": false,
+        "sourceHash": "1453d9a9075c82a62724270087c5853ca0823239094a7916f01732e28d8a3cb5"
+      },
+      {
+        "id": "POST /api/crm/online-orders/[id]/dispatch",
+        "method": "POST",
+        "template": "/api/crm/online-orders/[id]/dispatch",
+        "source": "app/api/crm/online-orders/[id]/dispatch/route.ts",
+        "group": "online-orders",
+        "status": "AVAILABLE",
+        "moduleId": "online-customers",
+        "params": [
+          "id"
+        ],
+        "selector": {},
+        "query": [],
+        "inputContract": "const assignSchema = z.object({version:z.number().int().positive(),warehouseId:z.uuid(),reason:z.string().trim().min(5).max(1000),idempotencyKey:z.uuid()}).strict()",
+        "multipart": false,
+        "sourceHash": "b9dbfbcb7632f9c701488112ad7ab3f51cfea5e780f19c3b9c7a34b3267147cd"
+      },
+      {
+        "id": "POST /api/crm/online-orders/[id]/accept",
+        "method": "POST",
+        "template": "/api/crm/online-orders/[id]/accept",
+        "source": "app/api/crm/online-orders/[id]/accept/route.ts",
+        "group": "online-orders",
+        "status": "AVAILABLE",
+        "moduleId": "online-customers",
+        "params": [
+          "id"
+        ],
+        "selector": {},
+        "query": [],
+        "inputContract": "const acceptSchema = z.object({version:z.number().int().positive(),reason:z.string().trim().max(1000).default(''),idempotencyKey:z.uuid()}).strict()",
+        "multipart": false,
+        "sourceHash": "3c24c27012dfab7633889449acc4f795c9e8e36e9e37d1e674451eb2a49955d3"
+      }
+    ]
+  },
+  "list": {
+    "httpStatus": 200,
+    "total": 0,
+    "pageSize": 20,
+    "canDispatch": true,
+    "eligibleWarehouseCount": 2
+  },
+  "dataCatalog": {
+    "website_orders": [
+      {
+        "column": "id",
+        "type": "uuid"
+      },
+      {
+        "column": "code",
+        "type": "text"
+      },
+      {
+        "column": "idempotency_key",
+        "type": "uuid"
+      },
+      {
+        "column": "request_hash",
+        "type": "text"
+      },
+      {
+        "column": "locale",
+        "type": "text"
+      },
+      {
+        "column": "contact",
+        "type": "jsonb"
+      },
+      {
+        "column": "lines",
+        "type": "jsonb"
+      },
+      {
+        "column": "subtotal",
+        "type": "numeric"
+      },
+      {
+        "column": "payment_requested",
+        "type": "text"
+      },
+      {
+        "column": "status",
+        "type": "text"
+      },
+      {
+        "column": "shipping_quote_pending",
+        "type": "boolean"
+      },
+      {
+        "column": "paid",
+        "type": "boolean"
+      },
+      {
+        "column": "created_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "column": "assigned_to",
+        "type": "uuid"
+      },
+      {
+        "column": "organization_id",
+        "type": "uuid"
+      },
+      {
+        "column": "version",
+        "type": "integer"
+      },
+      {
+        "column": "updated_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "column": "resolution_note",
+        "type": "text"
+      },
+      {
+        "column": "assigned_warehouse_id",
+        "type": "uuid"
+      },
+      {
+        "column": "dispatch_status",
+        "type": "text"
+      },
+      {
+        "column": "dispatch_note",
+        "type": "text"
+      },
+      {
+        "column": "dispatched_by",
+        "type": "uuid"
+      },
+      {
+        "column": "dispatched_at",
+        "type": "timestamp with time zone"
+      },
+      {
+        "column": "accepted_by",
+        "type": "uuid"
+      },
+      {
+        "column": "accepted_at",
+        "type": "timestamp with time zone"
+      }
+    ],
+    "website_order_dispatch_actions": [
+      {
+        "column": "id",
+        "type": "uuid"
+      },
+      {
+        "column": "website_order_id",
+        "type": "uuid"
+      },
+      {
+        "column": "actor_id",
+        "type": "uuid"
+      },
+      {
+        "column": "actor_name",
+        "type": "text"
+      },
+      {
+        "column": "request_hash",
+        "type": "text"
+      },
+      {
+        "column": "action",
+        "type": "text"
+      },
+      {
+        "column": "from_warehouse_id",
+        "type": "uuid"
+      },
+      {
+        "column": "to_warehouse_id",
+        "type": "uuid"
+      },
+      {
+        "column": "from_warehouse_name",
+        "type": "text"
+      },
+      {
+        "column": "to_warehouse_name",
+        "type": "text"
+      },
+      {
+        "column": "reason",
+        "type": "text"
+      },
+      {
+        "column": "version",
+        "type": "integer"
+      },
+      {
+        "column": "result",
+        "type": "jsonb"
+      },
+      {
+        "column": "created_at",
+        "type": "timestamp with time zone"
+      }
+    ]
+  },
+  "paginatedDataReads": [
+    {
+      "table": "website_orders",
+      "total": 0,
+      "limit": 1,
+      "nextOffset": null
+    },
+    {
+      "table": "website_order_dispatch_actions",
+      "total": 0,
+      "limit": 1,
+      "nextOffset": null
+    }
+  ],
+  "mail": {
+    "provider": {
+      "enabled": true,
+      "demo": false,
+      "webhookConfigured": false,
+      "storageReady": true,
+      "configured": true,
+      "keyConfigured": true,
+      "sender": "nguyenthenguyen15hp@gmail.com",
+      "source": "DATABASE",
+      "version": 3,
+      "storageError": null
+    },
+    "rule": {
+      "event": "website.order.received",
+      "enabled": true,
+      "warehouseId": null,
+      "factoryMembershipId": null,
+      "recipients": {
+        "cc": [],
+        "to": [
+          "kangminamhd@gmail.com",
+          "nguyenptkthd@gmail.com"
+        ],
+        "bcc": []
+      }
+    },
+    "totalVisibleJobs": 14,
+    "baselineVisibleJobs": 14,
+    "newOrderBackfillObserved": false
+  },
+  "productionBusinessWrites": 0,
+  "productionTestOrders": 0,
+  "realTestEmailsSent": 0,
+  "limitations": [
+    "Production had no website orders at verification; real order detail, dispatch, acceptance, history and email generation were exercised only on isolated staging.",
+    "Both POST operations are AVAILABLE in the actual production catalog; no real warehouse handoff was performed as a production test.",
+    "Mail enabled/provider configured is not proof of future mailbox delivery; no real test email was sent. Brevo webhook is not configured."
+  ]
+}
