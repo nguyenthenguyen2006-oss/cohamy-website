@@ -145,7 +145,7 @@ export const STORE_POLICIES: StorePolicy[] = [
       {
         id: "phuong-thuc",
         title: "2. Phương thức có thể lựa chọn",
-        items: ["Thanh toán khi nhận hàng (COD): áp dụng khi địa chỉ và dịch vụ giao nhận hỗ trợ, sau khi Cohamy xác nhận. Thanh toán đúng số tiền thu hộ đã thống nhất, nhận chứng từ giao nhận hoặc xác nhận cần thiết.", "Chuyển khoản ngân hàng: Cohamy cung cấp thông tin tài khoản thụ hưởng chính thức cùng nội dung chuyển khoản cho đơn đã đối chiếu. Kiểm tra đúng tên người nhận, ngân hàng, số tài khoản và số tiền trước khi chuyển. Ghi mã đơn và số điện thoại mua hàng để hỗ trợ đối soát.", "MoMo hoặc phương thức khác: lựa chọn trên biểu mẫu là đề nghị của khách hàng. Chỉ thanh toán khi Cohamy xác nhận phương thức khả dụng và cung cấp hướng dẫn chính thức; website không tự ghi nhận đã trả tiền khi bạn chọn phương thức này."],
+        items: ["Thanh toán khi nhận hàng (COD): áp dụng khi địa chỉ và dịch vụ giao nhận hỗ trợ, sau khi Cohamy xác nhận. Thanh toán đúng số tiền thu hộ đã thống nhất, nhận chứng từ giao nhận hoặc xác nhận cần thiết.", `Chuyển khoản ngân hàng: ${CONTACT.bankAccount.bankName}, số tài khoản ${CONTACT.bankAccount.accountNumberDisplay}, chủ tài khoản ${CONTACT.bankAccount.accountHolder}. Cohamy xác nhận số tiền và nội dung chuyển khoản cho đơn đã đối chiếu. Kiểm tra tên người nhận, ngân hàng, số tài khoản và số tiền trước khi chuyển. Ghi mã đơn và số điện thoại mua hàng trong nội dung chuyển khoản để hỗ trợ đối soát.`, "MoMo hoặc phương thức khác: lựa chọn trên biểu mẫu là đề nghị của khách hàng. Chỉ thanh toán khi Cohamy xác nhận phương thức khả dụng và cung cấp hướng dẫn chính thức; website không tự ghi nhận đã trả tiền khi bạn chọn phương thức này."],
       },
       {
         id: "doi-soat",

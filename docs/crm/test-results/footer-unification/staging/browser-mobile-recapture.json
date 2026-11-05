@@ -1,0 +1,183 @@
+{
+  "status": "PASS",
+  "environment": "STAGING public-origin routing to fixed owned tunnel4370 and VPS4334",
+  "testedAt": "2026-11-05T07:13:44.587Z",
+  "cases": [
+    {
+      "name": "mobile evidence recapture without sticky-header overlay or application changes",
+      "status": "PASS"
+    }
+  ],
+  "routes": [
+    {
+      "label": "mobile-home-footer",
+      "path": "/vi",
+      "viewport": 390,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 20,
+          "y": 660.203125,
+          "width": 350,
+          "height": 191.5625
+        },
+        {
+          "name": "policies",
+          "x": 20,
+          "y": 883.765625,
+          "width": 350,
+          "height": 391.953125
+        },
+        {
+          "name": "contact",
+          "x": 20,
+          "y": 1307.71875,
+          "width": 350,
+          "height": 331.171875
+        },
+        {
+          "name": "company",
+          "x": 20,
+          "y": 1670.890625,
+          "width": 350,
+          "height": 321.90625
+        }
+      ],
+      "gridColumns": "350px",
+      "documentWidth": 390,
+      "footer": {
+        "x": 0,
+        "y": 620.203125,
+        "width": 390,
+        "height": 1506.375,
+        "right": 390
+      }
+    },
+    {
+      "label": "mobile-payment-footer",
+      "path": "/vi/chinh-sach/thanh-toan",
+      "viewport": 390,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 20,
+          "y": 394.25,
+          "width": 350,
+          "height": 191.5625
+        },
+        {
+          "name": "policies",
+          "x": 20,
+          "y": 617.8125,
+          "width": 350,
+          "height": 391.953125
+        },
+        {
+          "name": "contact",
+          "x": 20,
+          "y": 1041.765625,
+          "width": 350,
+          "height": 331.171875
+        },
+        {
+          "name": "company",
+          "x": 20,
+          "y": 1404.9375,
+          "width": 350,
+          "height": 321.90625
+        }
+      ],
+      "gridColumns": "350px",
+      "documentWidth": 390,
+      "footer": {
+        "x": 0,
+        "y": 354.25,
+        "width": 390,
+        "height": 1506.375,
+        "right": 390
+      }
+    },
+    {
+      "label": "narrow-home-footer",
+      "path": "/vi",
+      "viewport": 320,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 20,
+          "y": 393.875,
+          "width": 280,
+          "height": 191.5625
+        },
+        {
+          "name": "policies",
+          "x": 20,
+          "y": 617.4375,
+          "width": 280,
+          "height": 414.734375
+        },
+        {
+          "name": "contact",
+          "x": 20,
+          "y": 1064.171875,
+          "width": 280,
+          "height": 357.5625
+        },
+        {
+          "name": "company",
+          "x": 20,
+          "y": 1453.734375,
+          "width": 280,
+          "height": 374.6875
+        }
+      ],
+      "gridColumns": "280px",
+      "documentWidth": 320,
+      "footer": {
+        "x": 0,
+        "y": 353.875,
+        "width": 320,
+        "height": 1608.328125,
+        "right": 320
+      }
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/footer-unification/staging/mobile-home-footer.png",
+    "docs/crm/test-results/footer-unification/staging/mobile-payment-footer.png",
+    "docs/crm/test-results/footer-unification/staging/narrow-home-footer.png"
+  ],
+  "accessibility": [],
+  "errors": [],
+  "blockedRequests": [],
+  "externalNetwork": [],
+  "coverageNotes": [],
+  "productionWrites": 0,
+  "adminRequests": 0,
+  "orderSubmissions": 0,
+  "mocks": 0,
+  "registration": {
+    "taxId": "0111549388",
+    "firstIssuedAt": "2026-06-25",
+    "date": "25/06/2026",
+    "authority": "Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp, Sở Tài chính Thành phố Hà Nội",
+    "address": "Tầng 3, Tháp A, Tòa nhà T608, KĐT mới Cổ Nhuế, Đường Tôn Quang Phiệt, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam"
+  },
+  "bank": {
+    "display": "9139 8888 6666",
+    "number": "913988886666",
+    "name": "MB Bank",
+    "holder": "CÔNG TY TNHH COHAMY"
+  },
+  "scope": "Shared public footer route-family and locale sampling, seven actual policy destinations, bank-copy verification, CSS/font/image settling, responsive measurements and footer-scoped axe. Real third-party contact-page map reads are outside the footer audit and separately reported; all non-read requests are blocked. Not exhaustive screen-reader testing or a pixel-regression baseline.",
+  "mcp": "Not invoked by this browser suite. Release owner separately verifies authenticated companyProfile and policy data through native remote MCP."
+}

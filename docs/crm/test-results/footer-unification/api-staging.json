@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL; native HTTP/RBAC only; no remote OAuth claim",
+  "testedAt": "2026-11-05T07:10:41.844Z",
+  "cases": [
+    {
+      "name": "Unauthenticated policy API remains private",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin policy response includes exact company and public bank details",
+      "status": "PASS"
+    },
+    {
+      "name": "Non-Admin cannot read policy administration API",
+      "status": "PASS"
+    }
+  ],
+  "businessWrites": 0,
+  "productionWrites": 0,
+  "externalEmails": 0
+}

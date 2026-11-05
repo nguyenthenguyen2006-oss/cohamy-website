@@ -7,6 +7,22 @@ export const CONTACT = {
   email: "Cohamyvietnam@gmail.com",
   emailMailto: "mailto:Cohamyvietnam@gmail.com",
   phoneTel: "tel:+84981956111",
+  registration: {
+    taxId: "0111549388",
+    firstIssuedAt: "2026-06-25",
+    firstIssuedDisplay: "25/06/2026",
+    lastChangedAt: "2026-09-24",
+    lastChangedDisplay: "24/09/2026",
+    changeNumber: 1,
+    issuingAuthority: "Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp, Sở Tài chính Thành phố Hà Nội",
+    registeredAddress: "Tầng 3, Tháp A, Tòa nhà T608, KĐT mới Cổ Nhuế, Đường Tôn Quang Phiệt, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam",
+  },
+  bankAccount: {
+    bankName: "MB Bank",
+    accountNumber: "913988886666",
+    accountNumberDisplay: "9139 8888 6666",
+    accountHolder: "CÔNG TY TNHH COHAMY",
+  },
   companyName: {
     vi: "CÔNG TY TNHH COHAMY",
     en: "COHAMY COMPANY LIMITED",

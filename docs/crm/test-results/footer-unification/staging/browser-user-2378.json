@@ -1,0 +1,108 @@
+{
+  "status": "PASS",
+  "environment": "STAGING public-origin routing to fixed owned tunnel4370 and VPS4334",
+  "testedAt": "2026-11-05T07:12:13.951Z",
+  "cases": [
+    {
+      "name": "user 2378px viewport shared footer capture and overflow",
+      "status": "PASS"
+    }
+  ],
+  "routes": [
+    {
+      "label": "user-2378-home",
+      "path": "/vi",
+      "viewport": 2378,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 469,
+          "y": 858.890625,
+          "width": 275.59375,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 784.59375,
+          "y": 858.890625,
+          "width": 362.640625,
+          "height": 399.953125
+        },
+        {
+          "name": "contact",
+          "x": 1187.234375,
+          "y": 858.890625,
+          "width": 290.109375,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1517.34375,
+          "y": 858.890625,
+          "width": 391.640625,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "275.594px 362.641px 290.109px 391.641px",
+      "documentWidth": 2378,
+      "footer": {
+        "x": 0,
+        "y": 794.890625,
+        "width": 2378,
+        "height": 583.34375,
+        "right": 2378
+      }
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/footer-unification/staging/user-2378-footer.png"
+  ],
+  "accessibility": [],
+  "errors": [
+    {
+      "type": "proxy",
+      "path": "/vi/chinh-sach/gia",
+      "message": "Error: route.fetch: Request context disposed.\nCall log:\n\u001b[2m  - → GET http://localhost:4370/vi/chinh-sach/gia?_rsc=TPhJYwlKcYp9unfU\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cookie: NEXT_LOCALE=vi\u001b[22m\n\u001b[2m    - referer: https://cohamy.vn/vi\u001b[22m\n\u001b[2m    - next-router-prefetch: 1\u001b[22m\n\u001b[2m    - next-router-segment-prefetch: /_tree\u001b[22m\n\u001b[2m    - next-url: /vi\u001b[22m\n\u001b[2m    - rsc: 1\u001b[22m\n\u001b[2m    - sec-ch-ua: \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Microsoft Edge\";v=\"156\"\u001b[22m\n\u001b[2m    - sec-ch-ua-mobile: ?0\u001b[22m\n\u001b[2m    - sec-ch-ua-platform: \"Windows\"\u001b[22m\n\u001b[2m  - ← 200 OK\u001b[22m\n\u001b[2m    - link: <http://localhost:4370/vi/chinh-sach/gia>; rel=\"alternate\"; hreflang=\"vi\", <http://localhost:4370/en/policies/gia>; rel=\"alternate\"; hreflang=\"en\", <http://localhost:4370/zh/policies/gia>; rel=\"alternate\"; hreflang=\"zh\", <http://localhost:4370/ko/policies/gia>; rel=\"alternate\"; hreflang=\"ko\", <http://localhost:4370/ja/policies/gia>; rel=\"alternate\"; hreflang=\"ja\", <http://localhost:4370/policies/gia>; rel=\"alternate\"; hreflang=\"x-default\"\u001b[22m\n\u001b[2m    - x-nextjs-rewritten-path: /vi/policies/gia\u001b[22m\n\u001b[2m    - x-middleware-rewrite: /vi/policies/gia?_rsc=TPhJYwlKcYp9unfU\u001b[22m\n\u001b[2m    - vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding\u001b[22m\n\u001b[2m    - cache-control: private, no-cache, no-store, max-age=0, must-revalidate\u001b[22m\n\u001b[2m    - content-type: text/x-component\u001b[22m\n\u001b[2m    - content-encoding: gzip\u001b[22m\n\u001b[2m    - date: Thu, 05 Nov 2026 07:12:18 GMT\u001b[22m\n\u001b[2m    - connection: keep-alive\u001b[22m\n\u001b[2m    - keep-alive: timeout=5\u001b[22m\n\u001b[2m    - transfer-encoding: chunked\u001b[22m\n"
+    },
+    {
+      "type": "proxy",
+      "path": "/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai",
+      "message": "Error: route.fetch: Request context disposed.\nCall log:\n\u001b[2m  - → GET http://localhost:4370/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai?_rsc=TPhJYwlKcYp9unfU\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cookie: NEXT_LOCALE=vi\u001b[22m\n\u001b[2m    - referer: https://cohamy.vn/vi\u001b[22m\n\u001b[2m    - next-router-prefetch: 1\u001b[22m\n\u001b[2m    - next-router-segment-prefetch: /_tree\u001b[22m\n\u001b[2m    - next-url: /vi\u001b[22m\n\u001b[2m    - rsc: 1\u001b[22m\n\u001b[2m    - sec-ch-ua: \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Microsoft Edge\";v=\"156\"\u001b[22m\n\u001b[2m    - sec-ch-ua-mobile: ?0\u001b[22m\n\u001b[2m    - sec-ch-ua-platform: \"Windows\"\u001b[22m\n"
+    },
+    {
+      "type": "proxy",
+      "path": "/vi/chinh-sach/van-chuyen-kiem-tra-doi-tra",
+      "message": "Error: route.fetch: Request context disposed.\nCall log:\n\u001b[2m  - → GET http://localhost:4370/vi/chinh-sach/van-chuyen-kiem-tra-doi-tra?_rsc=TPhJYwlKcYp9unfU\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cookie: NEXT_LOCALE=vi\u001b[22m\n\u001b[2m    - referer: https://cohamy.vn/vi\u001b[22m\n\u001b[2m    - next-router-prefetch: 1\u001b[22m\n\u001b[2m    - next-router-segment-prefetch: /_tree\u001b[22m\n\u001b[2m    - next-url: /vi\u001b[22m\n\u001b[2m    - rsc: 1\u001b[22m\n\u001b[2m    - sec-ch-ua: \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Microsoft Edge\";v=\"156\"\u001b[22m\n\u001b[2m    - sec-ch-ua-mobile: ?0\u001b[22m\n\u001b[2m    - sec-ch-ua-platform: \"Windows\"\u001b[22m\n"
+    },
+    {
+      "type": "proxy",
+      "path": "/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa",
+      "message": "Error: route.fetch: Request context disposed.\nCall log:\n\u001b[2m  - → GET http://localhost:4370/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa?_rsc=TPhJYwlKcYp9unfU\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - cookie: NEXT_LOCALE=vi\u001b[22m\n\u001b[2m    - referer: https://cohamy.vn/vi\u001b[22m\n\u001b[2m    - next-router-prefetch: 1\u001b[22m\n\u001b[2m    - next-router-segment-prefetch: /_tree\u001b[22m\n\u001b[2m    - next-url: /vi\u001b[22m\n\u001b[2m    - rsc: 1\u001b[22m\n\u001b[2m    - sec-ch-ua: \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"156\", \"Microsoft Edge\";v=\"156\"\u001b[22m\n\u001b[2m    - sec-ch-ua-mobile: ?0\u001b[22m\n\u001b[2m    - sec-ch-ua-platform: \"Windows\"\u001b[22m\n"
+    }
+  ],
+  "blockedRequests": [],
+  "externalNetwork": [],
+  "coverageNotes": [],
+  "productionWrites": 0,
+  "adminRequests": 0,
+  "orderSubmissions": 0,
+  "mocks": 0,
+  "registration": {
+    "taxId": "0111549388",
+    "firstIssuedAt": "2026-06-25",
+    "date": "25/06/2026",
+    "authority": "Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp, Sở Tài chính Thành phố Hà Nội",
+    "address": "Tầng 3, Tháp A, Tòa nhà T608, KĐT mới Cổ Nhuế, Đường Tôn Quang Phiệt, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam"
+  },
+  "bank": {
+    "display": "9139 8888 6666",
+    "number": "913988886666",
+    "name": "MB Bank",
+    "holder": "CÔNG TY TNHH COHAMY"
+  },
+  "scope": "Shared public footer route-family and locale sampling, seven actual policy destinations, bank-copy verification, CSS/font/image settling, responsive measurements and footer-scoped axe. Real third-party contact-page map reads are outside the footer audit and separately reported; all non-read requests are blocked. Not exhaustive screen-reader testing or a pixel-regression baseline.",
+  "mcp": "Not invoked by this browser suite. Release owner separately verifies authenticated companyProfile and policy data through native remote MCP."
+}

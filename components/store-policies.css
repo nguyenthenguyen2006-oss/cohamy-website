@@ -1,11 +1,9 @@
-.store-footer-policies { min-width: 0; color: #e0cfbd; font-size: 14px; line-height: 1.65; }
-.store-footer-policies h2 { color: #faf6ef; font-family: inherit; font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+.store-footer-policies { min-width: 0; color: inherit; font: inherit; }
+.store-footer-policies h2 { color: #f0e6d5; font-family: inherit; font-size: inherit; font-weight: 700; margin: 0 0 20px; }
 .store-footer-policies ul { list-style: none; padding: 0; margin: 0; }
 .store-footer-policies a { display: inline-flex; min-height: 44px; align-items: center; padding-block: 7px; text-underline-offset: 4px; }
 .store-footer-policies a:hover { color: #edc061; text-decoration: underline; }
 .store-footer-policies a:focus-visible { outline: 3px solid #edc061; outline-offset: 4px; }
-.store-footer-policies-home { border-top: 1px solid #e0cfbd38; padding-top: 26px; margin-top: 26px; }
-.store-footer-policies-home ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; }
 .store-policy-page { max-width: 1200px; margin: auto; padding: 40px 24px 80px; color: #2a120c; }
 .store-policy-back { min-height: 44px; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 4px; }
 .store-policy-heading { border-bottom: 1px solid #4a24182b; padding-block: 20px 28px; margin-bottom: 36px; }
@@ -27,7 +25,6 @@
 .store-policy-body a:focus-visible, .store-policy-nav a:focus-visible, .store-policy-back:focus-visible { outline: 3px solid #80550e; outline-offset: 4px; }
 .store-policy-contact { padding-top: 24px; border-top: 1px solid #4a24182b; }
 @media(max-width: 760px) {
-  .store-footer-policies-home ul { grid-template-columns: 1fr; }
   .store-policy-page { padding: 24px 20px 56px; }
   .store-policy-layout { display: flex; flex-direction: column; gap: 32px; }
   .store-policy-body { order: -1; width: 100%; }

@@ -1,0 +1,56 @@
+.footer {
+  --footer-paper: #f0e6d5;
+  --footer-muted: #e0cfbd;
+  --footer-gold: #edbe39;
+  background: #2c1914;
+  color: var(--footer-muted);
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+  padding: 64px clamp(20px, 4vw, 64px) 28px;
+  overflow-wrap: anywhere;
+}
+.columns {
+  display: grid;
+  grid-template-columns: .95fr 1.25fr 1fr 1.35fr;
+  gap: 40px;
+  max-width: 1440px;
+  margin-inline: auto;
+  align-items: start;
+}
+.columns > * { min-width: 0; }
+.footer h2, .footer p, .footer a, .footer dt, .footer dd, .footer time, .footer address {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+}
+.footer h2 { color: var(--footer-paper); font-weight: 700; margin: 0 0 20px; }
+.footer p, .footer dl, .footer dd { margin: 0; }
+.footer a { text-decoration: none; text-underline-offset: 4px; }
+.footer a:hover { color: var(--footer-gold); text-decoration: underline; }
+.footer a:focus-visible { outline: 3px solid var(--footer-gold); outline-offset: 4px; }
+.footer ::selection { background: var(--footer-gold); color: #2c1914; }
+.logo { display: inline-flex; align-items: center; min-height: 56px; margin-bottom: 20px; }
+.brand p + p { margin-top: 14px; }
+.contact > a { display: flex; align-items: center; min-height: 44px; padding-block: 6px; }
+.office { margin-top: 12px; margin-bottom: 8px; }
+.label { color: var(--footer-paper); font-weight: 600; }
+.footer .legalName { color: var(--footer-paper); font-weight: 700; margin-bottom: 16px; }
+.company dl > div { margin-top: 10px; }
+.company dt, .company dd { display: inline; }
+.company dt { margin-right: 5px; }
+.registeredAddress dt, .registeredAddress dd { display: block; }
+.footer address { font-style: normal; }
+.bottom { max-width: 1440px; margin: 40px auto 0; padding-top: 24px; border-top: 1px solid #e0cfbd38; }
+@media (max-width: 1100px) {
+  .columns { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; row-gap: 36px; }
+}
+@media (max-width: 600px) {
+  .footer { padding-block: 40px 24px; }
+  .columns { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .footer h2 { margin-bottom: 12px; }
+  .logo { margin-bottom: 16px; }
+  .bottom { margin-top: 32px; }
+}

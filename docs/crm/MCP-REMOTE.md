@@ -53,3 +53,9 @@ The original public Edge form produced `Origin: null` and `INVALID_ORIGIN` befor
 ## Current invoice corrections and recalls
 
 For current invoice content/status, read `GET /api/crm/admin-invoices` through `cohamy_read`; pass `kind` and `id` for the cancellation stock preview and immutable correction history. Original document tables/images remain source evidence. `invoice_admin_heads`, `invoice_admin_revisions` and `invoice_allocation_reversals` are discoverable and paginated through the data tools. `POST /api/crm/admin-invoices` supports Admin edits and cancellation with a version, reason and native idempotency UUID. Keep both UUIDs when retrying. Recalls reverse actual net stock once, adjust debt and release payment allocations without inventing refunds. See [Admin invoice behavior and tests](ADMIN-INVOICES.md).
+
+## Thông tin doanh nghiệp và chính sách website
+
+`cohamy_read` với `operation: "GET /api/crm/storefront/policies"` trả về bảy chính sách và `companyProfile`: tên pháp lý, MST, ngày đăng ký lần đầu, ngày thay đổi đăng ký, nơi cấp, địa chỉ trụ sở, liên hệ, văn phòng và tài khoản chuyển khoản được công bố trên website. Thông tin đăng ký theo giấy chứng nhận người dùng cung cấp; tài khoản MB Bank theo chỉ dẫn công bố của người dùng.
+
+Nguồn dùng chung là `lib/contact.ts` và `data/store-policies.ts`. Chân trang tất cả trang công khai dùng cùng `Footer`; không có biến thể riêng cho trang chính. Dữ liệu này chỉ đọc qua endpoint chính sách (`editable: false`), vẫn yêu cầu Admin CRM. Không có công cụ chỉnh sửa trực tiếp các hằng số hoặc thao tác tài khoản ngân hàng; công bố số tài khoản không xác nhận đã thu tiền.

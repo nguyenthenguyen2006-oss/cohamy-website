@@ -6324,7 +6324,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "093e927d9038a4b99dc4f183b698e6597f6890c669e3165c20769ca222d6f374"
+    "sourceHash": "08497528db5b75f552e7c02d49902af846de12702f330124fa6f037ff3ad7653"
   },
   {
     "id": "GET /api/crm/storefront",

@@ -1,0 +1,16 @@
+{
+  "sourceReport": "browser-user-2378.json",
+  "rawReportPreserved": true,
+  "rawStatus": "PASS",
+  "recordedProxyErrors": 4,
+  "captureValidity": "Valid 2378px footer image; visual and layout assertions completed before teardown",
+  "runtimeAllClear": false,
+  "classification": "Harness teardown race supported by the raw error text and verifier control flow; not an observed footer-render failure",
+  "evidence": [
+    "All four errors are route.fetch Request context disposed on RSC prefetch GET paths",
+    "The zero-error assertion executed before complete=true; browser.close then ran before serializing the shared errors array",
+    "The primary functional batch and mobile-recapture reports separately recorded zero errors"
+  ],
+  "futureHarnessChange": "Drain pending first-party reads and route handlers before browser close; preserve and fail on any late errors",
+  "validation": "Syntax/static review only; no full staging rerun or application source edit"
+}

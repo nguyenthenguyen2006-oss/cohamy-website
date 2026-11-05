@@ -1,0 +1,122 @@
+[
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 5,
+    "snippet": "Undocumented color #edc061 is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#edc061"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 7,
+    "snippet": "Undocumented color #2a120c is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#2a120c"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 9,
+    "snippet": "Undocumented color #4a24182b is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#4a24182b"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 10,
+    "snippet": "font-size: clamp(30px, 4vw, 48px) has fluid endpoints 30px and 48px off the DESIGN.md type ramp",
+    "advisory": true,
+    "ignoreValue": "30px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 12,
+    "snippet": "Undocumented color #654c3c is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#654c3c"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 14,
+    "snippet": "font-size: 14px is off the DESIGN.md type ramp",
+    "advisory": true,
+    "ignoreValue": "14px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 16,
+    "snippet": "Undocumented color #4a241825 is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#4a241825"
+  },
+  {
+    "antipattern": "design-system-font-size",
+    "name": "Font size outside DESIGN.md",
+    "description": "A literal font-size is off the type ramp documented in DESIGN.md typography. Use a documented size step or update the design system if the new step is intentional.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 20,
+    "snippet": "font-size: 25px is off the DESIGN.md type ramp",
+    "advisory": true,
+    "ignoreValue": "25px"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 25,
+    "snippet": "Undocumented color #80550e is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#80550e"
+  },
+  {
+    "antipattern": "design-system-color",
+    "name": "Color outside DESIGN.md",
+    "description": "A literal color is outside the DESIGN.md palette and sidecar tonal ramps. This may be legitimate, but it should be an intentional design-system addition rather than drift.",
+    "severity": "advisory",
+    "category": "quality",
+    "file": "components/store-policies.css",
+    "line": 26,
+    "snippet": "Undocumented color #4a24182b is outside DESIGN.md colors",
+    "advisory": true,
+    "ignoreValue": "#4a24182b"
+  }
+]
