@@ -6,7 +6,7 @@ Environment: isolated PostgreSQL staging with a production build, reached only t
 
 Run staging with `node scripts/crm/verify-cart-drawer-browser.mjs`. Full results, asset hashes, screenshots and focus traces are in `browser-staging.json`.
 
-The same script supports `--production` for direct public GET/HEAD reads and local browser cart interactions. This mode has no Admin login, settings changes, order submission or mocked GET responses. It expects the current 61,992 VND cashew unit price and 123,984 VND for two packs, and saves separate results under `production/`. **Production mode has not been run; deployment confirmation is required first.**
+The same script supports `--production` for direct public GET/HEAD reads and local browser cart interactions. This mode has no Admin login, settings changes, order submission or mocked GET responses. Production ran after deployment confirmation at 2026-11-05 06:05 UTC: **PASS — 11 cases, 0 failures**, with 12 separate screenshots under `production/`. The live cashew price was 61,992 VND per pack and 123,984 VND for two packs. See `production/browser-production.json`.
 
 Verified flows:
 

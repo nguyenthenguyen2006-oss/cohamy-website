@@ -1,0 +1,204 @@
+{
+  "status": "PASS",
+  "deployedSha": "4c34999674341c616e6abd6c557ed69a1ff85a6a",
+  "release": "/root/cohamy-releases/4c34999674341c616e6abd6c557ed69a1ff85a6a",
+  "backup": "/root/cohamy-backups/20261105T055933Z-4c3499967434",
+  "restore": [
+    {
+      "status": "PASS",
+      "completedAt": "2026-11-05T06:01:28.08Z",
+      "tableCount": 240,
+      "sha256": "02f09339ef52059ef1a2d7daf740895876fd3ec67ddd76e69d7fbc8de579faf3",
+      "snapshotConsistent": true,
+      "restoreRetained": false,
+      "fileIntegrityErrors": "0",
+      "documentSourceErrors": "0"
+    },
+    {
+      "status": "PASS",
+      "completedAt": "2026-11-05T06:03:53.853Z",
+      "tableCount": 240,
+      "sha256": "5be567cf5fd98954819eda3f8232256ea621e502af3669d315f2adc8ffe4f2d6",
+      "snapshotConsistent": true,
+      "restoreRetained": false,
+      "fileIntegrityErrors": "0",
+      "documentSourceErrors": "0"
+    }
+  ],
+  "runtime": [
+    {
+      "name": "cohamy",
+      "pid": 580961,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/4c34999674341c616e6abd6c557ed69a1ff85a6a",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 580962,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/4c34999674341c616e6abd6c557ed69a1ff85a6a",
+      "restarts": 0
+    }
+  ],
+  "candidateSmoke": {
+    "environment": "http://localhost:4312",
+    "scope": "Business reads and invalid-input validation only; administrator login/logout and an isolated OAuth connection authorization/revocation; no order, partner, stock, finance or outbound-message writes",
+    "testedAt": "2026-11-05T06:04:14.479Z",
+    "cases": [
+      {
+        "name": "Health and retained configured blog source",
+        "status": "PASS"
+      },
+      {
+        "name": "Private request API requires authentication",
+        "status": "PASS"
+      },
+      {
+        "name": "Old localized CRM links recover to login",
+        "status": "PASS"
+      },
+      {
+        "name": "Initial administrator authenticates against PostgreSQL",
+        "status": "PASS"
+      },
+      {
+        "name": "CRM pages render actual production data",
+        "status": "PASS"
+      },
+      {
+        "name": "Scoped intake API preserves persisted responses and retired task API is closed",
+        "status": "PASS"
+      },
+      {
+        "name": "All fifteen retired CRM modules and their read APIs return 404",
+        "status": "PASS"
+      },
+      {
+        "name": "Internal-document administrator catalogue is private and unknown files return 404",
+        "status": "PASS"
+      },
+      {
+        "name": "Historical warehouse invoice archive is private and available without ledger writes",
+        "status": "PASS"
+      },
+      {
+        "name": "Document flow and encrypted Brevo settings are available without a provider write or email",
+        "status": "PASS"
+      },
+      {
+        "name": "Buyer account types and private order workspace are available without creating accounts or business data",
+        "status": "PASS"
+      },
+      {
+        "name": "Website and localized products remain available",
+        "status": "PASS"
+      },
+      {
+        "name": "Candidate MCP completes real OAuth PKCE, discovers tools and reads native debt before connection revocation",
+        "status": "PASS"
+      },
+      {
+        "name": "Account provisioning is password-free; activation and safe Admin status API remain reachable",
+        "status": "PASS"
+      },
+      {
+        "name": "Invoice source discovery verifies live snapshots/PDFs when present, or explicit empty-source 404 guards without recreating business data",
+        "status": "PASS"
+      },
+      {
+        "name": "Generated-login contract and Admin choice are deployed without issuing an account or credential",
+        "status": "PASS"
+      },
+      {
+        "name": "Account deletion preview, deleted history and strict validation are available without deleting an account",
+        "status": "PASS"
+      },
+      {
+        "name": "Logout revokes server session",
+        "status": "PASS"
+      }
+    ],
+    "invoiceEvidence": {
+      "scope": "NO_LIVE_SOURCE",
+      "historicalFixture": {
+        "requestId": "52e60ea4-dc5b-4864-baaa-d437b4a18c17",
+        "state": "ABSENT_FROM_CURRENT_DATA",
+        "versions": [
+          {
+            "id": "66c6a784-4912-4278-ac1c-6cf572f09a4e",
+            "state": "ABSENT",
+            "invoiceDataStatus": 404,
+            "invoicePdfStatus": 404
+          },
+          {
+            "id": "31df54db-7f7d-4cb5-8e93-d9138d504c3f",
+            "state": "ABSENT",
+            "invoiceDataStatus": 404,
+            "invoicePdfStatus": 404
+          }
+        ]
+      },
+      "selected": [],
+      "positivePdf": "NOT_RUN_NO_LIVE_SOURCE",
+      "sixLineHistoricalPdf": "NOT_RUN_HISTORICAL_SOURCE_ABSENT",
+      "discovery": {
+        "nativeRequestCount": 0,
+        "nativeOrderCount": 0,
+        "viewLimit": 100
+      },
+      "reason": "Current authenticated request and sales-order views are empty; historical head/versions return NOT_FOUND. No production fixture was created.",
+      "invalidPostStatus": 400
+    },
+    "mcpInvoiceEvidence": {
+      "scope": "NO_LIVE_SOURCE",
+      "historicalFixture": {
+        "requestId": "52e60ea4-dc5b-4864-baaa-d437b4a18c17",
+        "state": "ABSENT_FROM_CURRENT_DATA",
+        "versions": [
+          {
+            "id": "66c6a784-4912-4278-ac1c-6cf572f09a4e",
+            "state": "ABSENT",
+            "invoiceDataStatus": 404,
+            "invoicePdfStatus": 404
+          },
+          {
+            "id": "31df54db-7f7d-4cb5-8e93-d9138d504c3f",
+            "state": "ABSENT",
+            "invoiceDataStatus": 404,
+            "invoicePdfStatus": 404
+          }
+        ]
+      },
+      "selected": [],
+      "positivePdf": "NOT_RUN_NO_LIVE_SOURCE",
+      "sixLineHistoricalPdf": "NOT_RUN_HISTORICAL_SOURCE_ABSENT",
+      "discovery": {
+        "nativeRequestCount": 0,
+        "nativeOrderCount": 0,
+        "viewLimit": 100,
+        "commercial_requestsTotal": 0,
+        "commercial_request_versionsTotal": 0,
+        "sales_ordersTotal": 0,
+        "sales_order_versionsTotal": 0
+      },
+      "reason": "Current authenticated request and sales-order views are empty; historical head/versions return NOT_FOUND. No production fixture was created."
+    }
+  },
+  "catalog": {
+    "operations": 359,
+    "available": 251,
+    "retired": 108,
+    "read": 139,
+    "write": 220,
+    "excludedRoutes": 13
+  },
+  "candidateSummary": {
+    "cases": 18,
+    "status": "PASS"
+  },
+  "stagingCleanup": {
+    "scope": "Owned QA database, role, server and local tunnel removed; production and rollback backups retained",
+    "status": "PASS"
+  }
+}

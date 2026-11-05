@@ -1,0 +1,23 @@
+{
+  "status": 200,
+  "discountPercent": 30,
+  "itemCount": 8,
+  "cashew": {
+    "productId": "cohamy-cashew-chocolate-80g",
+    "crmProductId": "ceeca031-0ed0-4c5c-a342-e3585b9d2261",
+    "basePrice": 82000,
+    "netSalePrice": 57400,
+    "vatRate": 8,
+    "vatAmount": 4592,
+    "listPrice": 88560,
+    "salePrice": 61992,
+    "discountPercent": 30,
+    "available": true
+  },
+  "operation": "GET /api/crm/storefront",
+  "verifiedAt": "2026-11-05T06:05:08.854Z",
+  "permissions": "Existing authenticated CRM read operation; no mutation",
+  "browserLocalCartReadable": false,
+  "apiContractChanged": false,
+  "catalogCheck": "PASS unchanged:359 operations,251 available,108 retired,139 read,220 write,13 excluded"
+}

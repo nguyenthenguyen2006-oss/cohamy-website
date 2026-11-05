@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "health": {
+    "ok": true,
+    "app": "cohamy",
+    "blogSource": "wordpress",
+    "blogReady": true,
+    "sheetsConfigured": false,
+    "uploadDirectoryWritable": true,
+    "timestamp": "2026-11-05T06:07:56.513Z"
+  },
+  "runtime": [
+    {
+      "name": "cohamy",
+      "status": "online",
+      "restarts": 0,
+      "release": "/root/cohamy-releases/4c34999674341c616e6abd6c557ed69a1ff85a6a"
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "status": "online",
+      "restarts": 0,
+      "release": "/root/cohamy-releases/4c34999674341c616e6abd6c557ed69a1ff85a6a"
+    }
+  ]
+}
