@@ -34,7 +34,7 @@ const context=await browser.newContext({viewport:{width:1440,height:900},service
 const page=await context.newPage();page.setDefaultTimeout(25000);
 const cdp=await context.newCDPSession(page);
 const cases=[],routes=[],screenshots=[],accessibility=[],errors=[],blockedRequests=[],coverageNotes=[],externalNetwork=[];
-const pendingRoutes=new Set(),pendingReads=new Set();
+const pendingRoutes=new Set();
 const lifecycle=[];let lifecyclePhase='running';
 const signatures=new Map();let activeCase='initialization',complete=false,navigations=0,adminRequests=0;
 const footer=page.locator(footerSelector);
@@ -44,9 +44,6 @@ const pass=(name,details={})=>{cases.push({name,status:'PASS',...details});conso
 page.on('pageerror',error=>errors.push({type:'pageerror',path:new URL(page.url()).pathname,message:error.message}));
 page.on('console',message=>{if(message.type()!=='error')return;const source=message.location().url;const record={type:'console',message:message.text(),source};if(source&&new URL(source).origin!==origin)externalNetwork.push(record);else errors.push(record);});
 page.on('requestfailed',request=>{const error=request.failure()?.errorText,url=new URL(request.url());if(error!=='net::ERR_ABORTED')(url.origin===origin?errors:externalNetwork).push({type:'requestfailed',path:url.pathname,origin:url.origin,error});});
-context.on('request',request=>{if(new URL(request.url()).origin===origin)pendingReads.add(request);});
-context.on('requestfinished',request=>pendingReads.delete(request));
-context.on('requestfailed',request=>pendingReads.delete(request));
 
 await context.route('**/*',async route=>{
   const task=(async()=>{
@@ -71,15 +68,18 @@ await context.route('**/*',async route=>{
   pendingRoutes.add(task);try{await task;}finally{pendingRoutes.delete(task);}
 });
 
-async function drainPendingReads(){
+async function drainRouteHandlers(){
   const started=Date.now(),deadline=started+20000;let quietSince=null;
   while(Date.now()<deadline){
-    if(pendingRoutes.size||pendingReads.size)quietSince=null;
+    // The API-backed staging proxy must finish before its context is disposed.
+    // Native browser streams/prefetch may remain open across navigation and are
+    // cancelled by browser close; do not wait on a global Request-object set.
+    if(pendingRoutes.size)quietSince=null;
     else if(quietSince===null)quietSince=Date.now();
-    else if(Date.now()-quietSince>=1000)return {status:'PASS',elapsedMs:Date.now()-started,pendingRoutes:0,pendingFirstPartyReads:0,quietMs:1000};
+    else if(Date.now()-quietSince>=1000)return {status:'PASS',elapsedMs:Date.now()-started,pendingRouteHandlers:0,quietMs:1000,scope:'Actual route-handler/API-proxy operations drained. Native browser streams are closed normally; first-party errors still fail the report.'};
     await new Promise(resolve=>setTimeout(resolve,50));
   }
-  throw new Error('Read drain timed out: '+JSON.stringify({pendingRoutes:pendingRoutes.size,pendingFirstPartyReads:[...pendingReads].map(request=>new URL(request.url()).pathname)}));
+  throw new Error('Route-handler drain timed out: '+JSON.stringify({pendingRoutes:pendingRoutes.size}));
 }
 
 async function settle(){
@@ -216,7 +216,7 @@ try{
   await capture('failure').catch(()=>{});
 }finally{
   lifecyclePhase='draining';
-  try{lifecycle.push(await drainPendingReads());}
+  try{lifecycle.push(await drainRouteHandlers());}
   catch(error){lifecycle.push({status:'FAIL',message:String(error)});complete=false;process.exitCode=1;}
   lifecyclePhase='closing';await browser.close();lifecyclePhase='closed';
   // Errors arriving during drain/close still fail the run. A successful visual

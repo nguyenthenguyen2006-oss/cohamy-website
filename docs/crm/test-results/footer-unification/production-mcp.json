@@ -1,0 +1,34 @@
+{
+  "status": 200,
+  "operation": "GET /api/crm/storefront/policies",
+  "verifiedAt": "2026-11-05T07:24:50.810Z",
+  "policyCount": 7,
+  "editable": false,
+  "companyProfile": {
+    "legalName": "CÔNG TY TNHH COHAMY",
+    "registration": {
+      "taxId": "0111549388",
+      "firstIssuedAt": "2026-06-25",
+      "firstIssuedDisplay": "25/06/2026",
+      "lastChangedAt": "2026-09-24",
+      "lastChangedDisplay": "24/09/2026",
+      "changeNumber": 1,
+      "issuingAuthority": "Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp, Sở Tài chính Thành phố Hà Nội",
+      "registeredAddress": "Tầng 3, Tháp A, Tòa nhà T608, KĐT mới Cổ Nhuế, Đường Tôn Quang Phiệt, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam"
+    },
+    "phone": "0981 956 111",
+    "email": "Cohamyvietnam@gmail.com",
+    "offices": {
+      "hanoi": "Tầng 3, tháp A, Tòa T608, Phường Nghĩa Đô, TP. Hà Nội",
+      "hcmc": "Tổ 7, Cầu Mới, P. Tân Thành, TP Hồ Chí Minh"
+    },
+    "bankAccount": {
+      "bankName": "MB Bank",
+      "accountNumber": "913988886666",
+      "accountNumberDisplay": "9139 8888 6666",
+      "accountHolder": "CÔNG TY TNHH COHAMY"
+    }
+  },
+  "paymentPolicyBankMatches": true,
+  "writePerformed": false
+}

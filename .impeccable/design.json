@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T07:19:32.454305+00:00",
+  "title": "Design System: Cohamy public homepage and shared footer",
+  "extensions": {
+    "typographyMeta": {
+      "footer-detail": {
+        "displayName": "Shared footer text",
+        "purpose": "Every public-footer text element retains one Manrope size across viewports."
+      },
+      "footer-heading": {
+        "displayName": "Shared footer heading",
+        "purpose": "Weight distinguishes headings and the legal company name without changing family or size."
+      }
+    },
+    "breakpoints": [
+      {
+        "name": "footer-two-columns",
+        "value": "1100px"
+      },
+      {
+        "name": "footer-one-column",
+        "value": "600px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Footer Policy Navigation",
+      "kind": "nav",
+      "refersTo": "public-footer",
+      "description": "Existing seven policy titles and destinations in the shared public footer; preview padding is a presentation inset.",
+      "html": "<nav class=\"ds-footer-policies\" aria-label=\"Chính sách mua hàng\" lang=\"vi\"><h2>Chính sách mua hàng</h2><ul><li><a href=\"/vi/chinh-sach/bao-mat-thong-tin\">Chính sách bảo mật thông tin</a></li><li><a href=\"/vi/chinh-sach/van-chuyen-kiem-tra-doi-tra\">Chính sách vận chuyển - kiểm tra - đổi trả hàng</a></li><li><a href=\"/vi/chinh-sach/thanh-toan\">Chính sách thanh toán</a></li><li><a href=\"/vi/chinh-sach/gia\">Chính sách giá</a></li><li><a href=\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\">Phương thức tiếp nhận và giải quyết yêu cầu phản ánh khiếu nại</a></li><li><a href=\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\">Các điều kiện hạn chế trong việc cung cấp hàng hóa</a></li><li><a href=\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\">Quyền và nghĩa vụ 2 bên</a></li></ul></nav>",
+      "css": ".ds-footer-policies { background:#2c1914; color:#e0cfbd; font-family:var(--font-manrope),ui-sans-serif,system-ui,sans-serif; font-size:16px; font-weight:400; line-height:1.65; padding:24px; overflow-wrap:anywhere; } .ds-footer-policies h2 { color:#f0e6d5; font-family:inherit; font-size:inherit; line-height:inherit; font-weight:700; margin:0 0 20px; } .ds-footer-policies ul { list-style:none; padding:0; margin:0; } .ds-footer-policies a { color:inherit; display:inline-flex; min-height:44px; align-items:center; padding-block:7px; text-decoration:none; text-underline-offset:4px; } .ds-footer-policies a:hover { color:#edbe39; text-decoration:underline; } .ds-footer-policies a:focus-visible { outline:3px solid #edbe39; outline-offset:4px; }"
+    },
+    {
+      "name": "Footer Company Facts",
+      "kind": "custom",
+      "refersTo": "public-footer",
+      "description": "Certificate-backed company registration in the shared footer; preview padding is a presentation inset.",
+      "html": "<section class=\"ds-footer-company\" aria-labelledby=\"ds-footer-company-title\" lang=\"vi\"><h2 id=\"ds-footer-company-title\">Thông tin doanh nghiệp</h2><p class=\"ds-footer-company-name\">CÔNG TY TNHH COHAMY</p><dl><div><dt>Mã số thuế:</dt><dd>0111549388</dd></div><div><dt>Ngày cấp lần đầu:</dt><dd><time datetime=\"2026-06-25\">25/06/2026</time></dd></div><div><dt>Nơi cấp:</dt><dd>Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp, Sở Tài chính Thành phố Hà Nội</dd></div><div class=\"ds-footer-company-address\"><dt>Địa chỉ trụ sở:</dt><dd><address>Tầng 3, Tháp A, Tòa nhà T608, KĐT mới Cổ Nhuế, Đường Tôn Quang Phiệt, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam</address></dd></div></dl></section>",
+      "css": ".ds-footer-company { background:#2c1914; color:#e0cfbd; font-family:var(--font-manrope),ui-sans-serif,system-ui,sans-serif; font-size:16px; font-weight:400; line-height:1.65; padding:24px; overflow-wrap:anywhere; } .ds-footer-company h2 { color:#f0e6d5; font-family:inherit; font-size:inherit; line-height:inherit; font-weight:700; margin:0 0 20px; } .ds-footer-company p,.ds-footer-company dl,.ds-footer-company dd { margin:0; } .ds-footer-company .ds-footer-company-name { color:#f0e6d5; font-weight:700; margin-bottom:16px; } .ds-footer-company dl>div { margin-top:10px; } .ds-footer-company dt,.ds-footer-company dd { display:inline; } .ds-footer-company dt { margin-right:5px; } .ds-footer-company-address dt,.ds-footer-company-address dd { display:block; } .ds-footer-company address { font-style:normal; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Cacao Scenes",
+    "overview": "\"Cacao Scenes\" is the visual world selected as direction C. Original Cohamy product and exhibition photographs lead the page; warm paper carries product selection and article links, while cacao carries the shell and action scenes. Strong serif headings and simple gold actions keep the product legible within the photographs.",
+    "keyCharacteristics": [
+      "Original product photographs and the original transparent gold wordmark.",
+      "Cacao and paper surfaces with a compact gold action vocabulary.",
+      "Playfair Display headings paired with Manrope controls and supporting text.",
+      "Open photo articles, fine rules and underlined text links.",
+      "Responsive scene crops and a compact mobile shell."
+    ],
+    "rules": [
+      {
+        "name": "Shared Footer Type",
+        "body": "Keep every footer heading, link, fact and copyright line at the `footer-detail` size and family on every viewport. Use the `footer-heading` weight for headings and the legal name, and weight (600) for contact labels; no mobile size reduction applies.",
+        "section": "typography"
+      }
+    ],
+    "dos": [],
+    "donts": []
+  }
+}

@@ -1,0 +1,1584 @@
+{
+  "status": "FAIL",
+  "environment": "PRODUCTION direct public website reads",
+  "testedAt": "2026-11-05T07:25:43.565Z",
+  "cases": [
+    {
+      "name": "shared footer, facts, typography, contact targets and policy links across Vietnamese page types",
+      "status": "PASS",
+      "routes": 17,
+      "policyDestinations": 7,
+      "bankAccount": "9139 8888 6666"
+    },
+    {
+      "name": "blog detail shared footer",
+      "status": "PASS",
+      "path": "/vi/bai-viet/qua-tang-khach-hang-bang-socola-cohamy"
+    },
+    {
+      "name": "dynamic blog and CMS page inherit the shared footer when discoverable",
+      "status": "PASS",
+      "discoveredBlog": "/vi/bai-viet/qua-tang-khach-hang-bang-socola-cohamy",
+      "discoveredPage": null
+    },
+    {
+      "name": "same footer across home and products for each additional locale",
+      "status": "PASS",
+      "routes": 8,
+      "locales": [
+        "en",
+        "zh",
+        "ko",
+        "ja"
+      ]
+    },
+    {
+      "name": "keyboard policy link retains visible focus",
+      "status": "PASS",
+      "focused": true,
+      "outline": "solid",
+      "width": 3
+    },
+    {
+      "name": "tablet layout uses two columns without overflow",
+      "status": "PASS"
+    },
+    {
+      "name": "390px mobile home and payment footer stack consistently with matching type",
+      "status": "PASS",
+      "width": 390
+    },
+    {
+      "name": "320px narrow mobile retains all content without horizontal overflow",
+      "status": "PASS",
+      "width": 320
+    },
+    {
+      "name": "user 2378px viewport shared footer capture and overflow",
+      "status": "PASS",
+      "width": 2378
+    },
+    {
+      "name": "no first-party browser runtime errors or attempted business writes",
+      "status": "PASS",
+      "navigations": 31,
+      "attemptedWrites": 0,
+      "ordersSubmitted": 0,
+      "adminRequests": 0
+    }
+  ],
+  "routes": [
+    {
+      "label": "/vi",
+      "path": "/vi",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.15625,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.15625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.15625,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.15625,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.15625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/san-pham",
+      "path": "/vi/san-pham",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.34375,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.34375,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.34375,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.34375,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.34375,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/san-pham/cohamy-socola-hat-dieu-80g",
+      "path": "/vi/san-pham/cohamy-socola-hat-dieu-80g",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.109375,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.109375,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.109375,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.109375,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.109375,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/ve-chung-toi",
+      "path": "/vi/ve-chung-toi",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.296875,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.296875,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.296875,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.296875,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.296875,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/hoat-dong",
+      "path": "/vi/hoat-dong",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.203125,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.203125,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.203125,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.203125,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.203125,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/lien-he",
+      "path": "/vi/lien-he",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.5625,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.5625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.5625,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.5625,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.5625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/doi-tac",
+      "path": "/vi/doi-tac",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 769.375,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 769.375,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 769.375,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 769.375,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 705.375,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/bai-viet",
+      "path": "/vi/bai-viet",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.234375,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.234375,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.234375,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.234375,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.234375,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/gio-hang",
+      "path": "/vi/gio-hang",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 588.1875,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 588.1875,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 588.1875,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 588.1875,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 524.1875,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/thanh-toan",
+      "path": "/vi/thanh-toan",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 445.6875,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 445.6875,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 445.6875,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 445.6875,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 381.6875,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/chinh-sach/bao-mat-thong-tin",
+      "path": "/vi/chinh-sach/bao-mat-thong-tin",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.390625,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.390625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.390625,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.390625,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.390625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/chinh-sach/van-chuyen-kiem-tra-doi-tra",
+      "path": "/vi/chinh-sach/van-chuyen-kiem-tra-doi-tra",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.515625,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.515625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.515625,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.515625,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.515625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/chinh-sach/thanh-toan",
+      "path": "/vi/chinh-sach/thanh-toan",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.140625,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.140625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.140625,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.140625,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.140625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/chinh-sach/gia",
+      "path": "/vi/chinh-sach/gia",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.40625,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.40625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.40625,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.40625,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.40625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai",
+      "path": "/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.796875,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.796875,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.796875,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.796875,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.796875,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa",
+      "path": "/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.609375,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.609375,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.609375,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.609375,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.609375,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/chinh-sach/quyen-nghia-vu-cac-ben",
+      "path": "/vi/chinh-sach/quyen-nghia-vu-cac-ben",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.609375,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.609375,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.609375,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.609375,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.609375,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/vi/bai-viet/qua-tang-khach-hang-bang-socola-cohamy",
+      "path": "/vi/bai-viet/qua-tang-khach-hang-bang-socola-cohamy",
+      "viewport": 1440,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.953125,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.953125,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.953125,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.953125,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.953125,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/en",
+      "path": "/en",
+      "viewport": 1440,
+      "signature": "13953ce374d2bf191cd187842895d7a3da3612a6612a51205ec00ac233c76dcf",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 665.453125,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 665.453125,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 665.453125,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 665.453125,
+          "width": 357.46875,
+          "height": 356.296875
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 601.453125,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/en/products",
+      "path": "/en/products",
+      "viewport": 1440,
+      "signature": "13953ce374d2bf191cd187842895d7a3da3612a6612a51205ec00ac233c76dcf",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.8125,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.8125,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.8125,
+          "width": 264.796875,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.8125,
+          "width": 357.46875,
+          "height": 356.296875
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.8125,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/zh",
+      "path": "/zh",
+      "viewport": 1440,
+      "signature": "495b835bd45c859eec677b48ab91e5af7175ac407b1c3720c6ffd62af8328ecc",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 666.15625,
+          "width": 251.546875,
+          "height": 169.171875
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 666.15625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 666.15625,
+          "width": 264.796875,
+          "height": 339.171875
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 666.15625,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 602.15625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/zh/products",
+      "path": "/zh/products",
+      "viewport": 1440,
+      "signature": "495b835bd45c859eec677b48ab91e5af7175ac407b1c3720c6ffd62af8328ecc",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.421875,
+          "width": 251.546875,
+          "height": 169.171875
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.421875,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.421875,
+          "width": 264.796875,
+          "height": 339.171875
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.421875,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.421875,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/ko",
+      "path": "/ko",
+      "viewport": 1440,
+      "signature": "027f128e2d4bb2add8b04a16238087ac02d95c4f58f4f0b2a505aec90c780e4e",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 422.15625,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 422.15625,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 422.15625,
+          "width": 264.796875,
+          "height": 339.171875
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 422.15625,
+          "width": 357.46875,
+          "height": 356.296875
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 358.15625,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/ko/products",
+      "path": "/ko/products",
+      "viewport": 1440,
+      "signature": "027f128e2d4bb2add8b04a16238087ac02d95c4f58f4f0b2a505aec90c780e4e",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.8125,
+          "width": 251.546875,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.8125,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.8125,
+          "width": 264.796875,
+          "height": 339.171875
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.8125,
+          "width": 357.46875,
+          "height": 356.296875
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.8125,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/ja",
+      "path": "/ja",
+      "viewport": 1440,
+      "signature": "10d3e37bf9b3a25f3d2f3beddcf05442e0709dbe1698f76359b68e937feac708",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 665.453125,
+          "width": 251.546875,
+          "height": 221.953125
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 665.453125,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 665.453125,
+          "width": 264.796875,
+          "height": 407.125
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 665.453125,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 601.453125,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "/ja/products",
+      "path": "/ja/products",
+      "viewport": 1440,
+      "signature": "10d3e37bf9b3a25f3d2f3beddcf05442e0709dbe1698f76359b68e937feac708",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 57.59375,
+          "y": 421.8125,
+          "width": 251.546875,
+          "height": 221.953125
+        },
+        {
+          "name": "policies",
+          "x": 349.140625,
+          "y": 421.8125,
+          "width": 330.984375,
+          "height": 422.734375
+        },
+        {
+          "name": "contact",
+          "x": 720.125,
+          "y": 421.8125,
+          "width": 264.796875,
+          "height": 407.125
+        },
+        {
+          "name": "company",
+          "x": 1024.921875,
+          "y": 421.8125,
+          "width": 357.46875,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "251.547px 330.984px 264.797px 357.469px",
+      "documentWidth": 1440,
+      "footer": {
+        "x": 0,
+        "y": 357.8125,
+        "width": 1440,
+        "height": 606.125,
+        "right": 1440
+      }
+    },
+    {
+      "label": "tablet-home",
+      "path": "/vi",
+      "viewport": 900,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 36,
+          "y": 655.9375,
+          "width": 394,
+          "height": 169.171875
+        },
+        {
+          "name": "policies",
+          "x": 470,
+          "y": 655.9375,
+          "width": 394,
+          "height": 377.171875
+        },
+        {
+          "name": "contact",
+          "x": 36,
+          "y": 1069.109375,
+          "width": 394,
+          "height": 339.171875
+        },
+        {
+          "name": "company",
+          "x": 470,
+          "y": 1069.109375,
+          "width": 394,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "394px 394px",
+      "documentWidth": 900,
+      "footer": {
+        "x": 0,
+        "y": 591.9375,
+        "width": 900,
+        "height": 935.734375,
+        "right": 900
+      }
+    },
+    {
+      "label": "mobile-home-footer",
+      "path": "/vi",
+      "viewport": 390,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 20,
+          "y": 681.203125,
+          "width": 350,
+          "height": 191.5625
+        },
+        {
+          "name": "policies",
+          "x": 20,
+          "y": 904.765625,
+          "width": 350,
+          "height": 391.953125
+        },
+        {
+          "name": "contact",
+          "x": 20,
+          "y": 1328.71875,
+          "width": 350,
+          "height": 331.171875
+        },
+        {
+          "name": "company",
+          "x": 20,
+          "y": 1691.890625,
+          "width": 350,
+          "height": 321.90625
+        }
+      ],
+      "gridColumns": "350px",
+      "documentWidth": 390,
+      "footer": {
+        "x": 0,
+        "y": 641.203125,
+        "width": 390,
+        "height": 1506.375,
+        "right": 390
+      }
+    },
+    {
+      "label": "mobile-payment-footer",
+      "path": "/vi/chinh-sach/thanh-toan",
+      "viewport": 390,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 20,
+          "y": 394.25,
+          "width": 350,
+          "height": 191.5625
+        },
+        {
+          "name": "policies",
+          "x": 20,
+          "y": 617.8125,
+          "width": 350,
+          "height": 391.953125
+        },
+        {
+          "name": "contact",
+          "x": 20,
+          "y": 1041.765625,
+          "width": 350,
+          "height": 331.171875
+        },
+        {
+          "name": "company",
+          "x": 20,
+          "y": 1404.9375,
+          "width": 350,
+          "height": 321.90625
+        }
+      ],
+      "gridColumns": "350px",
+      "documentWidth": 390,
+      "footer": {
+        "x": 0,
+        "y": 354.25,
+        "width": 390,
+        "height": 1506.375,
+        "right": 390
+      }
+    },
+    {
+      "label": "narrow-home",
+      "path": "/vi",
+      "viewport": 320,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 20,
+          "y": 393.875,
+          "width": 280,
+          "height": 191.5625
+        },
+        {
+          "name": "policies",
+          "x": 20,
+          "y": 617.4375,
+          "width": 280,
+          "height": 414.734375
+        },
+        {
+          "name": "contact",
+          "x": 20,
+          "y": 1064.171875,
+          "width": 280,
+          "height": 357.5625
+        },
+        {
+          "name": "company",
+          "x": 20,
+          "y": 1453.734375,
+          "width": 280,
+          "height": 374.6875
+        }
+      ],
+      "gridColumns": "280px",
+      "documentWidth": 320,
+      "footer": {
+        "x": 0,
+        "y": 353.875,
+        "width": 320,
+        "height": 1608.328125,
+        "right": 320
+      }
+    },
+    {
+      "label": "user-2378-home",
+      "path": "/vi",
+      "viewport": 2378,
+      "signature": "f3214dc420dba02d4343c270eaf84899437745be5230b2d897fe205ff5e2f13b",
+      "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+      "fontSize": "16px",
+      "columns": [
+        {
+          "name": "brand",
+          "x": 469,
+          "y": 1103.890625,
+          "width": 275.59375,
+          "height": 195.5625
+        },
+        {
+          "name": "policies",
+          "x": 784.59375,
+          "y": 1103.890625,
+          "width": 362.640625,
+          "height": 399.953125
+        },
+        {
+          "name": "contact",
+          "x": 1187.234375,
+          "y": 1103.890625,
+          "width": 290.109375,
+          "height": 365.5625
+        },
+        {
+          "name": "company",
+          "x": 1517.34375,
+          "y": 1103.890625,
+          "width": 391.640625,
+          "height": 329.90625
+        }
+      ],
+      "gridColumns": "275.594px 362.641px 290.109px 391.641px",
+      "documentWidth": 2378,
+      "footer": {
+        "x": 0,
+        "y": 1039.890625,
+        "width": 2378,
+        "height": 583.34375,
+        "right": 2378
+      }
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/footer-unification/production/desktop-home-footer.png",
+    "docs/crm/test-results/footer-unification/production/desktop-products-footer.png",
+    "docs/crm/test-results/footer-unification/production/desktop-payment-footer.png",
+    "docs/crm/test-results/footer-unification/production/desktop-payment-bank-section.png",
+    "docs/crm/test-results/footer-unification/production/mobile-home-footer.png",
+    "docs/crm/test-results/footer-unification/production/mobile-payment-footer.png",
+    "docs/crm/test-results/footer-unification/production/narrow-home-footer.png",
+    "docs/crm/test-results/footer-unification/production/user-2378-footer.png"
+  ],
+  "accessibility": [
+    {
+      "name": "desktop-home-footer",
+      "violations": [],
+      "incomplete": [],
+      "passes": 17
+    },
+    {
+      "name": "mobile-payment-footer",
+      "violations": [],
+      "incomplete": [],
+      "passes": 17
+    }
+  ],
+  "errors": [],
+  "blockedRequests": [],
+  "externalNetwork": [],
+  "lifecycle": [
+    {
+      "status": "FAIL",
+      "message": "Error: Read drain timed out: {\"pendingRoutes\":0,\"pendingFirstPartyReads\":[\"/vi/san-pham/cohamy-socola-hanh-nhan-dau-tay-80g\",\"/vi/san-pham/cohamy-socola-hanh-nhan-sau-rieng-80g\",\"/vi/san-pham/cohamy-socola-mac-ca-80g\",\"/vi/san-pham/cohamy-xoai-say-deo-phu-socola-80g\",\"/vi/san-pham/cohamy-socola-mac-ca-80g\",\"/vi/san-pham/cohamy-socola-hanh-nhan-dau-tay-80g\",\"/vi/lien-he\",\"/vi/san-pham/cohamy-socola-hat-dieu-80g\",\"/vi/chinh-sach/van-chuyen-kiem-tra-doi-tra\",\"/vi/chinh-sach/thanh-toan\",\"/vi/chinh-sach/gia\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/thanh-toan\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/vi\",\"/vi/san-pham\",\"/vi/bai-viet\",\"/vi/ve-chung-toi\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/hoat-dong\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi\",\"/vi/san-pham\",\"/vi/chinh-sach/thanh-toan\",\"/vi/chinh-sach/gia\",\"/vi/bai-viet\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/san-pham\",\"/vi\",\"/vi/bai-viet\",\"/vi/chinh-sach/thanh-toan\",\"/vi/chinh-sach/gia\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/hoat-dong\",\"/vi/chinh-sach/thanh-toan\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/hoat-dong\",\"/vi/chinh-sach/thanh-toan\",\"/vi/hoat-dong\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/hoat-dong\",\"/vi/chinh-sach/thanh-toan\",\"/vi/chinh-sach/dieu-kien-cung-cap-hang-hoa\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/hoat-dong\",\"/vi/chinh-sach/thanh-toan\",\"/vi/chinh-sach/tiep-nhan-giai-quyet-khieu-nai\",\"/vi/chinh-sach/quyen-nghia-vu-cac-ben\",\"/vi/hoat-dong\",\"/vi/chinh-sach/thanh-toan\",\"/vi/bai-viet/qua-socola-dong-goi\",\"/vi/bai-viet/cohamy-vn-vi-413b9f6a8fb9d8b8f6873790\",\"/vi/chinh-sach/van-chuyen-kiem-tra-doi-tra\",\"/vi/chinh-sach/thanh-toan\",\"/en/about\",\"/en/contact\",\"/en/blog/how-to-choose-cohamy-nut-chocolate\",\"/en/blog/cohamy-holiday-gift-ideas\",\"/en/products/cohamy-almond-matcha-chocolate-80g\",\"/en/blog\",\"/en/products/cohamy-chocolate-candy-65g\",\"/en/about\",\"/zh/blog/how-to-choose-cohamy-nut-chocolate\",\"/zh/about\",\"/zh/contact\",\"/zh/blog/cohamy-holiday-gift-ideas\",\"/zh/products/cohamy-almond-matcha-chocolate-80g\",\"/zh/blog\",\"/zh/products/cohamy-chocolate-candy-65g\",\"/zh/about\",\"/ko/blog/cohamy-holiday-gift-ideas\",\"/ko/blog/how-to-choose-cohamy-nut-chocolate\",\"/ko/products\",\"/ko/about\",\"/ko/products/cohamy-chocolate-candy-65g\",\"/ko/contact\",\"/ko\",\"/ko/products/cohamy-almond-matcha-chocolate-80g\",\"/ja/blog/cohamy-holiday-gift-ideas\",\"/ja/blog/how-to-choose-cohamy-nut-chocolate\",\"/ja/about\",\"/ja/contact\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/ja/products/cohamy-mango-chocolate-80g\",\"/ja/products/cohamy-macadamia-chocolate-80g\",\"/ja/products/cohamy-almond-strawberry-chocolate-80g\",\"/ja/products/cohamy-almond-matcha-chocolate-80g\",\"/vi/chinh-sach/gia\",\"/vi/bai-viet\",\"/vi/bai-viet/qua-tang-khach-hang-bang-socola-cohamy\",\"/vi/bai-viet/goi-y-qua-tang-tet-cohamy\",\"/vi/san-pham/cohamy-socola-hat-dieu-80g\",\"/vi/san-pham/cohamy-socola-hanh-nhan-matcha-80g\",\"/vi/san-pham/cohamy-socola-hanh-nhan-dau-tay-80g\",\"/vi/san-pham/cohamy-socola-hanh-nhan-sau-rieng-80g\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/_next/image\",\"/vi/bai-viet\",\"/vi/ve-chung-toi\",\"/vi/lien-he\",\"/vi/san-pham/cohamy-xoai-say-deo-phu-socola-80g\"]}"
+    }
+  ],
+  "coverageNotes": [
+    "CMS page: no discoverable public link in inspected pages; shared LocaleLayout source coverage, no invented fixture"
+  ],
+  "productionWrites": 0,
+  "adminRequests": 0,
+  "orderSubmissions": 0,
+  "mocks": 0,
+  "registration": {
+    "taxId": "0111549388",
+    "firstIssuedAt": "2026-06-25",
+    "date": "25/06/2026",
+    "authority": "Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp, Sở Tài chính Thành phố Hà Nội",
+    "address": "Tầng 3, Tháp A, Tòa nhà T608, KĐT mới Cổ Nhuế, Đường Tôn Quang Phiệt, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam"
+  },
+  "bank": {
+    "display": "9139 8888 6666",
+    "number": "913988886666",
+    "name": "MB Bank",
+    "holder": "CÔNG TY TNHH COHAMY"
+  },
+  "scope": "Shared public footer route-family and locale sampling, seven actual policy destinations, bank-copy verification, CSS/font/image settling, responsive measurements and footer-scoped axe. Real third-party contact-page map reads are outside the footer audit and separately reported; all non-read requests are blocked. Not exhaustive screen-reader testing or a pixel-regression baseline.",
+  "mcp": "Not invoked by this browser suite. Release owner separately verifies authenticated companyProfile and policy data through native remote MCP."
+}

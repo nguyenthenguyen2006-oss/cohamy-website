@@ -1,6 +1,6 @@
 ---
-name: "Cohamy local public homepage"
-description: "Current local homepage system: original product scenes, cacao, warm paper and gold actions."
+name: "Cohamy public homepage and shared footer"
+description: "Homepage scenes and shared public footer: original assets, cacao, warm paper and gold actions."
 colors:
   cacao: "#2c1914"
   paper: "#f0e6d5"
@@ -69,9 +69,14 @@ typography:
     lineHeight: 1.5
   footer-detail:
     fontFamily: "var(--font-manrope), ui-sans-serif, system-ui, sans-serif"
-    fontSize: "12px"
+    fontSize: "16px"
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.65
+  footer-heading:
+    fontFamily: "var(--font-manrope), ui-sans-serif, system-ui, sans-serif"
+    fontSize: "16px"
+    fontWeight: 700
+    lineHeight: 1.65
 rounded:
   action: "5px"
 spacing:
@@ -122,16 +127,20 @@ components:
     textColor: "{colors.ink}"
     typography: "{typography.article-row}"
     padding: "16px 0"
-  contact-disclosure:
+  public-footer:
     backgroundColor: "{colors.cacao}"
     textColor: "{colors.footer-muted}"
     typography: "{typography.footer-detail}"
+    padding: "64px clamp(20px, 4vw, 64px) 28px"
+  public-footer-heading:
+    textColor: "{colors.paper}"
+    typography: "{typography.footer-heading}"
   mobile-menu-control:
     backgroundColor: "{colors.cacao}"
     textColor: "{colors.paper}"
 ---
 
-# Design System: Cohamy local public homepage
+# Design System: Cohamy public homepage and shared footer
 
 ## Overview
 
@@ -139,11 +148,11 @@ components:
 
 "Cacao Scenes" is the visual world selected as direction C. Original Cohamy product and exhibition photographs lead the page; warm paper carries product selection and article links, while cacao carries the shell and action scenes. Strong serif headings and simple gold actions keep the product legible within the photographs.
 
-This file records the **current LOCAL public homepage only**: `app/[locale]/page.tsx`, `components/home/CacaoHome.tsx`, its CSS module, and the homepage branches of `components/Header.tsx` and `components/Footer.tsx`. The locale-aware pathname must be `/` for those shell branches. Other public routes retain their incumbent header, footer and styles. CRM and portal retain their own system; `components/crm/DESIGN.md` remains separate and authoritative for that scope.
+This file records the **current LOCAL public homepage**: `app/[locale]/page.tsx`, `components/home/CacaoHome.tsx`, its CSS module, and the homepage branch of `components/Header.tsx`. The locale-aware pathname must be `/` for that header branch. The user-authorized **shared public footer** is the exception: `components/Footer.tsx`, `components/Footer.module.css`, `components/FooterPolicies.tsx` and the footer selectors in `components/store-policies.css` now serve every public route through the public LocaleLayout. Other public routes retain their incumbent header and page styles. CRM and portal retain their own system; `components/crm/DESIGN.md` remains separate and authoritative for that scope.
 
 The tokens below come from the implemented source after the latest bounded correction batch. The selected scene sequence remains in `.impeccable/surfaces/app-locale-page-tsx.md`; it is not a mandate for every future route. Documentation is a local source record, not a production release, a browser/QA result or an Impeccable gate approval.
 
-**The Homepage Boundary Rule.** Apply this system only to the locale-aware homepage and its homepage shell branches. Read the incumbent system before extending any other surface.
+**The Homepage Boundary Rule.** Apply the scene and header system only to the locale-aware homepage. The documented shared footer applies across public routes; read the incumbent system before extending any other surface.
 
 **The Original Asset Rule.** Use the original photographs and transparent wordmark. Cropping, masking and readable scrims belong to the layout; redrawing package pixels or the brand mark does not.
 
@@ -172,13 +181,13 @@ The palette uses deep cacao and warm paper as large surfaces, gold for actions, 
 - **Brown ink** (`colors.ink`): headings, product titles and content links on paper.
 - **Fine ink rule** (`colors.rule`): the alpha border separating flavor selection, brand and article rows.
 - **Link hover** (`colors.link-hover`): the warm response for underlined text links.
-- **Muted footer paper** (`colors.footer-muted`): copyright and the contact disclosure in the compact footer.
+- **Muted footer paper** (`colors.footer-muted`): shared-footer body text, contact details, registration facts, policy links and copyright; warm paper distinguishes headings and the legal company name.
 
 **The Paper and Cacao Rule.** Use paper with ink for open content, and cacao with paper for the shell and photographic action scenes. Gold identifies actions and the supplied wordmark.
 
 The scrims use alpha forms of cacao, and the photo-edge masks transition from transparent to opaque. Those are scene treatments, not additional accent families.
 
-The sidecar's tonal strips are derived previews of the canonical colors. Their synthesized OKLCH steps are not additional surface tokens used by the current page.
+The sidecar is scoped to the shared-footer update. Existing color primitives remain authoritative in this frontmatter; it introduces no new palette.
 
 ## Typography
 
@@ -200,7 +209,7 @@ The sidecar's tonal strips are derived previews of the canonical colors. Their s
 | `label` / `hero-action` | Gold actions, with a larger desktop hero variant. |
 | `navigation` / `flavor` | Shell navigation and the eight product-flavor links. |
 | `link` / `article-row` | Underlined actions and CMS article rows. |
-| `footer-detail` | Copyright and the native contact disclosure. |
+| `footer-detail` / `footer-heading` | All shared-footer text and headings; one family and size, with weight providing hierarchy. |
 
 Desktop hero supporting copy uses a fluid size (`clamp(18px, 1.65vw, 24px)`), a line height (1.5) and a measure (420px). The hero line size changes at 1100px and 900px before the mobile treatment at 600px. English has a smaller display measure; Chinese, Korean and Japanese use a more open line height and normal tracking.
 
@@ -209,6 +218,8 @@ At 600px and below, the hero title uses `clamp(27px, 8.1vw, 46px)`, line height 
 **The Two Voice Rule.** Use Playfair Display at weight 700 for homepage display headings and Manrope for body copy, navigation and controls. The recorded tool-ranked Rasa face is not the current implementation.
 
 The type ramp is fluid and role-specific. It does not use a single invented scale ratio.
+
+**The Shared Footer Type Rule.** Keep every footer heading, link, fact and copyright line at the `footer-detail` size and family on every viewport. Use the `footer-heading` weight for headings and the legal name, and weight (600) for contact labels; no mobile size reduction applies.
 
 ## Layout
 
@@ -220,9 +231,9 @@ The page uses full-width scenes with a shared fluid side gutter (`spacing.page-g
 - **Flavor selection:** a horizontal group on desktop, a four-column grid from 900px, with compact Manrope labels from 600px. These are navigation links, not filter chips.
 - **Brand scene:** image and copy share one two-column scene (64.3% image). At 900px the scene stacks. At 600px the title, photo and action form a reading sequence through the existing ordering rules.
 - **Photographic action scenes:** hero and gift have a broad backdrop plus a focal product crop. Desktop backdrop scale is (2); mobile scale is (4), anchored at the left bottom so the foreground ingredients and light continue behind copy. The focal crops use gradient masks, with a cacao scrim protecting text.
-- **Footer:** desktop groups logo/contact and navigation horizontally. Mobile uses two columns, with logo/contact at left and a bordered navigation column at right; the native contact disclosure moves below.
+- **Shared public footer:** four desktop columns in the order brand, seven policies, contact and company registration, with proportions (.95fr / 1.25fr / 1fr / 1.35fr), gap (40px) and centered maximum width (1440px). At (1100px) and below use two equal columns with row gap (36px); at (600px) and below use one column with gap (32px). The horizontal gutter uses `spacing.page-gutter`; mobile vertical padding becomes (40px 24px). All information remains expanded; there is no Quick Links group or native contact disclosure.
 
-At 1800px and above, the hero's left padding can use a centered measure based on (1720px). The sidecar records actual breakpoints, including the inherited root type change. Reduced motion keeps scrolling automatic and removes transitions in the homepage, header and footer scopes.
+At 1800px and above, the hero's left padding can use a centered measure based on (1720px). The sidecar records the shared footer's two layout breakpoints; it does not recatalog the homepage. Reduced motion keeps scrolling automatic and removes transitions in the homepage and header scopes. The shared footer adds no animation or transition.
 
 ## Elevation & Depth
 
@@ -230,7 +241,7 @@ Homepage scenes and content articles are flat at rest. Depth comes from original
 
 **The Flat Content Rule.** Keep product articles and article rows flat. The photograph, surface contrast and fine rules provide the depth; the existing locale popover retains its incumbent treatment.
 
-Color transitions on gold actions last (160ms) with `ease`. Underlined links and navigation change color or underline without moving the content. Focus is a visible outline (3px, current color) with an offset (5px); the footer disclosure uses gold with an offset (4px).
+Color transitions on gold actions last (160ms) with `ease`. Underlined links and navigation change color or underline without moving the content. Focus is a visible outline (3px, current color) with an offset (5px); shared-footer links use gold with an offset (4px).
 
 ## Shapes
 
@@ -287,15 +298,16 @@ CMS article titles form a simple ruled list.
 - **States:** the title underlines on hover at an offset (5px); the link keeps the shared keyboard outline.
 - **Data behavior:** the source requests two featured CMS posts. If none are returned, it keeps the section heading and index link without inventing article rows.
 
-### Contact Disclosure
+### Shared Public Footer
 
-The footer keeps company/contact/navigation together and exposes addresses through native `details` and `summary`.
+Every public page uses the same four groups: original brand logo and existing copy, seven purchase policies, contact details, and company registration. The footer surface brief records the user's structural reference and factual sources.
 
-- **Structure:** cacao with muted footer-paper text; footer-detail type, minimum summary height (44px) and vertical summary padding (12px).
-- **States:** native open/closed behavior, a gold keyboard outline, and gold hover on links.
-- **Mobile:** contact and navigation retain separate columns; email can break at the actual `@` using `wbr`. Source contact details and external targets remain unchanged.
+- **Structure:** `public-footer` surface and type, with warm-paper headings through `public-footer-heading`. A fine muted-paper border separates the copyright row. Keep the original transparent logo at height (56px); no replacement artwork or certification badge.
+- **States:** contact and policy links retain minimum height (44px), underline on hover and a visible gold keyboard outline (3px) with offset (4px). The policy stylesheet retains its existing hover/focus shade; no new global color is inferred from it.
+- **Responsive behavior:** use the four/two/one-column rules in Layout, retain the same type size throughout, and allow long factual strings to wrap. All company and contact information remains visible without a disclosure control.
+- **Content:** preserve all seven existing policy destinations, locale routing and telephone, email, Zalo and map targets. Registration facts come from the supplied certificate through `lib/contact.ts`; the payment policy uses the user-supplied MB Bank account. These facts do not establish a new visual token or an independently verified bank-ownership claim.
 
-The sidecar contains self-contained `ds-` examples of implemented primitives. It embeds the original product photograph for its product-article example and expands framework utilities to CSS. It introduces no input, chip or dialog pattern that this homepage does not implement.
+The sidecar contains self-contained `ds-` previews of the implemented footer policy navigation and company facts. It is a minimal shared-footer record, not a regenerated homepage component catalog; no new raster asset or unrelated component is introduced.
 
 ## Do's and Don'ts
 
@@ -310,7 +322,7 @@ The sidecar contains self-contained `ds-` examples of implemented primitives. It
 
 ### Don't:
 
-- **Don't** propagate this homepage world into other public routes, CRM or portal without a separate authorized change.
+- **Don't** propagate the homepage scene or header world into other public routes, CRM or portal without a separate authorized change. The shared public footer is the approved exception.
 - **Don't** use the tool-ranked Rasa result as the homepage display rule; the current source uses Playfair Display.
 - **Don't** replace the original wordmark or product packaging with reconstructed artwork.
 - **Don't** add prices, reviews, certification claims or other product facts that the existing source does not provide.

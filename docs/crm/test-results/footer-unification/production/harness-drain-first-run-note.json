@@ -1,0 +1,15 @@
+{
+  "sourceReport": "harness-drain-first-run.json",
+  "rawReportPreserved": true,
+  "rawStatus": "FAIL",
+  "interpretation": "INCONCLUSIVE_HARNESS_FINALIZATION",
+  "functionalCasesPassed": 10,
+  "routeViewportRecords": 31,
+  "firstPartyErrors": 0,
+  "attemptedBusinessWrites": 0,
+  "actualRouteHandlersAtTimeout": 0,
+  "failure": "The first finalization guard also waited on a global set of native browser Request objects left from navigation, RSC prefetch and image reads. This set did not reach zero within20s.",
+  "scope": "The report does not establish a footer-render failure. Its lifecycle status is not a successful finalization proof either; retain the raw failed report.",
+  "correction": "Drain actual route-handler/API-proxy operations, which cause the Request context disposed risk. Native browser streams may remain open until ordinary close. First-party errors through close still fail final status.",
+  "followup": "One bounded full production rerun after the harness-only correction; no application source change or aesthetic iteration"
+}

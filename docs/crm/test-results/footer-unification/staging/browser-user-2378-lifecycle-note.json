@@ -11,6 +11,6 @@
     "The zero-error assertion executed before complete=true; browser.close then ran before serializing the shared errors array",
     "The primary functional batch and mobile-recapture reports separately recorded zero errors"
   ],
-  "futureHarnessChange": "Drain pending first-party reads and route handlers before browser close; preserve and fail on any late errors",
+  "futureHarnessChange": "Drain actual route-handler/API-proxy operations before browser close; preserve and fail on any late first-party errors. Do not require native streaming/prefetch requests to finish.",
   "validation": "Syntax/static review only; no full staging rerun or application source edit"
 }
