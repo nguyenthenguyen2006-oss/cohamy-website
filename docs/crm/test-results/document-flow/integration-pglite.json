@@ -31,7 +31,7 @@
       "status": "PASS"
     },
     {
-      "test": "Accountant has no legacy money, inventory, or factory approval mutation",
+      "test": "Accountant payment access requires a valid command; inventory and factory approval stay forbidden",
       "status": "PASS"
     },
     {
@@ -76,6 +76,10 @@
     },
     {
       "test": "All nine core notification events use real committed services and immutable exact files",
+      "status": "PASS"
+    },
+    {
+      "test": "Creator snapshot survives another confirmer, rename and deletion; immutable audit and PDF retain identity",
       "status": "PASS"
     }
   ]

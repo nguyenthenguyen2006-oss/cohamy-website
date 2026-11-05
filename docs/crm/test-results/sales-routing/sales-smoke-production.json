@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION public HTTPS business reads only",
+  "testedAt": "2026-10-30T10:22:36.258Z",
+  "cases": [
+    {
+      "name": "New Sales APIs require authentication before revealing business data",
+      "status": "PASS"
+    },
+    {
+      "name": "New Sales and scoped notification pages render through public HTTPS",
+      "status": "PASS"
+    },
+    {
+      "name": "Sales dashboard, filters and empty-page pagination read actual persisted business data",
+      "status": "PASS"
+    },
+    {
+      "name": "Scoped notification totals and Admin review queue are readable without creating or replaying notices",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual reference order stays waiting quote with seven packs and no issue; fulfillment denies preparation",
+      "status": "PASS"
+    },
+    {
+      "name": "Public invalid referral fails explicitly without assigning a customer or Sales",
+      "status": "PASS"
+    }
+  ],
+  "reads": [
+    {
+      "path": "/api/crm/sales-customers/workspace",
+      "status": 401,
+      "ms": 67
+    },
+    {
+      "path": "/api/crm/sales-customers/notifications",
+      "status": 401,
+      "ms": 16
+    },
+    {
+      "path": "/crm/sales-customers",
+      "status": 200,
+      "ms": 83
+    },
+    {
+      "path": "/crm/sales-notifications",
+      "status": 200,
+      "ms": 30
+    },
+    {
+      "path": "/crm/buyer-orders",
+      "status": 200,
+      "ms": 38
+    },
+    {
+      "path": "/portal/register?ref=SALE-000000000000",
+      "status": 200,
+      "ms": 16
+    },
+    {
+      "path": "/api/crm/sales-customers/workspace",
+      "status": 200,
+      "ms": 46
+    },
+    {
+      "path": "/api/crm/sales-customers/workspace?page=100000",
+      "status": 200,
+      "ms": 42
+    },
+    {
+      "path": "/api/crm/sales-customers/workspace?from=2026-10-01&to=2026-10-31",
+      "status": 200,
+      "ms": 33
+    },
+    {
+      "path": "/api/crm/sales-customers/notifications?limit=1",
+      "status": 200,
+      "ms": 16
+    },
+    {
+      "path": "/api/crm/sales-customers/review-requests",
+      "status": 200,
+      "ms": 13
+    },
+    {
+      "path": "/api/crm/buyer/order?id=74735ec7-fa0e-45c7-a299-b03597acfdb6",
+      "status": 200,
+      "ms": 44
+    },
+    {
+      "path": "/api/crm/sales-customers/fulfillment?id=74735ec7-fa0e-45c7-a299-b03597acfdb6",
+      "status": 200,
+      "ms": 21
+    },
+    {
+      "path": "/api/crm/sales-referrals/info?ref=SALE-000000000000",
+      "status": 404,
+      "ms": 13
+    }
+  ],
+  "target": {
+    "code": "DH-20261030-74735EC7",
+    "status": "WAITING_QUOTE",
+    "version": 1,
+    "lineCount": 7,
+    "baseQuantity": 7,
+    "issues": 0,
+    "fulfillmentStage": "WAITING_QUOTE",
+    "ready": false,
+    "orderDataSha256": "fb160fb37e188455f8d70c1f6ae9b96b90e8d84a55cd04fa40e7d8c4ff7195f9"
+  },
+  "productionBusinessWrites": 0,
+  "externalEmails": 0
+}

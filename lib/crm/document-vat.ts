@@ -9,7 +9,8 @@ import {enqueueDocumentMail} from './document-mail';
 const flowTypes=['factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance'];
 export async function guardFlowUpload(sql:Sql,user:Principal,d:{entityType:string;entityId:string;documentId?:string;docCategory?:string;reason?:string}){
   if(!flowTypes.includes(d.entityType)){
-    if(user.role==='ACCOUNTANT')throw new CrmError('FORBIDDEN',403);
+    const newPaymentProof=d.entityType==='partner'&&d.docCategory==='PAYMENT_PROOF'&&!d.documentId;
+    if(user.role==='ACCOUNTANT'&&!newPaymentProof)throw new CrmError('FORBIDDEN',403);
     return null;
   }
   await flowEntityAccess(sql,user,d.entityType,d.entityId);

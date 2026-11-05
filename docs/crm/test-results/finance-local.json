@@ -1,13 +1,13 @@
 {
-  "testedAt": "2026-10-12T08:11:43.494Z",
+  "testedAt": "2026-10-30T08:39:13.861Z",
   "environment": "LOCAL isolated fictitious PGlite; no real money/order/provider mutation",
   "status": "PASS",
   "references": {
-    "firstOrder": "67670591-d0bb-4d90-a0b9-33840538dfa7",
-    "receivable": "41afe6c8-681a-4e89-a8e9-3ae27f975342",
-    "payment": "10dcb3d6-4284-45d8-996c-04f3ec6d27d7",
-    "documentVersion": "99cf2400-6df1-454b-ad8a-a3f57ffd24fc",
-    "cash": "72437764-10a1-40e1-80ee-d980f4cacbe2"
+    "firstOrder": "e9313c83-c8d1-48ff-81fe-b0e4f7cb4aca",
+    "receivable": "41602a6f-5d86-465b-a208-54dd20d4b6ff",
+    "payment": "fc7828c6-4e0c-4aa6-bb6a-6df20d26e7df",
+    "documentVersion": "af87178a-1a79-459a-852d-a10cc78895a8",
+    "cash": "b0360dca-8828-458f-8300-362a1f22c50c"
   },
   "cases": [
     {
@@ -23,7 +23,7 @@
       "status": "PASS"
     },
     {
-      "name": "F085/F086 uploaded proof remains pending until accountant confirms",
+      "name": "F085/F086 uploaded proof remains pending until an authorized manager confirms",
       "status": "PASS"
     },
     {

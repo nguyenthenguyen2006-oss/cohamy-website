@@ -26,7 +26,8 @@ export async function buyerOrderPdf(b:BuyerOrder){
   doc.font('Body').fontSize(10).text('Tiền hàng trước VAT: '+buyerMoney(String(b.lines.reduce((n,l)=>n+BigInt(l.net!),0n))),40,y+16,{width:515});
   doc.text('Thuế VAT: '+buyerMoney(String(b.lines.reduce((n,l)=>n+BigInt(l.vat!),0n))),40,doc.y+5,{width:515});y=doc.y;
  }
- doc.font('Bold').fontSize(11).text('Tổng cộng: '+(b.lines.some(l=>l.total===null)?'Chờ Sales báo giá':buyerMoney(String(b.lines.reduce((n,l)=>n+BigInt(l.total!),0n)))),40,y+16,{width:515});
+ if(BigInt(b.quote_fee_amount??'0')>0n){doc.font('Body').fontSize(10).text('Phí theo bảng giá: '+buyerMoney(b.quote_fee_amount),40,y+12,{width:515});y=doc.y;}
+ doc.font('Bold').fontSize(11).text('Tổng cộng: '+(b.lines.some(l=>l.total===null)?'Chờ Sales báo giá':buyerMoney(String(b.lines.reduce((n,l)=>n+BigInt(l.total!),BigInt(b.quote_fee_amount??'0'))))),40,y+16,{width:515});
  doc.font('Body').fontSize(9).text('Ghi chú: '+(b.note||'—'),40,doc.y+12,{width:515}).moveDown().text('Đơn đặt hàng không thay thế hóa đơn VAT. PDF giao hàng và VAT được lưu riêng theo chứng từ đã phát hành.');
  const pages=doc.bufferedPageRange();for(let i=0;i<pages.count;i++){doc.switchToPage(i);doc.fontSize(8).text(b.code+' · v'+b.version+' · Trang '+(i+1)+'/'+pages.count,40,784,{width:515,lineBreak:false});}
  doc.end();return done;

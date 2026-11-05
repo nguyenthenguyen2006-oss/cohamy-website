@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "testedAt": "2026-10-30T07:48:58.989Z",
+  "environment": "PRODUCTION connected Cohamy MCP",
+  "visibleFlowDocuments": 11,
+  "allFlowDocumentsHaveCreator": true,
+  "legacyNamesRetained": true,
+  "creatorTableReadable": true,
+  "creatorRows": 0,
+  "auditActorSnapshotReadable": true,
+  "newOrderWrites": "LOCAL/STAGING tested; no production test order created",
+  "businessWrites": 0
+}

@@ -30,6 +30,17 @@ const parse = <T>(schema: z.ZodType<T>, input: unknown): T => {
   if (!result.success) throw new CrmError("INVALID_FIELDS", 400);
   return result.data;
 };
+function assertSalesPartnerFields(user:Principal,data:z.infer<typeof organizationSchema>,original?:Organization){
+  if(user.role!=='SALES')return;
+  if(!original){
+    const partnerType=data.partnerType??(data.kind==='CUSTOMER'?'END_CUSTOMER':'DEALER_L1');
+    if(data.creditEnabled===true||data.pricingTierId!=null||!['STORE','END_CUSTOMER'].includes(partnerType))throw new CrmError('FORBIDDEN',403);
+    return;
+  }
+  if((data.creditEnabled!==undefined&&data.creditEnabled!==Boolean(original.credit_enabled))||
+    (data.pricingTierId!==undefined&&data.pricingTierId!==(original.pricing_tier_id??null))||
+    (data.partnerType!==undefined&&data.partnerType!==original.partner_type))throw new CrmError('FORBIDDEN',403);
+}
 export function partnerScope(user: Principal, alias = "o"): { sql: string; params: unknown[] } {
   if (allPartners(user)) return { sql: "true", params: [] };
   if(user.area==="portal"&&isBuyerRole(user.role))return {sql:`${alias}.id=$1`,params:[user.organizationId]};
@@ -41,7 +52,7 @@ export function partnerScope(user: Principal, alias = "o"): { sql: string; param
   }
   if (user.role === "SALES") {
     return {
-      sql: `(EXISTS (SELECT 1 FROM cohamy_crm.partner_assignments a WHERE a.organization_id=COALESCE(${alias}.merged_into_id,${alias}.id) AND a.membership_id=$1) OR EXISTS (WITH RECURSIVE branch AS (SELECT child_organization_id FROM cohamy_crm.distribution_relations dr JOIN cohamy_crm.partner_assignments a ON a.organization_id=dr.parent_organization_id WHERE a.membership_id=$1 AND dr.status='ACTIVE' UNION SELECT dr2.child_organization_id FROM cohamy_crm.distribution_relations dr2 JOIN branch b ON dr2.parent_organization_id=b.child_organization_id WHERE dr2.status='ACTIVE') SELECT 1 FROM branch WHERE child_organization_id=COALESCE(${alias}.merged_into_id,${alias}.id)))`,
+      sql: `(EXISTS (SELECT 1 FROM cohamy_crm.customer_sales_ownership owner WHERE owner.customer_organization_id=COALESCE(${alias}.merged_into_id,${alias}.id) AND owner.sales_membership_id=$1 AND (owner.status='ACTIVE' OR(owner.status='PENDING_ACTIVATION' AND owner.source='SALES_CREATED'))) OR EXISTS (SELECT 1 FROM cohamy_crm.partner_assignments a WHERE a.organization_id=COALESCE(${alias}.merged_into_id,${alias}.id) AND a.membership_id=$1) OR EXISTS (WITH RECURSIVE branch AS (SELECT child_organization_id FROM cohamy_crm.distribution_relations dr JOIN cohamy_crm.partner_assignments a ON a.organization_id=dr.parent_organization_id WHERE a.membership_id=$1 AND dr.status='ACTIVE' UNION SELECT dr2.child_organization_id FROM cohamy_crm.distribution_relations dr2 JOIN branch b ON dr2.parent_organization_id=b.child_organization_id WHERE dr2.status='ACTIVE') SELECT 1 FROM branch WHERE child_organization_id=COALESCE(${alias}.merged_into_id,${alias}.id)))`,
       params: [user.membershipId]
     };
   }
@@ -87,18 +98,23 @@ export async function createOrganization(user: Principal, input: unknown) {
   const data = parse(organizationSchema, input);
   // Supplier management is restricted; sales cannot create a supplier to widen their scope.
   if (data.kind === "SUPPLIER" && !["ADMIN", "MANAGER"].includes(user.role)) throw new CrmError("FORBIDDEN", 403);
+  assertSalesPartnerFields(user,data);
   const db = await database();
   return db.transaction(async tx => {
+    if(user.role==='SALES'&&data.kind==='CUSTOMER')await tx.exec('LOCK TABLE cohamy_crm.task_dependencies IN SHARE ROW EXCLUSIVE MODE');
     await assertCurrentPrincipal(tx,user);
     const id = randomUUID();
     const defaultPartnerType = data.kind === "CUSTOMER" ? "END_CUSTOMER" : "DEALER_L1";
     const partnerType = data.partnerType ?? defaultPartnerType;
     await tx.query(`INSERT INTO cohamy_crm.organizations(id,code,name,kind,phone,email,address,partner_type,pricing_tier_id,credit_enabled) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`, [id, data.code, data.name, data.kind, data.phone, data.email, data.address, partnerType, data.pricingTierId ?? null, data.creditEnabled ?? false]);
     await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4,business_id=$6 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id,data.businessId]);
-    if (user.role === "SALES") await tx.query("INSERT INTO cohamy_crm.partner_assignments(membership_id,organization_id) VALUES ($1,$2)", [user.membershipId, id]);
+    if (user.role === "SALES") {
+      if(data.kind==='CUSTOMER')await(await import('./sales-customers')).assignNewSalesOrganization(tx,user,id);
+      else await tx.query("INSERT INTO cohamy_crm.partner_assignments(membership_id,organization_id) VALUES ($1,$2)", [user.membershipId, id]);
+    }
     await audit(tx, user.id, "partner.created", id, { kind: data.kind, partnerType });
     return { id };
-  });
+  }).catch(async error=>{if(user.role==='SALES'&&data.kind==='CUSTOMER')await(await import('./sales-customers')).reviewSalesCreationFailure(user,data.email,error);throw error;});
 }
 export async function updateOrganization(user: Principal, id: string, input: unknown) {
   assertPermission(user, "partners.write");
@@ -109,19 +125,22 @@ export async function updateOrganization(user: Principal, id: string, input: unk
     const original = await getOrganization(user, id, tx);
     if(original.merged_into_id)throw new CrmError("PARTNER_MERGED",409);
     if (original.kind === "COHAMY" || data.kind !== original.kind) throw new CrmError("ORGANIZATION_KIND_IMMUTABLE", 409);
-    const result = await tx.query<{ id: string }>(`UPDATE cohamy_crm.organizations SET code=$1,name=$2,phone=$3,email=$4,address=$5,active=$6,version=version+1 WHERE id=$7 AND version=$8 RETURNING id`, [data.code, data.name, data.phone, data.email, data.address, data.active, id, data.version]);
+    assertSalesPartnerFields(user,data,original);
+    const result = await tx.query<{id:string;partner_type:string;pricing_tier_id:string|null;credit_enabled:boolean}>(`UPDATE cohamy_crm.organizations SET code=$1,name=$2,phone=$3,email=$4,address=$5,active=$6,version=version+1 WHERE id=$7 AND version=$8 RETURNING id,partner_type,pricing_tier_id,credit_enabled`, [data.code, data.name, data.phone, data.email, data.address, data.active, id, data.version]);
     if (!result.rows.length) throw new CrmError("VERSION_CONFLICT", 409);
     await tx.query('UPDATE cohamy_crm.organizations SET source=$1,segment=$2,contact_name=$3,stage=$4,business_id=$6 WHERE id=$5',[data.source,data.segment,data.contactName,data.stage,id,data.businessId]);
-    if (data.partnerType !== undefined) {
+    const managesCommercialFields=user.area==='crm'&&['ADMIN','MANAGER'].includes(user.role);
+    if (data.partnerType !== undefined&&managesCommercialFields) {
       await tx.query('UPDATE cohamy_crm.organizations SET partner_type=$1 WHERE id=$2', [data.partnerType, id]);
     }
-    if (data.pricingTierId !== undefined) {
+    if (data.pricingTierId !== undefined&&managesCommercialFields) {
       await tx.query('UPDATE cohamy_crm.organizations SET pricing_tier_id=$1 WHERE id=$2', [data.pricingTierId, id]);
     }
-    if (data.creditEnabled !== undefined && user.area === 'crm' && ['ADMIN','MANAGER'].includes(user.role)) {
+    if (data.creditEnabled !== undefined&&managesCommercialFields) {
       await tx.query('UPDATE cohamy_crm.organizations SET credit_enabled=$1 WHERE id=$2', [data.creditEnabled, id]);
     }
-    await audit(tx, user.id, "partner.updated", id, {before:{code:original.code,name:original.name,phone:original.phone,email:original.email,address:original.address,active:original.active,source:original.source,segment:original.segment,contactName:original.contact_name,stage:original.stage,businessId:original.business_id,version:original.version},after:{...data,version:data.version+1},reason:"Profile edited by authorized user"});
+    const applied=managesCommercialFields?(await tx.query<{partner_type:string;pricing_tier_id:string|null;credit_enabled:boolean}>('SELECT partner_type,pricing_tier_id,credit_enabled FROM cohamy_crm.organizations WHERE id=$1',[id])).rows[0]:result.rows[0];
+    await audit(tx, user.id, "partner.updated", id, {before:{code:original.code,name:original.name,phone:original.phone,email:original.email,address:original.address,active:original.active,source:original.source,segment:original.segment,contactName:original.contact_name,stage:original.stage,businessId:original.business_id,version:original.version,partnerType:result.rows[0].partner_type,pricingTierId:result.rows[0].pricing_tier_id,creditEnabled:result.rows[0].credit_enabled},after:{...data,version:data.version+1,partnerType:applied.partner_type,pricingTierId:applied.pricing_tier_id,creditEnabled:applied.credit_enabled},reason:"Profile edited by authorized user"});
     return { id, version: data.version + 1 };
   });
 }

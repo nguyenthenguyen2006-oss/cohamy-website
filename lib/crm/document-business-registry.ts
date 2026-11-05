@@ -1,6 +1,21 @@
-type Definition={event:string;label:string;source:string;action:string;table:string;children?:[string,string][];warehouseField?:string;available?:boolean};
+type Definition={event:string;label:string;source:string;action:string;table:string;children?:[string,string][];warehouseField?:string;available?:boolean;notificationOnly?:boolean};
 const def=(source:string,action:string,label:string,table:string,children?:[string,string][],warehouseField?:string):Definition=>({event:`${source}:${action}`,label,source,action,table,children,warehouseField,available:true});
 export const businessMailEvents:Definition[]=[
+ ...Object.entries({
+  'buyer.order.created':'Khách đặt hàng → Báo Sales và đúng kho',
+  'buyer.order.quote_sent':'Đơn Portal → Đã gửi báo giá',
+  'buyer.order.quote_accepted':'Đơn Portal → Khách chấp nhận báo giá',
+  'buyer.order.quote_rejected':'Đơn Portal → Khách yêu cầu sửa báo giá',
+  'buyer.order.ready_for_fulfillment':'Đơn Portal → Đủ điều kiện xuất',
+  'buyer.order.picking':'Đơn Portal → Đang soạn hàng',
+  'buyer.order.packed':'Đơn Portal → Đã đóng gói',
+  'buyer.order.shipped':'Đơn Portal → Đã xuất / giao vận chuyển',
+  'buyer.order.delivered':'Đơn Portal → Đã giao thành công',
+  'buyer.order.delivery_failed':'Đơn Portal → Giao hàng chưa thành công',
+  'buyer.order.payment_confirmed':'Đơn Portal → Đã xác nhận khoản thanh toán',
+  'buyer.order.cancelled':'Đơn Portal → Đã hủy',
+ }).map(([event,label])=>({event,label,source:'buyer-notification',action:event,table:'buyer_orders',warehouseField:'warehouse_id',available:true,notificationOnly:true})),
+ ...Object.entries({'customer.registered':'Khách hàng → Đăng ký','customer.activated':'Khách hàng → Kích hoạt','customer.assigned_to_sales':'Khách hàng → Phân công Sales','customer.reassigned':'Khách hàng → Chuyển Sales'}).map(([event,label])=>({event,label,source:'customer-notification',action:event,table:'organizations',available:true,notificationOnly:true})),
  def('audit','commercial-request.submitted','Yêu cầu đặt hàng → Gửi Cohamy','commercial_requests'),
  def('audit','quotation.sent','Báo giá → Gửi chính thức','quotations'),
  def('audit','quotation.accepted','Báo giá → Chấp nhận','quotations'),

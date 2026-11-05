@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite, real Edge",
+  "issuer": "http://127.0.0.1:4362",
+  "fixtureOrderId": "8247bae5-d70e-4030-9927-cc9b55a07476",
+  "fixtureDataDir": ".local/crm-qa-sales-ca217edc-b83a-4f14-98bb-04487c3338c5",
+  "resumed": true,
+  "resumedFromGroups": 11,
+  "phase": "payment-retry",
+  "failure": null,
+  "slowApis": [],
+  "devCompileMarkers": [
+    {
+      "path": "/crm/payments",
+      "message": "[HMR] connected"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] rebuilding"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] done in 1287ms"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] rebuilding"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] rebuilding"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] done in 112ms"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] done in 5607ms"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] rebuilding"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] done in 663ms"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] rebuilding"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] done in 3179ms"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] rebuilding"
+    },
+    {
+      "path": "/crm/payments",
+      "message": "[Fast Refresh] done in 665ms"
+    }
+  ],
+  "paymentDiagnostics": {
+    "attempts": 2,
+    "uploads": 1,
+    "http": [
+      {
+        "path": "/api/crm/finance/payment-create",
+        "status": 200,
+        "error": null
+      },
+      {
+        "path": "/api/crm/finance/payment-create",
+        "status": 200,
+        "error": null
+      }
+    ],
+    "clientErrors": [
+      "Chưa xác định kết quả. Kiểm tra danh sách chứng từ và thử lại cùng nội dung."
+    ],
+    "pendingReceiptCount": 1,
+    "receiptReplayMatches": true
+  },
+  "prefetchBlockedForHarness": true,
+  "cases": [
+    {
+      "name": "Manager can assign Sales while Supermarket stays in its own Portal and cannot read CRM customer workspace",
+      "status": "PASS"
+    },
+    {
+      "name": "Sales creates an owned pending customer through actual form without a password field or sensitive URL parameters",
+      "status": "PASS"
+    },
+    {
+      "name": "A different Sales cannot read the new customer through API",
+      "status": "PASS"
+    },
+    {
+      "name": "Own referral link and authenticated local QR render without third party QR requests",
+      "status": "PASS"
+    },
+    {
+      "name": "Invalid public referral stops safely; a valid link registers one synthetic pending customer without exposing passwords",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin reassigns with a reason in actual form; previous Sales loses access and new Sales gains it",
+      "status": "PASS"
+    },
+    {
+      "name": "Historical order retains Sales attribution, HN sees its order, HCM is denied and waiting-quote warehouse cannot prepare or issue",
+      "status": "PASS"
+    },
+    {
+      "name": "Warehouse spreadsheet board has status tabs and warehouse/date filters, with no document overflow at 375/768/1440",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual Sales quote and customer revision form return the order to waiting quote without permitting shipment",
+      "status": "PASS"
+    },
+    {
+      "name": "Hydrated referral controls activate/deactivate own code and navigate the current-owned own-referral filter",
+      "status": "PASS"
+    },
+    {
+      "name": "Scoped notification hub and Accountant payment/bank navigation work while restricted finance controls remain hidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Lost payment response reuses the same uploaded proof and idempotency key, returning one native receipt",
+      "status": "PASS"
+    }
+  ],
+  "pageErrors": [],
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "visualBaseline": "INCONCLUSIVE: no previous baseline",
+  "screenshotData": "Synthetic QA identities only; no passwords or activation tokens captured"
+}

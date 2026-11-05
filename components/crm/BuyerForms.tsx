@@ -4,6 +4,8 @@ import {useRouter} from 'next/navigation';
 import Image from 'next/image';
 import type {buyerSetup} from '@/lib/crm/buyer';
 import type {BuyerOrder,BuyerContract,BuyerBranch} from '@/lib/crm/buyer-model';
+import {buyerMoney} from '@/lib/crm/buyer-model';
+import type {BuyerQuotePricing} from '@/lib/crm/buyer-quote-pricing';
 
 type Setup=Awaited<ReturnType<typeof buyerSetup>>;
 const subscribeReady=()=>()=>{};
@@ -17,6 +19,7 @@ const errors:Record<string,string>={
  DELIVERY_ALREADY_RECEIVED:'Phiếu này đã được xác nhận nhận hàng.',SOURCE_REVISION_CHANGED:'Phiếu giao đã được Admin cập nhật. Tải lại để kiểm tra.',
  STATEMENT_CHANGED:'Dữ liệu tháng đã thay đổi. Tải lại báo cáo trước khi đối soát.',IDEMPOTENCY_CONFLICT:'Nội dung đã đổi so với lần gửi trước. Tải lại để kiểm tra.',
  BUYER_ROLE_CONFLICT:'Hồ sơ này đang có loại tài khoản khách hàng/siêu thị khác.',DUPLICATE_RECORD:'Mã đã tồn tại hoặc thao tác này đã được ghi nhận.',
+ ORDER_MINIMUM_NOT_MET:'Đơn chưa đáp ứng số lượng hoặc giá trị tối thiểu của bảng giá. Kiểm tra phần điều kiện báo giá.',
 };
 function CommandForm({action,build,label,children,next}:{action:string;build:(f:FormData)=>Record<string,unknown>;label:string;children?:ReactNode;next?:string}){
  const ready=useSyncExternalStore(subscribeReady,()=>true,()=>false);
@@ -50,11 +53,20 @@ export function BuyerOrderForm({setup,supermarket}:{setup:Setup;supermarket:bool
   <label>Ghi chú đặt hàng<textarea name="note" maxLength={2000}/></label>
  </CommandForm>;
 }
-export function BuyerQuoteForm({order}:{order:BuyerOrder}){
+export function BuyerQuoteForm({order,pricing}:{order:BuyerOrder;pricing:BuyerQuotePricing|null}){
+ const [draft,setDraft]=useState(()=>Object.fromEntries(order.lines.map(l=>{const reference=pricing?.lines.find(p=>p.productId===l.productId);return [l.productId,{price:l.unitPrice??reference?.recommendedUnitPrice??'',vat:String(l.vatRate??reference?.vatRate??0)}];})));
+ const reasonLabels:Record<string,string>={SPECIAL_PRICE:'Đơn giá khác giá khuyến nghị',SPECIAL_VAT:'VAT khác bảng giá',AMOUNT:'Tổng giá trị vượt ngưỡng duyệt',DISCOUNT:'Chiết khấu vượt quyền Sales'};
+ const reasons=new Set(pricing?.approvalReasons??[]);
+ if(pricing?.configured)for(const line of pricing.lines){const input=draft[line.productId];if(input&&/^\d+$/.test(input.price)){const actual=BigInt(input.price),recommended=BigInt(line.recommendedUnitPrice);if(actual!==recommended)reasons.add('SPECIAL_PRICE');if(pricing.maxSalesDiscountBasisPoints!==null&&recommended>0n&&(recommended-actual)*10000n>recommended*BigInt(pricing.maxSalesDiscountBasisPoints))reasons.add('DISCOUNT');}if(input&&input.vat!==''&&Number(input.vat)!==line.vatRate)reasons.add('SPECIAL_VAT');}
+ const update=(id:string,field:'price'|'vat',value:string)=>setDraft(current=>({...current,[id]:{...current[id],[field]:value}}));
  return <CommandForm action="quote" label="Gửi báo giá cho khách" build={f=>({id:order.id,version:order.version,expiresOn:String(f.get('expiresOn')),note:String(f.get('note')??''),lines:order.lines.map(l=>({productId:l.productId,unitPrice:String(f.get('price:'+l.productId)),vatRate:Number(f.get('vat:'+l.productId))}))})}>
-  <div className="buyer-table"><table className="data-table"><thead><tr><th>Sản phẩm</th><th>Số lượng gốc</th><th>Đơn giá / ĐVT gốc (VND)</th><th>VAT (%)</th></tr></thead><tbody>{order.lines.map(l=><tr key={l.productId}><td>{l.name}</td><td>{l.baseQuantity} {l.unitLabel}</td><td><input aria-label={'Đơn giá '+l.name} name={'price:'+l.productId} type="number" min="0" max="9999999999" step="1" required defaultValue={l.unitPrice??''}/></td><td><input aria-label={'VAT '+l.name} name={'vat:'+l.productId} type="number" min="0" max="100" step="1" required defaultValue={l.vatRate??0}/></td></tr>)}</tbody></table></div>
+  {pricing&&<><dl className="sales-facts"><dt>Bảng giá tham chiếu</dt><dd>{pricing.bookName}{pricing.bookVersion!==null&&' · v'+pricing.bookVersion}</dd><dt>Giới hạn chiết khấu Sales</dt><dd>{pricing.maxSalesDiscountBasisPoints===null?'Chưa cấu hình giới hạn trong bảng giá':new Intl.NumberFormat('vi-VN',{maximumFractionDigits:2}).format(pricing.maxSalesDiscountBasisPoints/100)+'%'}</dd>{BigInt(pricing.feeAmount??'0')>0n&&<><dt>Phí theo bảng giá</dt><dd>{buyerMoney(pricing.feeAmount??'0')}</dd></>}</dl><p>Giá theo đơn vị gốc, chưa VAT. Hệ thống kiểm tra bảng giá, khuyến mãi sản phẩm, số lượng và chính sách khi gửi báo giá; giá riêng cần duyệt theo quyền.</p>{pricing.nonSelfApproval&&<p>Người lập hoặc báo giá không được tự duyệt ngoại lệ giá theo chính sách đang áp dụng.</p>}{reasons.size>0&&<div className="crm-status-note"><strong>Điều kiện cần duyệt theo chính sách</strong><ul>{[...reasons].map(reason=><li key={reason}>{reasonLabels[reason]??'Yêu cầu duyệt theo chính sách bảng giá'}</li>)}</ul></div>}{pricing.minimumShortfalls.length>0&&<div className="crm-status-note"><strong>Điều kiện tối thiểu chưa đáp ứng</strong><ul>{pricing.minimumShortfalls.map((shortfall,index)=><li key={index}>{shortfall.sku?'Sản phẩm '+shortfall.sku:'Đơn hàng'}: thiếu {shortfall.kind==='AMOUNT'?buyerMoney(shortfall.missing):shortfall.missing+' đơn vị theo quy tắc số lượng'}</li>)}</ul></div>}</>}
+  <div className="buyer-table"><table className="data-table"><thead><tr><th>Sản phẩm</th><th>Số lượng gốc</th><th>Giá niêm yết</th><th>Giá khuyến nghị</th><th>Đơn giá / ĐVT gốc (VND)</th><th>VAT (%)</th></tr></thead><tbody>{order.lines.map(l=>{const reference=pricing?.lines.find(p=>p.productId===l.productId);return <tr key={l.productId}><td>{l.name}</td><td>{l.baseQuantity} {l.unitLabel}</td><td>{reference?buyerMoney(reference.listUnitPrice):'Chưa có dữ liệu'}</td><td>{reference?buyerMoney(reference.recommendedUnitPrice):'Chưa có dữ liệu'}</td><td><input aria-label={'Đơn giá '+l.name} name={'price:'+l.productId} type="number" min="0" max="9999999999" step="1" required defaultValue={l.unitPrice??reference?.recommendedUnitPrice??''} onChange={e=>update(l.productId,'price',e.target.value)}/></td><td><input aria-label={'VAT '+l.name} name={'vat:'+l.productId} type="number" min="0" max="100" step="0.01" required defaultValue={l.vatRate??reference?.vatRate??0} onChange={e=>update(l.productId,'vat',e.target.value)}/></td></tr>;})}</tbody></table></div>
   <div className="buyer-fields"><label>Báo giá có hiệu lực đến<input type="date" name="expiresOn" required defaultValue={order.quote_expires_on??''}/></label><label>Ghi chú báo giá<textarea name="note" maxLength={2000}/></label></div>
  </CommandForm>;
+}
+export function BuyerQuoteRevisionForm({order}:{order:BuyerOrder}){
+ return <CommandForm action="quote-revision" label="Gửi yêu cầu sửa báo giá" build={f=>({id:order.id,version:order.version,note:String(f.get('note')).trim()})}><label>Nội dung cần điều chỉnh<textarea name="note" required minLength={3} maxLength={2000}/></label><p>Sales sẽ nhận yêu cầu và gửi lại báo giá. Đơn chưa được xuất kho trong lúc chờ.</p></CommandForm>;
 }
 export function BuyerOrderAction({action,order,label}:{action:'confirm'|'cancel';order:BuyerOrder;label:string}){
  return <CommandForm action={action} label={label} build={()=>({id:order.id,version:order.version})}/>;

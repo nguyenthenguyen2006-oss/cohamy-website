@@ -10,4 +10,12 @@ LOCAL và STAGING PostgreSQL: 20 nhóm document-flow PASS, gồm tạo bằng th
 
 **MCP có dùng được không?** Có: các lệnh tạo đơn/phiếu hiện có đi qua cùng trigger, không cần truyền tên người tạo.
 
-**MCP có đọc được dữ liệu này không?** Có: workspace/view phiếu trả `creator`; danh sách yêu cầu/đơn bán/đơn khách hàng cũng có metadata người tạo. `cohamy_data` đọc bảng `document_creators` và `audit_events.actor_identity` cho Admin, theo phân trang hiện có. Catalog vẫn 339 operations. Bằng chứng production sẽ bổ sung sau triển khai.
+**MCP có đọc được dữ liệu này không?** Có: workspace/view phiếu trả `creator`; danh sách yêu cầu/đơn bán/đơn khách hàng cũng có metadata người tạo. `cohamy_data` đọc bảng `document_creators` và `audit_events.actor_identity` cho Admin, theo phân trang hiện có. Catalog vẫn 339 operations.
+
+## PRODUCTION
+
+Release `96cb3d10ab1b3810d65668b9dfca0e2d8747dee4` đã lên cohamy.vn ngày 30/10/2026. Backup `/root/cohamy-backups/20261030T074257Z-96cb3d10ab1b`: trước migration 225 bảng và trước cutover 226 bảng đều khôi phục PASS. Bản ứng viên và HTTPS công khai đều qua 18 kiểm tra; web/worker online, không restart trong kiểm tra triển khai.
+
+Đã đọc trang thật và API: 11 phiếu hiện có hiển thị đúng tên người tạo đã lưu, workspace/view nhất quán. MCP hiện có đọc 11/11 creator, đọc được bảng mới (chưa có đơn production mới nên hiện 0 dòng), và đọc được actor_identity của sự kiện đăng nhập mới, khớp actor_id. Luồng tạo mới/đổi tên/xóa tài khoản đã chứng minh trên LOCAL/STAGING và Edge; không tạo đơn test hay gửi mail trên production.
+
+50 bảng/520 dòng nghiệp vụ và thông tin tài khoản trước triển khai không đổi sau triển khai. Chỉ bổ sung schema/trigger và metadata mới; không backfill snapshot/PDF cũ. Bằng chứng tại `test-results/document-creators/production-release.json` và `connected-mcp-production.json`. Commit tài liệu sau triển khai không đổi source đang chạy.

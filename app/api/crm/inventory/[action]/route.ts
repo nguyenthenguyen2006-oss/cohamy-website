@@ -1,9 +1,11 @@
 import {apiError,apiUser,json,readJson,sameOrigin} from '@/lib/crm/http';
 import {CrmError} from '@/lib/crm/permissions';
 import * as inventory from '@/lib/crm/inventory';
+import {inventoryTransferWorkspace} from '@/lib/crm/inventory-transfer-workspace';
 type Context={params:Promise<{action:string}>};
 export async function GET(request:Request,context:Context){try{
  const user=await apiUser(),{action}=await context.params,p=new URL(request.url).searchParams,id=p.get('id')??'';
+ if(action==='transfers')return json(await inventoryTransferWorkspace(user,{page:p.get('page')??undefined,q:p.get('q')??undefined,direction:p.get('direction')??undefined,status:p.get('status')??undefined}));
  if(action==='balances')return json(await inventory.listInventory(user));
  if(action==='locations')return json(await inventory.listLocations(user));
  if(action==='alerts')return json(await inventory.inventoryAlerts(user));

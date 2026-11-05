@@ -21,7 +21,7 @@ export function documentMailScopes(event:string){
   if(coreMailEvents.some(e=>e.event===event))return {warehouse:true,factory:event!=='warehouse.issue.confirmed'};
   const definition=businessMailEvents.find(e=>e.event===event&&e.available);
   const warehouseTables=new Set(['commercial_requests','sales_orders','goods_receipts','supplier_claims','consignment_agreements','consignment_shipments','consignment_sale_reports','consignment_returns','deliveries','return_requests','inventory_transfers','stock_counts','inventory_documents']);
-  return {warehouse:!!definition&&warehouseTables.has(definition.table),factory:false};
+  return {warehouse:!!definition&&(warehouseTables.has(definition.table)||!!definition.warehouseField),factory:false};
 }
 const recipientsSchema=z.object({to:z.array(z.email()).max(50),cc:z.array(z.email()).max(50),bcc:z.array(z.email()).max(50)}).strict();
 function normalizedRecipients(v:MailRecipients){const seen=new Set<string>();const clean=(items:string[])=>items.map(s=>s.trim().toLowerCase()).filter(s=>{if(seen.has(s))return false;seen.add(s);return true;});return {to:clean(v.to),cc:clean(v.cc),bcc:clean(v.bcc)};}
@@ -139,7 +139,7 @@ export async function runDocumentMailOutbox(provider:(input:DocumentEmail)=>Prom
   for(const r of rows){
     const token=randomUUID(),job=(await db.query<Job>("UPDATE cohamy_crm.document_mail_outbox SET status='SENDING',claim_token=$2,claimed_at=now(),attempts=attempts+1,updated_at=now() WHERE id=$1 AND status IN('PENDING','RETRY','DEFERRED') AND available_at<=now() RETURNING *",[r.id,token])).rows[0];if(!job)continue;
     try{
-      const attachments=await mailFiles(db,job.files);if(job.event!=='mail.test'&&!attachments.length)throw new CrmError('MAIL_FILE_NOT_READY',409);
+      const attachments=await mailFiles(db,job.files);if(job.event!=='mail.test'&&!businessMailEvents.some(e=>e.event===job.event&&e.available&&e.notificationOnly)&&!attachments.length)throw new CrmError('MAIL_FILE_NOT_READY',409);
       const messageId=await provider({recipients:job.recipients,subject:job.subject,textContent:job.body,attachments,jobId:job.id});
       await db.transaction(async sql=>{
         const state=provider===sendDocumentEmail&&isBrevoDemo()?'SIMULATED':'ACCEPTED';

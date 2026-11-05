@@ -1,0 +1,41 @@
+{
+  "environment": "LOCAL isolated PGlite HTTP runtime",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Real OAuth PKCE exchange and official MCP SDK initialize against the isolated HTTP runtime",
+      "status": "PASS"
+    },
+    {
+      "name": "Capability inputs are complete; all new business tables are readable and auth/retry/rate-limit internals stay excluded",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP issues a Sales referral and reads the locally generated QR through the authenticated native route",
+      "status": "PASS"
+    },
+    {
+      "name": "Native Sales-customer provisioning and invitation management work through MCP; retries create one pending account and expose no activation secret",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP Admin reassigns with version, reason and immutable history through the native permission checks",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP reuses native quote/readiness/picking/packing; unquoted picking is rejected and the actual customer accepts its own quote",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP reads Sales attribution, fulfillment audit, paginated notification data and the real native buyer PDF",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP rejects credential fields and keeps account passwords/activation tokens outside this workflow",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "chatGptWebUi": "NOT_RUN; verified using OAuth and the official MCP SDK"
+}

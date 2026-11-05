@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 const pg=process.env.CRM_DATABASE_MODE==='postgres';
 if(!pg){process.env.CRM_DATABASE_MODE='pglite';process.env.CRM_ENVIRONMENT='LOCAL';process.env.CRM_LOCAL_DATA_DIR='.local/crm-qa-documentflow-'+randomUUID();}
 process.env.CRM_EMAIL_ENABLED='false';
+process.env.CRM_PUBLIC_ORIGIN??='https://document-flow-qa.invalid';
 const result:{test:string;status:string}[]=[];
 async function test(name:string,fn:()=>Promise<void>){await fn();result.push({test:name,status:'PASS'});console.log('PASS',name);}
 async function main(){
@@ -47,7 +48,7 @@ async function main(){
  await test('Factory cannot forge request, missing/wrong source, warehouse or SKU',async()=>{
   for(const u of [factory,hn,accountant,manager])await assert.rejects(flow.saveFlowDocument(u,{kind:'REQUEST',warehouseId:hnWh.id,factoryMembershipId:factory.membershipId,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/FORBIDDEN/);
   await assert.rejects(old.handleAccountantWorkflowAction(factory,'create-factory-dispatch',{warehouseId:hnWh.id,lines:[{productId:product.id,dispatchedQty:1}]}),/SOURCE_REQUIRED/);
-  await assert.rejects(flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:req.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/NOT_FOUND/);
+  const shared=await createRequest('2');await flow.acceptFactoryRequest(factory,{id:shared.id,idempotencyKey:randomUUID()});const otherDraft=await flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:shared.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()});assert.equal((await flow.viewFlowDocument(other,otherDraft.id)).kind,'DISPATCH');
   const r=await createRequest();await flow.acceptFactoryRequest(factory,{id:r.id,idempotencyKey:randomUUID()});await assert.rejects(flow.saveFlowDocument(factory,{kind:'DISPATCH',parentId:r.id,warehouseId:hcmWh.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/SOURCE_WAREHOUSE_MISMATCH/);
   await assert.rejects(flow.saveFlowDocument(factory,{kind:'DISPATCH',parentId:r.id,lines:[{productId:productB.id,quantity:'1'}],idempotencyKey:randomUUID()}),/PRODUCT_OUTSIDE_REQUEST/);
  });
@@ -55,9 +56,10 @@ async function main(){
   const r=await createRequest('100'),first=await dispatch(r.id,'60');const outcomes=await Promise.allSettled([dispatch(r.id,'40'),dispatch(r.id,'40')]);assert.equal(outcomes.filter(x=>x.status==='fulfilled').length,1);
   const amendment=await flow.amendFlowDocument(admin,{id:r.id,kind:'REQUEST',version:1,lines:[{productId:product.id,quantity:'120'}],note:'Bổ sung 20',reason:'Bổ sung nhu cầu kho Hà Nội',idempotencyKey:randomUUID()});assert.equal(amendment.version,2);const data=await flow.flowWorkspace(admin);assert.equal(data.documents.find(x=>x.id===first.id)!.sourceRevision,1);await dispatch(r.id,'20');await assert.rejects(dispatch(r.id,'1'),/REQUEST_QUANTITY_EXCEEDED/);
  });
- await test('Accountant has no legacy money, inventory, or factory approval mutation',async()=>{
-  for(const action of ['record-order-payment','confirm-order-payment','accountant-clear-order','accountant-verify-factory-invoice','save-vat-invoice','update-reconciliation-status','register-warehouse-order'])await assert.rejects(old.handleAccountantWorkflowAction(accountant,action,{}),/FORBIDDEN/);
-  await assert.rejects(inventory.postReceipt(accountant,{}),/FORBIDDEN/);await assert.rejects(finance.createPaymentReceipt(accountant,{}),/FORBIDDEN/);
+ await test('Accountant payment access requires a valid command; inventory and factory approval stay forbidden',async()=>{
+  for(const action of ['accountant-clear-order','accountant-verify-factory-invoice','save-vat-invoice','update-reconciliation-status','register-warehouse-order'])await assert.rejects(old.handleAccountantWorkflowAction(accountant,action,{}),/FORBIDDEN/);
+  for(const action of ['record-order-payment','confirm-order-payment'])await assert.rejects(old.handleAccountantWorkflowAction(accountant,action,{}),/IDEMPOTENCY_KEY_REQUIRED/);
+  await assert.rejects(inventory.postReceipt(accountant,{}),/FORBIDDEN/);await assert.rejects(finance.createPaymentReceipt(accountant,{}),/INVALID_FIELDS/);
  });
  await test('VAT bytes in DB, exact version, immutable metadata/upload versions, scoped download',async()=>{
   const content=Buffer.from('%PDF-1.4\n% LOCAL QA VAT\n%%EOF');vat=await workspace.uploadDocument(accountant,{entityType:'factory-invoice',entityId:disp.id,title:'LOCAL QA VAT',docCategory:'VAT_ORIGINAL',filename:'VAT-LOCAL.pdf',mime:'application/pdf',content});const file=await workspace.downloadDocument(accountant,vat.versionId);assert.deepEqual(Buffer.from(file.content),content);assert.equal((await db.query<{checksum:string}>('SELECT checksum FROM cohamy_crm.document_versions WHERE id=$1',[vat.versionId])).rows[0].checksum,createHash('sha256').update(content).digest('hex'));await assert.rejects(workspace.downloadDocument(factory,vat.versionId),/NOT_FOUND/);
@@ -142,6 +144,76 @@ async function main(){
   await assert.rejects(db.query('UPDATE cohamy_crm.document_creators SET display_name=$1 WHERE entity_id=$2',['Spoof',issue.id]),/immutable|permission denied|AUDIT/i);
   const identity=(await db.query<{actor_identity:{displayName:string}}> ("SELECT actor_identity FROM cohamy_crm.audit_events WHERE actor_id=$1 AND action='auth.login' ORDER BY created_at LIMIT 1",[creator.id])).rows[0].actor_identity;assert.equal(identity.displayName,'Người tạo gốc QA');
   const {invokeOperation}=await import('../../lib/crm/mcp/bridge');const read=await invokeOperation(admin,{operation:'GET /api/crm/document-flow/view',query:{id:issue.id}},false);assert.equal(read.status,200);assert.ok('data' in read);assert.equal((read.data as typeof saved).creator?.displayName,'Người tạo gốc QA');
+ });
+
+ await test('Shared factory: default request reaches every active factory account without stock effects',async()=>{
+  const before=await countStock(),r=await flow.saveFlowDocument(admin,{kind:'REQUEST',warehouseId:hnWh.id,lines:[{productId:product.id,quantity:'5'}],confirm:true,idempotencyKey:randomUUID()});
+  assert.equal((await flow.viewFlowDocument(admin,r.id)).factoryName,'Nhà máy Cohamy');
+  for(const u of [factory,other]){assert.ok((await flow.flowWorkspace(u)).documents.some(x=>x.id===r.id));assert.equal((await flow.downloadFlowPdf(u,r.id)).bytes.subarray(0,5).toString(),'%PDF-');assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND event_key=$2',[u.id,`factory.request.sent:${r.id}:1`])).rows.length,1);}
+  assert.equal(await countStock(),before);
+ });
+ await test('Shared factory: Admin drafts and another employee transfer drafts remain private',async()=>{
+  const r=await flow.saveFlowDocument(admin,{kind:'REQUEST',warehouseId:hnWh.id,lines:[{productId:product.id,quantity:'5'}],idempotencyKey:randomUUID()});
+  for(const u of [factory,other]){assert.ok(!(await flow.flowWorkspace(u)).documents.some(x=>x.id===r.id));await assert.rejects(flow.viewFlowDocument(u,r.id),/NOT_FOUND/);}
+  await flow.confirmFlowDocument(admin,{id:r.id,kind:'REQUEST',version:r.version,idempotencyKey:randomUUID()});
+  await assert.rejects(flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:r.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()}),/FACTORY_ACCEPTANCE_REQUIRED/);
+  await flow.acceptFactoryRequest(other,{id:r.id,idempotencyKey:randomUUID()});
+  const d=await flow.saveFlowDocument(other,{kind:'DISPATCH',parentId:r.id,lines:[{productId:product.id,quantity:'1'}],idempotencyKey:randomUUID()});
+  assert.ok((await flow.flowWorkspace(other)).documents.some(x=>x.id===d.id));assert.ok(!(await flow.flowWorkspace(factory)).documents.some(x=>x.id===d.id));await assert.rejects(flow.viewFlowDocument(factory,d.id),/NOT_FOUND/);
+  await flow.confirmFlowDocument(other,{id:d.id,kind:'DISPATCH',version:d.version,idempotencyKey:randomUUID()});
+  const view=await flow.viewFlowDocument(factory,d.id);assert.equal(view.creator?.userId,other.id);assert.equal(view.confirmedBy,other.displayName);
+ });
+ await test('Shared factory: acceptance and cross-account partial dispatches serialize once',async()=>{
+  const before=await countStock(),r=await createRequest('5');
+  await Promise.all([factory,other].map(u=>flow.acceptFactoryRequest(u,{id:r.id,idempotencyKey:randomUUID()})));
+  assert.equal((await db.query("SELECT id FROM cohamy_crm.audit_events WHERE entity_id=$1 AND action='document-flow.accepted'",[r.id])).rows.length,1);
+  const values=await Promise.allSettled([factory,other].map(u=>flow.saveFlowDocument(u,{kind:'DISPATCH',parentId:r.id,lines:[{productId:product.id,quantity:'3'}],confirm:true,idempotencyKey:randomUUID()})));
+  assert.equal(values.filter(x=>x.status==='fulfilled').length,1);assert.equal(values.filter(x=>x.status==='rejected').length,1);assert.equal(await countStock(),before);
+ });
+ await test('Shared factory: another organization, disabled identities and warehouse issues stay denied',async()=>{
+  const org=randomUUID(),userId=randomUUID(),membership=randomUUID();
+  await owner.query("INSERT INTO cohamy_crm.organizations(id,code,name,kind) VALUES($1,$2,'QA foreign factory','COHAMY')",[org,'QA_FACTORY_'+org.slice(0,8)]);
+  await owner.query("INSERT INTO cohamy_crm.users(id,email,display_name,password_hash) SELECT $1,'foreign-factory@crm-qa.invalid','QA foreign factory',password_hash FROM cohamy_crm.users WHERE id=$2",[userId,factory.id]);
+  await owner.query("INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,'FACTORY')",[membership,userId,org]);
+  const foreign=(await auth.login('foreign-factory@crm-qa.invalid',qaPassword)).user;
+  assert.equal((await flow.flowWorkspace(foreign)).documents.length,0);await assert.rejects(flow.downloadFlowPdf(foreign,req.id),/NOT_FOUND/);await assert.rejects(flow.acceptFactoryRequest(foreign,{id:req.id,idempotencyKey:randomUUID()}),/NOT_FOUND/);
+  const r=await createRequest('1');assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE entity_id=$1 AND user_id=$2',[r.id,userId])).rows.length,0);
+  await owner.query('UPDATE cohamy_crm.memberships SET active=false,version=version+1 WHERE id=$1',[other.membershipId]);
+  try{await assert.rejects(flow.flowWorkspace(other),/SESSION|FORBIDDEN|PRINCIPAL|REAUTH|AUTH/);const r2=await createRequest('1');assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE entity_id=$1 AND user_id=$2',[r2.id,other.id])).rows.length,0);}finally{await owner.query('UPDATE cohamy_crm.memberships SET active=true,version=version+1 WHERE id=$1',[other.membershipId]);}
+  const issue=(await flow.flowWorkspace(admin)).documents.find(x=>x.kind==='ISSUE')!;assert.ok(issue);await assert.rejects(flow.viewFlowDocument(factory,issue.id),/NOT_FOUND/);
+ });
+
+ await test('Regional teams share all local warehouses despite partial or stale opposite assignments',async()=>{
+  for(const [email,role] of [['hn-peer@crm-qa.invalid','WAREHOUSE_HN'],['hcm-peer@crm-qa.invalid','WAREHOUSE_HCM']] as const)await repo.createAccount(admin,{email,role,displayName:'QA team '+role,password:qaPassword,organizationId:admin.organizationId});
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,extra=randomUUID();
+  await owner.query("INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id,region) VALUES($1,$2,'QA second North location',$3,'NORTH')",[extra,'QA_NORTH_'+extra.slice(0,8),admin.organizationId]);
+  await owner.query('DELETE FROM cohamy_crm.warehouse_assignments WHERE membership_id=$1',[peer.membershipId]);await owner.query('INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) VALUES($1,$2)',[peer.membershipId,hcmWh.id]);
+  for(const u of [hn,peer]){const ws=await flow.flowWorkspace(u);assert.ok(ws.warehouses.some(w=>w.id===hnWh.id));assert.ok(ws.warehouses.some(w=>w.id===extra));assert.ok(!ws.warehouses.some(w=>w.id===hcmWh.id));}
+  await assert.rejects(flow.downloadFlowPdf(peer,(await createRequest('1',hcmWh.id)).id),/NOT_FOUND/);
+ });
+ await test('Every regional teammate receives request/dispatch events only at the selected location; planning leaves stock unchanged',async()=>{
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,southPeer=(await auth.login('hcm-peer@crm-qa.invalid',qaPassword)).user,before=await countStock();
+  for(const [warehouse,recipients,excluded] of [[hnWh.id,[hn,peer],[hcm,southPeer]],[hcmWh.id,[hcm,southPeer],[hn,peer]]] as const){
+   const r=await createRequest('5',warehouse);for(const u of recipients)assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND event_key=$2',[u.id,`factory.request.sent:${r.id}:1`])).rows.length,1);
+   for(const u of excluded){assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND entity_id=$2',[u.id,r.id])).rows.length,0);await assert.rejects(flow.viewFlowDocument(u,r.id),/NOT_FOUND/);}
+   await assert.rejects(flow.saveFlowDocument(recipients[0],{kind:'RECEIPT',parentId:r.id,lines:[{productId:product.id,quantity:'5'}],confirm:true,idempotencyKey:randomUUID()}),/NOT_FOUND/);
+   const d=await dispatch(r.id,'5');for(const u of recipients){assert.ok((await flow.flowWorkspace(u)).documents.some(x=>x.id===d.id));assert.equal((await db.query('SELECT id FROM cohamy_crm.notifications WHERE user_id=$1 AND event_key=$2',[u.id,`factory.dispatch.confirmed:${d.id}:1`])).rows.length,1);}
+  }
+  assert.equal(await countStock(),before);
+ });
+ await test('Two same-warehouse employees confirm one shared receipt once and retain the real creator',async()=>{
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,r=await createRequest('5'),d=await dispatch(r.id,'5'),before=await countStock();
+  const receipt=await flow.saveFlowDocument(hn,{kind:'RECEIPT',parentId:d.id,lines:[{productId:product.id,quantity:'5'}],idempotencyKey:randomUUID()});
+  assert.equal((await flow.viewFlowDocument(peer,receipt.id)).creator?.userId,hn.id);
+  const inputs=[hn,peer].map(()=>({id:receipt.id,kind:'RECEIPT',version:receipt.version,idempotencyKey:randomUUID()})),values=await Promise.allSettled([hn,peer].map((u,i)=>flow.confirmFlowDocument(u,inputs[i])));
+  assert.equal(values.filter(x=>x.status==='fulfilled').length,1);assert.equal(await countStock(),before+5);const winner=values.findIndex(x=>x.status==='fulfilled');await flow.confirmFlowDocument([hn,peer][winner],inputs[winner]);assert.equal(await countStock(),before+5);
+  assert.equal((await flow.viewFlowDocument(peer,receipt.id)).creator?.userId,hn.id);await assert.rejects(flow.downloadFlowPdf(hcm,receipt.id),/NOT_FOUND/);
+ });
+ await test('Warehouse peers can finish a shared issue draft, while opposite and foreign locations remain denied',async()=>{
+  const peer=(await auth.login('hn-peer@crm-qa.invalid',qaPassword)).user,delivery={giver:'QA team',recipient:'QA recipient',recipientPhone:'0900000000',address:'QA address',deliveryDate:'2026-11-03',carrier:'QA',customer:'QA'},before=await countStock();
+  const issue=await flow.saveFlowDocument(peer,{kind:'ISSUE',warehouseId:hnWh.id,lines:[{productId:product.id,quantity:'1'}],delivery,idempotencyKey:randomUUID()});
+  await assert.rejects(flow.confirmFlowDocument(hcm,{id:issue.id,kind:'ISSUE',version:issue.version,idempotencyKey:randomUUID()}),/NOT_FOUND/);
+  await flow.confirmFlowDocument(hn,{id:issue.id,kind:'ISSUE',version:issue.version,idempotencyKey:randomUUID()});assert.equal(await countStock(),before-1);const view=await flow.viewFlowDocument(peer,issue.id);assert.equal(view.creator?.userId,peer.id);assert.equal(view.confirmedBy,hn.displayName);
  });
  await fs.mkdir('.local',{recursive:true});await fs.writeFile('.local/crm-document-flow-run.json',JSON.stringify({dataDir:process.env.CRM_LOCAL_DATA_DIR,mode:pg?'postgres':'pglite',emails:{admin:admin.email,factory:factory.email,hn:hn.email,hcm:hcm.email,accountant:accountant.email},requestId:req!.id,dispatchId:disp!.id,receiptId:rec!.id,vatVersionId:vat!.versionId},null,2));
  await fs.writeFile('docs/crm/test-results/document-flow/integration-'+(pg?'postgres':'pglite')+'.json',JSON.stringify({environment:pg?'LOCAL native PostgreSQL 17.11 / isolated DML role':'LOCAL PGlite',provider:'FAKE_ONLY',tests:result},null,2));

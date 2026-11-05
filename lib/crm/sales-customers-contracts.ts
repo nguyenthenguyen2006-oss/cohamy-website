@@ -1,0 +1,6 @@
+import {z} from 'zod';
+const fields={representativeName:z.string().trim().min(2).max(120),companyName:z.string().trim().min(2).max(200),phone:z.string().trim().min(8).max(40).regex(/^[+()\d .-]+$/).refine(v=>{const n=v.replace(/\D/g,'').length;return n>=8&&n<=15;}),email:z.email().trim().toLowerCase(),province:z.string().trim().min(2).max(120),address:z.string().trim().min(3).max(500),customerType:z.enum(['CUSTOMER','SUPERMARKET']),businessId:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(''),note:z.string().trim().max(2000).default(''),warehouseId:z.uuid(),idempotencyKey:z.uuid()};
+export const createSalesCustomerSchema=z.object({...fields,salesMembershipId:z.uuid().optional()}).strict();
+export const registerReferralCustomerSchema=z.object({...fields,referralCode:z.string().trim().toUpperCase().regex(/^SALE-[A-F0-9]{12}$/)}).strict();
+export const saveSalesReferralSchema=z.object({idempotencyKey:z.uuid(),salesMembershipId:z.uuid().optional(),active:z.boolean().optional(),expiresAt:z.iso.datetime().nullable().optional()}).strict();
+export const reassignSalesCustomerSchema=z.object({organizationId:z.uuid(),salesMembershipId:z.uuid(),expectedVersion:z.number().int().min(0),reason:z.string().trim().min(5).max(1000),idempotencyKey:z.uuid()}).strict();

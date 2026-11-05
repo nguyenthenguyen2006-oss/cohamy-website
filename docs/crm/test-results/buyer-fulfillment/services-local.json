@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Waiting quote and quote revision never hold or move stock; customer must accept quote",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirmed quote is held by snapshotted manager approval and accountant review",
+      "status": "PASS"
+    },
+    {
+      "name": "Review approvals are versioned, idempotent and cannot be forged by stale principal or wrong warehouse",
+      "status": "PASS"
+    },
+    {
+      "name": "Policy changes do not recapture, reprice or remove old approval/payment conditions",
+      "status": "PASS"
+    },
+    {
+      "name": "Picking and packed states require readiness; confirmed issue posts exact-once and yields SHIPPED",
+      "status": "PASS"
+    },
+    {
+      "name": "PAID policy cannot fabricate payment; Sales submits pending, Accountant verifies actual money once",
+      "status": "PASS"
+    },
+    {
+      "name": "Non-self manager policy blocks quote author; disabled policy and stock shortages remain blocked",
+      "status": "PASS"
+    },
+    {
+      "name": "Accountant uploads a new payment proof and creates one pending receipt; other uploads and money escalation stay forbidden",
+      "status": "PASS"
+    },
+    {
+      "name": "Old confirmed orders keep native partial issue rules and never acquire a new policy snapshot",
+      "status": "PASS"
+    },
+    {
+      "name": "Amount approval uses native VAT total and only the configured approver role",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent issues with distinct keys cannot exceed source quantity or double stock movement",
+      "status": "PASS"
+    },
+    {
+      "name": "Incomplete partner profiles block new orders and cannot be relabeled READY by the paginated SQL filter",
+      "status": "PASS"
+    },
+    {
+      "name": "Supermarket receipt updates delivered state only after real source issue and complete receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy Sales order and tax-profile endpoints enforce current customer assignment",
+      "status": "PASS"
+    },
+    {
+      "name": "Native price-book approval and non-self rules gate special buyer quotes; minimums fail closed",
+      "status": "PASS"
+    },
+    {
+      "name": "Fractional VAT and native fee stay exact through payment gate and multiple source shipments",
+      "status": "PASS"
+    }
+  ],
+  "externalEmails": 0,
+  "productionWrites": 0
+}
