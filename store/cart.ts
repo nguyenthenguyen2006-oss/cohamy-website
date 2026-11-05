@@ -30,7 +30,7 @@ export const useCartStore = create<CartState>()(
             const updatedItems = [...state.items];
             const existing = updatedItems[existingIndex];
             updatedItems[existingIndex] = {
-              ...item,
+              ...existing,
               quantity: Math.min(100, existing.quantity + quantity),
             };
             return { items: updatedItems };

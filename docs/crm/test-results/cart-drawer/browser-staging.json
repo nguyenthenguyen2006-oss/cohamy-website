@@ -1,0 +1,1084 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL production build; fixed local tunnel4369; real-origin routing; service workers blocked",
+  "testedAt": "2026-11-05T05:53:45.334Z",
+  "cases": [
+    {
+      "name": "isolated staging fixture and native price guard",
+      "status": "PASS",
+      "unitPrice": 59724,
+      "basePrice": 79000,
+      "vatRate": 8,
+      "discountPercent": 30
+    },
+    {
+      "name": "desktop card quantity2 opens drawer with119448VND VAT total",
+      "status": "PASS"
+    },
+    {
+      "name": "native dialog keyboard containment background lock and close focus restoration",
+      "status": "PASS",
+      "tabSteps": 60,
+      "nativeDocumentBlurSteps": 3,
+      "backgroundFocusAttempts": 1,
+      "closeMethods": [
+        "Escape",
+        "close button",
+        "backdrop"
+      ]
+    },
+    {
+      "name": "drawer stepper increment decrement and inclusive1to100bounds",
+      "status": "PASS"
+    },
+    {
+      "name": "recommendation adds product and updates total and header count",
+      "status": "PASS"
+    },
+    {
+      "name": "removing all items shows empty cart and removes checkout",
+      "status": "PASS"
+    },
+    {
+      "name": "cart persists after reload while presentation drawer remains closed",
+      "status": "PASS"
+    },
+    {
+      "name": "checkout navigation closes drawer and retains matching VAT total without order submission",
+      "status": "PASS"
+    },
+    {
+      "name": "real price update requires explicit acceptance and existing add preserves old price snapshot",
+      "status": "PASS",
+      "nativeDiscounts": [
+        30,
+        25,
+        30
+      ]
+    },
+    {
+      "name": "mocked public price error disables checkout and retry restores real quote",
+      "status": "PASS",
+      "mocked": true,
+      "scope": "GET /api/storefront only"
+    },
+    {
+      "name": "mocked intake pause disables checkout without changing native settings",
+      "status": "PASS",
+      "mocked": true,
+      "scope": "GET /api/storefront only"
+    },
+    {
+      "name": "mobile390card drawer footer and checkout remain usable without horizontal overflow",
+      "status": "PASS",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      }
+    },
+    {
+      "name": "product detail buy now retains checkout journey",
+      "status": "PASS"
+    },
+    {
+      "name": "browser runtime safety and visible asset checks",
+      "status": "PASS",
+      "priceReadResponses": 22,
+      "orderSubmissionAttempts": 0,
+      "unmockedBrowserErrors": 0
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/cart-drawer/desktop-card-hover.png",
+    "docs/crm/test-results/cart-drawer/desktop-card-hover-crop.png",
+    "docs/crm/test-results/cart-drawer/desktop-drawer.png",
+    "docs/crm/test-results/cart-drawer/desktop-drawer-empty.png",
+    "docs/crm/test-results/cart-drawer/desktop-checkout.png",
+    "docs/crm/test-results/cart-drawer/desktop-drawer-price-changed.png",
+    "docs/crm/test-results/cart-drawer/desktop-drawer-price-error-mocked.png",
+    "docs/crm/test-results/cart-drawer/desktop-drawer-intake-paused-mocked.png",
+    "docs/crm/test-results/cart-drawer/mobile-card.png",
+    "docs/crm/test-results/cart-drawer/mobile-card-crop.png",
+    "docs/crm/test-results/cart-drawer/mobile-drawer.png",
+    "docs/crm/test-results/cart-drawer/mobile-drawer-recommendations.png",
+    "docs/crm/test-results/cart-drawer/mobile-checkout-full.png",
+    "docs/crm/test-results/cart-drawer/mobile-product-detail-full.png",
+    "docs/crm/test-results/cart-drawer/mobile-site-footer.png"
+  ],
+  "measurements": [
+    {
+      "name": "desktop-product-card",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "url": "/vi/san-pham"
+    },
+    {
+      "name": "desktop-drawer-geometry",
+      "drawer": {
+        "x": 770,
+        "y": 0,
+        "width": 670,
+        "height": 900,
+        "bottom": 900
+      },
+      "main": {
+        "x": 990,
+        "y": 0,
+        "width": 450,
+        "height": 900,
+        "bottom": 900
+      },
+      "rail": {
+        "x": 770,
+        "y": 0,
+        "width": 220,
+        "height": 900,
+        "bottom": 900
+      },
+      "footer": {
+        "x": 990,
+        "y": 712.703125,
+        "width": 450,
+        "height": 187.296875,
+        "bottom": 900
+      },
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "overflow": "hidden"
+    },
+    {
+      "name": "desktop-drawer-geometry",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "url": "/vi/san-pham"
+    },
+    {
+      "name": "keyboard-focus-sequence",
+      "steps": [
+        {
+          "index": 0,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 1,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 2,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Mắc Ca 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 3,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 4,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Matcha 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 5,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 6,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Sầu Riêng 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 7,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 8,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "cart-drawer-close",
+          "label": "Đóng giỏ hàng",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 9,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạt Điều 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 10,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Giảm Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 11,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "INPUT",
+          "className": "",
+          "label": "Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 12,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Tăng Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 13,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "cart-drawer-remove",
+          "label": "Xóa Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 14,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "cart-drawer-checkout",
+          "label": null,
+          "text": "Thanh toán119.448 ₫",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 15,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "cart-drawer-cart-link",
+          "label": null,
+          "text": "Xem giỏ hàng",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 16,
+          "direction": "Tab",
+          "inDialog": false,
+          "documentHasFocus": false,
+          "tag": "BODY",
+          "className": "min-h-full bg-[#FAF6EF] font-[family-name:var(--font-manrope)] text-[#2A120C]",
+          "label": null,
+          "text": "{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"CÔNG TY TNHH COHAMY\",\"alternateName\"",
+          "nativeDocumentBlur": true
+        },
+        {
+          "index": 16,
+          "direction": "Tab",
+          "recovery": true,
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân 80g"
+        },
+        {
+          "index": 17,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 18,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Mắc Ca 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 19,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 20,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Matcha 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 21,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 22,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Sầu Riêng 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 23,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 24,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "cart-drawer-close",
+          "label": "Đóng giỏ hàng",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 25,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạt Điều 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 26,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Giảm Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 27,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "INPUT",
+          "className": "",
+          "label": "Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 28,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Tăng Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 29,
+          "direction": "Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "cart-drawer-remove",
+          "label": "Xóa Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 0,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Tăng Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 1,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "INPUT",
+          "className": "",
+          "label": "Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 2,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Giảm Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 3,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạt Điều 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 4,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "cart-drawer-close",
+          "label": "Đóng giỏ hàng",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 5,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 6,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Sầu Riêng 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 7,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 8,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Matcha 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 9,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 10,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Mắc Ca 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 11,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 12,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 13,
+          "direction": "Shift+Tab",
+          "inDialog": false,
+          "documentHasFocus": false,
+          "tag": "BODY",
+          "className": "min-h-full bg-[#FAF6EF] font-[family-name:var(--font-manrope)] text-[#2A120C]",
+          "label": null,
+          "text": "{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"CÔNG TY TNHH COHAMY\",\"alternateName\"",
+          "nativeDocumentBlur": true
+        },
+        {
+          "index": 13,
+          "direction": "Shift+Tab",
+          "recovery": true,
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "cart-drawer-cart-link",
+          "label": null,
+          "text": "Xem giỏ hàng"
+        },
+        {
+          "index": 14,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "cart-drawer-checkout",
+          "label": null,
+          "text": "Thanh toán119.448 ₫",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 15,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "cart-drawer-remove",
+          "label": "Xóa Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 16,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Tăng Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 17,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "INPUT",
+          "className": "",
+          "label": "Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 18,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": "Giảm Số lượng: Cohamy Socola Hạt Điều 80g",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 19,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạt Điều 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 20,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "cart-drawer-close",
+          "label": "Đóng giỏ hàng",
+          "text": "",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 21,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 22,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Sầu Riêng 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 23,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 24,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân Matcha 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 25,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 26,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Mắc Ca 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 27,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "BUTTON",
+          "className": "",
+          "label": null,
+          "text": "Thêm vào giỏ",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 28,
+          "direction": "Shift+Tab",
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "",
+          "label": null,
+          "text": "Cohamy Socola Hạnh Nhân 80g",
+          "nativeDocumentBlur": false
+        },
+        {
+          "index": 29,
+          "direction": "Shift+Tab",
+          "inDialog": false,
+          "documentHasFocus": false,
+          "tag": "BODY",
+          "className": "min-h-full bg-[#FAF6EF] font-[family-name:var(--font-manrope)] text-[#2A120C]",
+          "label": null,
+          "text": "{\"@context\":\"https://schema.org\",\"@type\":\"Organization\",\"name\":\"CÔNG TY TNHH COHAMY\",\"alternateName\"",
+          "nativeDocumentBlur": true
+        },
+        {
+          "index": 29,
+          "direction": "Shift+Tab",
+          "recovery": true,
+          "inDialog": true,
+          "documentHasFocus": true,
+          "tag": "A",
+          "className": "cart-drawer-cart-link",
+          "label": null,
+          "text": "Xem giỏ hàng"
+        }
+      ],
+      "observation": "BODY with document.hasFocus() false is a document blur; focus entering browser chrome is an inference. The next identical Tab direction must return inside, and no background page control may receive focus."
+    },
+    {
+      "name": "desktop-checkout",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "url": "/vi/thanh-toan"
+    },
+    {
+      "name": "mobile-product-card",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "url": "/vi/san-pham"
+    },
+    {
+      "name": "mobile-drawer-geometry",
+      "drawer": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "bottom": 844
+      },
+      "main": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "bottom": 844
+      },
+      "rail": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "bottom": 0
+      },
+      "footer": {
+        "x": 0,
+        "y": 642.203125,
+        "width": 390,
+        "height": 201.796875,
+        "bottom": 844
+      },
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "overflow": "hidden"
+    },
+    {
+      "name": "mobile-drawer-geometry",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "url": "/vi/san-pham"
+    },
+    {
+      "name": "mobile-checkout",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "url": "/vi/thanh-toan"
+    },
+    {
+      "name": "mobile-product-detail",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "url": "/vi/san-pham/cohamy-socola-hat-dieu-80g"
+    }
+  ],
+  "accessibility": [
+    {
+      "name": "desktop-drawer",
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    },
+    {
+      "name": "mobile-drawer",
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    }
+  ],
+  "assets": [
+    {
+      "path": "/_next/static/chunks/1t6148qg-fzfq.css",
+      "status": 200,
+      "bytes": 2787,
+      "sha256": "17c32967b22dc483656e0c384db3bb1633dd7a4bdd9f5a9262aff3905fe84353"
+    },
+    {
+      "path": "/_next/static/chunks/3m5n5y9bu6d04.css",
+      "status": 200,
+      "bytes": 7025,
+      "sha256": "87b01496dc21bbc11d1883015847f92fd8ef6fcff05881e5be7f7c36c628fbc5"
+    },
+    {
+      "path": "/_next/static/chunks/181sxdo6gsw55.css",
+      "status": 200,
+      "bytes": 21142,
+      "sha256": "206c32d0a5fec1cf7e122eae1189f03bbb8194e0febcbe3a6761b7fb26ded7c1"
+    },
+    {
+      "path": "/_next/static/chunks/3bjdlso8850s5.css",
+      "status": 200,
+      "bytes": 90623,
+      "sha256": "7a7425a0d7eecceb3027068c0d5ffa08fcaef8a8de08b741c1e1e14b660cfb61"
+    },
+    {
+      "path": "/_next/static/chunks/1t6148qg-fzfq.css",
+      "status": 200,
+      "bytes": 2787,
+      "sha256": "17c32967b22dc483656e0c384db3bb1633dd7a4bdd9f5a9262aff3905fe84353"
+    },
+    {
+      "path": "/_next/static/chunks/181sxdo6gsw55.css",
+      "status": 200,
+      "bytes": 21142,
+      "sha256": "206c32d0a5fec1cf7e122eae1189f03bbb8194e0febcbe3a6761b7fb26ded7c1"
+    },
+    {
+      "path": "/_next/static/chunks/3m5n5y9bu6d04.css",
+      "status": 200,
+      "bytes": 7025,
+      "sha256": "87b01496dc21bbc11d1883015847f92fd8ef6fcff05881e5be7f7c36c628fbc5"
+    },
+    {
+      "path": "/_next/static/chunks/3bjdlso8850s5.css",
+      "status": 200,
+      "bytes": 90623,
+      "sha256": "7a7425a0d7eecceb3027068c0d5ffa08fcaef8a8de08b741c1e1e14b660cfb61"
+    },
+    {
+      "path": "/_next/static/chunks/181sxdo6gsw55.css",
+      "status": 200,
+      "bytes": 21142,
+      "sha256": "206c32d0a5fec1cf7e122eae1189f03bbb8194e0febcbe3a6761b7fb26ded7c1"
+    },
+    {
+      "path": "/_next/static/chunks/1t6148qg-fzfq.css",
+      "status": 200,
+      "bytes": 2787,
+      "sha256": "17c32967b22dc483656e0c384db3bb1633dd7a4bdd9f5a9262aff3905fe84353"
+    },
+    {
+      "path": "/_next/static/chunks/3bjdlso8850s5.css",
+      "status": 200,
+      "bytes": 90623,
+      "sha256": "7a7425a0d7eecceb3027068c0d5ffa08fcaef8a8de08b741c1e1e14b660cfb61"
+    },
+    {
+      "path": "/_next/static/chunks/3m5n5y9bu6d04.css",
+      "status": 200,
+      "bytes": 7025,
+      "sha256": "87b01496dc21bbc11d1883015847f92fd8ef6fcff05881e5be7f7c36c628fbc5"
+    },
+    {
+      "path": "/_next/static/chunks/3m5n5y9bu6d04.css",
+      "status": 200,
+      "bytes": 7025,
+      "sha256": "87b01496dc21bbc11d1883015847f92fd8ef6fcff05881e5be7f7c36c628fbc5"
+    },
+    {
+      "path": "/_next/static/chunks/1t6148qg-fzfq.css",
+      "status": 200,
+      "bytes": 2787,
+      "sha256": "17c32967b22dc483656e0c384db3bb1633dd7a4bdd9f5a9262aff3905fe84353"
+    },
+    {
+      "path": "/_next/static/chunks/181sxdo6gsw55.css",
+      "status": 200,
+      "bytes": 21142,
+      "sha256": "206c32d0a5fec1cf7e122eae1189f03bbb8194e0febcbe3a6761b7fb26ded7c1"
+    },
+    {
+      "path": "/_next/static/chunks/3bjdlso8850s5.css",
+      "status": 200,
+      "bytes": 90623,
+      "sha256": "7a7425a0d7eecceb3027068c0d5ffa08fcaef8a8de08b741c1e1e14b660cfb61"
+    },
+    {
+      "path": "/_next/static/chunks/1t6148qg-fzfq.css",
+      "status": 200,
+      "bytes": 2787,
+      "sha256": "17c32967b22dc483656e0c384db3bb1633dd7a4bdd9f5a9262aff3905fe84353"
+    },
+    {
+      "path": "/_next/static/chunks/3m5n5y9bu6d04.css",
+      "status": 200,
+      "bytes": 7025,
+      "sha256": "87b01496dc21bbc11d1883015847f92fd8ef6fcff05881e5be7f7c36c628fbc5"
+    },
+    {
+      "path": "/_next/static/chunks/181sxdo6gsw55.css",
+      "status": 200,
+      "bytes": 21142,
+      "sha256": "206c32d0a5fec1cf7e122eae1189f03bbb8194e0febcbe3a6761b7fb26ded7c1"
+    },
+    {
+      "path": "/_next/static/chunks/3bjdlso8850s5.css",
+      "status": 200,
+      "bytes": 90623,
+      "sha256": "7a7425a0d7eecceb3027068c0d5ffa08fcaef8a8de08b741c1e1e14b660cfb61"
+    }
+  ],
+  "browserErrors": [
+    {
+      "type": "console",
+      "message": "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+      "source": "https://cohamy.vn/api/storefront",
+      "mockMode": "error",
+      "expectedMock": true
+    }
+  ],
+  "blockedRequests": [],
+  "restoredDiscount": true,
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "orderSubmissionAttempts": 0,
+  "ordersCreated": 0,
+  "visualBaseline": "INCONCLUSIVE for automated pixel regression: no Cohamy golden image. Visual review separately uses the user-pinned Maison Marou reference screenshots; current screenshots and measured widths support that review.",
+  "accessibilityScope": "Drawer-scoped axe WCAG2A/AA/2.1AA/2.2AA plus native dialog keyboard containment, Escape, labels and focus restoration. BODY with document.hasFocus() false was observed; browser UI focus is an inference. The next identical Tab direction returned inside, and no background control received focus. No screen-reader audit or exhaustive WCAG claim.",
+  "mcp": "Not invoked by this browser suite. Existing server pricing/settings coverage is verified separately. Anonymous unsent cart and drawer presentation are browser-local and are not readable through remote MCP."
+}

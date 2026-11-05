@@ -10,6 +10,7 @@ import { wordpressSiteSeo } from "@/lib/wordpress-site-seo";
 import { SITE_URL } from "@/lib/seo";
 import { getPublicStorefront } from '@/lib/crm/storefront';
 import { StorefrontProvider } from '@/components/StorefrontProvider';
+import {CartDrawer} from '@/components/CartDrawer';
 
 export const dynamic = "force-dynamic";
 
@@ -73,6 +74,7 @@ export default async function LocaleLayout({
         <Header orderIntakeEnabled={process.env.CRM_WEBSITE_ORDER_INTAKE === "true"} />
         <main className="flex-1">{children}</main>
         <Footer />
+        <CartDrawer />
         </StorefrontProvider>
       </NextIntlClientProvider>
     </div>

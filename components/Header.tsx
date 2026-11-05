@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
@@ -8,6 +8,10 @@ import { Menu, X, ShoppingBag } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LocaleSwitcher } from "@/components/LocaleSwitcher";
 import styles from "@/components/home/CacaoHome.module.css";
+import {useCartDrawerStore} from '@/store/cart-drawer';
+import {useCartStore} from '@/store/cart';
+
+const subscribeCartHydration=()=>()=>{};
 
 const navItems = [
   { href: "/products" as const, label: "products" },
@@ -22,6 +26,9 @@ export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const openCart=useCartDrawerStore(state=>state.openCart);
+  const cartCount=useCartStore(state=>state.items.reduce((sum,item)=>sum+item.quantity,0));
+  const cartHydrated=useSyncExternalStore(subscribeCartHydration,()=>true,()=>false);
 
   useEffect(() => {
     if (!open) return;
@@ -63,7 +70,7 @@ export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean
 
         <div className={isHome ? styles.headerActions : "flex shrink-0 items-center gap-1 sm:gap-3"}>
           <LocaleSwitcher className={isHome ? styles.localeSwitcher : undefined} />
-          {orderIntakeEnabled && <Link href="/cart" className="inline-flex min-h-11 min-w-11 items-center justify-center" aria-label={t("cart")}><ShoppingBag size={20}/></Link>}
+          {orderIntakeEnabled && <button type="button" className="cart-header-button" aria-label={t("cart")} aria-haspopup="dialog" onClick={()=>{setOpen(false);openCart();}}><ShoppingBag size={20}/>{cartHydrated&&cartCount>0&&<span className="cart-header-count">{cartCount}</span>}</button>}
           {!isHome && mobileMenuButton}
         </div>
       </div>
