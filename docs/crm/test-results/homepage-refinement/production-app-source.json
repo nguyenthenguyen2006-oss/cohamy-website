@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "scope": "Normalized application sources and migrations, excluding QA/doc-only changes",
+  "files": 22,
+  "mismatches": [],
+  "sourceHashes": {
+    "app/[locale]/about/page.tsx": "1252d312c180c5c6b982caf8aff0c6e4af64ed52274e54f7ab8861b833abf95a",
+    "app/[locale]/layout.tsx": "b8b10d7b406260337b9f9d0e324134ce4abcdfb4f969539d0cb9fa57e7d007c6",
+    "app/globals.css": "86994516934816754f16869ba382c7a01bc606d7ce8c325517228a739e616fa1",
+    "components/ActivityGallery.tsx": "900ab0fca018314772bf96e494b3236b8dee947234f1bfcbbc581b2056f7be54",
+    "components/Header.tsx": "e8b4d9fd8e35754f62b21174dc0175b0777010d783f372ae608ff31de629c35b",
+    "components/home/CacaoHome.module.css": "82ba009848f9f1fa760635500e64101320906226a2319aa0aa643185bec35c75",
+    "components/home/CacaoHome.tsx": "8329a699bd0e61648e3a4b249f078e66c73ad0d7ca0f396bc19f663c9a66ad4a",
+    "components/product-purchase.css": "856ab14972e10a4d0716045f1ecf43012424e3541ccf69feb1ea7cd35bd0d966",
+    "data/activities.ts": "683189aef03c77f55a1af90c980add4e8ddfaec50c6cd1094cc5fa299eb4cf31",
+    "data/blog-locale/en.ts": "1a071172259e4b545fe97ca64663fd87bb8296ab22ddb98e7214c7b99ebe5fc1",
+    "data/blog-locale/ja.ts": "8818740a037fb05adc09ec8e837e1cbd3bf3a124e581547830bd846c560d2141",
+    "data/blog-locale/ko.ts": "75a104597c3d0a60d6701e8ef9e1f43a32f421be8549399865799d1689c54cef",
+    "data/blog-locale/zh.ts": "4ced19a1bff562e90c2e23e67b78e910ff06288064c1d83ca343dab5cd333e48",
+    "data/blog.ts": "15cce4549aac0867ad0b721c7bd042a88058d83428c6c754b1848917ccaab0ed",
+    "lib/assets/manifest.ts": "2a512022e1b693f62812101a41e23cbf0a40a65f37a4f2794557b6b4ca824f2b",
+    "lib/seo.ts": "930b591836e1f3db6a6c5b7723bb8670f0ca103026ac82a8e92aa7d3587e52f4",
+    "messages/en.json": "833dd20d7d1fdb18c3e43f688c57a6c03462bf2ca600c14e78c4f82bc8be2b28",
+    "messages/ja.json": "17f9d5c3688ffa8115ddbaf7f02b34281e8ded86d2d69cf1a0904b8412633bba",
+    "messages/ko.json": "235ca25f5a3fb107bb2ef39f0ba153a6daaf02082fea74293dbff30cf08eb873",
+    "messages/vi.json": "ae239e9dd3cbcb24f352cee93731c65c3bf3104253fcdb88204e7b5410735806",
+    "messages/zh.json": "36d1cb4b3dd24f8d12ea8fe2841d2d2ef9cef50656ce9eb3d3f8d5e77b37ae69",
+    "public/asset-manifest.json": "87eeaac61bbd3506ad92d0eb925e67f7dcc7b4dc8f20dafb1effdb41fe77a5a3"
+  }
+}

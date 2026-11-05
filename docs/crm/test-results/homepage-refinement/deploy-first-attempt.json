@@ -1,0 +1,11 @@
+{
+  "status": "FAIL",
+  "deployedShaRequested": "76cccbf7bcf932775059de597cd12ab99d68a685",
+  "exitCode": 2,
+  "phase": "Shell initialization, before any release or database mutation",
+  "cause": "Private deployment helper was transferred with CRLF line endings; bash rejected the pipefail option",
+  "productionShaAfterFailure": "30f31336b7c3ad7ab5f6127b12d827dfe3fceb96",
+  "releaseDirectoryAbsentVerified": true,
+  "resolution": "Normalized the private helper to UTF-8 LF, preserved the first log/receipt, verified the current release and absent target, then retried the same tested application SHA",
+  "applicationSourceChange": false
+}

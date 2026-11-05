@@ -1,0 +1,132 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION connected OAuth CRM MCP",
+  "testedAt": "2026-11-05T10:07:46.687Z",
+  "deployedSha": "76cccbf7bcf932775059de597cd12ab99d68a685",
+  "httpStatus": 200,
+  "catalog": {
+    "total": 363,
+    "available": 255
+  },
+  "capabilities": [
+    {
+      "id": "GET /api/crm/storefront",
+      "status": "AVAILABLE",
+      "inputContract": ""
+    },
+    {
+      "id": "POST /api/crm/storefront",
+      "status": "AVAILABLE",
+      "inputContract": ""
+    }
+  ],
+  "discountPercent": 30,
+  "version": 1,
+  "intakeEnabled": true,
+  "items": [
+    {
+      "productId": "cohamy-cashew-chocolate-80g",
+      "crmProductId": "ceeca031-0ed0-4c5c-a342-e3585b9d2261",
+      "basePrice": 82000,
+      "netSalePrice": 57400,
+      "vatRate": 8,
+      "vatAmount": 4592,
+      "listPrice": 88560,
+      "salePrice": 61992,
+      "discountPercent": 30,
+      "available": true
+    },
+    {
+      "productId": "cohamy-almond-chocolate-80g",
+      "crmProductId": "0b8e76c8-f210-48e0-9d70-7d02680d2dde",
+      "basePrice": 79000,
+      "netSalePrice": 55300,
+      "vatRate": 8,
+      "vatAmount": 4424,
+      "listPrice": 85320,
+      "salePrice": 59724,
+      "discountPercent": 30,
+      "available": true
+    },
+    {
+      "productId": "cohamy-almond-durian-chocolate-80g",
+      "crmProductId": "be3e82ca-aa08-45b1-a697-322d0679d421",
+      "basePrice": 79000,
+      "netSalePrice": 55300,
+      "vatRate": 8,
+      "vatAmount": 4424,
+      "listPrice": 85320,
+      "salePrice": 59724,
+      "discountPercent": 30,
+      "available": true
+    },
+    {
+      "productId": "cohamy-almond-matcha-chocolate-80g",
+      "crmProductId": "5c44e8b3-8882-41b9-b2b7-3e1651eac3c7",
+      "basePrice": 79000,
+      "netSalePrice": 55300,
+      "vatRate": 8,
+      "vatAmount": 4424,
+      "listPrice": 85320,
+      "salePrice": 59724,
+      "discountPercent": 30,
+      "available": true
+    },
+    {
+      "productId": "cohamy-almond-strawberry-chocolate-80g",
+      "crmProductId": "4f2606cc-221e-4f55-a1e4-0031bc96c7f2",
+      "basePrice": 79000,
+      "netSalePrice": 55300,
+      "vatRate": 8,
+      "vatAmount": 4424,
+      "listPrice": 85320,
+      "salePrice": 59724,
+      "discountPercent": 30,
+      "available": true
+    },
+    {
+      "productId": "cohamy-macadamia-chocolate-80g",
+      "crmProductId": "65fa3a0f-8191-4dea-956c-04a65461ec24",
+      "basePrice": 90000,
+      "netSalePrice": 63000,
+      "vatRate": 8,
+      "vatAmount": 5040,
+      "listPrice": 97200,
+      "salePrice": 68040,
+      "discountPercent": 30,
+      "available": true
+    },
+    {
+      "productId": "cohamy-mango-chocolate-80g",
+      "crmProductId": "c9c7a035-ba4b-4fbd-951a-0391884e4b94",
+      "basePrice": 79000,
+      "netSalePrice": 55300,
+      "vatRate": 8,
+      "vatAmount": 4424,
+      "listPrice": 85320,
+      "salePrice": 59724,
+      "discountPercent": 30,
+      "available": true
+    },
+    {
+      "productId": "cohamy-chocolate-candy-65g",
+      "crmProductId": "0c5c6623-306e-4544-94f7-6edd97ba14ac",
+      "basePrice": 32000,
+      "netSalePrice": 22400,
+      "vatRate": 8,
+      "vatAmount": 1792,
+      "listPrice": 34560,
+      "salePrice": 24192,
+      "discountPercent": 30,
+      "available": true
+    }
+  ],
+  "quoteAndCatalogUnchangedSinceBeforeRelease": true,
+  "productionBusinessWrites": 0,
+  "notes": [
+    "Actual Admin MCP reads all eight public package identities and current prices, VAT and discount values.",
+    "The existing native discount-settings POST remains AVAILABLE; no setting or business write was performed during this verification.",
+    "Homepage composition, type scale and compiled translation/alt copy are source changes. CRM MCP does not expose arbitrary CSS/source editing or filesystem execution. WordPress remains a separate connector; its source inspection required no content write.",
+    "No API/input contract changed in this refinement. The build catalog check retains363operations,255available and108retired."
+  ]
+}

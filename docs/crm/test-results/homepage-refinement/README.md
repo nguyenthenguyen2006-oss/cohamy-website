@@ -17,3 +17,14 @@ The authorized scope is the complete eight-product homepage, four columns/two ro
 One manual detector run is retained unchanged in `impeccable-detector.json`: 73 advisory findings and two primary warnings in the pre-existing Admin-editor blockquote rules, outside this public scope. The intended smaller scale is codified in the updated public design system; no second detector was run.
 
 LOCAL TypeScript and scoped ESLint passed. The production-mode staging build passed after the final two-file correction. No new API/input contract or database migration was introduced; production builds still check the existing MCP catalog. Production release/read-only verification is recorded separately after deployment. Browser/axe samples are not exhaustive device, screen-reader or accessibility proof.
+
+## Production release
+
+Application SHA: `76cccbf7bcf932775059de597cd12ab99d68a685`. The later documentation/proof HEAD is separate from the running application revision.
+
+- `production-release.json`: both consistent backup/restore proofs passed over 241 tables, with zero file/source integrity errors; all 18 candidate smoke cases passed before cutover. The first helper attempt stopped before release/database changes because of CRLF shell line endings; `deploy-first-attempt.json` records the cause and verified unchanged old release. The corrected LF helper deployed the same tested SHA successfully.
+- `production-app-source.json`: all 22 normalized application/content sources match the staged files. No raster pixels were changed.
+- `runtime-production.json`: web and CRM worker are online at this application revision, both with zero restarts; the configured WordPress blog remains ready.
+- `production.json`: 16/16 actual public HTTPS browser cases passed with 17 captures. It checks all eight actual price quotes, desktop 4×2/mobile two-column layouts, whole photographs, five locales and public routes, the 320/390px header correction, accessibility/keyboard/reflow samples, and unchanged internal type boundary. Production skips the local-cart mutation case; that case passed on isolated staging. All browser request writes were blocked, and no test order/email was created.
+- `mcp-production.json`: the actual OAuth MCP reads eight package identities and their current prices/VAT/discount values. The catalog/quote/version and 30% discount matched the pre-release read; GET and existing discount-settings POST remain available. Presentation/CSS/source editing is not exposed as an MCP operation.
+- `cleanup.json`: only the owned staging process, database, runtime role and local SSH tunnel were removed. Production releases and rollback/backup evidence are retained.

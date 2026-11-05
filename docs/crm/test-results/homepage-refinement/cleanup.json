@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "scope": "Only resources created for this isolated homepage verification",
+  "ownedStagingServer": "Stopped after verifying process group and source directory",
+  "ownedQaDatabase": "Guarded exact cohamy_qa_homepage_* database dropped",
+  "ownedQaRuntimeRole": "Guarded exact qa_commercial_* role removed",
+  "localTunnel": "Stopped only after confirming ssh.exe, cohamy-prod and 4372:localhost:4336; marker removed",
+  "productionBrowser": "Fresh public context only; no login, customer session or server write",
+  "productionBusinessWritesByVerification": 0,
+  "productionTestOrders": 0,
+  "realTestEmailsSent": 0,
+  "preserved": "Production releases, business data, original assets, source and backup/restore evidence"
+}
