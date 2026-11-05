@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL production build; local tunnel4368 only; fictitious .invalid contacts",
+  "testedAt": "2026-11-05T04:25:34.839Z",
+  "cases": [
+    {
+      "name": "QA public API quotes30percent discount on79000VND net plus8percent VAT; settings require authentication",
+      "status": "PASS"
+    },
+    {
+      "name": "All7policy links occur in the public footer and resolve to complete readable policy pages",
+      "status": "PASS"
+    },
+    {
+      "name": "Buy now carries2packages to checkout with matching VATinclusive119448VND and unselected policy acknowledgement",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin previews and saves25percent; open checkout requires explicit review and acceptance of updated127980VND total",
+      "status": "PASS"
+    },
+    {
+      "name": "Real browser submission saves one fictitious pending request with server VATinclusive total, without posting cash or stock",
+      "status": "PASS"
+    },
+    {
+      "name": "Official MCP SDK OAuth reads policies, settings and actual browser order; writes discount with exact retry and retains original order price",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop1440andmobile390 render product, checkout, Admin preview and all7policies with no horizontal document overflow",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/storefront/footer-desktop.png",
+    "docs/crm/test-results/storefront/policy-desktop.png",
+    "docs/crm/test-results/storefront/product-desktop.png",
+    "docs/crm/test-results/storefront/product-mobile.png",
+    "docs/crm/test-results/storefront/product-mobile-full.png",
+    "docs/crm/test-results/storefront/checkout-mobile.png",
+    "docs/crm/test-results/storefront/footer-mobile.png",
+    "docs/crm/test-results/storefront/policy-mobile.png",
+    "docs/crm/test-results/storefront/admin-mobile.png",
+    "docs/crm/test-results/storefront/admin-desktop.png"
+  ],
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "qaGrantRevoked": true
+}

@@ -134,6 +134,7 @@ export function generateProductCatalogJsonLd(options: {
   image: string;
   slug: string;
   sku: string;
+  offerPrice?: number;
 }) {
   const { locale, name, description, image, slug, sku } = options;
   const url = buildLocalizedUrl(locale, {
@@ -152,13 +153,14 @@ export function generateProductCatalogJsonLd(options: {
     image: imageUrl,
     inLanguage: locale,
     about: {
-      "@type": "Thing",
+      "@type": options.offerPrice === undefined ? "Thing" : "Product",
       "@id": `${url}#catalog-item`,
       url,
       name,
       description,
       image: imageUrl,
       identifier: sku,
+      ...(options.offerPrice === undefined ? {} : {sku, brand:{'@type':'Brand',name:'Cohamy'}, offers:{'@type':'Offer',url,price:options.offerPrice,priceCurrency:'VND',seller:{'@type':'Organization',name:CONTACT.companyName[locale]}}}),
     },
     isPartOf: { "@type": "WebSite", "@id": `${SITE_URL}/#website`, url: SITE_URL },
   };

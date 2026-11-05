@@ -8,6 +8,8 @@ import { Link } from "@/i18n/navigation";
 import { getFeaturedPosts } from "@/lib/blog-repository";
 import type { Locale } from "@/lib/types";
 import styles from "./CacaoHome.module.css";
+import {ProductPrice} from '@/components/ProductPrice';
+import {ProductPurchase} from '@/components/ProductPurchase';
 
 const flavorProducts = [
   ["almond", "cohamy-almond-chocolate-80g"],
@@ -138,6 +140,8 @@ export async function CacaoHome({ locale }: { locale: Locale }) {
                   />
                 </Link>
                 <h3>{product.name[locale].replace(/^Cohamy\s+/u, "").replace(/^Socola\s+/u, "")}</h3>
+                <ProductPrice productId={product.id} compact/>
+                <ProductPurchase product={product} compact/>
                 <Link href={href} className={styles.textLink} aria-label={`${t("cacao.productLink")}: ${product.name[locale]}`}>
                   {t("cacao.productLink")} <ArrowRight size={18} aria-hidden />
                 </Link>

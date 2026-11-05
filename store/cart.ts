@@ -10,6 +10,7 @@ interface CartState {
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
+  acceptPrices: (prices: {productId:string;price:number}[]) => void;
   getTotal: () => number;
   getItemCount: () => number;
 }
@@ -29,14 +30,14 @@ export const useCartStore = create<CartState>()(
             const updatedItems = [...state.items];
             const existing = updatedItems[existingIndex];
             updatedItems[existingIndex] = {
-              ...existing,
-              quantity: existing.quantity + quantity,
+              ...item,
+              quantity: Math.min(100, existing.quantity + quantity),
             };
             return { items: updatedItems };
           }
 
           return {
-            items: [...state.items, { ...item, quantity }],
+            items: [...state.items, { ...item, quantity: Math.min(100,Math.max(1,Math.trunc(quantity))) }],
           };
         });
       },
@@ -55,7 +56,7 @@ export const useCartStore = create<CartState>()(
 
         set((state) => ({
           items: state.items.map((item) =>
-            item.productId === productId ? { ...item, quantity } : item,
+            item.productId === productId ? { ...item, quantity:Math.min(100,Math.max(1,Math.trunc(quantity))) } : item,
           ),
         }));
       },
@@ -63,6 +64,8 @@ export const useCartStore = create<CartState>()(
       clearCart: () => {
         set({ items: [] });
       },
+
+      acceptPrices: (prices) => set(state=>({items:state.items.map(item=>{const price=prices.find(row=>row.productId===item.productId);return price?{...item,price:price.price}:item;})})),
 
       getTotal: () => {
         return get().items.reduce(

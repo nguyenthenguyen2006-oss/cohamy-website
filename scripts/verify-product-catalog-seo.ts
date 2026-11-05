@@ -34,6 +34,12 @@ for (const product of products) {
   }
 }
 const unsafe = '</script><script>alert(1)</script>';
+const pricedProduct=products.find(product=>product.id==='cohamy-almond-chocolate-80g')!;
+const pricedSchema=generateProductCatalogJsonLd({locale:'vi',name:pricedProduct.name.vi,description:pricedProduct.description.vi,image:pricedProduct.images[0],slug:pricedProduct.slug.vi,sku:pricedProduct.id,offerPrice:59724});
+assert.equal(pricedSchema.about['@type'],'Product');
+assert.deepEqual(pricedSchema.about.offers?.price,59724);
+assert.equal(pricedSchema.about.offers?.priceCurrency,'VND');
+assert(!/aggregateRating|"review"/.test(JSON.stringify(pricedSchema)));
 const html=renderToStaticMarkup(createElement(SEOJsonLd,{type:"Product",product:{name:unsafe,description:"Source text",image:["https://cohamy.vn/image.jpg"],sku:"test-sku",url:"https://cohamy.vn/en/products/test"}}));
 assert(!html.includes(unsafe));
 const payload=JSON.parse(html.replace(/^.*?<script[^>]*>/s,"").replace(/<\/script>.*$/s,""));

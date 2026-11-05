@@ -38,8 +38,10 @@ import * as r35 from '@/app/api/crm/relationships/[action]/route';
 import * as r36 from '@/app/api/crm/reports/[action]/route';
 import * as r37 from '@/app/api/crm/sales-customers/[action]/route';
 import * as r38 from '@/app/api/crm/spreadsheet/[action]/route';
-import * as r39 from '@/app/api/crm/work/[action]/route';
-import * as r40 from '@/app/api/crm/workspace/[action]/route';
+import * as r39 from '@/app/api/crm/storefront/policies/route';
+import * as r40 from '@/app/api/crm/storefront/route';
+import * as r41 from '@/app/api/crm/work/[action]/route';
+import * as r42 from '@/app/api/crm/workspace/[action]/route';
 export interface McpRoute {id:string;method:'GET'|'POST'|'PATCH'|'PUT'|'DELETE';template:string;source:string;group:string;status:'AVAILABLE'|'RETIRED';moduleId:string|null;params:string[];selector:Record<string,string>;query:string[];inputContract:string;multipart:boolean;sourceHash:string}
 const sharedContracts: Record<string,string> = {
   "4b75ce37fd75d5d5": "z.object({id:z.uuid()}).strict() // connection id from GET connections",
@@ -6310,6 +6312,51 @@ const metadata: McpRoute[] = [
     "sourceHash": "8ed4f5568f556ec6dc4a68d402e9f85adde73a6c09a1fbccc3251a9136a585e9"
   },
   {
+    "id": "GET /api/crm/storefront/policies",
+    "method": "GET",
+    "template": "/api/crm/storefront/policies",
+    "source": "app/api/crm/storefront/policies/route.ts",
+    "group": "storefront",
+    "status": "AVAILABLE",
+    "moduleId": "storefront",
+    "params": [],
+    "selector": {},
+    "query": [],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "093e927d9038a4b99dc4f183b698e6597f6890c669e3165c20769ca222d6f374"
+  },
+  {
+    "id": "GET /api/crm/storefront",
+    "method": "GET",
+    "template": "/api/crm/storefront",
+    "source": "app/api/crm/storefront/route.ts",
+    "group": "storefront",
+    "status": "AVAILABLE",
+    "moduleId": null,
+    "params": [],
+    "selector": {},
+    "query": [],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "703303c813f262cda662a8ba097cfff02bb020cd2d476bca26f634e9e6b21fac"
+  },
+  {
+    "id": "POST /api/crm/storefront",
+    "method": "POST",
+    "template": "/api/crm/storefront",
+    "source": "app/api/crm/storefront/route.ts",
+    "group": "storefront",
+    "status": "AVAILABLE",
+    "moduleId": null,
+    "params": [],
+    "selector": {},
+    "query": [],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "703303c813f262cda662a8ba097cfff02bb020cd2d476bca26f634e9e6b21fac"
+  },
+  {
     "id": "GET /api/crm/work/order",
     "method": "GET",
     "template": "/api/crm/work/order",
@@ -6846,5 +6893,7 @@ export const mcpHandlers: Record<string, unknown> = {"app/api/crm/mcp/oauth/[act
 "app/api/crm/reports/[action]/route.ts": r36,
 "app/api/crm/sales-customers/[action]/route.ts": r37,
 "app/api/crm/spreadsheet/[action]/route.ts": r38,
-"app/api/crm/work/[action]/route.ts": r39,
-"app/api/crm/workspace/[action]/route.ts": r40};
+"app/api/crm/storefront/policies/route.ts": r39,
+"app/api/crm/storefront/route.ts": r40,
+"app/api/crm/work/[action]/route.ts": r41,
+"app/api/crm/workspace/[action]/route.ts": r42};

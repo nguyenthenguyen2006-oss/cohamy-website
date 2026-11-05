@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "testedAt": "2026-11-05T04:50:30.494Z",
+  "environment": "STAGING isolated fakebuyer; firstcommit+finalreplay useactualservice;429injected atproxy to model actual pre-service wrapperlimit",
+  "cases": [
+    "First actual STAGING request commits one pending order; proxy drops only the response and client retains its request key",
+    "Injected pre-service429 leaves the existing uncertain request key and original quote unchanged",
+    "Third actual STAGING request replays the original receipt; all3requests carry the same key and payload; success clears pending metadata",
+    "Authenticated native Admin order view finds exactly1saved order for the unique fictitious email after all3attempts"
+  ],
+  "attempts": 3,
+  "sameKey": true,
+  "orderCount": 1,
+  "productionWrites": 0,
+  "externalEmails": 0
+}

@@ -13,6 +13,7 @@ import { buildProductAlternates, generatePageMetadata, generateProductCatalogJso
 import type { Locale } from "@/lib/types";
 import type { Metadata } from "next";
 import { sanitizeBlogHtml } from "@/lib/blog-sanitize";
+import {getPublicStorefront} from '@/lib/crm/storefront';
 
 export function generateStaticParams() {
   return getAllProductSlugs().map(({ locale, slug }) => ({ locale, slug }));
@@ -55,6 +56,8 @@ export default async function ProductDetailPage({
   if (!product) notFound();
 
   const related = getRelatedProducts(product);
+  const storefront = await getPublicStorefront().catch(() => null);
+  const price = storefront?.items.find(item => item.productId === product.id);
   const jsonLd = generateProductCatalogJsonLd({
     locale: locale as Locale,
     name: product.name[locale as Locale],
@@ -62,6 +65,7 @@ export default async function ProductDetailPage({
     image: product.images[0],
     slug,
     sku: product.id,
+    ...(storefront?.intakeEnabled && price?.available && price.salePrice !== null ? {offerPrice:price.salePrice} : {}),
   });
 
   return (

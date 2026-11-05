@@ -6,7 +6,8 @@ import { Link } from "@/i18n/navigation";
 import { useCartStore } from "@/store/cart";
 import { formatPrice } from "@/lib/utils";
 import type { Locale } from "@/lib/types";
-import { getProductById } from "@/lib/products";
+import {useCartQuote} from './StorefrontProvider';
+import {storefrontCopy} from './storefront-copy';
 
 interface CheckoutFormProps {
   locale: Locale;
@@ -14,8 +15,8 @@ interface CheckoutFormProps {
 
 export function CheckoutForm({ locale }: CheckoutFormProps) {
   const t = useTranslations("checkout");
-  const items = useCartStore((s) => s.items);
-  const getTotal = useCartStore((s) => s.getTotal);
+  const {hydrated,items,total,error:quoteError,refresh,changed,unavailable,acceptPrices,snapshot}=useCartQuote();
+  const copy=storefrontCopy(locale);
   const clearCart = useCartStore((s) => s.clearCart);
   const [done, setDone] = useState(false);
   const [orderCode, setOrderCode] = useState("");
@@ -24,8 +25,9 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
   const [error, setError] = useState("");
   const busy = useRef(false);
   const [payment, setPayment] = useState("cod");
-  const hasSoldOutItems = items.some((item) => getProductById(item.productId)?.outOfStock);
   useEffect(() => { if (done) window.scrollTo({ top: 0, behavior: "instant" }); }, [done]);
+
+  if(!hydrated)return <p role="status" className="mx-auto max-w-5xl px-6 py-12">{copy.pending}</p>;
 
   if (!items.length && !done) {
     return (
@@ -58,21 +60,25 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
         className="lg:col-span-3 space-y-8"
         onSubmit={async (e) => {
           e.preventDefault();
-          if (hasSoldOutItems) { setError(t("outOfStockNotice")); return; }
+          if (unavailable) { setError(copy.removed); return; }
+          if (quoteError||!snapshot?.intakeEnabled||changed) return;
           if (busy.current) return;
-          busy.current = true; setPending(true); setError("");
           const form = new FormData(e.currentTarget);
+          if(form.get('policyConsent')!=='on')return;
+          busy.current = true; setPending(true); setError("");
           const contact = Object.fromEntries(["fullName", "email", "phone", "address", "city", "district", "ward", "note"].map(name => [name, String(form.get(name) || "")]));
-          const body = { locale, payment, contact, items: items.map(item => ({ productId: item.productId, quantity: item.quantity })) };
+          const body = { locale, payment, contact,acceptedPolicyVersion:'2026-11-05', items: items.map(({item}) => ({ productId: item.productId, quantity: item.quantity })) };
           try {
             const hash = Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(body))))).map(byte => byte.toString(16).padStart(2,"0")).join("");
             const stored = localStorage.getItem("cohamy-order-request");
-            let saved: { hash: string; key: string } | null = null;
+            let saved: { hash: string; key: string; quoteVersion:string } | null = null;
             try { saved = stored ? JSON.parse(stored) : null; } catch { /* Replace invalid local request metadata. */ }
             const key = saved?.hash === hash ? saved.key : crypto.randomUUID();
-            localStorage.setItem("cohamy-order-request", JSON.stringify({ hash, key }));
-            const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...body, idempotencyKey: key }) });
+            const quoteVersion=saved?.hash===hash&&saved.quoteVersion?saved.quoteVersion:snapshot.quoteVersion;
+            localStorage.setItem("cohamy-order-request", JSON.stringify({ hash, key,quoteVersion }));
+            const response = await fetch("/api/orders", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...body,quoteVersion,idempotencyKey: key }) });
             const result = await response.json();
+            if(response.status===409&&result.error==='PRICE_CHANGED'){localStorage.removeItem('cohamy-order-request');await refresh();setError(copy.review);return;}
             if (response.status !== 201 || result.status !== "PENDING_REVIEW" || result.paid !== false || typeof result.code !== "string" || typeof result.subtotal !== "string" || !/^\d{1,18}$/u.test(result.subtotal)) throw new Error("ORDER_NOT_SAVED");
             setOrderCode(result.code); setServerSubtotal(result.subtotal); clearCart(); setDone(true);
             localStorage.removeItem("cohamy-order-request");
@@ -96,9 +102,9 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
           <legend className="font-medium mb-2">{t("shippingInfo")}</legend>
           <input required name="address" aria-label={t("fields.address")} placeholder={t("fields.address")} className="w-full h-12 px-4 border rounded-xl bg-white" />
           <div className="grid sm:grid-cols-3 gap-3">
-            <input required name="city" aria-label={t("fields.city")} placeholder={t("fields.city")} className="h-12 px-4 border rounded-xl bg-white" />
-            <input name="district" aria-label={t("fields.district")} placeholder={t("fields.district")} className="h-12 px-4 border rounded-xl bg-white" />
-            <input name="ward" aria-label={t("fields.ward")} placeholder={t("fields.ward")} className="h-12 px-4 border rounded-xl bg-white" />
+            <input required name="city" aria-label={t("fields.city")} placeholder={t("fields.city")} className="min-w-0 w-full h-12 px-4 border rounded-xl bg-white" />
+            <input name="district" aria-label={t("fields.district")} placeholder={t("fields.district")} className="min-w-0 w-full h-12 px-4 border rounded-xl bg-white" />
+            <input name="ward" aria-label={t("fields.ward")} placeholder={t("fields.ward")} className="min-w-0 w-full h-12 px-4 border rounded-xl bg-white" />
           </div>
           <textarea name="note" aria-label={t("fields.notePlaceholder")} placeholder={t("fields.notePlaceholder")} rows={3} className="w-full p-4 border rounded-xl bg-white" />
         </fieldset>
@@ -119,9 +125,20 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
           ))}
         </fieldset>
 
-        {(hasSoldOutItems || error) && <p role="alert" className="text-red-800">{hasSoldOutItems ? t("outOfStockNotice") : error}</p>}
+        <div className="space-y-3 text-sm leading-relaxed text-[#4A2418]">
+          <nav aria-label={locale==='vi'?'Chính sách mua hàng':'Purchase policies'} className="flex flex-wrap gap-x-4 gap-y-2">
+            <Link className="underline underline-offset-4" href={{pathname:'/policies/[slug]',params:{slug:'bao-mat-thong-tin'}}}>{copy.privacy}</Link>
+            <Link className="underline underline-offset-4" href={{pathname:'/policies/[slug]',params:{slug:'thanh-toan'}}}>{copy.payment}</Link>
+            <Link className="underline underline-offset-4" href={{pathname:'/policies/[slug]',params:{slug:'van-chuyen-kiem-tra-doi-tra'}}}>{copy.shippingPolicy}</Link>
+          </nav>
+          <label className="flex items-start gap-3"><input required type="checkbox" name="policyConsent" className="mt-1 h-5 w-5 shrink-0 accent-[#4A2418]"/><span>{copy.consent}</span></label>
+        </div>
+        {quoteError&&<div role="alert" className="text-[#8A2F21]"><p>{copy.unavailable}</p><button type="button" className="min-h-11 underline underline-offset-4" onClick={()=>void refresh()}>{copy.retry}</button></div>}
+        {changed&&!quoteError&&<div role="alert" className="rounded-lg bg-[#FFF4D8] p-4 text-[#4A2418]"><p>{copy.changed}</p><button type="button" onClick={acceptPrices} className="mt-2 min-h-11 underline underline-offset-4 font-semibold">{copy.accept}</button></div>}
+        {(unavailable||error) && <p role="alert" className="text-red-800">{unavailable?copy.removed:error}</p>}
+        {!snapshot?.intakeEnabled&&<p role="alert" className="text-[#8A2F21]">{copy.paused}</p>}
         <p className="text-sm text-[#4A2418]/80">{t("pendingNotice")}</p>
-        <button type="submit" disabled={pending || hasSoldOutItems} className="btn-primary w-full h-14 rounded-2xl disabled:opacity-50">
+        <button type="submit" disabled={pending || unavailable || quoteError || changed || !snapshot?.intakeEnabled} className="btn-primary w-full h-14 rounded-2xl disabled:opacity-50">
           {pending ? t("saving") : t("placeOrder")}
         </button>
       </form>
@@ -130,17 +147,18 @@ export function CheckoutForm({ locale }: CheckoutFormProps) {
         <div className="p-6 bg-white rounded-2xl border border-[#4A2418]/10 sticky top-24">
           <h2 className="font-medium mb-4">{t("orderSummary")}</h2>
           <div className="space-y-3 text-sm">
-            {items.map((item) => (
+            {items.map(({item,quote}) => (
               <div key={item.productId} className="flex justify-between gap-2">
                 <span className="line-clamp-1">{item.name[locale]} × {item.quantity}</span>
-                <span>{formatPrice(item.price * item.quantity)}</span>
+                <span className="whitespace-nowrap tabular-nums">{!quoteError&&quote?.available&&quote.salePrice!==null?formatPrice(quote.salePrice*item.quantity):'—'}</span>
               </div>
             ))}
           </div>
           <div className="border-t mt-4 pt-4 flex justify-between font-medium">
-            <span>Tổng</span>
-            <span className="text-[#D9A441]">{formatPrice(getTotal())}</span>
+            <span>{copy.subtotal}</span>
+            <span className="whitespace-nowrap text-[#4A2418] tabular-nums">{!quoteError&&!unavailable?formatPrice(total):'—'}</span>
           </div>
+          <p className="mt-3 text-sm leading-relaxed text-[#4A2418]">{copy.shipping}</p>
         </div>
       </aside>
     </div>

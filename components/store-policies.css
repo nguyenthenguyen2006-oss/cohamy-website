@@ -1,0 +1,35 @@
+.store-footer-policies { min-width: 0; color: #e0cfbd; font-size: 14px; line-height: 1.65; }
+.store-footer-policies h2 { color: #faf6ef; font-family: inherit; font-size: 16px; font-weight: 600; margin: 0 0 12px; }
+.store-footer-policies ul { list-style: none; padding: 0; margin: 0; }
+.store-footer-policies a { display: inline-flex; min-height: 44px; align-items: center; padding-block: 7px; text-underline-offset: 4px; }
+.store-footer-policies a:hover { color: #edc061; text-decoration: underline; }
+.store-footer-policies a:focus-visible { outline: 3px solid #edc061; outline-offset: 4px; }
+.store-footer-policies-home { border-top: 1px solid #e0cfbd38; padding-top: 26px; margin-top: 26px; }
+.store-footer-policies-home ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 32px; }
+.store-policy-page { max-width: 1200px; margin: auto; padding: 40px 24px 80px; color: #2a120c; }
+.store-policy-back { min-height: 44px; display: inline-flex; align-items: center; text-decoration: underline; text-underline-offset: 4px; }
+.store-policy-heading { border-bottom: 1px solid #4a24182b; padding-block: 20px 28px; margin-bottom: 36px; }
+.store-policy-heading h1 { font-family: var(--font-playfair), Georgia, serif; font-size: clamp(30px, 4vw, 48px); line-height: 1.16; max-width: 28ch; text-wrap: balance; }
+.store-policy-heading p { margin-top: 16px; max-width: 72ch; line-height: 1.7; }
+.store-policy-heading small { display: block; margin-top: 16px; color: #654c3c; }
+.store-policy-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 56px; align-items: start; }
+.store-policy-nav { position: sticky; top: 110px; font-size: 14px; }
+.store-policy-nav h2 { font-weight: 600; margin-bottom: 12px; }
+.store-policy-nav a { display: block; padding-block: 12px; border-bottom: 1px solid #4a241825; line-height: 1.5; min-height: 44px; text-underline-offset: 4px; }
+.store-policy-nav a[aria-current=page] { font-weight: 700; text-decoration: underline; }
+.store-policy-body { max-width: 74ch; min-width: 0; font-size: 16px; line-height: 1.8; overflow-wrap: anywhere; }
+.store-policy-body section { scroll-margin-top: 110px; margin-bottom: 34px; }
+.store-policy-body h2 { font-family: var(--font-playfair), Georgia, serif; font-size: 25px; line-height: 1.35; margin-bottom: 14px; }
+.store-policy-body p + p { margin-top: 14px; }
+.store-policy-body ul { list-style: disc; padding-left: 22px; margin-block: 14px; }
+.store-policy-body li + li { margin-top: 10px; }
+.store-policy-body a { text-decoration: underline; text-underline-offset: 4px; }
+.store-policy-body a:focus-visible, .store-policy-nav a:focus-visible, .store-policy-back:focus-visible { outline: 3px solid #80550e; outline-offset: 4px; }
+.store-policy-contact { padding-top: 24px; border-top: 1px solid #4a24182b; }
+@media(max-width: 760px) {
+  .store-footer-policies-home ul { grid-template-columns: 1fr; }
+  .store-policy-page { padding: 24px 20px 56px; }
+  .store-policy-layout { display: flex; flex-direction: column; gap: 32px; }
+  .store-policy-body { order: -1; width: 100%; }
+  .store-policy-nav { position: static; width: 100%; }
+}

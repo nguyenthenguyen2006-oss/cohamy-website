@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "test:crm:storefront-browser": "node scripts/crm/verify-storefront-browser.mjs",
+    "test:crm:storefront-client-retry": "node scripts/crm/verify-storefront-client-retry.mjs",
+    "test:crm:storefront": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-storefront.ts",
     "test:crm:account-email-reuse": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-account-email-reuse.ts",
     "test:crm:account-email-reuse-browser": "node scripts/crm/verify-account-email-reuse-browser.mjs",
     "test:crm:account-deletion": "node --require ./scripts/register-server-only.cjs --import tsx scripts/crm/verify-account-deletion.ts",

@@ -7,6 +7,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
 import type { Locale } from "@/lib/types";
 import styles from "@/components/home/CacaoHome.module.css";
+import { FooterPolicies } from './FooterPolicies';
 
 export function Footer() {
   const t = useTranslations("footer");
@@ -42,6 +43,7 @@ export function Footer() {
             <Link href="/partners">{home("partnerCta")}</Link>
           </nav>
         </div>
+        <FooterPolicies home />
         <div className={styles.footerBottom}>
           <p>{t("copyright", { year: new Date().getFullYear() })}</p>
           <details className={styles.footerDetails}>
@@ -90,16 +92,10 @@ export function Footer() {
           <Link href="/partners" className="block text-[#FAF6EF]/70 hover:text-[#D9A441] mt-1">
             {{vi:'Dành cho đối tác',en:'For partners',zh:'合作伙伴',ko:'파트너 안내',ja:'パートナーの皆様へ'}[locale]}
           </Link>
+          <Link href="/about" className="block text-[#FAF6EF]/70 hover:text-[#D9A441] mt-1">{nav("about")}</Link>
+          <Link href="/activities" className="block text-[#FAF6EF]/70 hover:text-[#D9A441] mt-1">{nav("activities")}</Link>
         </div>
-        <div>
-          <div className="font-medium mb-3">{nav("about")}</div>
-          <Link href="/about" className="block text-[#FAF6EF]/70 hover:text-[#D9A441] mb-1">
-            {nav("about")}
-          </Link>
-          <Link href="/activities" className="block text-[#FAF6EF]/70 hover:text-[#D9A441]">
-            {nav("activities")}
-          </Link>
-        </div>
+        <FooterPolicies />
         <div>
           <div className="font-medium mb-3">{nav("contact")}</div>
           <a

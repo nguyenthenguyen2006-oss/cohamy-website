@@ -6,8 +6,11 @@ import {database} from "./db";
 import {audit,digest} from "./auth";
 import {allPartners,assertPermission,CrmError} from "./permissions";
 import type {Principal} from "./types";
+import {resolvePublicStorefront} from './storefront';
 const intake=z.object({
   idempotencyKey:z.uuid(),locale:z.enum(["vi","en","zh","ko","ja"]),payment:z.enum(["cod","bank","momo"]),
+  quoteVersion:z.string().regex(/^[a-f0-9]{64}$/).optional(),
+  acceptedPolicyVersion:z.literal('2026-11-05').optional(),
   contact:z.object({fullName:z.string().trim().min(2).max(120),email:z.email(),phone:z.string().trim().min(8).max(40),address:z.string().trim().min(5).max(500),city:z.string().trim().min(2).max(120),district:z.string().trim().max(120),ward:z.string().trim().max(120),note:z.string().trim().max(1000)}).strict(),
   items:z.array(z.object({productId:z.string().max(120),quantity:z.number().int().min(1).max(100)}).strict()).min(1).max(30),
 }).strict();
@@ -16,19 +19,44 @@ export async function createWebsiteOrder(input:unknown) {
   const parsed=intake.safeParse(input);if(!parsed.success)throw new CrmError("INVALID_FIELDS",400);
   const data=parsed.data;
   if(new Set(data.items.map(item=>item.productId)).size!==data.items.length)throw new CrmError("DUPLICATE_PRODUCT",400);
-  const lines=data.items.map(item=>{const product=getProductById(item.productId);if(!product)throw new CrmError("INVALID_PRODUCT",400);if(product.outOfStock)throw new CrmError("PRODUCT_OUT_OF_STOCK",409);if(product.price===null)throw new CrmError("PRICE_ON_REQUEST",409);return {websiteId:product.id,name:product.name[data.locale],quantity:item.quantity,unitPrice:String(product.price),lineTotal:String(BigInt(product.price)*BigInt(item.quantity))};});
-  const subtotal=lines.reduce((sum,line)=>sum+BigInt(line.lineTotal),BigInt(0)).toString();
   const requestHash=digest(JSON.stringify({...data,idempotencyKey:undefined}));
   const db=await database();
   return db.transaction(async tx=> {
+    const replay=async()=>{
+      const existing=(await tx.query<{code:string;subtotal:string;request_hash:string}>("SELECT code,subtotal::text,request_hash FROM cohamy_crm.website_orders WHERE idempotency_key=$1",[data.idempotencyKey])).rows[0];
+      if(!existing)return null;
+      if(existing.request_hash!==requestHash)throw new CrmError("IDEMPOTENCY_CONFLICT",409);
+      return {code:existing.code,subtotal:existing.subtotal,status:"PENDING_REVIEW",paid:false,shippingQuotePending:true};
+    };
+    // Replay the frozen receipt before consulting today's settings or catalog.
+    const prior=await replay();if(prior)return prior;
+    // Optional fields exist only so pre-upgrade receipts can still be replayed.
+    // Every new request must show the current price and acknowledge the policies.
+    if(!data.quoteVersion||!data.acceptedPolicyVersion)throw new CrmError('PRICE_REVIEW_REQUIRED',409);
+    const quote=await resolvePublicStorefront(tx,true);
+    // A concurrent same-key order may commit while this request waits behind a
+    // settings update. Its receipt wins over a now-stale quote in that race.
+    const afterLock=await replay();if(afterLock)return afterLock;
+    if(data.quoteVersion&&data.quoteVersion!==quote.quoteVersion)throw new CrmError('PRICE_CHANGED',409);
+    const lines=data.items.map(item=>{
+      const product=getProductById(item.productId);
+      if(!product)throw new CrmError('INVALID_PRODUCT',400);
+      if(product.outOfStock)throw new CrmError('PRODUCT_OUT_OF_STOCK',409);
+      const price=quote.items.find(price=>price.productId===product.id);
+      if(!price?.available||price.salePrice===null||price.netSalePrice===null||price.basePrice===null||price.vatAmount===null||price.vatRate===null)throw new CrmError('PRICE_ON_REQUEST',409);
+      return {websiteId:product.id,crmProductId:price.crmProductId,name:product.name[data.locale],quantity:item.quantity,
+        baseUnitPrice:String(price.basePrice),discountPercent:price.discountPercent,
+        netUnitPrice:String(price.netSalePrice),netLineTotal:String(BigInt(price.netSalePrice)*BigInt(item.quantity)),
+        vatRate:String(price.vatRate),unitVatAmount:String(price.vatAmount),vatAmount:String(BigInt(price.vatAmount)*BigInt(item.quantity)),
+        unitPrice:String(price.salePrice),lineTotal:String(BigInt(price.salePrice)*BigInt(item.quantity)),quoteVersion:quote.quoteVersion};
+    });
+    const subtotal=lines.reduce((sum,line)=>sum+BigInt(line.lineTotal),BigInt(0)).toString();
     const code=`CH-${randomUUID().replaceAll('-','').slice(0,16).toUpperCase()}`;
     const inserted=await tx.query<{id:string;code:string;subtotal:string}>(`INSERT INTO cohamy_crm.website_orders(id,code,idempotency_key,request_hash,locale,contact,lines,subtotal,payment_requested)
       VALUES ($1,$2,$3,$4,$5,$6::jsonb,$7::jsonb,$8,$9) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id,code,subtotal::text`,[randomUUID(),code,data.idempotencyKey,requestHash,data.locale,JSON.stringify(data.contact),JSON.stringify(lines),subtotal,data.payment]);
     const created=inserted.rows[0];
-    if(created) {await audit(tx,null,"website.order-received",created.id,{code:created.code});return {code:created.code,subtotal:created.subtotal,status:"PENDING_REVIEW",paid:false,shippingQuotePending:true};}
-    const existing=(await tx.query<{code:string;subtotal:string;request_hash:string}>("SELECT code,subtotal::text,request_hash FROM cohamy_crm.website_orders WHERE idempotency_key=$1",[data.idempotencyKey])).rows[0];
-    if(!existing||existing.request_hash!==requestHash)throw new CrmError("IDEMPOTENCY_CONFLICT",409);
-    return {code:existing.code,subtotal:existing.subtotal,status:"PENDING_REVIEW",paid:false,shippingQuotePending:true};
+    if(created) {await audit(tx,null,"website.order-received",created.id,{code:created.code,...(data.acceptedPolicyVersion?{policyAcknowledgement:{version:data.acceptedPolicyVersion,acceptedAt:new Date().toISOString(),marketingConsent:false}}:{})});return {code:created.code,subtotal:created.subtotal,status:"PENDING_REVIEW",paid:false,shippingQuotePending:true};}
+    const existing=await replay();if(!existing)throw new CrmError('IDEMPOTENCY_CONFLICT',409);return existing;
   });
 }
 export async function listWebsiteOrders(user:Principal) {

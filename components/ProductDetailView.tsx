@@ -6,7 +6,8 @@ import { ProductGallery } from "@/components/ProductGallery";
 import { ProductFAQ } from "@/components/ProductFAQ";
 import { ProductGrid } from "@/components/ProductGrid";
 import type { Locale, Product } from "@/lib/types";
-import { useCartStore } from "@/store/cart";
+import { ProductPrice } from './ProductPrice';
+import { ProductPurchase } from './ProductPurchase';
 
 interface ProductDetailViewProps {
   product: Product;
@@ -16,9 +17,8 @@ interface ProductDetailViewProps {
   articleHtml?: string;
 }
 
-export function ProductDetailView({ product, related, locale, orderIntakeEnabled = false, articleHtml }: ProductDetailViewProps) {
+export function ProductDetailView({ product, related, locale, articleHtml }: ProductDetailViewProps) {
   const t = useTranslations("products");
-  const addItem = useCartStore(state => state.addItem);
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
@@ -28,9 +28,7 @@ export function ProductDetailView({ product, related, locale, orderIntakeEnabled
           <h1 className="font-serif text-4xl md:text-5xl tracking-tight">
             {product.name[locale]}
           </h1>
-          <p className="mt-4 text-lg font-medium text-[#4A2418]/80">
-            {product.outOfStock ? t("outOfStock") : t("contactForPrice")}
-          </p>
+          <ProductPrice productId={product.id} outOfStock={product.outOfStock} />
           <p className="text-[#4A2418]/80 mb-6 mt-4 leading-relaxed">
             {product.description[locale]}
           </p>
@@ -44,13 +42,7 @@ export function ProductDetailView({ product, related, locale, orderIntakeEnabled
             </div>
           </div>
 
-          <Link
-            href={product.outOfStock ? "/products" : "/contact"}
-            className="btn-primary inline-flex h-14 items-center rounded-2xl px-10"
-          >
-            {product.outOfStock ? t("viewNewProducts") : t("contactCta")}
-          </Link>
-          {orderIntakeEnabled && !product.outOfStock && product.price !== null && <button type="button" className="btn-primary mt-3 inline-flex h-14 items-center rounded-2xl px-10 md:ml-3" onClick={() => { if (product.price !== null) addItem({productId:product.id,price:product.price,name:product.name,image:product.images[0]}); }}>{t("addOrderItem")}</button>}
+          {product.outOfStock?<Link href="/products" className="btn-primary inline-flex h-14 items-center rounded-2xl px-10">{t('viewNewProducts')}</Link>:<ProductPurchase product={product}/>}
         </div>
       </div>
 

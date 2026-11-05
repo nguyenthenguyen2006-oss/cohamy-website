@@ -39,6 +39,7 @@ const internal: CrmModule[] = [
   salesCustomersModule,
   buyerOrdersModule,
   {id:'mcp',label:'Kết nối ChatGPT / MCP',shortLabel:'ChatGPT / MCP',icon:'account',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
+  {id:'storefront',label:'Cài đặt → Giá bán website',shortLabel:'Giá bán website',icon:'pricing',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
   historicalOrdersModule,
   internalDocumentsModule,
   {id:'factory-requests',label:'Phiếu đề nghị sản xuất/cấp hàng',shortLabel:'Đề nghị nhà máy',icon:'procurement',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
@@ -276,7 +277,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "account",
     color: "#64748b",
     gradient: "linear-gradient(135deg, #64748b, #334155)",
-    moduleIds: ["accounts", "fields", "audit", "workspace", "profile", "document-notifications", "factory-requests", "mcp"],
+    moduleIds: ["accounts", "fields", "audit", "workspace", "profile", "document-notifications", "factory-requests", "mcp", "storefront"],
   },
 ];
 

@@ -1,0 +1,25 @@
+{
+  "local": {
+    "storefront": {
+      "passed": 8
+    },
+    "access": {
+      "passed": 23
+    },
+    "typescript": "PASS",
+    "eslint": "PASS",
+    "catalogOperations": 359,
+    "catalogAvailable": 251,
+    "catalogStatus": "PASS",
+    "productSchemaLocales": 90,
+    "pricedOfferVATInclusive": "PASS"
+  },
+  "unrelatedRegression": {
+    "suite": "test:crm:work",
+    "passedBeforeStop": 10,
+    "stoppedAt": "Retired tasks module returns NOT_FOUND; not part of website pricing change",
+    "status": "BASELINE_LIMITATION"
+  },
+  "productionBusinessWritesForQA": 0,
+  "externalEmailsForQA": 0
+}

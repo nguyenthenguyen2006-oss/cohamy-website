@@ -3,6 +3,7 @@ import { getPathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getAllProductSlugs } from "@/lib/products";
 import { SITE_URL } from "@/lib/seo";
+import { STORE_POLICIES } from '@/data/store-policies';
 
 export const dynamic = "force-dynamic";
 
@@ -42,5 +43,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
+  for (const policy of STORE_POLICIES) entries.push({
+    url: `${SITE_URL}/vi/chinh-sach/${policy.slug}`,
+    lastModified: `${policy.updatedAt}T00:00:00+07:00`,
+    changeFrequency: 'monthly', priority: 0.5,
+  });
   return entries;
 }

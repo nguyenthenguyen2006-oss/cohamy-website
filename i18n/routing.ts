@@ -6,6 +6,7 @@ export const routing = defineRouting({
   localePrefix: 'always',
   pathnames: {
     '/': '/',
+    '/policies/[slug]': {vi:'/chinh-sach/[slug]',en:'/policies/[slug]',zh:'/policies/[slug]',ko:'/policies/[slug]',ja:'/policies/[slug]'},
     '/partners': {vi:'/doi-tac',en:'/partners',zh:'/partners',ko:'/partners',ja:'/partners'},
     '/products': {
       vi: '/san-pham',

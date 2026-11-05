@@ -1,0 +1,16 @@
+{
+  "disposition": "ship",
+  "scope": "Full review of seven policies, storefront pricing and purchase, Admin settings and user requested natural gallery aspect",
+  "environment": "STAGING",
+  "capturesReviewed": 14,
+  "findingsRemaining": 0,
+  "galleryNaturalAspect": "PASS",
+  "feedbackContrast": {
+    "success": 7.24,
+    "error": 7.46
+  },
+  "originalProductPixelsChanged": false,
+  "newRasterAssets": 0,
+  "reviewer": "Fresh independent Impeccable finish reviewer",
+  "productionVerified": false
+}

@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL PGlite",
+  "testedAt": "2026-11-05T04:12:01.677Z",
+  "cases": [
+    {
+      "name": "Retail prices exclude VAT; exact discount and per-unit VAT give the same consumer total",
+      "status": "PASS"
+    },
+    {
+      "name": "Only a current Admin can read or save public retail settings, with bounded strict input",
+      "status": "PASS"
+    },
+    {
+      "name": "Settings use version checking, exact native retries and append-only audited receipts",
+      "status": "PASS"
+    },
+    {
+      "name": "Checkout stores server-priced immutable net, discount, VAT and gross without posting money or stock",
+      "status": "PASS"
+    },
+    {
+      "name": "Discount or catalog VAT changes reject stale quotes while retries keep the original order and total",
+      "status": "PASS"
+    },
+    {
+      "name": "Inactive, mismatched packages and discontinued public products cannot become free or purchasable",
+      "status": "PASS"
+    },
+    {
+      "name": "Native MCP can discover/read/update retail settings and read policy/current settings data safely",
+      "status": "PASS"
+    },
+    {
+      "name": "Pre-upgrade orders without quote or acknowledgement fields still replay their frozen receipt",
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "externalEmails": 0
+}

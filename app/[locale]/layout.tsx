@@ -8,6 +8,8 @@ import { routing } from "@/i18n/routing";
 import { generateOrganizationJsonLd, generatePageMetadata } from "@/lib/seo";
 import { wordpressSiteSeo } from "@/lib/wordpress-site-seo";
 import { SITE_URL } from "@/lib/seo";
+import { getPublicStorefront } from '@/lib/crm/storefront';
+import { StorefrontProvider } from '@/components/StorefrontProvider';
 
 export const dynamic = "force-dynamic";
 
@@ -53,6 +55,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
   const organizationJsonLd = generateOrganizationJsonLd(locale);
   const siteSeo = await wordpressSiteSeo();
+  const storefront = await getPublicStorefront().catch(() => null);
   if (siteSeo?.name) organizationJsonLd.name = siteSeo.name;
   if (siteSeo?.logo) organizationJsonLd.logo = siteSeo.logo;
   if (siteSeo?.same_as.length) organizationJsonLd.sameAs = siteSeo.same_as;
@@ -66,9 +69,11 @@ export default async function LocaleLayout({
       />
       <script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(websiteJsonLd).replace(/</gu,"\\u003c")}} />
       <NextIntlClientProvider messages={messages}>
+        <StorefrontProvider initial={storefront}>
         <Header orderIntakeEnabled={process.env.CRM_WEBSITE_ORDER_INTAKE === "true"} />
         <main className="flex-1">{children}</main>
         <Footer />
+        </StorefrontProvider>
       </NextIntlClientProvider>
     </div>
   );
