@@ -1,0 +1,108 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL; anonymized six-product snapshot, no production writes",
+  "sourceVersion": 1,
+  "sourceChecksum": "aaff17dc2914832dc34810f8ffd771cefbe76b641efc2f96f69b676ad4dad34f",
+  "cases": [
+    {
+      "name": "Price layers list + 0 basis points = 237000",
+      "status": "PASS"
+    },
+    {
+      "name": "Price layers list + 2500 basis points = 177750",
+      "status": "PASS"
+    },
+    {
+      "name": "Price layers special + 0 basis points = 180000",
+      "status": "PASS"
+    },
+    {
+      "name": "Price layers special + 2500 basis points = 135000",
+      "status": "PASS"
+    },
+    {
+      "name": "Actual version-1 pricing snapshot projects 997500, twenty bags and all six exact final prices without mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "Quantity trailing zeros are preserved and internal identifiers never render as tax IDs",
+      "status": "PASS"
+    },
+    {
+      "name": "160 mixed-unit/fractional-quantity/odd-percentage baskets allocate every dong exactly",
+      "status": "PASS"
+    },
+    {
+      "name": "Amounts above JavaScript safe integer range remain exact",
+      "status": "PASS"
+    },
+    {
+      "name": "Order taxes and fees are retained and added once to net line totals",
+      "status": "PASS"
+    },
+    {
+      "name": "Corrupt saved pricing snapshots fail closed instead of silently rewriting money",
+      "status": "PASS"
+    },
+    {
+      "name": "Frontend provisional table uses the same calculator and per-line allocation as backend/PDF",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy tier metadata recovers original list price from its own captured policy without changing totals or snapshots",
+      "status": "PASS"
+    },
+    {
+      "name": "Six-product invoice fits one A4 page including totals and signatures",
+      "status": "PASS"
+    },
+    {
+      "name": "Long invoices, long codes/addresses, zero discounts, taxes/fees and large amounts render without empty trailing pages",
+      "status": "PASS"
+    }
+  ],
+  "pdfs": [
+    {
+      "name": "sample-v1-after",
+      "bytes": 177968,
+      "pages": 1,
+      "sha256": "1f5f6f32b700523e4ce59bc67fcb2410738acafd644340fd43f7db9a571cb549",
+      "artifact": "docs/crm/test-results/storefront/invoice-regression/sample-v1-after.pdf"
+    },
+    {
+      "name": "many-products",
+      "bytes": 1369818,
+      "pages": 4,
+      "sha256": "2db1981ed8dd4fd606878a34d0f6dee7f180eb89099ea8cfc6a0b951d222cdf1",
+      "artifact": "docs/crm/test-results/storefront/invoice-regression/many-products.pdf"
+    },
+    {
+      "name": "long-fields",
+      "bytes": 180575,
+      "pages": 2,
+      "sha256": "a1d9b64508ef4f26f532bccf530703f60127a22d25d6c7c6b1b0fd32ca00fb42",
+      "artifact": "docs/crm/test-results/storefront/invoice-regression/long-fields.pdf"
+    },
+    {
+      "name": "zero-discount",
+      "bytes": 177758,
+      "pages": 1,
+      "sha256": "d191625bc14f744567676201cf53a3f4102c5e2f35edba8b71d27140bdc3ec96",
+      "artifact": "docs/crm/test-results/storefront/invoice-regression/zero-discount.pdf"
+    },
+    {
+      "name": "tax-fees",
+      "bytes": 178307,
+      "pages": 1,
+      "sha256": "adbd1ed244c9d688021cb4d5a4c0b5fa072a2b5d78c40b0b7065e510f9eebe12",
+      "artifact": "docs/crm/test-results/storefront/invoice-regression/tax-fees.pdf"
+    },
+    {
+      "name": "large-amount",
+      "bytes": 67217,
+      "pages": 1,
+      "sha256": "fb2ca1107b3fdf1a453c6e7bf196ea2b2917135a9875862b37983a4ec751a3b1",
+      "artifact": "docs/crm/test-results/storefront/invoice-regression/large-amount.pdf"
+    }
+  ]
+}
