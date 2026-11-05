@@ -39,7 +39,7 @@
       }
     },
     "hero": {
-      "badge": "CohamyとJamy Green",
+      "badge": "Cohamy",
       "title": "Cohamyの新商品",
       "subtitle": "80gのチョコレートパウチ7種類と65gのカラフルチョコレートキャンディ。各商品の写真と詳細をご覧ください。",
       "ctaPrimary": "製品を見る",
@@ -61,7 +61,7 @@
       "phrase2": "上品なギフトコレクション",
       "phrase3": "厳選素材",
       "phrase4": "独自のフレーバー",
-      "phrase5": "CohamyとJamy Green",
+      "phrase5": "Cohamy",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -233,7 +233,7 @@
   "products": {
     "newArrival": "新商品",
     "title": "製品",
-    "subtitle": "Cohamy & Jamy チョコレートコレクション",
+    "subtitle": "Cohamy チョコレートコレクション",
     "count": "{count}件の製品",
     "empty": "該当する製品が見つかりません",
     "emptyHint": "フィルターや検索キーワードを変更してみてください",
@@ -466,7 +466,7 @@
     }
   },
   "footer": {
-    "brandTagline": "CohamyとJamy Green",
+    "brandTagline": "Cohamy",
     "description": "Cohamy — ベトナム産プレミアムナッツコーティングチョコレート。繊細な味わい、心のこもったギフト。",
     "quickLinks": "クイックリンク",
     "support": "サポート",
@@ -568,11 +568,11 @@
   "seo": {
     "home": {
       "title": "Cohamy — ベトナム産プレミアムナッツコーティングチョコレート",
-      "description": "Cohamy & Jamyチョコレートコレクション：カシューナッツ、アーモンド、抹茶、ドリアンなど独自のフレーバー。上品なギフト、高品質。"
+      "description": "Cohamyチョコレートコレクション：カシューナッツ、アーモンド、抹茶、ドリアンなど独自のフレーバー。上品なギフト、高品質。"
     },
     "products": {
       "title": "製品 — Cohamyチョコレート",
-      "description": "Cohamy & Jamyのナッツコーティングチョコレート製品一覧。オンライン購入、全国配送。"
+      "description": "Cohamyのナッツコーティングチョコレート製品一覧。オンライン購入、全国配送。"
     },
     "productDetail": {
       "title": "{name} — Cohamy",

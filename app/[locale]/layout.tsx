@@ -63,7 +63,7 @@ export default async function LocaleLayout({
   const websiteJsonLd = {"@context":"https://schema.org","@type":"WebSite","@id":SITE_URL+"/#website",url:SITE_URL,name:siteSeo?.website_name || "Cohamy",description:siteSeo?.website_description || undefined,inLanguage:routing.locales};
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-[#FAF6EF] text-[#2A120C]">
+    <div data-public-storefront className="flex min-h-[100dvh] flex-col bg-[#FAF6EF] text-[#2A120C]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd).replace(/</gu,"\\u003c") }}

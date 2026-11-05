@@ -53,7 +53,7 @@ const viContent2 = `
 
 const viContent3 = `
 <h1 id="qua-tang-tet-cohamy">Gợi ý quà tặng Tết và lễ hội từ Cohamy</h1>
-<p>Quà Tết không chỉ cần đẹp mắt mà còn phải mang giá trị thưởng thức thực sự. Bộ sưu tập Cohamy & Jamy đáp ứng cả hai tiêu chí đó.</p>
+<p>Quà Tết không chỉ cần đẹp mắt mà còn phải mang giá trị thưởng thức thực sự. Bộ sưu tập Cohamy đáp ứng cả hai tiêu chí đó.</p>
 
 <h2 id="bo-qua-cao-cap">Bộ quà cao cấp 4 hũ socola</h2>
 <p><a href="/vi/san-pham/cohamy-bo-qua-tang-hu-socola">Bộ Quà Tặng Cohamy – Bộ Sưu Tập Hũ Socola</a> gồm 4 hũ đa hương vị: hạnh nhân, hạt điều, macca và xoài sấy — đóng trong hộp gold foil sang trọng.</p>

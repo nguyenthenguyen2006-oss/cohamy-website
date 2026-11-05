@@ -33,7 +33,7 @@ export const enBlogContent: Record<string, string> = {
 
   "blog-qua-tang-tet": `
 <h1 id="holiday-gifts">Holiday & Festival Gift Ideas from Cohamy</h1>
-<p>Festive gifts should look beautiful and taste exceptional. Cohamy & Jamy collections deliver both.</p>
+<p>Festive gifts should look beautiful and taste exceptional. Cohamy collections deliver both.</p>
 <h2 id="premium-set">Premium 4-Jar Gift Set</h2>
 <p>The <a href="/en/products/cohamy-gift-jar-collection">Cohamy Gift Jar Collection</a> includes almond, cashew, macadamia, and dried mango flavors in elegant gold-foil packaging.</p>
 <h2 id="by-budget">Gifts by Budget</h2>

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION WordPress, read-only connector inspection",
+  "checkedAt": "2026-11-05T08:58:23Z",
+  "connection": "SSH_WP_CLI, administrator cohamy_admin; inventory and coverage inspected",
+  "publishedPostPageContent": {
+    "candidateRowsContainingJamy": 25,
+    "fields": ["post_title", "post_content", "post_excerpt"],
+    "combinedBrandMatches": 0,
+    "method": "Published post/page SQL candidate scan, HTML stripped and decoded, Unicode case-insensitive combined Cohamy + conjunction + Jamy Green matching"
+  },
+  "publicSeoAndImageAltMetadata": {
+    "candidateRowsContainingJamyOrKoreanEquivalent": 18,
+    "keys": ["rank_math_title", "rank_math_description", "rank_math_facebook_title", "rank_math_facebook_description", "rank_math_twitter_title", "rank_math_twitter_description", "_wp_attachment_image_alt"],
+    "combinedBrandMatches": 0
+  },
+  "siteOptions": {"blogname": "Cohamy", "blogdescription": ""},
+  "contentWrites": 0,
+  "notes": "No WordPress content required replacement under these explicit pattern scans. Source translations, fallback article copy, asset alt metadata and Organization aliases are covered separately by brand-copy-audit.json. This is source/runtime inspection, not a claim that every published URL was individually visited. Embedded text in original photographs remains unchanged."
+}

@@ -1,0 +1,18 @@
+{
+  "testedAt": "2026-11-05T09:02:52.865Z",
+  "scope": "Read-only baseline capture correction for image decode timing; no app edits or live business actions",
+  "results": [
+    {
+      "width": 1366,
+      "imagesDecoded": true,
+      "scopedActivityCapture": "docs/crm/test-results/homepage-refinement/baseline/cohamy-activity-1366.png",
+      "fullPage": "docs/crm/test-results/homepage-refinement/baseline/cohamy-1366.png"
+    },
+    {
+      "width": 390,
+      "imagesDecoded": true,
+      "scopedActivityCapture": "docs/crm/test-results/homepage-refinement/baseline/cohamy-activity-390.png",
+      "fullPage": "docs/crm/test-results/homepage-refinement/baseline/cohamy-390.png"
+    }
+  ]
+}

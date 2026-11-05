@@ -39,7 +39,7 @@
       }
     },
     "hero": {
-      "badge": "Cohamy와 Jamy Green",
+      "badge": "Cohamy",
       "title": "Cohamy 신제품",
       "subtitle": "80g 초콜릿 파우치 7종과 65g 컬러 초콜릿 캔디. 각 제품의 사진과 상세 정보를 확인하세요.",
       "ctaPrimary": "제품 둘러보기",
@@ -61,7 +61,7 @@
       "phrase2": "우아한 선물 컬렉션",
       "phrase3": "엄선된 원료",
       "phrase4": "독점적인 맛",
-      "phrase5": "Cohamy와 Jamy Green",
+      "phrase5": "Cohamy",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -233,7 +233,7 @@
   "products": {
     "newArrival": "신제품",
     "title": "제품",
-    "subtitle": "Cohamy & Jamy 초콜릿 컬렉션",
+    "subtitle": "Cohamy 초콜릿 컬렉션",
     "count": "제품 {count}개",
     "empty": "일치하는 제품이 없습니다",
     "emptyHint": "필터나 검색어를 변경해 보세요",
@@ -466,7 +466,7 @@
     }
   },
   "footer": {
-    "brandTagline": "Cohamy와 Jamy Green",
+    "brandTagline": "Cohamy",
     "description": "Cohamy — 베트남 프리미엄 견과류 코팅 초콜릿. 정교한 풍미, 의미 있는 선물.",
     "quickLinks": "바로가기",
     "support": "고객 지원",
@@ -568,11 +568,11 @@
   "seo": {
     "home": {
       "title": "Cohamy — 베트남 프리미엄 견과류 코팅 초콜릿",
-      "description": "Cohamy & Jamy 초콜릿 컬렉션: 캐슈넛, 아몬드, 말차, 두리안 등 독특한 맛. 우아한 선물, 프리미엄 품질."
+      "description": "Cohamy 초콜릿 컬렉션: 캐슈넛, 아몬드, 말차, 두리안 등 독특한 맛. 우아한 선물, 프리미엄 품질."
     },
     "products": {
       "title": "제품 — Cohamy 초콜릿",
-      "description": "Cohamy & Jamy 견과류 코팅 초콜릿 제품을 둘러보세요. 온라인 구매, 전국 배송."
+      "description": "Cohamy 견과류 코팅 초콜릿 제품을 둘러보세요. 온라인 구매, 전국 배송."
     },
     "productDetail": {
       "title": "{name} — Cohamy",

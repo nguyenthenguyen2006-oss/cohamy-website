@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL through fixed localhost4372→VPS4336 proxy; public GET-only verification",
+  "testedAt": "2026-11-05T09:29:36.908Z",
+  "confirmation": false,
+  "recaptureActivity": true,
+  "cases": [
+    {
+      "name": "Recapture only the required mobile activity region at scroll zero with document clipping",
+      "status": "PASS"
+    },
+    {
+      "name": "Read-only guards and settled first-party runtime remain clean",
+      "status": "PASS"
+    }
+  ],
+  "measurements": [
+    {
+      "label": "activity-390",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/homepage-refinement/staging/activity-390.png"
+  ],
+  "captureMethod": "Whole-document screenshots and document-coordinate region clips are taken at scroll zero with neutral focus after image scroll/load/decode. Region clips avoid the sticky-header fragment caused by automatic element scrolling in the initial batch.",
+  "accessibility": [],
+  "errors": [],
+  "blockedWrites": [],
+  "externalRequestsBlocked": [],
+  "productionBusinessWrites": 0,
+  "orderSubmissions": 0,
+  "realEmailsSent": 0,
+  "notes": [],
+  "scope": "Capture-only replacement of the named mobile activity-region image. No application change, new orders, cart actions or other screenshot replacements."
+}

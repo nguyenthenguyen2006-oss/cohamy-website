@@ -39,7 +39,7 @@
       }
     },
     "hero": {
-      "badge": "Cohamy và Jamy Green",
+      "badge": "Cohamy",
       "title": "Các mẫu mới của Cohamy",
       "subtitle": "7 mẫu socola túi 80g và socola ngũ sắc 65g. Khám phá hình ảnh và thông tin của từng sản phẩm.",
       "ctaPrimary": "Khám phá sản phẩm",
@@ -61,7 +61,7 @@
       "phrase2": "Bộ quà tặng tinh tế",
       "phrase3": "Nguyên liệu chọn lọc",
       "phrase4": "Hương vị độc quyền",
-      "phrase5": "Cohamy và Jamy Green",
+      "phrase5": "Cohamy",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -133,7 +133,7 @@
     },
     "about": {
       "title": "Từ nguyên liệu quen thuộc đến diện mạo quà tặng cao cấp",
-      "subtitle": "Cohamy và Jamy Green",
+      "subtitle": "Cohamy",
       "description": "Chúng tôi chọn cách kể câu chuyện hương vị Việt Nam bằng bao bì hiện đại, sản phẩm chỉn chu và trải nghiệm thưởng thức phù hợp với cả thị trường nội địa lẫn quốc tế.",
       "stats": {
         "products": "Sản phẩm",
@@ -233,7 +233,7 @@
   "products": {
     "newArrival": "Mẫu mới",
     "title": "Sản phẩm",
-    "subtitle": "Bộ sưu tập chocolate Cohamy & Jamy",
+    "subtitle": "Bộ sưu tập chocolate Cohamy",
     "count": "{count} sản phẩm",
     "empty": "Không tìm thấy sản phẩm phù hợp",
     "emptyHint": "Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm",
@@ -467,7 +467,7 @@
     }
   },
   "footer": {
-    "brandTagline": "Cohamy và Jamy Green",
+    "brandTagline": "Cohamy",
     "description": "Cohamy — Thương hiệu chocolate phủ hạt cao cấp từ Việt Nam. Hương vị tinh tế, quà tặng ý nghĩa.",
     "quickLinks": "Liên kết nhanh",
     "support": "Hỗ trợ",
@@ -569,11 +569,11 @@
   "seo": {
     "home": {
       "title": "Cohamy — Chocolate phủ hạt cao cấp Việt Nam",
-      "description": "Khám phá bộ sưu tập chocolate Cohamy & Jamy: hạt điều, hạnh nhân, matcha, sầu riêng và nhiều hương vị độc đáo. Quà tặng tinh tế, chất lượng cao."
+      "description": "Khám phá bộ sưu tập chocolate Cohamy: hạt điều, hạnh nhân, matcha, sầu riêng và nhiều hương vị độc đáo. Quà tặng tinh tế, chất lượng cao."
     },
     "products": {
       "title": "Sản phẩm — Cohamy Chocolate",
-      "description": "Danh sách sản phẩm chocolate phủ hạt Cohamy & Jamy. Mua online, giao hàng toàn quốc."
+      "description": "Danh sách sản phẩm chocolate phủ hạt Cohamy. Mua online, giao hàng toàn quốc."
     },
     "productDetail": {
       "title": "{name} — Cohamy",

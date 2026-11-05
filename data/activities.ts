@@ -43,11 +43,11 @@ export const activities: Activity[] = [
     id: "exhibition-booth-visitors",
     imageId: "exhibition-booth-visitors",
     caption: {
-      vi: "Khách tham quan khám phá sản phẩm tại gian hàng Cohamy & Jamy.",
-      en: "Visitors exploring products at the Cohamy & Jamy exhibition booth.",
-      zh: "参观者探索 Cohamy & Jamy 展台产品。",
-      ko: "코하미 & 자미 전시 부스에서 제품을 둘러보는 방문객.",
-      ja: "Cohamy & Jamy展示ブースで製品を探索する来場者。",
+      vi: "Khách tham quan khám phá sản phẩm tại gian hàng Cohamy.",
+      en: "Visitors exploring products at the Cohamy exhibition booth.",
+      zh: "参观者探索 Cohamy 展台产品。",
+      ko: "코하미 전시 부스에서 제품을 둘러보는 방문객.",
+      ja: "Cohamy展示ブースで製品を探索する来場者。",
     },
     date: "2024",
     location: {
@@ -81,11 +81,11 @@ export const activities: Activity[] = [
     id: "product-display-table",
     imageId: "product-display-table",
     caption: {
-      vi: "Bàn trưng bày đầy đủ dòng sản phẩm Cohamy và Jamy Green.",
-      en: "Display table showcasing the full Cohamy and Jamy Green product range.",
-      zh: "展示台陈列 Cohamy 和 Jamy Green 全系列产品。",
-      ko: "코하미와 자미 그린 전 제품 라인을 선보이는 전시 테이블.",
-      ja: "CohamyとJamy Greenの全製品ラインを展示するテーブル。",
+      vi: "Bàn trưng bày đầy đủ dòng sản phẩm Cohamy.",
+      en: "Display table showcasing the full Cohamy product range.",
+      zh: "展示台陈列 Cohamy 全系列产品。",
+      ko: "코하미 전 제품 라인을 선보이는 전시 테이블.",
+      ja: "Cohamyの全製品ラインを展示するテーブル。",
     },
     date: "2024",
     location: {

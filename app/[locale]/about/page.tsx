@@ -41,9 +41,10 @@ export default async function AboutPage({
         <Image
           src="/images/activities/team-factory.jpg"
           alt={t("story.title")}
-          width={960}
-          height={720}
-          className="rounded-3xl shadow-lg w-full aspect-[4/3] object-cover"
+          width={2560}
+          height={1707}
+          sizes="(max-width: 1024px) 90vw, 520px"
+          className="h-auto w-full rounded-xl"
         />
         <div>
           <h2 className="font-serif text-3xl mb-4">{t("story.title")}</h2>

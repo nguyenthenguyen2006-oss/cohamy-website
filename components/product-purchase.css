@@ -28,7 +28,7 @@
 .cohamy-product-card-photo img { display: block; width: 100%; height: auto; }
 .cohamy-product-card-controls { position: absolute; inset: auto 24px 24px; opacity: 1; }
 .cohamy-product-card-info { padding-top: 20px; text-align: center; }
-.cohamy-product-card-info h3 { margin: 0; font-family: var(--font-cart-heading), sans-serif; font-size: 28px; font-weight: 600; line-height: 1.1; text-transform: uppercase; text-wrap: balance; }
+.cohamy-product-card-info h3 { margin: 0; font-family: var(--font-cart-heading), sans-serif; font-size: 24px; font-weight: 600; line-height: 1.15; text-transform: uppercase; text-wrap: balance; }
 .cohamy-product-card-info h3 a { color: #80550e; text-decoration: none; }
 .cohamy-product-card-info h3 a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .cohamy-product-card-info h3 a:focus-visible { outline: 3px solid #80550e; outline-offset: 4px; }
@@ -41,7 +41,7 @@
 }
 @media(max-width:600px) {
   .cohamy-product-card-controls { inset: auto 16px 16px; opacity: 1; transform: none; pointer-events: auto; }
-  .cohamy-product-card-info h3 { font-size: 26px; }
+  .cohamy-product-card-info h3 { font-size: 22px; }
   .product-purchase-action { flex: 1 1 auto; }
 }
 @media(prefers-reduced-motion:reduce) {

@@ -196,11 +196,11 @@ export const assetManifest: AssetManifestItem[] = [
     path: "/images/activities/product-display-table.jpg",
     category: "company_activity",
     alt: {
-      vi: "Bàn trưng bày sản phẩm Cohamy & Jamy",
-      en: "Cohamy & Jamy product display table",
-      zh: "Cohamy 和 Jamy 产品展示台",
-      ko: "코하미 & 자미 제품 전시 테이블",
-      ja: "Cohamy & Jamy 製品展示テーブル",
+      vi: "Bàn trưng bày sản phẩm Cohamy",
+      en: "Cohamy product display table",
+      zh: "Cohamy 产品展示台",
+      ko: "코하미 제품 전시 테이블",
+      ja: "Cohamy 製品展示テーブル",
     },
   },
   {

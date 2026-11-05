@@ -173,7 +173,7 @@ export function generateOrganizationJsonLd(locale: Locale) {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: getCompanyName(locale),
-    alternateName: ["Cohamy", "Cohamy and Jamy Green", "Cohamy và Jamy Green"],
+    alternateName: ["Cohamy"],
     legalName: getCompanyName(locale),
     url: SITE_URL,
     logo: `${SITE_URL}/images/logo/cohamy-brand-logo.png`,

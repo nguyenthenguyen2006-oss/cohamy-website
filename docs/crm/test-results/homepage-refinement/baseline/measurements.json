@@ -1,0 +1,1285 @@
+{
+  "testedAt": "2026-11-05T08:57:42.861Z",
+  "scope": "Fresh read-only public browsing; all non-GET/HEAD/OPTIONS requests blocked; no cart/order/email operation",
+  "results": [
+    {
+      "name": "cohamy",
+      "width": 1366,
+      "status": 200,
+      "screenshot": "docs/crm/test-results/homepage-refinement/baseline/cohamy-1366.png",
+      "url": "https://cohamy.vn/vi",
+      "viewport": 1366,
+      "documentWidth": 1366,
+      "rootFont": "18px",
+      "body": {
+        "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+        "size": "18px",
+        "lineHeight": "29.7px",
+        "weight": "400",
+        "letterSpacing": "normal",
+        "width": 1366,
+        "height": 3736
+      },
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Socola.Đúng vị bạn.",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "94.937px",
+          "lineHeight": "96.8357px",
+          "weight": "700",
+          "letterSpacing": "-3.79748px",
+          "width": 615,
+          "height": 194
+        },
+        {
+          "tag": "H2",
+          "text": "Các mẫu mới của Cohamy",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "61.47px",
+          "lineHeight": "67.617px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 1257,
+          "height": 68
+        },
+        {
+          "tag": "H3",
+          "text": "Hạnh Nhân 80g",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "31.418px",
+          "lineHeight": "34.5598px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 400,
+          "height": 35
+        },
+        {
+          "tag": "H3",
+          "text": "Hạnh Nhân Matcha 80g",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "31.418px",
+          "lineHeight": "34.5598px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 400,
+          "height": 35
+        },
+        {
+          "tag": "H3",
+          "text": "Hạnh Nhân Dâu Tây 80g",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "31.418px",
+          "lineHeight": "34.5598px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 400,
+          "height": 35
+        },
+        {
+          "tag": "H2",
+          "text": "Cohamy và Jamy Green",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "57.372px",
+          "lineHeight": "56.2246px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 340,
+          "height": 112
+        },
+        {
+          "tag": "H2",
+          "text": "Chọn socola làm quà tặng",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "54.64px",
+          "lineHeight": "54.64px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 738,
+          "height": 55
+        },
+        {
+          "tag": "H2",
+          "text": "Hoạt động nổi bật",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "43.029px",
+          "lineHeight": "43.029px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 352,
+          "height": 43
+        },
+        {
+          "tag": "H2",
+          "text": "Bài viết từ Cohamy",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "43.029px",
+          "lineHeight": "43.029px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 370,
+          "height": 43
+        },
+        {
+          "tag": "H2",
+          "text": "Cùng Cohamy đưa sản phẩm đến khách hàng",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "30.735px",
+          "lineHeight": "33.8085px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 633,
+          "height": 34
+        },
+        {
+          "tag": "H2",
+          "text": "Chính sách mua hàng",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "16px",
+          "lineHeight": "26.4px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 312,
+          "height": 26
+        },
+        {
+          "tag": "H2",
+          "text": "Liên hệ",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "16px",
+          "lineHeight": "26.4px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 250,
+          "height": 26
+        },
+        {
+          "tag": "H2",
+          "text": "Thông tin doanh nghiệp",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "16px",
+          "lineHeight": "26.4px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 337,
+          "height": 26
+        }
+      ],
+      "navigation": [
+        {
+          "tag": "A",
+          "text": "",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "18px",
+          "lineHeight": "29.7px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 211,
+          "height": 61
+        },
+        {
+          "tag": "A",
+          "text": "Sản phẩm",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "20px",
+          "lineHeight": "33px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 93,
+          "height": 57
+        },
+        {
+          "tag": "A",
+          "text": "Bài viết",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "20px",
+          "lineHeight": "33px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 68,
+          "height": 57
+        },
+        {
+          "tag": "A",
+          "text": "Về chúng tôi",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "20px",
+          "lineHeight": "33px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 116,
+          "height": 57
+        },
+        {
+          "tag": "A",
+          "text": "Hoạt động",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "20px",
+          "lineHeight": "33px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 98,
+          "height": 57
+        },
+        {
+          "tag": "A",
+          "text": "Liên hệ",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "20px",
+          "lineHeight": "33px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 67,
+          "height": 57
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Tiếng ViệtVI",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "15.75px",
+          "lineHeight": "22.5px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 149,
+          "height": 50
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "18px",
+          "lineHeight": "29.7px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "paragraphs": [
+        {
+          "tag": "P",
+          "text": "7 mẫu socola túi 80g và socola ngũ sắc 65g.",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "22.539px",
+          "lineHeight": "33.8085px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 420,
+          "height": 68
+        },
+        {
+          "tag": "P",
+          "text": "Đã gồm VAT 8%",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "13.5px",
+          "lineHeight": "18px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 400,
+          "height": 18
+        },
+        {
+          "tag": "P",
+          "text": "Đã gồm VAT 8%",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "13.5px",
+          "lineHeight": "18px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 400,
+          "height": 18
+        },
+        {
+          "tag": "P",
+          "text": "Đã gồm VAT 8%",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "13.5px",
+          "lineHeight": "18px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 400,
+          "height": 18
+        },
+        {
+          "tag": "P",
+          "text": "Liên hệ Cohamy để chọn mẫu và nhận báo giá.",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "22px",
+          "lineHeight": "33px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 738,
+          "height": 33
+        }
+      ],
+      "productTitles": [],
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            798,
+            997
+          ],
+          "box": [
+            2732,
+            1123
+          ],
+          "fit": "cover",
+          "position": "0% 100%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "Cohamy Socola Hạnh Nhân 80g",
+          "natural": [
+            723,
+            904
+          ],
+          "box": [
+            645,
+            562
+          ],
+          "fit": "cover",
+          "position": "50% 16%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            437,
+            546
+          ],
+          "box": [
+            400,
+            416
+          ],
+          "fit": "cover",
+          "position": "50% 28%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fmatcha.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            437,
+            546
+          ],
+          "box": [
+            400,
+            416
+          ],
+          "fit": "cover",
+          "position": "50% 28%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fstrawberry.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            437,
+            546
+          ],
+          "box": [
+            400,
+            416
+          ],
+          "fit": "cover",
+          "position": "50% 28%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fbrand.jpg&w=3840&q=75",
+          "alt": "Toàn thể đội ngũ Cohamy tại gian hàng – đại diện thương hiệu socola Việt.",
+          "natural": [
+            874,
+            908
+          ],
+          "box": [
+            878,
+            469
+          ],
+          "fit": "cover",
+          "position": "50% 35%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fstrawberry.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            798,
+            997
+          ],
+          "box": [
+            2732,
+            654
+          ],
+          "fit": "cover",
+          "position": "0% 100%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fstrawberry.jpg&w=3840&q=75",
+          "alt": "Cohamy Socola Hạnh Nhân Dâu Tây 80g",
+          "natural": [
+            532,
+            665
+          ],
+          "box": [
+            523,
+            327
+          ],
+          "fit": "cover",
+          "position": "50% 15%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Factivities.jpg&w=3840&q=75",
+          "alt": "Khách tham quan khám phá sản phẩm tại gian hàng Cohamy & Jamy.",
+          "natural": [
+            1256,
+            1675
+          ],
+          "box": [
+            1257,
+            290
+          ],
+          "fit": "cover",
+          "position": "50% 50%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            300,
+            375
+          ],
+          "box": [
+            290,
+            118
+          ],
+          "fit": "cover",
+          "position": "50% 100%"
+        }
+      ]
+    },
+    {
+      "name": "cohamy",
+      "width": 390,
+      "status": 200,
+      "screenshot": "docs/crm/test-results/homepage-refinement/baseline/cohamy-390.png",
+      "url": "https://cohamy.vn/vi",
+      "viewport": 390,
+      "documentWidth": 390,
+      "rootFont": "17px",
+      "body": {
+        "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+        "size": "17px",
+        "lineHeight": "28.05px",
+        "weight": "400",
+        "letterSpacing": "normal",
+        "width": 390,
+        "height": 4661
+      },
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "Socola.Đúng vị bạn.",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "31.59px",
+          "lineHeight": "35.3808px",
+          "weight": "700",
+          "letterSpacing": "-1.10565px",
+          "width": 222,
+          "height": 71
+        },
+        {
+          "tag": "H2",
+          "text": "Các mẫu mới của Cohamy",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "34px",
+          "lineHeight": "34px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 350,
+          "height": 68
+        },
+        {
+          "tag": "H3",
+          "text": "Hạnh Nhân 80g",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "21px",
+          "lineHeight": "23.1px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 168,
+          "height": 23
+        },
+        {
+          "tag": "H3",
+          "text": "Hạnh Nhân Matcha 80g",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "21px",
+          "lineHeight": "23.1px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 168,
+          "height": 46
+        },
+        {
+          "tag": "H3",
+          "text": "Hạnh Nhân Dâu Tây 80g",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "21px",
+          "lineHeight": "23.1px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 350,
+          "height": 23
+        },
+        {
+          "tag": "H2",
+          "text": "Cohamy và Jamy Green",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "34px",
+          "lineHeight": "33.32px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 390,
+          "height": 103
+        },
+        {
+          "tag": "H2",
+          "text": "Chọn socola làm quà tặng",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "31px",
+          "lineHeight": "31px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 225,
+          "height": 62
+        },
+        {
+          "tag": "H2",
+          "text": "Hoạt động nổi bật",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "32px",
+          "lineHeight": "32px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 262,
+          "height": 32
+        },
+        {
+          "tag": "H2",
+          "text": "Bài viết từ Cohamy",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "32px",
+          "lineHeight": "32px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 275,
+          "height": 32
+        },
+        {
+          "tag": "H2",
+          "text": "Cùng Cohamy đưa sản phẩm đến khách hàng",
+          "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+          "size": "24px",
+          "lineHeight": "26.4px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 298,
+          "height": 53
+        },
+        {
+          "tag": "H2",
+          "text": "Chính sách mua hàng",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "16px",
+          "lineHeight": "26.4px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 350,
+          "height": 26
+        },
+        {
+          "tag": "H2",
+          "text": "Liên hệ",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "16px",
+          "lineHeight": "26.4px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 350,
+          "height": 26
+        },
+        {
+          "tag": "H2",
+          "text": "Thông tin doanh nghiệp",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "16px",
+          "lineHeight": "26.4px",
+          "weight": "700",
+          "letterSpacing": "normal",
+          "width": 350,
+          "height": 26
+        }
+      ],
+      "navigation": [
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "17px",
+          "lineHeight": "28.05px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 96,
+          "height": 44
+        },
+        {
+          "tag": "A",
+          "text": "",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "17px",
+          "lineHeight": "28.05px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 142,
+          "height": 41
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Tiếng ViệtVI",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "14.875px",
+          "lineHeight": "21.25px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 44,
+          "height": 47
+        },
+        {
+          "tag": "BUTTON",
+          "text": "",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "17px",
+          "lineHeight": "28.05px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 44,
+          "height": 44
+        }
+      ],
+      "paragraphs": [
+        {
+          "tag": "P",
+          "text": "7 mẫu socola túi 80g và socola ngũ sắc 65g.",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "14px",
+          "lineHeight": "21.7px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 178,
+          "height": 43
+        },
+        {
+          "tag": "P",
+          "text": "Đã gồm VAT 8%",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "12.75px",
+          "lineHeight": "17px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 168,
+          "height": 17
+        },
+        {
+          "tag": "P",
+          "text": "Đã gồm VAT 8%",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "12.75px",
+          "lineHeight": "17px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 168,
+          "height": 17
+        },
+        {
+          "tag": "P",
+          "text": "Đã gồm VAT 8%",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "12.75px",
+          "lineHeight": "17px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 350,
+          "height": 17
+        },
+        {
+          "tag": "P",
+          "text": "Liên hệ Cohamy để chọn mẫu và nhận báo giá.",
+          "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+          "size": "14px",
+          "lineHeight": "21px",
+          "weight": "400",
+          "letterSpacing": "normal",
+          "width": 225,
+          "height": 42
+        }
+      ],
+      "productTitles": [],
+      "images": [
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            390,
+            487
+          ],
+          "box": [
+            1560,
+            1360
+          ],
+          "fit": "cover",
+          "position": "0% 100%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "Cohamy Socola Hạnh Nhân 80g",
+          "natural": [
+            187,
+            233
+          ],
+          "box": [
+            187,
+            340
+          ],
+          "fit": "cover",
+          "position": "50% 50%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            171,
+            214
+          ],
+          "box": [
+            168,
+            174
+          ],
+          "fit": "cover",
+          "position": "50% 28%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fmatcha.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            171,
+            214
+          ],
+          "box": [
+            168,
+            174
+          ],
+          "fit": "cover",
+          "position": "50% 28%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fstrawberry.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            350,
+            438
+          ],
+          "box": [
+            350,
+            250
+          ],
+          "fit": "cover",
+          "position": "50% 28%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fbrand.jpg&w=3840&q=75",
+          "alt": "Toàn thể đội ngũ Cohamy tại gian hàng – đại diện thương hiệu socola Việt.",
+          "natural": [
+            390,
+            405
+          ],
+          "box": [
+            390,
+            260
+          ],
+          "fit": "cover",
+          "position": "50% 35%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fstrawberry.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            390,
+            487
+          ],
+          "box": [
+            1560,
+            1000
+          ],
+          "fit": "cover",
+          "position": "0% 100%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Fstrawberry.jpg&w=3840&q=75",
+          "alt": "Cohamy Socola Hạnh Nhân Dâu Tây 80g",
+          "natural": [
+            163,
+            204
+          ],
+          "box": [
+            144,
+            250
+          ],
+          "fit": "cover",
+          "position": "50% 50%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Factivities.jpg&w=3840&q=75",
+          "alt": "Khách tham quan khám phá sản phẩm tại gian hàng Cohamy & Jamy.",
+          "natural": [
+            358,
+            478
+          ],
+          "box": [
+            350,
+            240
+          ],
+          "fit": "cover",
+          "position": "50% 53%"
+        },
+        {
+          "src": "/_next/image?url=%2Fimages%2Fhome-cacao%2Falmond.jpg&w=3840&q=75",
+          "alt": "",
+          "natural": [
+            300,
+            375
+          ],
+          "box": [
+            160,
+            173
+          ],
+          "fit": "cover",
+          "position": "50% 100%"
+        }
+      ]
+    },
+    {
+      "name": "marou",
+      "width": 1366,
+      "status": 200,
+      "screenshot": "docs/crm/test-results/homepage-refinement/baseline/marou-1366.png",
+      "url": "https://maisonmarou.com/",
+      "viewport": 1366,
+      "documentWidth": 1366,
+      "rootFont": "16px",
+      "body": {
+        "font": "Inter, sans-serif",
+        "size": "14px",
+        "lineHeight": "24px",
+        "weight": "700",
+        "letterSpacing": "0.14px",
+        "width": 1366,
+        "height": 6013
+      },
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "24 DOORS, 24 DELIGHTS",
+          "font": "\"Tungsten SemiBold\", serif",
+          "size": "90px",
+          "lineHeight": "99.9px",
+          "weight": "400",
+          "letterSpacing": "5px",
+          "width": 1226,
+          "height": 200
+        },
+        {
+          "tag": "H2",
+          "text": "EXPLORE THE WORLD OF DELICIOUS VIETNAMESE CHOCOLATE CREATIONS",
+          "font": "\"Tungsten medium\"",
+          "size": "54px",
+          "lineHeight": "54px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 533,
+          "height": 108
+        },
+        {
+          "tag": "H2",
+          "text": "Discover our best sellers",
+          "font": "\"Tungsten medium\"",
+          "size": "54px",
+          "lineHeight": "54px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 428,
+          "height": 54
+        },
+        {
+          "tag": "H2",
+          "text": "CREATE SOMETHING UNFORGETTABLE",
+          "font": "\"Tungsten medium\"",
+          "size": "54px",
+          "lineHeight": "54px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 539,
+          "height": 54
+        },
+        {
+          "tag": "H4",
+          "text": "PASTRY MASTERCLASS",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "48px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 352,
+          "height": 48
+        },
+        {
+          "tag": "H4",
+          "text": "CORPORATE GIFTS",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "48px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 352,
+          "height": 48
+        },
+        {
+          "tag": "H4",
+          "text": "CELEBRATION CAKES",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "48px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 352,
+          "height": 48
+        },
+        {
+          "tag": "H3",
+          "text": "MEET OUR INCREDIBLE TEAM",
+          "font": "\"Tungsten medium\"",
+          "size": "54px",
+          "lineHeight": "64.8px",
+          "weight": "500",
+          "letterSpacing": "1px",
+          "width": 483,
+          "height": 65
+        },
+        {
+          "tag": "H2",
+          "text": "COME VISIT US!",
+          "font": "\"Tungsten medium\"",
+          "size": "54px",
+          "lineHeight": "54px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 865,
+          "height": 54
+        },
+        {
+          "tag": "H2",
+          "text": "Follow @MAISONMAROU",
+          "font": "\"Tungsten medium\"",
+          "size": "54px",
+          "lineHeight": "54px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 865,
+          "height": 54
+        }
+      ],
+      "navigation": [],
+      "paragraphs": [],
+      "productTitles": [
+        {
+          "tag": "A",
+          "text": "Chocolate Advent Calendar",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 263,
+          "height": 24
+        },
+        {
+          "tag": "A",
+          "text": "Birthday Cake 3 Level",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 263,
+          "height": 24
+        },
+        {
+          "tag": "A",
+          "text": "Chocolate 75% Drops 3kg",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 263,
+          "height": 24
+        },
+        {
+          "tag": "A",
+          "text": "6 Flavors of Vietnam Set",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 263,
+          "height": 24
+        }
+      ],
+      "images": []
+    },
+    {
+      "name": "marou",
+      "width": 390,
+      "status": 200,
+      "screenshot": "docs/crm/test-results/homepage-refinement/baseline/marou-390.png",
+      "url": "https://maisonmarou.com/",
+      "viewport": 390,
+      "documentWidth": 390,
+      "rootFont": "16px",
+      "body": {
+        "font": "Inter, sans-serif",
+        "size": "14px",
+        "lineHeight": "24px",
+        "weight": "700",
+        "letterSpacing": "0.14px",
+        "width": 390,
+        "height": 7153
+      },
+      "headings": [
+        {
+          "tag": "H1",
+          "text": "24 DOORS, 24 DELIGHTS",
+          "font": "\"Tungsten SemiBold\", serif",
+          "size": "40px",
+          "lineHeight": "44.4px",
+          "weight": "400",
+          "letterSpacing": "5px",
+          "width": 367,
+          "height": 89
+        },
+        {
+          "tag": "H2",
+          "text": "EXPLORE THE WORLD OF DELICIOUS VIETNAMESE CHOCOLATE CREATIONS",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "40px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 358,
+          "height": 160
+        },
+        {
+          "tag": "H3",
+          "text": "6 Flavors of Vietnam Napolitain Gift Box",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 316,
+          "height": 36
+        },
+        {
+          "tag": "H3",
+          "text": "Set Of 3 Mini Gift Boxes",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 181,
+          "height": 36
+        },
+        {
+          "tag": "H3",
+          "text": "6 Single Origin Napolitain Gift Box",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 268,
+          "height": 36
+        },
+        {
+          "tag": "H3",
+          "text": "6 Single Origin Mini Gift Box",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 218,
+          "height": 36
+        },
+        {
+          "tag": "H3",
+          "text": "6 The Faiseurs Collection Mini Gift Box",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 302,
+          "height": 36
+        },
+        {
+          "tag": "H2",
+          "text": "Discover our best sellers",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "40px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 323,
+          "height": 40
+        },
+        {
+          "tag": "H2",
+          "text": "CREATE SOMETHING UNFORGETTABLE",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "40px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 358,
+          "height": 80
+        },
+        {
+          "tag": "H4",
+          "text": "PASTRY MASTERCLASS",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 298,
+          "height": 36
+        },
+        {
+          "tag": "H4",
+          "text": "CORPORATE GIFTS",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 298,
+          "height": 36
+        },
+        {
+          "tag": "H4",
+          "text": "CELEBRATION CAKES",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "36px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 298,
+          "height": 36
+        },
+        {
+          "tag": "H3",
+          "text": "MEET OUR INCREDIBLE TEAM",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "48px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 358,
+          "height": 48
+        },
+        {
+          "tag": "H2",
+          "text": "COME VISIT US!",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "40px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 358,
+          "height": 40
+        },
+        {
+          "tag": "H2",
+          "text": "Follow @MAISONMAROU",
+          "font": "\"Tungsten medium\"",
+          "size": "40px",
+          "lineHeight": "40px",
+          "weight": "400",
+          "letterSpacing": "1px",
+          "width": 358,
+          "height": 40
+        }
+      ],
+      "navigation": [],
+      "paragraphs": [],
+      "productTitles": [
+        {
+          "tag": "A",
+          "text": "Chocolate Advent Calendar",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 202,
+          "height": 24
+        },
+        {
+          "tag": "A",
+          "text": "Birthday Cake 3 Level",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 202,
+          "height": 24
+        },
+        {
+          "tag": "A",
+          "text": "Chocolate 75% Drops 3kg",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 202,
+          "height": 24
+        },
+        {
+          "tag": "A",
+          "text": "6 Flavors of Vietnam Set",
+          "font": "\"Tungsten medium\"",
+          "size": "24px",
+          "lineHeight": "24px",
+          "weight": "500",
+          "letterSpacing": "normal",
+          "width": 202,
+          "height": 24
+        }
+      ],
+      "images": []
+    }
+  ]
+}

@@ -1,0 +1,636 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL through fixed localhost4372→VPS4336 proxy; public GET-only verification",
+  "testedAt": "2026-11-05T09:41:28.982Z",
+  "confirmation": true,
+  "recaptureActivity": false,
+  "cases": [
+    {
+      "name": "Confirm corrected mobile header geometry and complete catalog at 390px",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirm corrected mobile header geometry and complete catalog at 320px",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirm eight whole gallery frames and corrected metadata contrast at 1366px",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirm eight whole gallery frames and corrected metadata contrast at 390px",
+      "status": "PASS"
+    },
+    {
+      "name": "Read-only guards and settled first-party runtime remain clean",
+      "status": "PASS"
+    }
+  ],
+  "measurements": [
+    {
+      "label": "home-390-confirmation",
+      "root": 16,
+      "body": {
+        "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+        "size": 16,
+        "lineHeight": "26.4px"
+      },
+      "nav": {
+        "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+        "size": 14,
+        "lineHeight": "23.1px"
+      },
+      "hero": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 31.2,
+        "lineHeight": "33.696px"
+      },
+      "catalog": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 28,
+        "lineHeight": "33.6px"
+      },
+      "product": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 17,
+        "lineHeight": "22.1px"
+      },
+      "brand": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 28,
+        "lineHeight": "33.6px"
+      },
+      "gift": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 28,
+        "lineHeight": "33.6px"
+      },
+      "columns": 2,
+      "ids": [
+        "cohamy-almond-chocolate-80g",
+        "cohamy-cashew-chocolate-80g",
+        "cohamy-almond-matcha-chocolate-80g",
+        "cohamy-almond-strawberry-chocolate-80g",
+        "cohamy-almond-durian-chocolate-80g",
+        "cohamy-macadamia-chocolate-80g",
+        "cohamy-mango-chocolate-80g",
+        "cohamy-chocolate-candy-65g"
+      ],
+      "rowTops": [
+        -4243,
+        -3701,
+        -3158,
+        -2616
+      ],
+      "links": [
+        "/vi/san-pham/cohamy-socola-hanh-nhan-80g",
+        "/vi/san-pham/cohamy-socola-hat-dieu-80g",
+        "/vi/san-pham/cohamy-socola-hanh-nhan-matcha-80g",
+        "/vi/san-pham/cohamy-socola-hanh-nhan-dau-tay-80g",
+        "/vi/san-pham/cohamy-socola-hanh-nhan-sau-rieng-80g",
+        "/vi/san-pham/cohamy-socola-mac-ca-80g",
+        "/vi/san-pham/cohamy-xoai-say-deo-phu-socola-80g",
+        "/vi/san-pham/cohamy-socola-ngu-sac-65g"
+      ]
+    },
+    {
+      "label": "home-390-confirmation",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "header-390-confirmation",
+      "logo": {
+        "x": 102,
+        "y": 11.46875,
+        "width": 142,
+        "height": 41.046875,
+        "right": 244,
+        "bottom": 52.515625
+      },
+      "buttons": [
+        {
+          "label": "Menu",
+          "width": 44,
+          "height": 44,
+          "x": 20,
+          "y": 10,
+          "overlapWidth": 0,
+          "overlapHeight": 41.046875
+        },
+        {
+          "label": "Ngôn ngữ",
+          "width": 44,
+          "height": 44,
+          "x": 282,
+          "y": 10,
+          "overlapWidth": 0,
+          "overlapHeight": 41.046875
+        },
+        {
+          "label": "Giỏ hàng",
+          "width": 44,
+          "height": 44,
+          "x": 326,
+          "y": 10,
+          "overlapWidth": 0,
+          "overlapHeight": 41.046875
+        }
+      ]
+    },
+    {
+      "label": "home-marketing-390-confirmation",
+      "images": [
+        {
+          "src": "/_next/image",
+          "kind": "hero",
+          "naturalWidth": 351,
+          "naturalHeight": 438,
+          "width": 280,
+          "height": 350,
+          "objectFit": "contain",
+          "relativeAspectError": 0.0017094017094015923,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": "team",
+          "naturalWidth": 351,
+          "naturalHeight": 364,
+          "width": 350,
+          "height": 363.671875,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0019493177387914784,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": "gift",
+          "naturalWidth": 351,
+          "naturalHeight": 438,
+          "width": 260,
+          "height": 325,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0017094017094015923,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": "activity",
+          "naturalWidth": 351,
+          "naturalHeight": 467,
+          "width": 350,
+          "height": 466.484375,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0017468094842069126,
+          "clippingAncestors": []
+        }
+      ]
+    },
+    {
+      "label": "home-390",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "catalog-390",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "brand-390",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "activity-390",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "home-320-confirmation",
+      "root": 16,
+      "body": {
+        "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+        "size": 16,
+        "lineHeight": "26.4px"
+      },
+      "nav": {
+        "font": "Manrope, \"Manrope Fallback\", ui-sans-serif, system-ui, sans-serif",
+        "size": 14,
+        "lineHeight": "23.1px"
+      },
+      "hero": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 30,
+        "lineHeight": "32.4px"
+      },
+      "catalog": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 28,
+        "lineHeight": "33.6px"
+      },
+      "product": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 17,
+        "lineHeight": "22.1px"
+      },
+      "brand": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 28,
+        "lineHeight": "33.6px"
+      },
+      "gift": {
+        "font": "\"Playfair Display\", \"Playfair Display Fallback\", Georgia, serif",
+        "size": 28,
+        "lineHeight": "33.6px"
+      },
+      "columns": 2,
+      "ids": [
+        "cohamy-almond-chocolate-80g",
+        "cohamy-cashew-chocolate-80g",
+        "cohamy-almond-matcha-chocolate-80g",
+        "cohamy-almond-strawberry-chocolate-80g",
+        "cohamy-almond-durian-chocolate-80g",
+        "cohamy-macadamia-chocolate-80g",
+        "cohamy-mango-chocolate-80g",
+        "cohamy-chocolate-candy-65g"
+      ],
+      "rowTops": [
+        -4093,
+        -3566,
+        -3040,
+        -2514
+      ],
+      "links": [
+        "/vi/san-pham/cohamy-socola-hanh-nhan-80g",
+        "/vi/san-pham/cohamy-socola-hat-dieu-80g",
+        "/vi/san-pham/cohamy-socola-hanh-nhan-matcha-80g",
+        "/vi/san-pham/cohamy-socola-hanh-nhan-dau-tay-80g",
+        "/vi/san-pham/cohamy-socola-hanh-nhan-sau-rieng-80g",
+        "/vi/san-pham/cohamy-socola-mac-ca-80g",
+        "/vi/san-pham/cohamy-xoai-say-deo-phu-socola-80g",
+        "/vi/san-pham/cohamy-socola-ngu-sac-65g"
+      ]
+    },
+    {
+      "label": "home-320-confirmation",
+      "viewport": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    },
+    {
+      "label": "header-320-confirmation",
+      "logo": {
+        "x": 82,
+        "y": 15.8125,
+        "width": 112,
+        "height": 32.375,
+        "right": 194,
+        "bottom": 48.1875
+      },
+      "buttons": [
+        {
+          "label": "Menu",
+          "width": 44,
+          "height": 44,
+          "x": 20,
+          "y": 10,
+          "overlapWidth": 0,
+          "overlapHeight": 32.375
+        },
+        {
+          "label": "Ngôn ngữ",
+          "width": 44,
+          "height": 44,
+          "x": 212,
+          "y": 10,
+          "overlapWidth": 0,
+          "overlapHeight": 32.375
+        },
+        {
+          "label": "Giỏ hàng",
+          "width": 44,
+          "height": 44,
+          "x": 256,
+          "y": 10,
+          "overlapWidth": 0,
+          "overlapHeight": 32.375
+        }
+      ]
+    },
+    {
+      "label": "home-marketing-320-confirmation",
+      "images": [
+        {
+          "src": "/_next/image",
+          "kind": "hero",
+          "naturalWidth": 288,
+          "naturalHeight": 360,
+          "width": 280,
+          "height": 350,
+          "objectFit": "contain",
+          "relativeAspectError": 0,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": "team",
+          "naturalWidth": 288,
+          "naturalHeight": 299,
+          "width": 280,
+          "height": 290.9375,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0008354218880535225,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": "gift",
+          "naturalWidth": 288,
+          "naturalHeight": 360,
+          "width": 260,
+          "height": 325,
+          "objectFit": "fill",
+          "relativeAspectError": 0,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": "activity",
+          "naturalWidth": 288,
+          "naturalHeight": 383,
+          "width": 280,
+          "height": 373.1875,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0022144066692718622,
+          "clippingAncestors": []
+        }
+      ]
+    },
+    {
+      "label": "home-320",
+      "viewport": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    },
+    {
+      "label": "catalog-320",
+      "viewport": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    },
+    {
+      "label": "brand-320",
+      "viewport": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    },
+    {
+      "label": "activity-320",
+      "viewport": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    },
+    {
+      "label": "gallery-1366-confirmation",
+      "images": [
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 239,
+          "width": 350,
+          "height": 233.328125,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0013704668223729621,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 317,
+          "width": 350,
+          "height": 308.984375,
+          "objectFit": "fill",
+          "relativeAspectError": 0.00022185520250439517,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 479,
+          "width": 350,
+          "height": 466.65625,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0007187163014295006,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 479,
+          "width": 350,
+          "height": 466.65625,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0007187163014295006,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 640,
+          "width": 350,
+          "height": 622.515625,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0023128845237816442,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 479,
+          "width": 350,
+          "height": 466.65625,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0007187163014295006,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 386,
+          "width": 350,
+          "height": 375.515625,
+          "objectFit": "fill",
+          "relativeAspectError": 0.002150362657103111,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 359,
+          "naturalHeight": 374,
+          "width": 350,
+          "height": 363.671875,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0026179655266298507,
+          "clippingAncestors": []
+        }
+      ]
+    },
+    {
+      "label": "gallery-1366",
+      "viewport": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "gallery-390-confirmation",
+      "images": [
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 233,
+          "width": 340,
+          "height": 226.65625,
+          "objectFit": "fill",
+          "relativeAspectError": 0.001382679088456018,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 309,
+          "width": 340,
+          "height": 300.15625,
+          "objectFit": "fill",
+          "relativeAspectError": 0.00005056890012622439,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 467,
+          "width": 340,
+          "height": 453.328125,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0007257830233737828,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 467,
+          "width": 340,
+          "height": 453.328125,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0007257830233737828,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 624,
+          "width": 340,
+          "height": 604.734375,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0023763384898181084,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 467,
+          "width": 340,
+          "height": 453.328125,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0007257830233737828,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 376,
+          "width": 340,
+          "height": 364.78125,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0013045979121537599,
+          "clippingAncestors": []
+        },
+        {
+          "src": "/_next/image",
+          "kind": null,
+          "naturalWidth": 350,
+          "naturalHeight": 364,
+          "width": 340,
+          "height": 353.28125,
+          "objectFit": "fill",
+          "relativeAspectError": 0.0009022556390976266,
+          "clippingAncestors": []
+        }
+      ]
+    },
+    {
+      "label": "gallery-390",
+      "viewport": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/homepage-refinement/staging/home-390.png",
+    "docs/crm/test-results/homepage-refinement/staging/catalog-390.png",
+    "docs/crm/test-results/homepage-refinement/staging/brand-390.png",
+    "docs/crm/test-results/homepage-refinement/staging/activity-390.png",
+    "docs/crm/test-results/homepage-refinement/staging/home-320.png",
+    "docs/crm/test-results/homepage-refinement/staging/catalog-320.png",
+    "docs/crm/test-results/homepage-refinement/staging/brand-320.png",
+    "docs/crm/test-results/homepage-refinement/staging/activity-320.png",
+    "docs/crm/test-results/homepage-refinement/staging/gallery-1366.png",
+    "docs/crm/test-results/homepage-refinement/staging/gallery-390.png"
+  ],
+  "captureMethod": "Whole-document screenshots and document-coordinate region clips are taken at scroll zero with neutral focus after image scroll/load/decode. Region clips avoid the sticky-header fragment caused by automatic element scrolling in the initial batch.",
+  "accessibility": [
+    {
+      "label": "gallery-1366-confirmation",
+      "violations": [],
+      "incomplete": [],
+      "passes": 19
+    },
+    {
+      "label": "gallery-390-confirmation",
+      "violations": [],
+      "incomplete": [],
+      "passes": 19
+    }
+  ],
+  "errors": [],
+  "blockedWrites": [],
+  "externalRequestsBlocked": [],
+  "productionBusinessWrites": 0,
+  "orderSubmissions": 0,
+  "realEmailsSent": 0,
+  "notes": [
+    "One bounded confirmation for the two recorded material findings: mobile logo/control collision and gallery metadata contrast. Original functional/cart/localization reports remain unchanged. Only affected canonical captures and corrected document-clipped mobile region images are replaced."
+  ],
+  "scope": "Public catalog completeness/grid, original marketing/photo framing, public type scale and workspace boundary, branding in sampled localized runtime pages, current routes, local cart UI, keyboard/reflow and axe samples. All requests outside GET/HEAD/OPTIONS are blocked. No claim of exhaustive accessibility or every CMS article render."
+}

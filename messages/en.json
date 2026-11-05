@@ -39,7 +39,7 @@
       }
     },
     "hero": {
-      "badge": "Cohamy and Jamy Green",
+      "badge": "Cohamy",
       "title": "New products from Cohamy",
       "subtitle": "Seven 80g chocolate pouches and 65g colorful chocolate candy. Explore the images and details of each product.",
       "ctaPrimary": "Explore Products",
@@ -61,7 +61,7 @@
       "phrase2": "Elegant Gift Collection",
       "phrase3": "Selected Ingredients",
       "phrase4": "Signature Flavors",
-      "phrase5": "Cohamy and Jamy Green",
+      "phrase5": "Cohamy",
       "phrase6": "Made in Vietnam"
     },
     "flavorRibbon": {
@@ -233,7 +233,7 @@
   "products": {
     "newArrival": "New arrival",
     "title": "Products",
-    "subtitle": "Cohamy & Jamy Chocolate Collection",
+    "subtitle": "Cohamy Chocolate Collection",
     "count": "{count} products",
     "empty": "No matching products found",
     "emptyHint": "Try adjusting your filters or search keywords",
@@ -467,7 +467,7 @@
     }
   },
   "footer": {
-    "brandTagline": "Cohamy and Jamy Green",
+    "brandTagline": "Cohamy",
     "description": "Cohamy — Premium nut-coated chocolate from Vietnam. Exquisite flavors, meaningful gifts.",
     "quickLinks": "Quick Links",
     "support": "Support",
@@ -569,11 +569,11 @@
   "seo": {
     "home": {
       "title": "Cohamy — Premium Vietnamese Nut-Coated Chocolate",
-      "description": "Discover Cohamy & Jamy chocolate collection: cashew, almond, matcha, durian and more unique flavors. Elegant gifts, premium quality."
+      "description": "Discover Cohamy chocolate collection: cashew, almond, matcha, durian and more unique flavors. Elegant gifts, premium quality."
     },
     "products": {
       "title": "Products — Cohamy Chocolate",
-      "description": "Browse Cohamy & Jamy nut-coated chocolate products. Shop online with nationwide delivery."
+      "description": "Browse Cohamy nut-coated chocolate products. Shop online with nationwide delivery."
     },
     "productDetail": {
       "title": "{name} — Cohamy",

@@ -10,6 +10,7 @@ import type { Locale } from "@/lib/types";
 import styles from "./CacaoHome.module.css";
 import {ProductPrice} from '@/components/ProductPrice';
 import {ProductPurchase} from '@/components/ProductPurchase';
+import {productImageDimensions} from '@/data/product-image-dimensions';
 
 const flavorProducts = [
   ["almond", "cohamy-almond-chocolate-80g"],
@@ -20,12 +21,6 @@ const flavorProducts = [
   ["macadamia", "cohamy-macadamia-chocolate-80g"],
   ["mango", "cohamy-mango-chocolate-80g"],
   ["candy", "cohamy-chocolate-candy-65g"],
-] as const;
-
-const featuredPhotos = [
-  { id: "cohamy-almond-chocolate-80g", photo: "almond" },
-  { id: "cohamy-almond-matcha-chocolate-80g", photo: "matcha" },
-  { id: "cohamy-almond-strawberry-chocolate-80g", photo: "strawberry" },
 ] as const;
 
 async function CacaoBlog({ locale }: { locale: Locale }) {
@@ -74,21 +69,15 @@ export async function CacaoHome({ locale }: { locale: Locale }) {
   return (
     <div className={styles.home} data-home-cacao>
       <section className={styles.hero} aria-labelledby="cacao-hero-title">
-        <div className={styles.heroBackdrop} aria-hidden="true">
-          <Image
-            src="/images/home-cacao/almond.jpg"
-            alt=""
-            fill
-            sizes="100vw"
-          />
-        </div>
         <div className={styles.heroPhoto}>
           <Image
             src="/images/home-cacao/almond.jpg"
             alt={almond.name[locale]}
-            fill
+            width={1122}
+            height={1402}
             preload
-            sizes="(max-width: 600px) 48vw, 53vw"
+            sizes="(max-width: 600px) 90vw, 440px"
+            data-marketing-image="hero"
           />
         </div>
         <div className={styles.heroCopy}>
@@ -123,20 +112,23 @@ export async function CacaoHome({ locale }: { locale: Locale }) {
           {t("cacao.productsTitle")}
         </h2>
         <div className={styles.productGrid}>
-          {featuredPhotos.map(({ id, photo }) => {
+          {flavorProducts.map(([, id]) => {
             const product = productArrivals.find((item) => item.id === id)!;
+            const photo = product.images[id === 'cohamy-cashew-chocolate-80g' ? 1 : 0];
+            const dimensions = productImageDimensions[photo] ?? {width:1122,height:1402};
             const href = {
               pathname: "/products/[slug]" as const,
               params: { slug: product.slug[locale] },
             };
             return (
-              <article className={styles.product} key={id}>
+              <article className={styles.product} key={id} data-home-product={id}>
                 <Link href={href} className={styles.productPhoto} tabIndex={-1} aria-hidden="true">
                   <Image
-                    src={`/images/home-cacao/${photo}.jpg`}
+                    src={photo}
                     alt=""
-                    fill
-                    sizes={photo === "strawberry" ? "(max-width: 600px) 90vw, 32vw" : "(max-width: 600px) 44vw, 32vw"}
+                    width={dimensions.width}
+                    height={dimensions.height}
+                    sizes="(max-width: 900px) 44vw, 23vw"
                   />
                 </Link>
                 <h3>{product.name[locale].replace(/^Cohamy\s+/u, "").replace(/^Socola\s+/u, "")}</h3>
@@ -153,20 +145,18 @@ export async function CacaoHome({ locale }: { locale: Locale }) {
 
       <section className={styles.brand} aria-labelledby="cacao-brand-title">
         <div className={styles.brandPhoto}>
-          <Image src="/images/home-cacao/brand.jpg" alt={team.caption[locale]} fill sizes="(max-width: 900px) 100vw, 64vw" />
+          <Image src="/images/home-cacao/brand.jpg" alt={team.caption[locale]} width={1715} height={1782} sizes="(max-width: 600px) 90vw, 440px" data-marketing-image="team" />
         </div>
         <div className={styles.brandCopy}>
           <h2 id="cacao-brand-title">{t("about.subtitle")}</h2>
+          <p>{team.caption[locale]}</p>
           <Link href="/about" className={styles.button}>{t("about.cta")}</Link>
         </div>
       </section>
 
       <section className={styles.gift} aria-labelledby="cacao-gift-title">
-        <div className={styles.giftBackdrop} aria-hidden="true">
-          <Image src="/images/home-cacao/strawberry.jpg" alt="" fill sizes="100vw" />
-        </div>
         <div className={styles.giftPhoto}>
-          <Image src="/images/home-cacao/strawberry.jpg" alt={strawberry.name[locale]} fill sizes="(max-width: 600px) 42vw, 39vw" />
+          <Image src="/images/home-cacao/strawberry.jpg" alt={strawberry.name[locale]} width={1122} height={1402} sizes="(max-width: 600px) 90vw, 320px" data-marketing-image="gift" />
         </div>
         <div className={styles.giftCopy}>
           <h2 id="cacao-gift-title">{t("cacao.giftTitle")}</h2>
@@ -176,14 +166,16 @@ export async function CacaoHome({ locale }: { locale: Locale }) {
       </section>
 
       <section className={styles.activities} aria-labelledby="cacao-activities-title">
-        <div className={styles.sectionHeading}>
+        <div className={styles.activitiesCopy}>
           <h2 id="cacao-activities-title">{t("activities.title")}</h2>
+          <p>{visitors.caption[locale]}</p>
+          <p className={styles.activityDetails}>{visitors.location?.[locale]} · {visitors.date}</p>
           <Link href="/activities" className={styles.textLink}>
             {t("activities.viewAll")} <ArrowRight size={18} aria-hidden />
           </Link>
         </div>
         <Link href="/activities" className={styles.activitiesPhoto} aria-label={t("activities.viewAll")}>
-          <Image src="/images/home-cacao/activities.jpg" alt={visitors.caption[locale]} fill sizes="92vw" />
+          <Image src="/images/home-cacao/activities.jpg" alt={visitors.caption[locale]} width={1920} height={2560} sizes="(max-width: 600px) 90vw, 360px" data-marketing-image="activity" />
         </Link>
       </section>
 
@@ -192,9 +184,6 @@ export async function CacaoHome({ locale }: { locale: Locale }) {
       </Suspense>
 
       <section className={styles.partners} aria-labelledby="cacao-partner-title">
-        <div className={styles.partnerPhoto} aria-hidden="true">
-          <Image src="/images/home-cacao/almond.jpg" alt="" fill sizes="300px" />
-        </div>
         <h2 id="cacao-partner-title">{t("cacao.partnerTitle")}</h2>
         <Link href="/partners" className={styles.button}>{t("cacao.partnerCta")}</Link>
       </section>

@@ -1,0 +1,123 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL source-copy verification; no runtime, deployment or WordPress mutation performed by this agent",
+  "checkedOn": "2026-11-05",
+  "sourceBaseCommit": "6b8f59379c3ea12d0fcf754dc4b4062a43ebe0c6",
+  "scope": "Normalize combined public brand presentation to Cohamy while preserving identifiers, link targets, facts and standalone manufacturer/product names.",
+  "replacements": {
+    "total": 58,
+    "fileCount": 14,
+    "files": [
+      {
+        "file": "messages/vi.json",
+        "count": 7
+      },
+      {
+        "file": "messages/en.json",
+        "count": 6
+      },
+      {
+        "file": "messages/zh.json",
+        "count": 6
+      },
+      {
+        "file": "messages/ko.json",
+        "count": 6
+      },
+      {
+        "file": "messages/ja.json",
+        "count": 6
+      },
+      {
+        "file": "data/activities.ts",
+        "count": 10
+      },
+      {
+        "file": "data/blog.ts",
+        "count": 1
+      },
+      {
+        "file": "data/blog-locale/en.ts",
+        "count": 1
+      },
+      {
+        "file": "data/blog-locale/zh.ts",
+        "count": 1
+      },
+      {
+        "file": "data/blog-locale/ko.ts",
+        "count": 1
+      },
+      {
+        "file": "data/blog-locale/ja.ts",
+        "count": 1
+      },
+      {
+        "file": "lib/assets/manifest.ts",
+        "count": 5
+      },
+      {
+        "file": "public/asset-manifest.json",
+        "count": 5
+      },
+      {
+        "file": "lib/seo.ts",
+        "count": 2
+      }
+    ],
+    "locales": [
+      "vi",
+      "en",
+      "zh",
+      "ko",
+      "ja"
+    ],
+    "organizationAlternateNames": "Collapsed obsolete combined-brand aliases to one Cohamy alias; two replacements count as one changed source line.",
+    "koreanCaptions": "Existing localized 코하미 wording retained while the joined 자미 / 자미 그린 clause was removed."
+  },
+  "performedChecks": {
+    "combinedFormsAfter": 0,
+    "combinedFormScan": "Source scan across messages, data, lib, app, components and public for joined Cohamy/Jamy forms using Vietnamese, English, ampersand, Chinese, Japanese and Korean conjunctions, plus Korean transliterations.",
+    "changedJsonParsed": {
+      "status": "PASS",
+      "files": 6
+    },
+    "jsonKeyAndValueShapes": {
+      "status": "PASS",
+      "files": 6,
+      "comparedTo": "git show HEAD:<file> at the recorded base revision"
+    },
+    "urlTargets": {
+      "status": "PASS",
+      "files": 14,
+      "result": "Original and edited URL sequences unchanged"
+    },
+    "numericTokens": {
+      "status": "PASS",
+      "files": 14,
+      "result": "Original and edited numeric token sequences unchanged"
+    },
+    "diffWhitespace": {
+      "status": "PASS",
+      "command": "git diff --check"
+    }
+  },
+  "preserved": [
+    "Standalone Jamy product and manufacturer names",
+    "Product IDs, routes, asset paths and existing link targets",
+    "Existing article facts, dates, quantities and unrelated prose",
+    "Original photographs and any branding printed within them",
+    "CRM accounting data, records and historical documents"
+  ],
+  "humanizer": {
+    "skill": "C:/Users/ACER/.codex/skills/humanizer/SKILL.md",
+    "mode": "Embedded, bounded brand-copy edit",
+    "workflowNote": "The full skill was read. Mark: identify the combined-brand phrases and keep unrelated prose outside this edit. Draft: remove the joined Jamy clause in each affected locale and normalize Organization aliases. Review: read affected wording and inspect diffs, JSON structure, link targets and numerical tokens. Final edit: save only the requested Cohamy presentation change.",
+    "claimLimit": "Humanizer use does not establish search ranking or success against AI detectors."
+  },
+  "limitations": [
+    "This file records the checks already performed before later homepage-layout work; it does not represent a new test run.",
+    "WordPress published-content, metadata and blog-name checks are separate release-owner evidence, not this agent's source verification.",
+    "No browser, production MCP, provider-delivery or deployment result is claimed here."
+  ]
+}

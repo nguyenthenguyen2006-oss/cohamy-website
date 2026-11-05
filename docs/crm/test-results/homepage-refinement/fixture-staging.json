@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL; restricted runtime role",
+  "catalogItems": 8,
+  "available": 8,
+  "fictitiousUniformPrice": 59724,
+  "websiteOrders": 0,
+  "workerInvoked": false,
+  "externalEmails": 0,
+  "productionWrites": 0
+}

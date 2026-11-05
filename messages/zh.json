@@ -39,7 +39,7 @@
       }
     },
     "hero": {
-      "badge": "Cohamy 与 Jamy Green",
+      "badge": "Cohamy",
       "title": "Cohamy 新品",
       "subtitle": "七款80g袋装巧克力和65g彩色巧克力糖。查看各款产品的图片与详细信息。",
       "ctaPrimary": "探索产品",
@@ -61,7 +61,7 @@
       "phrase2": "精美礼品系列",
       "phrase3": "精选原料",
       "phrase4": "独家风味",
-      "phrase5": "Cohamy 与 Jamy Green",
+      "phrase5": "Cohamy",
       "phrase6": "越南制造"
     },
     "flavorRibbon": {
@@ -233,7 +233,7 @@
   "products": {
     "newArrival": "新品",
     "title": "产品",
-    "subtitle": "Cohamy & Jamy 巧克力系列",
+    "subtitle": "Cohamy 巧克力系列",
     "count": "{count} 件产品",
     "empty": "未找到匹配的产品",
     "emptyHint": "请尝试调整筛选条件或搜索关键词",
@@ -466,7 +466,7 @@
     }
   },
   "footer": {
-    "brandTagline": "Cohamy 与 Jamy Green",
+    "brandTagline": "Cohamy",
     "description": "Cohamy — 来自越南的高端坚果裹巧克力。精致风味，心意好礼。",
     "quickLinks": "快速链接",
     "support": "客户支持",
@@ -568,11 +568,11 @@
   "seo": {
     "home": {
       "title": "Cohamy — 越南高端坚果裹巧克力",
-      "description": "探索 Cohamy & Jamy 巧克力系列：腰果、杏仁、抹茶、榴莲等多种独特口味。精美礼品，优质品质。"
+      "description": "探索 Cohamy 巧克力系列：腰果、杏仁、抹茶、榴莲等多种独特口味。精美礼品，优质品质。"
     },
     "products": {
       "title": "产品 — Cohamy 巧克力",
-      "description": "浏览 Cohamy & Jamy 坚果裹巧克力产品。在线购买，全国配送。"
+      "description": "浏览 Cohamy 坚果裹巧克力产品。在线购买，全国配送。"
     },
     "productDetail": {
       "title": "{name} — Cohamy",

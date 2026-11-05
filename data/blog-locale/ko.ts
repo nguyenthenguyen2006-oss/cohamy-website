@@ -33,7 +33,7 @@ export const koBlogContent: Record<string, string> = {
 
   "blog-qua-tang-tet": `
 <h1 id="holiday-gifts">Cohamy의 명절·축제 선물 아이디어</h1>
-<p>축제 선물은 아름다워야 하고, 맛도 뛰어나야 합니다. Cohamy & Jamy 컬렉션은 두 가지를 모두 충족합니다.</p>
+<p>축제 선물은 아름다워야 하고, 맛도 뛰어나야 합니다. Cohamy 컬렉션은 두 가지를 모두 충족합니다.</p>
 <h2 id="premium-set">프리미엄 4병 기프트 세트</h2>
 <p><a href="/ko/products/cohamy-gift-jar-collection">Cohamy 기프트 병 컬렉션</a>에는 아몬드, 캐슈, 마카다미아, 망고 건조 풍미가 우아한 금박 포장과 함께 담겨 있습니다.</p>
 <h2 id="by-budget">예산별 선물</h2>

@@ -33,7 +33,7 @@ export const jaBlogContent: Record<string, string> = {
 
   "blog-qua-tang-tet": `
 <h1 id="holiday-gifts">Cohamy の祝祭・季節のギフトアイデア</h1>
-<p>祝祭のギフトは、美しさと味わいの両方を備えているべきです。Cohamy & Jamy コレクションは、その両方をお届けします。</p>
+<p>祝祭のギフトは、美しさと味わいの両方を備えているべきです。Cohamy コレクションは、その両方をお届けします。</p>
 <h2 id="premium-set">プレミアム4瓶ギフトセット</h2>
 <p><a href="/ja/products/cohamy-gift-jar-collection">Cohamy ギフトジャーコレクション</a>には、アーモンド、カシュー、マカダミア、ドライマンゴーのフレーバーが、上品な金箔パッケージで揃っています。</p>
 <h2 id="by-budget">予算別ギフト</h2>

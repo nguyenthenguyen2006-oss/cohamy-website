@@ -33,7 +33,7 @@ export const zhBlogContent: Record<string, string> = {
 
   "blog-qua-tang-tet": `
 <h1 id="holiday-gifts">Cohamy 节日与节庆礼品指南</h1>
-<p>节庆礼品应兼具美观与美味。Cohamy 与 Jamy 系列完美呈现二者。</p>
+<p>节庆礼品应兼具美观与美味。Cohamy 系列完美呈现二者。</p>
 <h2 id="premium-set">高端四罐礼品套装</h2>
 <p><a href="/zh/products/cohamy-gift-jar-collection">Cohamy 礼品罐套装</a>包含杏仁、腰果、夏威夷果与芒果干风味，配以优雅烫金包装。</p>
 <h2 id="by-budget">按预算选购</h2>

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-05T07:19:32.454305+00:00",
-  "title": "Design System: Cohamy public homepage and shared footer",
+  "generatedAt": "2026-11-05T09:46:06.134729+00:00",
+  "title": "Design System: Cohamy public storefront and shared footer",
   "extensions": {
     "typographyMeta": {
       "footer-detail": {
@@ -11,6 +11,30 @@
       "footer-heading": {
         "displayName": "Shared footer heading",
         "purpose": "Weight distinguishes headings and the legal company name without changing family or size."
+      },
+      "display": {
+        "displayName": "Homepage display",
+        "purpose": "Compact two-line hero with locale and breakpoint overrides."
+      },
+      "title": {
+        "displayName": "Homepage product name",
+        "purpose": "Playfair names below the eight complete product frames."
+      },
+      "body": {
+        "displayName": "Public body",
+        "purpose": "16px public root scoped by data-public-storefront; internal roots remain unchanged."
+      },
+      "metadata": {
+        "displayName": "Activity metadata",
+        "purpose": "Opaque warm-brown date/location text; small sizes still require contrast."
+      },
+      "commerce-action": {
+        "displayName": "Retained commerce action",
+        "purpose": "Existing Barlow Condensed purchase action; homepage compact size is 18px."
+      },
+      "commerce-title": {
+        "displayName": "Retained catalog title",
+        "purpose": "Existing non-home Barlow Condensed catalog card title."
       }
     },
     "breakpoints": [
@@ -21,6 +45,37 @@
       {
         "name": "footer-one-column",
         "value": "600px"
+      },
+      {
+        "name": "home-compact-navigation",
+        "value": "1100px"
+      },
+      {
+        "name": "home-two-column-catalog-and-menu",
+        "value": "900px"
+      },
+      {
+        "name": "home-stacked-scenes",
+        "value": "600px"
+      },
+      {
+        "name": "home-narrow-wordmark",
+        "value": "360px"
+      },
+      {
+        "name": "gallery-two-columns",
+        "value": "640px"
+      },
+      {
+        "name": "gallery-three-columns-and-public-nav",
+        "value": "1024px"
+      }
+    ],
+    "motion": [
+      {
+        "name": "home-action-color",
+        "value": "background-color 160ms ease, color 160ms ease",
+        "purpose": "Gold action response; disabled under prefers-reduced-motion."
       }
     ]
   },
@@ -40,26 +95,93 @@
       "description": "Certificate-backed company registration in the shared footer; preview padding is a presentation inset.",
       "html": "<section class=\"ds-footer-company\" aria-labelledby=\"ds-footer-company-title\" lang=\"vi\"><h2 id=\"ds-footer-company-title\">Thông tin doanh nghiệp</h2><p class=\"ds-footer-company-name\">CÔNG TY TNHH COHAMY</p><dl><div><dt>Mã số thuế:</dt><dd>0111549388</dd></div><div><dt>Ngày cấp lần đầu:</dt><dd><time datetime=\"2026-06-25\">25/06/2026</time></dd></div><div><dt>Nơi cấp:</dt><dd>Phòng Đăng ký kinh doanh và Tài chính doanh nghiệp, Sở Tài chính Thành phố Hà Nội</dd></div><div class=\"ds-footer-company-address\"><dt>Địa chỉ trụ sở:</dt><dd><address>Tầng 3, Tháp A, Tòa nhà T608, KĐT mới Cổ Nhuế, Đường Tôn Quang Phiệt, Phường Nghĩa Đô, Thành phố Hà Nội, Việt Nam</address></dd></div></dl></section>",
       "css": ".ds-footer-company { background:#2c1914; color:#e0cfbd; font-family:var(--font-manrope),ui-sans-serif,system-ui,sans-serif; font-size:16px; font-weight:400; line-height:1.65; padding:24px; overflow-wrap:anywhere; } .ds-footer-company h2 { color:#f0e6d5; font-family:inherit; font-size:inherit; line-height:inherit; font-weight:700; margin:0 0 20px; } .ds-footer-company p,.ds-footer-company dl,.ds-footer-company dd { margin:0; } .ds-footer-company .ds-footer-company-name { color:#f0e6d5; font-weight:700; margin-bottom:16px; } .ds-footer-company dl>div { margin-top:10px; } .ds-footer-company dt,.ds-footer-company dd { display:inline; } .ds-footer-company dt { margin-right:5px; } .ds-footer-company-address dt,.ds-footer-company-address dd { display:block; } .ds-footer-company address { font-style:normal; }"
+    },
+    {
+      "name": "Compact Gold Action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The same existing 44px gold action serves the homepage hero and content rows.",
+      "html": "<a class=\"ds-home-action\" href=\"/vi/san-pham\">Khám phá sản phẩm</a>",
+      "css": ".ds-home-action { display:inline-flex; min-height:44px; align-items:center; justify-content:center; padding:12px 22px; border-radius:5px; background:#edbe39; color:#2c1914; font-family:var(--font-manrope),ui-sans-serif,system-ui,sans-serif; font-size:15px; font-weight:700; line-height:1.4; text-decoration:none; transition:background-color 160ms ease,color 160ms ease; } .ds-home-action:hover { background:#f8d467; } .ds-home-action:focus-visible { outline:3px solid currentColor; outline-offset:4px; } @media(prefers-reduced-motion:reduce) { .ds-home-action { transition:none; } }"
+    },
+    {
+      "name": "Homepage Text Link",
+      "kind": "custom",
+      "refersTo": "text-link",
+      "description": "Underlined 14px destination with the existing arrow vocabulary.",
+      "html": "<a class=\"ds-home-link\" href=\"/vi/hoat-dong\">Xem tất cả hoạt động<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\"/></svg></a>",
+      "css": ".ds-home-link { display:inline-flex; min-height:44px; align-items:center; gap:10px; font-family:var(--font-manrope),ui-sans-serif,system-ui,sans-serif; font-size:14px; line-height:1.5; color:#432820; text-decoration:underline; text-underline-offset:4px; } .ds-home-link svg { flex-shrink:0; } .ds-home-link:hover { color:#765235; } .ds-home-link:focus-visible { outline:3px solid currentColor; outline-offset:4px; }"
+    },
+    {
+      "name": "Compact Product Quantity",
+      "kind": "input",
+      "refersTo": "product-article",
+      "description": "Visual primitive preview of the existing homepage quantity geometry; it does not operate a cart.",
+      "html": "<div class=\"ds-product-quantity\" role=\"group\" aria-label=\"Số lượng\"><button type=\"button\" aria-label=\"Giảm số lượng\" disabled><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M5 12h14\"/></svg></button><input type=\"number\" min=\"1\" value=\"1\" aria-label=\"Số lượng\"/><button type=\"button\" aria-label=\"Tăng số lượng\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M5 12h14M12 5v14\"/></svg></button></div>",
+      "css": ".ds-product-quantity { display:grid; grid-template-columns:44px minmax(0,1fr) 44px; min-height:48px; width:100%; max-width:296px; background:#fff; color:#2a120c; border:1px solid #4a24183d; border-radius:3px; font-family:var(--font-manrope),ui-sans-serif,system-ui,sans-serif; font-variant-numeric:tabular-nums; } .ds-product-quantity button { display:inline-flex; min-width:44px; min-height:46px; align-items:center; justify-content:center; border:0; background:transparent; color:inherit; cursor:pointer; } .ds-product-quantity button:hover:not(:disabled) { background:#f4e9d4; } .ds-product-quantity button:disabled { opacity:.35; cursor:not-allowed; } .ds-product-quantity input { width:100%; min-width:0; border:0; padding:8px 0; background:transparent; color:inherit; font:inherit; font-size:17px; font-weight:700; line-height:1; text-align:center; appearance:textfield; caret-color:#4a2418; } .ds-product-quantity :is(button,input):focus-visible { outline:3px solid #80550e; outline-offset:3px; }"
     }
   ],
   "narrative": {
     "northStar": "Cacao Scenes",
-    "overview": "\"Cacao Scenes\" is the visual world selected as direction C. Original Cohamy product and exhibition photographs lead the page; warm paper carries product selection and article links, while cacao carries the shell and action scenes. Strong serif headings and simple gold actions keep the product legible within the photographs.",
+    "overview": "\"Cacao Scenes\" keeps the original Cohamy product and exhibition photographs, warm paper, cacao fields and gold actions. Playfair Display supplies the heading character; Manrope carries navigation, supporting copy and facts. The user-authorized refinement makes public typography smaller and displays complete photographs instead of the previous cover crops.",
     "keyCharacteristics": [
       "Original product photographs and the original transparent gold wordmark.",
-      "Cacao and paper surfaces with a compact gold action vocabulary.",
-      "Playfair Display headings paired with Manrope controls and supporting text.",
-      "Open photo articles, fine rules and underlined text links.",
-      "Responsive scene crops and a compact mobile shell."
+      "Cacao and paper surfaces with compact gold actions.",
+      "Playfair Display headings with Manrope controls and supporting text; the existing Barlow Condensed commerce face retains its limited purchase/catalog role.",
+      "Eight open product articles in a four-column desktop grid, with prices and commerce controls supplied by the existing components.",
+      "Whole photographic frames in balanced content rows, fine rules, underlined links and a compact mobile shell."
     ],
     "rules": [
+      {
+        "name": "Public Boundary",
+        "body": "Apply the public 16px root and scoped type variables only when `[data-public-storefront]` is present. Apply the homepage scene/header system only to the locale-aware homepage. The documented shared footer applies across public routes. Keep internal CRM/portal typography outside this boundary.",
+        "section": "overview"
+      },
+      {
+        "name": "Original Asset",
+        "body": "Keep original photograph and wordmark pixels. Show complete promotional, About and gallery frames at their actual aspect ratios; product photo slots use `object-fit: contain`. Do not redraw packaging or the supplied brand mark.",
+        "section": "overview"
+      },
+      {
+        "name": "Paper and Cacao",
+        "body": "Use paper with ink for open homepage content and cacao with paper for the shell and action scenes. Gold identifies actions and the supplied wordmark.",
+        "section": "colors"
+      },
+      {
+        "name": "Two Voice",
+        "body": "Preserve Playfair Display for homepage headings and Manrope for supporting copy and controls. Retain Barlow Condensed only in its existing commerce roles. The historical tool-ranked Rasa face is not the implementation.",
+        "section": "typography"
+      },
       {
         "name": "Shared Footer Type",
         "body": "Keep every footer heading, link, fact and copyright line at the `footer-detail` size and family on every viewport. Use the `footer-heading` weight for headings and the legal name, and weight (600) for contact labels; no mobile size reduction applies.",
         "section": "typography"
+      },
+      {
+        "name": "Flat Content",
+        "body": "Keep product articles and article rows flat. The photograph, surface contrast and fine rules provide depth; the existing locale popover retains its incumbent treatment.",
+        "section": "elevation & depth"
+      },
+      {
+        "name": "Small Corner",
+        "body": "Use the action radius for gold actions. Preserve the whole-frame photography and existing locale control; do not reshape the control into a product card.",
+        "section": "shapes"
       }
     ],
-    "dos": [],
-    "donts": []
+    "dos": [
+      "Do apply the Public Boundary Rule before changing public type or using homepage scene styles.",
+      "Do keep original asset pixels, logo transparency, complete promotional frames and existing product/link targets.",
+      "Do show the complete eight-product range in the documented responsive grid.",
+      "Do retain the observed small-screen hierarchy, locale overrides, 44px controls and visible keyboard focus.",
+      "Do source prices, article titles and order-intake state from their existing runtime authorities.",
+      "Do preserve the shared footer's four groups, uniform 16px type and factual content."
+    ],
+    "donts": [
+      "Don't propagate the homepage scene/header world or public root scale into CRM/portal workspaces.",
+      "Don't use the historical tool-ranked Rasa face as an implementation rule.",
+      "Don't reconstruct the original wordmark or packaging, or crop a whole-frame photograph merely to fill a shallow banner.",
+      "Don't invent prices, reviews, certification claims, stock facts or delivery evidence.",
+      "Don't turn historical refused comp gates, current defects or detector findings outside this public scope into reusable design rules."
+    ]
   }
 }

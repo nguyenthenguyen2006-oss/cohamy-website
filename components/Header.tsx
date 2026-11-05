@@ -43,7 +43,7 @@ export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean
     <button
       type="button"
       onClick={() => setOpen(!open)}
-      className={isHome ? styles.menuButton : "md:hidden inline-flex min-h-11 min-w-11 items-center justify-center"}
+      className={isHome ? styles.menuButton : "lg:hidden inline-flex min-h-11 min-w-11 items-center justify-center"}
       aria-label={open ? t("close") : t("menu")}
       aria-expanded={open}
       aria-controls="main-mobile-menu"
@@ -57,10 +57,10 @@ export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean
       <div className={isHome ? styles.headerInner : "max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-2"}>
         {isHome && mobileMenuButton}
         <Link href="/" className={isHome ? styles.logo : "inline-flex shrink-0 items-center leading-none [&>img]:h-7! sm:[&>img]:h-12!"} aria-label="Cohamy">
-          {isHome ? <Image src="/images/home-cacao/logo.png" alt="Cohamy" width={925} height={267} sizes="(max-width: 600px) 142px, (max-width: 1100px) 170px, 211px" /> : <BrandLogo height={48} />}
+          {isHome ? <Image src="/images/home-cacao/logo.png" alt="Cohamy" width={925} height={267} sizes="(max-width: 600px) 142px, (max-width: 1100px) 164px, 184px" /> : <BrandLogo height={48} />}
         </Link>
 
-        <nav aria-label={t("menu")} className={isHome ? styles.navigation : "hidden md:flex gap-9 text-base font-medium"}>
+        <nav aria-label={t("menu")} className={isHome ? styles.navigation : "hidden lg:flex gap-6 text-sm font-medium"}>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-[#D9A441] transition">
               {t(item.label)}
@@ -76,7 +76,7 @@ export function Header({orderIntakeEnabled = false}:{orderIntakeEnabled?:boolean
       </div>
 
       {open && (
-        <nav id="main-mobile-menu" aria-label={t("menu")} className={isHome ? styles.mobileMenu : "md:hidden px-6 py-4 border-t text-sm bg-[#FAF6EF] space-y-3"}>
+        <nav id="main-mobile-menu" aria-label={t("menu")} className={isHome ? styles.mobileMenu : "lg:hidden px-6 py-4 border-t text-sm bg-[#FAF6EF] space-y-3"}>
           {navItems.map((item) => (
             <Link
               key={item.href}
