@@ -1,0 +1,1 @@
+{"status": "PASS", "checkedAt": "2026-11-05T08:05:56.706050+00:00", "database": "exact owned cohamy_qa_online_<32hex> namespace", "role": "restricted qa_commercial_<32hex>", "runtimePath": "exact .local/crm-qa-online-<32hex>.env under owned code directory", "host": "loopback55432", "credentialValuesPrinted": false}

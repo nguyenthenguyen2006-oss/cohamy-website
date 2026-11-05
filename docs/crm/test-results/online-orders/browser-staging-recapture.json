@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL via fixed localhost4371→VPS4335; fictitious contacts only; no worker or external emails",
+  "testedAt": "2026-11-05T08:25:44.393Z",
+  "cases": [
+    {
+      "name": "Warehouse mobile full-page capture has neutral focus and header at top",
+      "status": "PASS"
+    },
+    {
+      "name": "Route handling settles and final first-party errors/write guards remain clear",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/online-orders/browser-staging/warehouse-detail-mobile.png"
+  ],
+  "measurements": [
+    {
+      "label": "warehouse-detail-mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    }
+  ],
+  "accessibility": [],
+  "errors": [],
+  "expectedEvents": [],
+  "blockedRequests": [],
+  "teardown": {
+    "milliseconds": 766,
+    "pending": 0,
+    "quietMs": 1000
+  },
+  "notes": [
+    "Required warehouse mobile evidence recaptured at scroll zero and neutral focus; no application or business data change."
+  ],
+  "productionWrites": 0,
+  "realEmailsSent": 0,
+  "productionOrderSubmissions": 0,
+  "stageOrderCreated": 0,
+  "stageDroppedResponse": false,
+  "liveOrderAvailableForReadOnlyShapeCheck": null,
+  "mcp": "Not invoked in browser suite. Parent verifies native remote MCP separately.",
+  "scope": "UI navigation, role scope, actual browser headers, warehouse handoff/acceptance, version conflicts, exact retry, snapshot display and responsive/accessibility sampling. Stock and finance ledger fingerprints are verified separately by service tests. No exhaustive screen-reader or pixel-baseline claim."
+}

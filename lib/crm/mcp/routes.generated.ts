@@ -29,19 +29,23 @@ import * as r26 from '@/app/api/crm/jobs/[action]/route';
 import * as r27 from '@/app/api/crm/library/[action]/route';
 import * as r28 from '@/app/api/crm/me/route';
 import * as r29 from '@/app/api/crm/onboarding/[action]/route';
-import * as r30 from '@/app/api/crm/partners/duplicates/route';
-import * as r31 from '@/app/api/crm/partners/merge/route';
-import * as r32 from '@/app/api/crm/pricing/[action]/route';
-import * as r33 from '@/app/api/crm/procurement/[action]/route';
-import * as r34 from '@/app/api/crm/quotations/[action]/route';
-import * as r35 from '@/app/api/crm/relationships/[action]/route';
-import * as r36 from '@/app/api/crm/reports/[action]/route';
-import * as r37 from '@/app/api/crm/sales-customers/[action]/route';
-import * as r38 from '@/app/api/crm/spreadsheet/[action]/route';
-import * as r39 from '@/app/api/crm/storefront/policies/route';
-import * as r40 from '@/app/api/crm/storefront/route';
-import * as r41 from '@/app/api/crm/work/[action]/route';
-import * as r42 from '@/app/api/crm/workspace/[action]/route';
+import * as r30 from '@/app/api/crm/online-orders/[id]/accept/route';
+import * as r31 from '@/app/api/crm/online-orders/[id]/dispatch/route';
+import * as r32 from '@/app/api/crm/online-orders/[id]/route';
+import * as r33 from '@/app/api/crm/online-orders/route';
+import * as r34 from '@/app/api/crm/partners/duplicates/route';
+import * as r35 from '@/app/api/crm/partners/merge/route';
+import * as r36 from '@/app/api/crm/pricing/[action]/route';
+import * as r37 from '@/app/api/crm/procurement/[action]/route';
+import * as r38 from '@/app/api/crm/quotations/[action]/route';
+import * as r39 from '@/app/api/crm/relationships/[action]/route';
+import * as r40 from '@/app/api/crm/reports/[action]/route';
+import * as r41 from '@/app/api/crm/sales-customers/[action]/route';
+import * as r42 from '@/app/api/crm/spreadsheet/[action]/route';
+import * as r43 from '@/app/api/crm/storefront/policies/route';
+import * as r44 from '@/app/api/crm/storefront/route';
+import * as r45 from '@/app/api/crm/work/[action]/route';
+import * as r46 from '@/app/api/crm/workspace/[action]/route';
 export interface McpRoute {id:string;method:'GET'|'POST'|'PATCH'|'PUT'|'DELETE';template:string;source:string;group:string;status:'AVAILABLE'|'RETIRED';moduleId:string|null;params:string[];selector:Record<string,string>;query:string[];inputContract:string;multipart:boolean;sourceHash:string}
 const sharedContracts: Record<string,string> = {
   "4b75ce37fd75d5d5": "z.object({id:z.uuid()}).strict() // connection id from GET connections",
@@ -57,6 +61,8 @@ const sharedContracts: Record<string,string> = {
   "c7a321202b1971d9": "const quantity=z.string().regex(/^\\d{1,18}(?:\\.\\d{1,6})?$/).refine(v=>fixed(v)>0n);\nconst reason=z.string().trim().min(3).max(2000);\nconst key=z.uuid();\nconst transferLine=z.object({productId:z.uuid(),lotId:z.uuid(),quantity,destinationLocationId:z.uuid()}).strict();\nconst shipTransferSchema = z.object({sourceLocationId:z.uuid(),lines:z.array(transferLine).min(1).max(200),reason,idempotencyKey:key}).strict()",
   "35e942bb2a930ba0": "z.object({id:z.uuid()})",
   "eb18e2fa220be416": "z.object({id:z.uuid(),data:z.unknown().optional()})",
+  "6a830783f0573cb7": "const acceptSchema = z.object({version:z.number().int().positive(),reason:z.string().trim().max(1000).default(''),idempotencyKey:z.uuid()}).strict()",
+  "e22ed66776fbb1cd": "const assignSchema = z.object({version:z.number().int().positive(),warehouseId:z.uuid(),reason:z.string().trim().min(5).max(1000),idempotencyKey:z.uuid()}).strict()",
   "56c8cfe84480a495": "const fields={representativeName:z.string().trim().min(2).max(120),companyName:z.string().trim().min(2).max(200),phone:z.string().trim().min(8).max(40).regex(/^[+()\\d .-]+$/).refine(v=>{const n=v.replace(/\\D/g,'').length;return n>=8&&n<=15;}),email:z.email().trim().toLowerCase(),province:z.string().trim().min(2).max(120),address:z.string().trim().min(3).max(500),customerType:z.enum(['CUSTOMER','SUPERMARKET']),businessId:z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(''),note:z.string().trim().max(2000).default(''),warehouseId:z.uuid(),idempotencyKey:z.uuid()};\nconst createSalesCustomerSchema = z.object({...fields,salesMembershipId:z.uuid().optional()}).strict()",
   "d69af04472001f70": "const buyerFulfillmentActionSchema = z.object({\n id:z.uuid(),version:z.number().int().positive(),\n action:z.enum(['APPROVE','REJECT','PAYMENT_REVIEW','PICKING','PACKED','DELIVERED','DELIVERY_FAILED']),\n decision:z.enum(['CLEAR','HOLD']).optional(),note:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid(),\n}).strict().refine(d=>(d.action==='PAYMENT_REVIEW')===(d.decision!==undefined))",
   "9e15e83d965ee331": "const invitationSchema = z.object({membershipId:z.uuid(),action:z.enum(['SEND','RESEND','REVOKE']),idempotencyKey:z.uuid()}).strict()",
@@ -4953,6 +4959,83 @@ const metadata: McpRoute[] = [
     "sourceHash": "71dbfd4229e655f2fff9a1459b61945626f902bacebbd2ffb8ef19a5d77cdca7"
   },
   {
+    "id": "POST /api/crm/online-orders/[id]/accept",
+    "method": "POST",
+    "template": "/api/crm/online-orders/[id]/accept",
+    "source": "app/api/crm/online-orders/[id]/accept/route.ts",
+    "group": "online-orders",
+    "status": "AVAILABLE",
+    "moduleId": "online-customers",
+    "params": [
+      "id"
+    ],
+    "selector": {},
+    "query": [],
+    "inputContract": "6a830783f0573cb7",
+    "multipart": false,
+    "sourceHash": "3c24c27012dfab7633889449acc4f795c9e8e36e9e37d1e674451eb2a49955d3"
+  },
+  {
+    "id": "POST /api/crm/online-orders/[id]/dispatch",
+    "method": "POST",
+    "template": "/api/crm/online-orders/[id]/dispatch",
+    "source": "app/api/crm/online-orders/[id]/dispatch/route.ts",
+    "group": "online-orders",
+    "status": "AVAILABLE",
+    "moduleId": "online-customers",
+    "params": [
+      "id"
+    ],
+    "selector": {},
+    "query": [],
+    "inputContract": "e22ed66776fbb1cd",
+    "multipart": false,
+    "sourceHash": "b9dbfbcb7632f9c701488112ad7ab3f51cfea5e780f19c3b9c7a34b3267147cd"
+  },
+  {
+    "id": "GET /api/crm/online-orders/[id]",
+    "method": "GET",
+    "template": "/api/crm/online-orders/[id]",
+    "source": "app/api/crm/online-orders/[id]/route.ts",
+    "group": "online-orders",
+    "status": "AVAILABLE",
+    "moduleId": "online-customers",
+    "params": [
+      "id"
+    ],
+    "selector": {},
+    "query": [
+      "historyPage",
+      "mailPage"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "1453d9a9075c82a62724270087c5853ca0823239094a7916f01732e28d8a3cb5"
+  },
+  {
+    "id": "GET /api/crm/online-orders",
+    "method": "GET",
+    "template": "/api/crm/online-orders",
+    "source": "app/api/crm/online-orders/route.ts",
+    "group": "online-orders",
+    "status": "AVAILABLE",
+    "moduleId": "online-customers",
+    "params": [],
+    "selector": {},
+    "query": [
+      "dispatchStatus",
+      "from",
+      "page",
+      "q",
+      "status",
+      "to",
+      "warehouseId"
+    ],
+    "inputContract": "",
+    "multipart": false,
+    "sourceHash": "63ae27446bf0d6d4c5bd452052a71500a4a31378b06951ffc9dcfb91a1ff25c9"
+  },
+  {
     "id": "POST /api/crm/partners/duplicates",
     "method": "POST",
     "template": "/api/crm/partners/duplicates",
@@ -6884,16 +6967,20 @@ export const mcpHandlers: Record<string, unknown> = {"app/api/crm/mcp/oauth/[act
 "app/api/crm/library/[action]/route.ts": r27,
 "app/api/crm/me/route.ts": r28,
 "app/api/crm/onboarding/[action]/route.ts": r29,
-"app/api/crm/partners/duplicates/route.ts": r30,
-"app/api/crm/partners/merge/route.ts": r31,
-"app/api/crm/pricing/[action]/route.ts": r32,
-"app/api/crm/procurement/[action]/route.ts": r33,
-"app/api/crm/quotations/[action]/route.ts": r34,
-"app/api/crm/relationships/[action]/route.ts": r35,
-"app/api/crm/reports/[action]/route.ts": r36,
-"app/api/crm/sales-customers/[action]/route.ts": r37,
-"app/api/crm/spreadsheet/[action]/route.ts": r38,
-"app/api/crm/storefront/policies/route.ts": r39,
-"app/api/crm/storefront/route.ts": r40,
-"app/api/crm/work/[action]/route.ts": r41,
-"app/api/crm/workspace/[action]/route.ts": r42};
+"app/api/crm/online-orders/[id]/accept/route.ts": r30,
+"app/api/crm/online-orders/[id]/dispatch/route.ts": r31,
+"app/api/crm/online-orders/[id]/route.ts": r32,
+"app/api/crm/online-orders/route.ts": r33,
+"app/api/crm/partners/duplicates/route.ts": r34,
+"app/api/crm/partners/merge/route.ts": r35,
+"app/api/crm/pricing/[action]/route.ts": r36,
+"app/api/crm/procurement/[action]/route.ts": r37,
+"app/api/crm/quotations/[action]/route.ts": r38,
+"app/api/crm/relationships/[action]/route.ts": r39,
+"app/api/crm/reports/[action]/route.ts": r40,
+"app/api/crm/sales-customers/[action]/route.ts": r41,
+"app/api/crm/spreadsheet/[action]/route.ts": r42,
+"app/api/crm/storefront/policies/route.ts": r43,
+"app/api/crm/storefront/route.ts": r44,
+"app/api/crm/work/[action]/route.ts": r45,
+"app/api/crm/workspace/[action]/route.ts": r46};

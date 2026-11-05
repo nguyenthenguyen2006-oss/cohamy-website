@@ -9,7 +9,7 @@ import {mailFiles} from '../../lib/crm/document-mail';
 export async function instrumentDocumentMailQa(db:Database,adminId:string){
  if(process.env.CRM_QA_DOCUMENT_MAIL!=='true')return;
  process.env.CRM_EMAIL_ENABLED='false';
- for(const e of [...coreMailEvents,...businessMailEvents.filter(e=>e.available)])await db.query("INSERT INTO cohamy_crm.document_mail_rules(id,event,enabled,recipients,updated_by) VALUES($1,$2,true,$3::jsonb,$4)",[randomUUID(),e.event,JSON.stringify({to:['documents@qa.invalid'],cc:['cc@qa.invalid'],bcc:['bcc@qa.invalid']}),adminId]);
+ for(const e of [...coreMailEvents,...businessMailEvents.filter(e=>e.available)])await db.query("INSERT INTO cohamy_crm.document_mail_rules(id,event,enabled,recipients,updated_by) VALUES($1,$2,true,$3::jsonb,$4) ON CONFLICT DO NOTHING",[randomUUID(),e.event,JSON.stringify({to:['documents@qa.invalid'],cc:['cc@qa.invalid'],bcc:['bcc@qa.invalid']}),adminId]);
  const original=db.close.bind(db);
  db.close=async()=>{try{
    const rows=(await db.query<{event:string;jobs:string}>("SELECT event,count(*)::text AS jobs FROM cohamy_crm.document_mail_outbox GROUP BY event ORDER BY event")).rows;

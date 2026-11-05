@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "environment": "STAGING existing isolated PostgreSQL fixture; restricted runtime role; no reset or new fixture",
+  "testedAt": "2026-11-05T08:03:52.408Z",
+  "cases": [
+    {
+      "name": "Existing main-suite history pages contain every immutable action once",
+      "status": "PASS"
+    },
+    {
+      "name": "Two fresh isolated checkouts keep current quoted receipts and one notification each",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent cross-order use of one idempotency UUID produces one success and one 409",
+      "status": "PASS"
+    },
+    {
+      "name": "Losing order and history stay unchanged; exact winner replay creates no mutation",
+      "status": "PASS"
+    }
+  ],
+  "sourceScriptSha256": "52b0b413d5000954a629acf1f7c617daa2d6c6f04d5c5e3a8d81352f589e85f3",
+  "existingMainScriptSha256": "31c43c145dc60483001ae9baf27a91463ec8a64c7b2065f6ff13fd44d30579aa",
+  "createdQaOrderIds": [
+    "44b8c90e-9750-484a-8b05-cd2f6f5d4b49",
+    "c8f90a67-808c-4127-a437-80c3b0d55d13"
+  ],
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "workerInvoked": false
+}

@@ -1,0 +1,169 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL, restricted runtime role",
+  "testedAt": "2026-11-05T07:57:19.163Z",
+  "cases": [
+    {
+      "name": "New checkout appears with frozen customer/price and one explicit two-recipient notification",
+      "status": "PASS"
+    },
+    {
+      "name": "Exact checkout replay returns the original receipt and does not enqueue another notification",
+      "status": "PASS"
+    },
+    {
+      "name": "Notification-only worker accepts exactly one fake-provider message and never makes an outbound request",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin notification history pages every explicit QA resend without any real delivery",
+      "status": "PASS"
+    },
+    {
+      "name": "Only current Admin and warehouse actors can read the queue; global customer data stays out of other roles",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy unknown products remain readable; cancelled and already converted orders cannot be rerouted",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin dispatch checks ownership, active warehouse, input and identity before changing an order",
+      "status": "PASS"
+    },
+    {
+      "name": "Assigned warehouse sees and accepts only its own dispatch; retries retain their original action receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "Reassignment resets acceptance and removes previous warehouse visibility without repricing or posting money",
+      "status": "PASS"
+    },
+    {
+      "name": "Dispatch action history is append-only for the production-equivalent runtime role",
+      "status": "PASS"
+    },
+    {
+      "name": "Order and action history pagination exposes every row without duplicates",
+      "status": "PASS"
+    },
+    {
+      "name": "Native MCP discovers and invokes the same scoped read/dispatch service on isolated data",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent same-key checkout and same-version routing have single winners without duplicate notifications",
+      "status": "PASS"
+    },
+    {
+      "name": "Online routing leaves all stock, reservation, finance, partner and commercial records unchanged",
+      "status": "PASS"
+    }
+  ],
+  "invariantTables": {
+    "organizations": {
+      "rows": 3,
+      "sha256": "d64d616ce4d3f3399750c210e16d959c1eafd6b7225a2dc55f4257cbeab26b7b"
+    },
+    "commercial_requests": {
+      "rows": 1,
+      "sha256": "d233769656d9adeb9c73fa2c13db0874a5d021a18f4299aad2269038da48ffd7"
+    },
+    "commercial_request_versions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "sales_orders": {
+      "rows": 1,
+      "sha256": "8ea499534157cc9d6bb8d8db38829c7955b673f6a890f1642de72c08d227266d"
+    },
+    "sales_order_versions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_lots": {
+      "rows": 1,
+      "sha256": "744e4271318cd0c0af70e9847887947fda5d1607836b5e431c20fd679d056ff6"
+    },
+    "inventory_documents": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_balances": {
+      "rows": 1,
+      "sha256": "75e292b8f6a9e6492e44b6fa6325c389e6f569c06b1140b8aa687f959e88ec1e"
+    },
+    "inventory_movements": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_reservations": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_reservation_events": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_actions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_transfers": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_transfer_receipts": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "credit_accounts": {
+      "rows": 1,
+      "sha256": "89dfb6306b12c4b5dbb84062289c37aa1d38df68130e699fa309adb5a51505c7"
+    },
+    "credit_events": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "credit_holds": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "receivables": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "receivable_events": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "payment_receipts": {
+      "rows": 1,
+      "sha256": "4543d6148ae5e6248165811c40b8f40987acaad861b6e4894fdd86f266b3e6ae"
+    },
+    "payment_allocations": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "payment_allocation_records": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "finance_actions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "accounting_order_clearances": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "order_payment_transactions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "provider": "FAKE_PROVIDER lambda; CRM_EMAIL_ENABLED=false; no live delivery claim",
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "mcpScope": "Native invokeOperation on isolated fixtures, not production connector verification"
+}

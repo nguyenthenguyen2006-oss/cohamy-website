@@ -50,6 +50,7 @@ import {InternalDocumentsPage} from "./InternalDocumentsPage";
 import {PortalNetworkPage,PeriodSalesPage,KpiPage,PortalOrderCatalogPage} from "./ChannelPages";
 import {HistoricalOrdersPage} from "./HistoricalOrdersPage";
 import {BuyerPage} from "./BuyerPage";
+import {OnlineOrdersPage} from './OnlineOrdersPage';
 import {isBuyerRole} from "@/lib/crm/types";
 
 function Empty({children}:{children:React.ReactNode}) {return <div className="crm-status-note" role="status">{children}</div>;}
@@ -60,6 +61,10 @@ export async function CrmModulePage({area,segments,query}:{area:Area;segments:st
   if(isRemovedCrmModule(area,slug))notFound();
   if(segments.length>2)notFound();
   const buyerQuery=Object.fromEntries(Object.entries(query).filter((e):e is [string,string]=>typeof e[1]==='string'));
+  if(slug==='online-customers'){
+    if(area!=='crm'||user.role!=='ADMIN'&&!isWarehouseRole(user.role))notFound();
+    return <OnlineOrdersPage user={user} id={id} query={buyerQuery}/>;
+  }
   if(area==='crm'&&slug==='sales-customers')return <SalesCustomersPage user={user} id={id} query={buyerQuery}/>;
   if(area==='crm'&&slug==='storefront'){
     if(id||user.role!=='ADMIN')notFound();

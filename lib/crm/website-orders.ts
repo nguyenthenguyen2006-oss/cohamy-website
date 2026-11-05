@@ -7,6 +7,7 @@ import {audit,digest} from "./auth";
 import {allPartners,assertPermission,CrmError} from "./permissions";
 import type {Principal} from "./types";
 import {resolvePublicStorefront} from './storefront';
+import {enqueueWebsiteOrderReceived} from './website-order-notifications';
 const intake=z.object({
   idempotencyKey:z.uuid(),locale:z.enum(["vi","en","zh","ko","ja"]),payment:z.enum(["cod","bank","momo"]),
   quoteVersion:z.string().regex(/^[a-f0-9]{64}$/).optional(),
@@ -52,10 +53,10 @@ export async function createWebsiteOrder(input:unknown) {
     });
     const subtotal=lines.reduce((sum,line)=>sum+BigInt(line.lineTotal),BigInt(0)).toString();
     const code=`CH-${randomUUID().replaceAll('-','').slice(0,16).toUpperCase()}`;
-    const inserted=await tx.query<{id:string;code:string;subtotal:string}>(`INSERT INTO cohamy_crm.website_orders(id,code,idempotency_key,request_hash,locale,contact,lines,subtotal,payment_requested)
-      VALUES ($1,$2,$3,$4,$5,$6::jsonb,$7::jsonb,$8,$9) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id,code,subtotal::text`,[randomUUID(),code,data.idempotencyKey,requestHash,data.locale,JSON.stringify(data.contact),JSON.stringify(lines),subtotal,data.payment]);
+    const inserted=await tx.query<{id:string;code:string;subtotal:string;created_at:Date|string}>(`INSERT INTO cohamy_crm.website_orders(id,code,idempotency_key,request_hash,locale,contact,lines,subtotal,payment_requested)
+      VALUES ($1,$2,$3,$4,$5,$6::jsonb,$7::jsonb,$8,$9) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id,code,subtotal::text,created_at`,[randomUUID(),code,data.idempotencyKey,requestHash,data.locale,JSON.stringify(data.contact),JSON.stringify(lines),subtotal,data.payment]);
     const created=inserted.rows[0];
-    if(created) {await audit(tx,null,"website.order-received",created.id,{code:created.code,...(data.acceptedPolicyVersion?{policyAcknowledgement:{version:data.acceptedPolicyVersion,acceptedAt:new Date().toISOString(),marketingConsent:false}}:{})});return {code:created.code,subtotal:created.subtotal,status:"PENDING_REVIEW",paid:false,shippingQuotePending:true};}
+    if(created) {await audit(tx,null,"website.order-received",created.id,{code:created.code,...(data.acceptedPolicyVersion?{policyAcknowledgement:{version:data.acceptedPolicyVersion,acceptedAt:new Date().toISOString(),marketingConsent:false}}:{})});await enqueueWebsiteOrderReceived(tx,{id:created.id,code:created.code,createdAt:created.created_at instanceof Date?created.created_at.toISOString():created.created_at});return {code:created.code,subtotal:created.subtotal,status:"PENDING_REVIEW",paid:false,shippingQuotePending:true};}
     const existing=await replay();if(!existing)throw new CrmError('IDEMPOTENCY_CONFLICT',409);return existing;
   });
 }

@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite",
+  "testedAt": "2026-11-05T07:45:21.744Z",
+  "cases": [
+    {
+      "name": "Migration seeds only the two requested recipients and QA instrumentation preserves that rule",
+      "status": "PASS"
+    },
+    {
+      "name": "Order and notification enqueue roll back together",
+      "status": "PASS"
+    },
+    {
+      "name": "New-order email snapshot has exact recipients, Vietnamese time, authenticated Admin link and no PDF",
+      "status": "PASS"
+    },
+    {
+      "name": "Repeated or concurrent helper calls cannot create another event/rule delivery",
+      "status": "PASS"
+    },
+    {
+      "name": "Rule seeding never overrides Admin choices and disabled-rule orders are not backfilled",
+      "status": "PASS"
+    },
+    {
+      "name": "Real outbox worker accepts the attachmentless event but delivery requires both fake recipient webhooks",
+      "status": "PASS"
+    },
+    {
+      "name": "An unknown provider outcome remains UNKNOWN and is never automatically resent",
+      "status": "PASS"
+    }
+  ],
+  "provider": "INJECTED_FAKE_NO_NETWORK",
+  "webhooks": "SYNTHETIC_LOCAL_ONLY",
+  "publicCheckoutIntegration": "Verified separately by parent suite",
+  "externalEmails": 0,
+  "productionWrites": 0
+}

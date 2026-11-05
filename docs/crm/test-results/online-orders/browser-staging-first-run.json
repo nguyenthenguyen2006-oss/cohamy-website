@@ -1,0 +1,115 @@
+{
+  "status": "FAIL",
+  "environment": "STAGING isolated PostgreSQL via fixed localhost4371→VPS4335; fictitious contacts only; no worker or external emails",
+  "testedAt": "2026-11-05T08:09:18.078Z",
+  "cases": [
+    {
+      "name": "Authenticated fictitious Admin and both QA warehouses confirm isolated staging",
+      "status": "PASS"
+    },
+    {
+      "name": "Public checkout and exact retry create one order and one queued two-recipient email",
+      "status": "PASS",
+      "fictitious": true,
+      "unitQuantity": 2
+    },
+    {
+      "name": "Admin navigation, search, frozen amounts, customer details and product images render",
+      "status": "PASS"
+    },
+    {
+      "name": "Only the assigned northern warehouse sees the order; southern warehouse is denied",
+      "status": "PASS"
+    },
+    {
+      "name": "stale Admin view",
+      "status": "FAIL",
+      "error": "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByRole('alert')\nExpected substring: \"Đơn vừa được cập nhật\"\nError: strict mode violation: getByRole('alert') resolved to 2 elements:\n    1) <div role=\"alert\" class=\"t7RuXG_error\">…</div> aka getByText('Đơn vừa được cập nhật. Tải lại dữ liệu trước khi tiếp tục.Tải lại dữ liệu')\n    2) <div role=\"alert\" aria-live=\"assertive\" id=\"__next-route-announcer__\">CRM Cohamy</div> aka getByText('CRM Cohamy', { exact: true })\n\nCall log:\n  - Expect \"toContainText\" getByRole('alert') with timeout 5000ms\n  - waiting for getByRole('alert')\n\n    at captureRawStack (C:\\Users\\ACER\\.codex\\worktrees\\account-email-reuse\\cohamy-website-main\\node_modules\\playwright-core\\lib\\coreBundle.js:8588:17)\n    at callMatcherAsStep (C:\\Users\\ACER\\.codex\\worktrees\\account-email-reuse\\cohamy-website-main\\node_modules\\playwright\\lib\\matchers\\expect.js:13310:57)\n    at Object.toContainText (C:\\Users\\ACER\\.codex\\worktrees\\account-email-reuse\\cohamy-website-main\\node_modules\\playwright\\lib\\matchers\\expect.js:13302:23)\n    at C:\\Users\\ACER\\.codex\\worktrees\\account-email-reuse\\cohamy-website-main\\scripts\\crm\\verify-online-orders-browser.mjs:112:149"
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-desktop.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-detail-desktop.png",
+    "docs/crm/test-results/online-orders/browser-staging/warehouse-hn-assigned-desktop.png"
+  ],
+  "measurements": [
+    {
+      "label": "admin-list-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "admin-detail-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "warehouse-hn-assigned-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    }
+  ],
+  "accessibility": [
+    {
+      "label": "admin-list-desktop",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ],
+      "passes": 19
+    },
+    {
+      "label": "admin-detail-desktop",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ],
+      "passes": 23
+    }
+  ],
+  "errors": [],
+  "expectedEvents": [
+    {
+      "type": "http",
+      "actor": "warehouse-hcm",
+      "path": "/crm/online-customers/d80af620-4450-436d-916f-19aa84e6d5ec",
+      "status": 404,
+      "phase": "Admin dispatch north"
+    },
+    {
+      "type": "console",
+      "actor": "warehouse-hcm",
+      "path": "/crm/online-customers/d80af620-4450-436d-916f-19aa84e6d5ec",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "phase": "Admin dispatch north"
+    },
+    {
+      "type": "http",
+      "actor": "admin",
+      "path": "/api/crm/online-orders/d80af620-4450-436d-916f-19aa84e6d5ec/dispatch",
+      "status": 409,
+      "phase": "stale Admin view"
+    },
+    {
+      "type": "console",
+      "actor": "admin",
+      "path": "/api/crm/online-orders/d80af620-4450-436d-916f-19aa84e6d5ec/dispatch",
+      "message": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "phase": "stale Admin view"
+    }
+  ],
+  "blockedRequests": [],
+  "teardown": null,
+  "notes": [],
+  "productionWrites": 0,
+  "realEmailsSent": 0,
+  "productionOrderSubmissions": 0,
+  "stageOrderCreated": 1,
+  "stageDroppedResponse": true,
+  "liveOrderAvailableForReadOnlyShapeCheck": null,
+  "mcp": "Not invoked in browser suite. Parent verifies native remote MCP separately.",
+  "scope": "UI navigation, role scope, actual browser headers, warehouse handoff/acceptance, version conflicts, exact retry, snapshot display and responsive/accessibility sampling. Stock and finance ledger fingerprints are verified separately by service tests. No exhaustive screen-reader or pixel-baseline claim."
+}

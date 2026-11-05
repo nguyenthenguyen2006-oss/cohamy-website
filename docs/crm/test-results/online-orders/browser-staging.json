@@ -1,0 +1,251 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL via fixed localhost4371→VPS4335; fictitious contacts only; no worker or external emails",
+  "testedAt": "2026-11-05T08:15:44.817Z",
+  "cases": [
+    {
+      "name": "Authenticated fictitious Admin and both QA warehouses confirm isolated staging",
+      "status": "PASS"
+    },
+    {
+      "name": "Public checkout and exact retry create one order and one queued two-recipient email",
+      "status": "PASS",
+      "fictitious": true,
+      "unitQuantity": 2
+    },
+    {
+      "name": "Admin navigation, search, frozen amounts, customer details and product images render",
+      "status": "PASS"
+    },
+    {
+      "name": "Only the assigned northern warehouse sees the order; southern warehouse is denied",
+      "status": "PASS"
+    },
+    {
+      "name": "Warehouse acceptance updates native state and stale Admin form requires reload",
+      "status": "PASS"
+    },
+    {
+      "name": "Lost actual POST response retries identical key/body with one reassignment history record",
+      "status": "PASS"
+    },
+    {
+      "name": "Reassignment removes northern access and southern acceptance preserves frozen intake and unpaid state",
+      "status": "PASS"
+    },
+    {
+      "name": "Sales, Manager, Accountant and portal roles cannot open or read the Admin/warehouse inbox",
+      "status": "PASS"
+    },
+    {
+      "name": "Desktop1366andmobile390/320 keep the document within viewport with usable table scrolling and keyboard filters",
+      "status": "PASS"
+    },
+    {
+      "name": "Route handling settles and final first-party errors/write guards remain clear",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-desktop.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-detail-desktop.png",
+    "docs/crm/test-results/online-orders/browser-staging/warehouse-hn-assigned-desktop.png",
+    "docs/crm/test-results/online-orders/browser-staging/warehouse-hcm-accepted-desktop.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-detail-mobile.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-mobile.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-narrow.png",
+    "docs/crm/test-results/online-orders/browser-staging/warehouse-detail-mobile.png"
+  ],
+  "measurements": [
+    {
+      "label": "admin-list-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "admin-detail-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "warehouse-hn-assigned-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "warehouse-hcm-accepted-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "admin-detail-mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "admin-list-mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "admin-list-narrow",
+      "width": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    },
+    {
+      "label": "warehouse-detail-mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    }
+  ],
+  "accessibility": [
+    {
+      "label": "admin-list-desktop",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ],
+      "passes": 19
+    },
+    {
+      "label": "admin-detail-desktop",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ],
+      "passes": 23
+    },
+    {
+      "label": "admin-detail-mobile",
+      "violations": [],
+      "incomplete": [
+        "color-contrast"
+      ],
+      "passes": 23
+    }
+  ],
+  "errors": [],
+  "expectedEvents": [
+    {
+      "type": "http",
+      "actor": "warehouse-hcm",
+      "path": "/crm/online-customers/52cb13c5-97e0-44af-9ee6-f72347b93959",
+      "status": 404,
+      "phase": "Admin dispatch north"
+    },
+    {
+      "type": "console",
+      "actor": "warehouse-hcm",
+      "path": "/crm/online-customers/52cb13c5-97e0-44af-9ee6-f72347b93959",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "phase": "Admin dispatch north"
+    },
+    {
+      "type": "http",
+      "actor": "admin",
+      "path": "/api/crm/online-orders/52cb13c5-97e0-44af-9ee6-f72347b93959/dispatch",
+      "status": 409,
+      "phase": "stale Admin view"
+    },
+    {
+      "type": "console",
+      "actor": "admin",
+      "path": "/api/crm/online-orders/52cb13c5-97e0-44af-9ee6-f72347b93959/dispatch",
+      "message": "Failed to load resource: the server responded with a status of 409 (Conflict)",
+      "phase": "stale Admin view"
+    },
+    {
+      "type": "requestfailed",
+      "actor": "admin",
+      "path": "/api/crm/online-orders/52cb13c5-97e0-44af-9ee6-f72347b93959/dispatch",
+      "message": "net::ERR_FAILED",
+      "phase": "lost response and exact retry"
+    },
+    {
+      "type": "console",
+      "actor": "admin",
+      "path": "/api/crm/online-orders/52cb13c5-97e0-44af-9ee6-f72347b93959/dispatch",
+      "message": "Failed to load resource: net::ERR_FAILED",
+      "phase": "lost response and exact retry"
+    },
+    {
+      "type": "http",
+      "actor": "sales",
+      "path": "/crm/online-customers",
+      "status": 404,
+      "phase": "other role denials"
+    },
+    {
+      "type": "console",
+      "actor": "sales",
+      "path": "/crm/online-customers",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "phase": "other role denials"
+    },
+    {
+      "type": "http",
+      "actor": "manager",
+      "path": "/crm/online-customers",
+      "status": 404,
+      "phase": "other role denials"
+    },
+    {
+      "type": "console",
+      "actor": "manager",
+      "path": "/crm/online-customers",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "phase": "other role denials"
+    },
+    {
+      "type": "http",
+      "actor": "accountant",
+      "path": "/crm/online-customers",
+      "status": 404,
+      "phase": "other role denials"
+    },
+    {
+      "type": "console",
+      "actor": "accountant",
+      "path": "/crm/online-customers",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "phase": "other role denials"
+    },
+    {
+      "type": "http",
+      "actor": "portal",
+      "path": "/portal/online-customers",
+      "status": 404,
+      "phase": "other role denials"
+    },
+    {
+      "type": "console",
+      "actor": "portal",
+      "path": "/portal/online-customers",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "phase": "other role denials"
+    }
+  ],
+  "blockedRequests": [],
+  "teardown": {
+    "milliseconds": 866,
+    "pending": 0,
+    "quietMs": 1000
+  },
+  "notes": [],
+  "productionWrites": 0,
+  "realEmailsSent": 0,
+  "productionOrderSubmissions": 0,
+  "stageOrderCreated": 1,
+  "stageDroppedResponse": true,
+  "liveOrderAvailableForReadOnlyShapeCheck": null,
+  "mcp": "Not invoked in browser suite. Parent verifies native remote MCP separately.",
+  "scope": "UI navigation, role scope, actual browser headers, warehouse handoff/acceptance, version conflicts, exact retry, snapshot display and responsive/accessibility sampling. Stock and finance ledger fingerprints are verified separately by service tests. No exhaustive screen-reader or pixel-baseline claim."
+}

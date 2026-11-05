@@ -1,6 +1,9 @@
+import {websiteOrderMailEvent} from './website-order-mail-event';
+
 type Definition={event:string;label:string;source:string;action:string;table:string;children?:[string,string][];warehouseField?:string;available?:boolean;notificationOnly?:boolean};
 const def=(source:string,action:string,label:string,table:string,children?:[string,string][],warehouseField?:string):Definition=>({event:`${source}:${action}`,label,source,action,table,children,warehouseField,available:true});
 export const businessMailEvents:Definition[]=[
+ websiteOrderMailEvent,
  ...Object.entries({
   'buyer.order.created':'Khách đặt hàng → Báo Sales và đúng kho',
   'buyer.order.quote_sent':'Đơn Portal → Đã gửi báo giá',

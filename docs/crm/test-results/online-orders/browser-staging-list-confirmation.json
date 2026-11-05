@@ -1,0 +1,144 @@
+{
+  "status": "PASS",
+  "environment": "STAGING isolated PostgreSQL via fixed localhost4371→VPS4335; fictitious contacts only; no worker or external emails",
+  "testedAt": "2026-11-05T08:40:09.950Z",
+  "cases": [
+    {
+      "name": "Explicit list columns retain readable IDs/status/action text and local scrolling at1366/390/320",
+      "status": "PASS"
+    },
+    {
+      "name": "Route handling settles and final first-party errors/write guards remain clear",
+      "status": "PASS"
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-desktop.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-desktop-right.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-mobile.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-mobile-right.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-narrow.png",
+    "docs/crm/test-results/online-orders/browser-staging/admin-list-narrow-right.png"
+  ],
+  "measurements": [
+    {
+      "label": "admin-list-desktop",
+      "regionWidth": 1032,
+      "scrollWidth": 1745,
+      "tableLayout": "fixed",
+      "columnWidths": [
+        190,
+        240,
+        200,
+        240,
+        140,
+        155,
+        190,
+        155,
+        135,
+        100
+      ],
+      "codeHeight": 15,
+      "codeLineHeight": 19.2,
+      "codeWhiteSpace": "nowrap"
+    },
+    {
+      "label": "admin-list-desktop",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "admin-list-desktop-right",
+      "width": 1366,
+      "documentWidth": 1366,
+      "bodyWidth": 1366
+    },
+    {
+      "label": "admin-list-mobile",
+      "regionWidth": 320,
+      "scrollWidth": 1745,
+      "tableLayout": "fixed",
+      "columnWidths": [
+        190,
+        240,
+        200,
+        240,
+        140,
+        155,
+        190,
+        155,
+        135,
+        100
+      ],
+      "codeHeight": 15,
+      "codeLineHeight": 19.2,
+      "codeWhiteSpace": "nowrap"
+    },
+    {
+      "label": "admin-list-mobile",
+      "width": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "admin-list-mobile-right",
+      "width": 390,
+      "documentWidth": 390,
+      "bodyWidth": 390
+    },
+    {
+      "label": "admin-list-narrow",
+      "regionWidth": 250,
+      "scrollWidth": 1745,
+      "tableLayout": "fixed",
+      "columnWidths": [
+        190,
+        240,
+        200,
+        240,
+        140,
+        155,
+        190,
+        155,
+        135,
+        100
+      ],
+      "codeHeight": 15,
+      "codeLineHeight": 19.2,
+      "codeWhiteSpace": "nowrap"
+    },
+    {
+      "label": "admin-list-narrow",
+      "width": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    },
+    {
+      "label": "admin-list-narrow-right",
+      "width": 320,
+      "documentWidth": 320,
+      "bodyWidth": 320
+    }
+  ],
+  "accessibility": [],
+  "errors": [],
+  "expectedEvents": [],
+  "blockedRequests": [],
+  "teardown": {
+    "milliseconds": 992,
+    "pending": 0,
+    "quietMs": 1000
+  },
+  "notes": [
+    "One scoped confirmation batch for list-column fix, left/right local-scroll evidence at three widths; no business mutation."
+  ],
+  "productionWrites": 0,
+  "realEmailsSent": 0,
+  "productionOrderSubmissions": 0,
+  "stageOrderCreated": 0,
+  "stageDroppedResponse": false,
+  "liveOrderAvailableForReadOnlyShapeCheck": null,
+  "mcp": "Not invoked in browser suite. Parent verifies native remote MCP separately.",
+  "scope": "UI navigation, role scope, actual browser headers, warehouse handoff/acceptance, version conflicts, exact retry, snapshot display and responsive/accessibility sampling. Stock and finance ledger fingerprints are verified separately by service tests. No exhaustive screen-reader or pixel-baseline claim."
+}

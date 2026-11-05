@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "environment": "STAGING existing isolated PostgreSQL fixture; restricted DML role; controlled transaction gates and observed pg_stat_activity locks",
+  "testedAt": "2026-11-05T08:17:12.006Z",
+  "cases": [
+    {
+      "name": "Acceptance holds its generic grant while waiting for the warehouse row, and revocation waits",
+      "status": "PASS"
+    },
+    {
+      "name": "Committed revocation wins a blocked grant check and acceptance rolls back without changing the order",
+      "status": "PASS"
+    }
+  ],
+  "observations": [
+    {
+      "schedule": "acceptance-first",
+      "acceptWaitedOnWarehouseRow": true,
+      "acceptPid": 2764732,
+      "grantNowaitCode": "55P03",
+      "revokePid": 2764734,
+      "revocationWaitObserved": true,
+      "acceptCommitted": true,
+      "revokedReadAndAcceptDenied": true
+    },
+    {
+      "schedule": "revocation-first",
+      "acceptPid": 2764732,
+      "waitedForGrantTransaction": true,
+      "deniedStatus": 403,
+      "unchangedOrderHash": "144c11c33ec4a140257e08b73edaefe5f0a9678859a9967e3ad6622210d125a8",
+      "acceptanceReceiptCount": 0
+    }
+  ],
+  "sourceScriptSha256": "8ebb4875536a88a7153580cf48337af1f4e56dae9690e2ed12ea34926882f1ee",
+  "serviceSourceSha256": "aeee5380b58f2802ebd821fb2bfac539f28968d9813d1f7f3f0309bc04c584d5",
+  "createdQaOrderIds": [
+    "cd884943-bfad-4a12-a21e-64b6825ca538",
+    "73fa85ab-304c-4224-b310-f9a9b48f736b"
+  ],
+  "originalGrantRestored": true,
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "workerInvoked": false,
+  "limitations": "Generic warehouse grant revocation tested in both lock orders. Regional scope recheck is not independently raced by this helper."
+}

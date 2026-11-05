@@ -1,0 +1,7 @@
+{
+  "scope": "Superseded first browser run; preserve raw diagnostic evidence",
+  "reason": "The stale-version application error was rendered correctly, but an unscoped alert locator also matched Next.js route announcer. The harness was corrected to scope to the dispatch form before the next run.",
+  "applicationChange": false,
+  "rawReportFieldCorrection": "stageDroppedResponse in the first raw report was the intended stage test flag, not an observed event. That run stopped before the lost-response test. Future reports record the observed forwarded-and-dropped event.",
+  "outboundMail": "No worker or real provider was run. One fictitious intake queued one two-recipient email in isolated staging."
+}

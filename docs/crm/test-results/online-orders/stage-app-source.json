@@ -1,0 +1,25 @@
+{
+  "status": "PASS",
+  "scope": "Normalized application sources and migrations, excluding QA/doc-only changes",
+  "files": 17,
+  "mismatches": [],
+  "sourceHashes": {
+    "app/api/crm/online-orders/[id]/accept/route.ts": "176d2e3671611231c6c926acbf01057219d4db7da2c5a48733cc60735cdf7a27",
+    "app/api/crm/online-orders/[id]/dispatch/route.ts": "4a64f83caf902d23e4fbb745346bb2da522810f84ff792cb8acc0313b179eb43",
+    "app/api/crm/online-orders/[id]/route.ts": "9b06df9394522b9d58a4cf904fccaf0b8e736f1964c9443d9a28179324b1ce03",
+    "app/api/crm/online-orders/route.ts": "dd8346e907618f56ef084f1e806c21963faaa44bcd3c7a76048cd6ff37fa7701",
+    "components/crm/ModulePage.tsx": "e13887515ce890b96d29f648bb1c16c63c68e1c582b48e728df670fdc95f9197",
+    "components/crm/OnlineOrderForms.tsx": "e3705e2ecc6e568c49189466e04629ee9eec104a37dc7fc50f0758e954f0d935",
+    "components/crm/OnlineOrders.module.css": "032143da13cb864e36f851dfa3ee8c5148d7bc67c41821d7f898c81a3b24e30d",
+    "components/crm/OnlineOrdersPage.tsx": "d2d39d9814da458f717701670769179d5be8d85ddc8d44047012ea23f0d2f964",
+    "db/crm/056-online-order-dispatch.sql": "bb63bb4a0cb104f0c0397f95cd9e4f0d1b21156309a0ac20d2967bdd4f6f95d0",
+    "db/crm/057-website-order-mail.sql": "9aefd13c69845996bf809a00bb85b97613bf1b51b94e79d0e36de56b158bdf53",
+    "lib/crm/document-business-registry.ts": "79c59b2296238a1f8ab850e92a4ed54fd6b7245f8b91881cba3124c6a926401e",
+    "lib/crm/mcp/routes.generated.ts": "cc9e3abdcf2f3cd568c5c91212509945b578927972f0b17de35e47312714742d",
+    "lib/crm/modules.ts": "29699afbd66d734c78c52cd02579c7bfb4ccfe22d0df75d1d3764286a16a4b94",
+    "lib/crm/online-orders.ts": "aeee5380b58f2802ebd821fb2bfac539f28968d9813d1f7f3f0309bc04c584d5",
+    "lib/crm/website-order-mail-event.ts": "833a592725bf2402d547073c25e5ebb42c505c5aa251556b5df16aa25a2c6b80",
+    "lib/crm/website-order-notifications.ts": "8cef1e2e2ffe3ccb27e57a100567bebdc76abd4b348bf2bca44d0245a8a1c58e",
+    "lib/crm/website-orders.ts": "3d7c57603a42df16296e74ba43e732eb71bde4ed1b8165b3a7d9357e6bd1803e"
+  }
+}

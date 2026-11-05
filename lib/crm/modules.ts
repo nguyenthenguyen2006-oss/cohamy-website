@@ -36,6 +36,7 @@ const buyerOrdersModule:CrmModule={id:'buyer-orders',label:'Đơn khách hàng /
 const salesCustomersModule:CrmModule={id:'sales-customers',label:'Khách hàng của tôi',shortLabel:'Khách của tôi',icon:'customer',tone:'primary',permission:'partners.write',status:'CONNECTED'};
 const salesNotificationsModule:CrmModule={id:'sales-notifications',label:'Thông báo khách hàng & đơn hàng',shortLabel:'Thông báo đơn',icon:'notifications',tone:'primary',permission:'workspace.use',status:'CONNECTED'};
 const internal: CrmModule[] = [
+  {id:'online-customers',label:'Khách hàng bán online',shortLabel:'Khách online',icon:'customer',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
   salesCustomersModule,
   buyerOrdersModule,
   {id:'mcp',label:'Kết nối ChatGPT / MCP',shortLabel:'ChatGPT / MCP',icon:'account',tone:'primary',permission:'document-flow.admin',status:'CONNECTED'},
@@ -90,6 +91,7 @@ const factoryModules: CrmModule[] = [
   { id: "notifications", label: "2. Thông báo Kho tiếp nhận", shortLabel: "Thông báo", icon: "notifications", tone: "primary", permission: "workspace.use", status: "CONNECTED", bottom: 2 },
 ];
 const warehouseKeeperModules: CrmModule[] = [
+  {id:'online-customers',label:'Đơn bán online tại kho',shortLabel:'Đơn online',icon:'order',tone:'primary',permission:'orders.read',status:'CONNECTED'},
   warehouseTransfersModule,
   buyerOrdersModule,
   historicalOrdersModule,
@@ -169,7 +171,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "warehouse",
     color: "#2563eb",
     gradient: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-    moduleIds: ["warehouse-stock", "warehouse-orders", "warehouse-factory", "warehouse-handover", "warehouse-transfers", "warehouse-notifications"],
+    moduleIds: ["warehouse-stock", "warehouse-orders", "online-customers", "warehouse-factory", "warehouse-handover", "warehouse-transfers", "warehouse-notifications"],
   },
   {
     id: "accounting",
@@ -196,7 +198,7 @@ export const crmHubs: readonly CrmHub[] = [
     icon: "customer",
     color: "#10b981",
     gradient: "linear-gradient(135deg, #10b981, #047857)",
-    moduleIds: ["customers", "care", "visits"],
+    moduleIds: ["online-customers", "customers", "care", "visits"],
   },
   {
     id: "dealers",
@@ -290,7 +292,7 @@ export function getVisibleHubs(user: Principal): VisibleHub[] {
   const allowed = visibleModules(user);
   const result: VisibleHub[] = [];
   for (const hub of crmHubs) {
-    const hubModules = allowed.filter(m => hub.moduleIds.includes(m.id));
+    const hubModules = allowed.filter(m => hub.moduleIds.includes(m.id) && (m.id !== 'online-customers' || hub.id === (isWarehouseRole(user.role) ? 'warehouse-keeper' : 'customers')));
     if (hubModules.length > 0) {
       const visibleHub = user.area === "crm" && hub.id === "tasks"
         ? { ...hub, label: "CÔNG VIỆC & THÔNG BÁO", description: "Việc cần làm và thông báo hệ thống" }

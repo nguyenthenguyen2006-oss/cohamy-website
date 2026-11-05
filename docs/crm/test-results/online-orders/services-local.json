@@ -1,0 +1,165 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL isolated PGlite",
+  "testedAt": "2026-11-05T07:55:25.938Z",
+  "cases": [
+    {
+      "name": "New checkout appears with frozen customer/price and one explicit two-recipient notification",
+      "status": "PASS"
+    },
+    {
+      "name": "Exact checkout replay returns the original receipt and does not enqueue another notification",
+      "status": "PASS"
+    },
+    {
+      "name": "Notification-only worker accepts exactly one fake-provider message and never makes an outbound request",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin notification history pages every explicit QA resend without any real delivery",
+      "status": "PASS"
+    },
+    {
+      "name": "Only current Admin and warehouse actors can read the queue; global customer data stays out of other roles",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy unknown products remain readable; cancelled and already converted orders cannot be rerouted",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin dispatch checks ownership, active warehouse, input and identity before changing an order",
+      "status": "PASS"
+    },
+    {
+      "name": "Assigned warehouse sees and accepts only its own dispatch; retries retain their original action receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "Reassignment resets acceptance and removes previous warehouse visibility without repricing or posting money",
+      "status": "PASS"
+    },
+    {
+      "name": "Dispatch action history is append-only for the production-equivalent runtime role",
+      "status": "PASS"
+    },
+    {
+      "name": "Order and action history pagination exposes every row without duplicates",
+      "status": "PASS"
+    },
+    {
+      "name": "Native MCP discovers and invokes the same scoped read/dispatch service on isolated data",
+      "status": "PASS"
+    },
+    {
+      "name": "Online routing leaves all stock, reservation, finance, partner and commercial records unchanged",
+      "status": "PASS"
+    }
+  ],
+  "invariantTables": {
+    "organizations": {
+      "rows": 3,
+      "sha256": "5c150b8c77debe3136721c52fbec6d61ebab7766a0cbc00a8eebcfc2f6f22cba"
+    },
+    "commercial_requests": {
+      "rows": 1,
+      "sha256": "077ae9c01434313d2273fd57c632061c540bb72f5d639fac7cc64baa57a48395"
+    },
+    "commercial_request_versions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "sales_orders": {
+      "rows": 1,
+      "sha256": "41aeff7f28db31e48f3181b6b114cee9ad86654f2102d43964eaf843318e48e7"
+    },
+    "sales_order_versions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_lots": {
+      "rows": 1,
+      "sha256": "ab97956b6a39aee34611d3a1bdf12b4cb18d7b042134cbc84b035fa19ba21f2e"
+    },
+    "inventory_documents": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_balances": {
+      "rows": 1,
+      "sha256": "d3bde5bced967f7e51dddc4490f61e58f08402b58af127e09b1376a5c0344d3c"
+    },
+    "inventory_movements": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_reservations": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_reservation_events": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_actions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_transfers": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "inventory_transfer_receipts": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "credit_accounts": {
+      "rows": 1,
+      "sha256": "4b6c41cad05da6f58a4429b2b896e9d5b4ef0d4a82dc71c1c5f6134d9116c703"
+    },
+    "credit_events": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "credit_holds": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "receivables": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "receivable_events": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "payment_receipts": {
+      "rows": 1,
+      "sha256": "091b772cdfffcde1d5b666385d83b16434a049ca72ab74f25f82fbed91218bb0"
+    },
+    "payment_allocations": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "payment_allocation_records": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "finance_actions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "accounting_order_clearances": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "order_payment_transactions": {
+      "rows": 0,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    }
+  },
+  "provider": "FAKE_PROVIDER lambda; CRM_EMAIL_ENABLED=false; no live delivery claim",
+  "externalEmails": 0,
+  "productionWrites": 0,
+  "mcpScope": "Native invokeOperation on isolated fixtures, not production connector verification"
+}
