@@ -1,0 +1,25 @@
+{
+  "environment": "PRODUCTION connected Cohamy MCP; read only",
+  "status": "PASS",
+  "operations": [
+    {
+      "id": "GET /api/crm/storefront/policies",
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "GET /api/crm/storefront",
+      "status": "AVAILABLE"
+    },
+    {
+      "id": "POST /api/crm/storefront",
+      "status": "AVAILABLE"
+    }
+  ],
+  "discountPercent": 30,
+  "pricedPackages": 8,
+  "policies": 7,
+  "safeSettingsRows": 1,
+  "internalActionReceiptsExcluded": true,
+  "productionWritesForVerification": 0,
+  "writeCoverage": "Verified against isolated STAGING official SDK with version/idempotency protections"
+}

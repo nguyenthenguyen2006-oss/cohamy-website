@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "sha": "4765454c927d7268b0a04e5d5415cae3643484bf",
+  "restoreProofs": [
+    {
+      "phase": "pre-migration-restore.json",
+      "status": "PASS",
+      "tables": 240
+    },
+    {
+      "phase": "before-cutover-restore.json",
+      "status": "PASS",
+      "tables": 240
+    }
+  ],
+  "candidateChecks": 18,
+  "runtime": "Web and worker online, exact release, zero restarts",
+  "discountPercent": 30,
+  "activePricedPackages": 8,
+  "vatInclusiveAlmondPrice": 59724,
+  "policiesHTTP200": 7,
+  "verificationBusinessWrites": 0,
+  "externalEmails": 0
+}

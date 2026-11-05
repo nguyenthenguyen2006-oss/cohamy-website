@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION public read only",
+  "checks": [
+    {
+      "viewport": "desktop",
+      "width": 1440,
+      "height": 1000,
+      "gallery": {
+        "width": 598.5,
+        "height": 448.875,
+        "naturalWidth": 599,
+        "naturalHeight": 449,
+        "attrWidth": 1448,
+        "attrHeight": 1086,
+        "fit": "fill"
+      },
+      "status": "PASS"
+    },
+    {
+      "viewport": "mobile",
+      "width": 390,
+      "height": 844,
+      "gallery": {
+        "width": 339,
+        "height": 254.25,
+        "naturalWidth": 342,
+        "naturalHeight": 256,
+        "attrWidth": 1448,
+        "attrHeight": 1086,
+        "fit": "fill"
+      },
+      "status": "PASS"
+    }
+  ],
+  "policyFooterLinks": 7,
+  "cashewPriceIncludingVAT": 61992,
+  "ordersCreated": 0,
+  "settingsChanged": 0,
+  "externalEmails": 0
+}

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "ownedStagingServerStopped": true,
+  "ownedQaDatabaseDropped": true,
+  "ownedQaRoleDropped": true,
+  "ownedLocalTunnelStopped": true,
+  "qaGrantRevoked": true,
+  "verifiedBackupsRetained": true,
+  "productionBusinessWritesForQA": 0,
+  "externalEmailsForQA": 0
+}
