@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "environment": "PRODUCTION connected Cohamy MCP; actual user connection",
+  "testedAt": "2026-11-06 06:58:28 UTC",
+  "sourceSha": "cbb8981779d1f64fb326731369c2db2e1fabc6be",
+  "scope": "Read-only business/catalog/data verification. Mutating sale/stock/payment tests ran only in isolated LOCAL/STAGING.",
+  "productionBusinessTestWrites": 0,
+  "externalTestEmails": 0,
+  "checks": {
+    "capability": {
+      "available": true,
+      "perProductPercent": true,
+      "strict": true
+    },
+    "workspace": {
+      "status": 200,
+      "products": 8,
+      "customers": 4,
+      "warehouses": 2,
+      "documents": 33,
+      "hasCatalogPrices": true
+    },
+    "saleLinks": {
+      "readable": true
+    },
+    "paymentLinks": {
+      "readable": true
+    },
+    "data": {
+      "total": 0,
+      "items": 0,
+      "nextOffset": null
+    },
+    "reconciliation": {
+      "status": 200,
+      "orders": 0,
+      "lineItems": 0
+    }
+  }
+}
