@@ -1,7 +1,7 @@
 {
   "environment": "LOCAL isolated fictitious PGlite; email disabled",
   "status": "PASS",
-  "scope": "Financial helper/runtime only. No stock movement, PDF, browser or production coverage claimed.",
+  "scope": "Financial helper/runtime and scoped customer workspace reads only. No stock movement, PDF, browser or production coverage claimed.",
   "cases": [
     {
       "name": "Explicit priced sale creates native request/order/clearance/receivable exactly once without a credit hold, reservation or stock movement",
@@ -9,6 +9,10 @@
     },
     {
       "name": "Tenant customer/warehouse eligibility is rechecked and portal users cannot finalize",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin can select and finalize an unassociated active legacy customer while warehouse and portal scope stay restricted",
       "status": "PASS"
     },
     {

@@ -3,7 +3,7 @@ import {randomUUID} from 'node:crypto';
 import type {Sql} from './db';
 import type {Principal} from './types';
 import type {FlowSnapshot} from './document-flow-model';
-import {CrmError,isWarehouseRole} from './permissions';
+import {allPartners,CrmError,isWarehouseRole} from './permissions';
 import {warehouseScope} from './warehouse-scope';
 import {commercialDigest,vietnamBusinessDate} from './commercial-common';
 import {currentOrderPolicy} from './order-policy';
@@ -11,12 +11,14 @@ import {assertCurrentPrincipal,audit} from './auth';
 import {fixed,integer,lineAmount,roundRatio} from './decimal';
 import {z} from 'zod';
 
-/** Customer organizations have no tenant column. Require a recorded relationship
- * with this seller, rather than widening warehouse users to all partners. */
+/** Admin retains native all-partner buyer selection, including imported legacy
+ * profiles. Warehouse users still require a recorded seller relationship. */
 export function handoverCustomerScope(user:Principal,alias='o',offset=0){
  if(user.area!=='crm'||!['ADMIN','MANAGER','ACCOUNTANT'].includes(user.role)&&!isWarehouseRole(user.role))return {sql:'false',params:[] as unknown[]};
+ const eligible=`${alias}.active AND ${alias}.merged_into_id IS NULL AND ${alias}.kind IN('CUSTOMER','DEALER')`;
+ if(user.role==='ADMIN'&&allPartners(user))return {sql:eligible,params:[] as unknown[]};
  const p=`$${offset+1}`;
- return {sql:`${alias}.active AND ${alias}.merged_into_id IS NULL AND ${alias}.kind IN('CUSTOMER','DEALER') AND (
+ return {sql:`${eligible} AND (
  EXISTS(SELECT 1 FROM cohamy_crm.commercial_requests cr WHERE cr.organization_id=${alias}.id AND cr.seller_organization_id=${p})
  OR EXISTS(SELECT 1 FROM cohamy_crm.sales_orders so WHERE so.organization_id=${alias}.id AND so.seller_organization_id=${p})
  OR EXISTS(SELECT 1 FROM cohamy_crm.deals d WHERE d.customer_id=${alias}.id AND d.seller_organization_id=${p})

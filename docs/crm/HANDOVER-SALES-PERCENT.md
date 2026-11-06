@@ -1,6 +1,6 @@
 # Phiếu xuất kho bán hàng: chiết khấu theo sản phẩm
 
-Luồng `ISSUE` mới với mục đích `SALE` chọn khách hàng đã có quan hệ với đơn vị bán. Mỗi dòng lấy giá bán niêm yết từ danh mục và có `discountPercent` riêng; dòng mới bắt đầu ở 0%. Không nhận số tiền giảm trực tiếp, đơn giá sau giảm hoặc tỷ lệ chung cho phiếu.
+Luồng `ISSUE` mới với mục đích `SALE` chọn khách hàng đang hoạt động, chưa gộp. Admin giữ quyền chọn toàn bộ khách/đại lý như phân hệ Khách hàng hiện có; tài khoản kho chỉ chọn khách đã có quan hệ được ghi nhận với đơn vị bán. Mỗi dòng lấy giá bán niêm yết từ danh mục và có `discountPercent` riêng; dòng mới bắt đầu ở 0%. Không nhận số tiền giảm trực tiếp, đơn giá sau giảm hoặc tỷ lệ chung cho phiếu.
 
 CK nằm trong khoảng 0–100%, tối đa bốn chữ số thập phân. Hệ thống dùng số nguyên/fixed-point, làm tròn HALF_UP đơn giá sau CK về đồng trước, sau đó nhân số lượng để tính tiền dòng. Ví dụ A: 2 × 90.000 × 90% = 162.000; B: 3 × 50.000 × 80% = 120.000; C: 1 × 80.000 × 95% = 76.000. Tổng gốc 410.000, CK 52.000, sau CK 358.000 đồng.
 
@@ -20,4 +20,4 @@ MCP có đọc được dữ liệu này không? Có: workspace/view, đối so�
 
 ## Bằng chứng phát hành
 
-Xem `test-results/handover-sales/`: pricing-local (17), flow-local (16), finance-local (10), flow-postgres (16), finance-concurrency-postgres (5), mcp-postgres (7), và browser (6). Các bộ hồi quy phiếu, Admin và tài chính cũ được lưu riêng trong cùng thư mục. Giao diện Edge đã kiểm tra 1440px/390px/320px; PDF staging đã đối chiếu số tiền và từng CK%. Triển khai và đọc MCP production được ghi riêng sau kiểm tra thực tế. Tất cả dữ liệu giao dịch kiểm thử là giả, thuộc database LOCAL/STAGING riêng; không chạy worker hoặc gửi mail ngoài.
+Xem `test-results/handover-sales/`: pricing-local (17), flow-local (16), finance-local (11), flow-postgres (16), finance-concurrency-postgres (5), mcp-postgres (7), và browser (6). Các bộ hồi quy phiếu, Admin và tài chính cũ được lưu riêng trong cùng thư mục. Giao diện Edge đã kiểm tra 1440px/390px/320px; PDF staging đã đối chiếu số tiền và từng CK%. Triển khai và đọc MCP production được ghi riêng sau kiểm tra thực tế. Tất cả dữ liệu giao dịch kiểm thử là giả, thuộc database LOCAL/STAGING riêng; không chạy worker hoặc gửi mail ngoài.

@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "sourceSha": "4e4aea34b350bba0ff18a8695277bd4722313a12",
+  "previousSha": "76cccbf7bcf932775059de597cd12ab99d68a685",
+  "backupDirectory": "/root/cohamy-backups/20261106T063057Z-4e4aea34b350",
+  "productionBusinessTestWrites": 0,
+  "testEmails": 0,
+  "preMigration": {
+    "status": "PASS",
+    "snapshotConsistent": true,
+    "tableCount": 241,
+    "fileIntegrityErrors": "0",
+    "documentSourceErrors": "0"
+  },
+  "beforeCutover": {
+    "status": "PASS",
+    "snapshotConsistent": true,
+    "tableCount": 243,
+    "fileIntegrityErrors": "0",
+    "documentSourceErrors": "0"
+  },
+  "candidateSmoke": {
+    "passed": 18,
+    "scope": "Business reads and invalid-input validation only; administrator login/logout and an isolated OAuth connection authorization/revocation; no order, partner, stock, finance or outbound-message writes"
+  },
+  "publicHealth": {
+    "ok": true,
+    "app": "cohamy",
+    "blogSource": "wordpress",
+    "blogReady": true,
+    "sheetsConfigured": false,
+    "uploadDirectoryWritable": true,
+    "timestamp": "2026-11-06T06:37:17.371Z"
+  },
+  "runtime": [
+    {
+      "name": "cohamy",
+      "pid": 1175273,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/4e4aea34b350bba0ff18a8695277bd4722313a12",
+      "restarts": 0
+    },
+    {
+      "name": "cohamy-crm-worker",
+      "pid": 1175274,
+      "status": "online",
+      "cwd": "/root/cohamy-releases/4e4aea34b350bba0ff18a8695277bd4722313a12",
+      "restarts": 0
+    }
+  ],
+  "followupRequired": "Admin customer picker returned no eligible legacy profiles; corrected to existing all-partner Admin authorization in subsequent release."
+}

@@ -1,6 +1,6 @@
 {
   "environment": "STAGING existing isolated PostgreSQL; restricted runtime; native MCP route dispatch; email disabled",
-  "database": "cohamy_qa_handover_65dafc7a36c941d4996b3fdcf1c27efb",
+  "database": "cohamy_qa_handover_ac873fbcb48f4656b6b43d7ca06bdae7",
   "status": "PASS",
   "scope": "Native MCP bridge and paginated business data runtime. OAuth transport, browser and production are separate checks.",
   "cases": [
@@ -34,16 +34,16 @@
     }
   ],
   "evidence": {
-    "orderId": "9493a45d-f11a-4c0f-8bd5-4e11c34522d0",
-    "handoverId": "bd49ed47-d1ef-4953-858f-d916f4cef217",
+    "orderId": "4711c788-a739-40f1-8b60-13170e8bd2ac",
+    "handoverId": "8aa2c0d3-3fa9-4761-83a6-cb169845c855",
     "pdf": {
-      "bytes": 46621,
+      "bytes": 46617,
       "chunks": 12,
-      "sha256": "bd61679bd698e0ec78a0cda26f1c1c3def35de9034e1ca30fa50ff77b308b7a7"
+      "sha256": "0638e7ea4cb17dbc7e1b3126e4e7c6c4e7040e47eaf714ac989a22570a8d4d9f"
     },
     "partialPayment": {
       "amount": "58796",
-      "transactionId": "487f6ab4-ba0c-4d71-931e-8a7fc4c86430"
+      "transactionId": "42296a1b-04b5-4f10-b033-4b7d6f4071b2"
     }
   }
 }
