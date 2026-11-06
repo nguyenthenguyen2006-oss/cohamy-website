@@ -31,9 +31,11 @@ function salesOrderScope(user:Principal){
  if(user.area!=='crm'||!isWarehouseRole(user.role))return partnerScope(user);
  const scope=warehouseScope(user),region=warehouseRoleRegion(user.role);
  const allocated=`EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouses w ON w.id=ir.warehouse_id WHERE ir.order_id=s.id AND ir.status IN('ACTIVE','PARTIAL','CONSUMED') AND (${scope.sql}))`;
- if(!region)return {sql:allocated,params:scope.params};
+ const warehouseSale=`EXISTS(SELECT 1 FROM cohamy_crm.warehouse_sale_links l JOIN cohamy_crm.warehouses w ON w.id=l.warehouse_id WHERE l.order_id=s.id AND l.seller_organization_id=s.seller_organization_id AND (${scope.sql}))`;
+ const linked=`EXISTS(SELECT 1 FROM cohamy_crm.warehouse_sale_links l WHERE l.order_id=s.id)`;
+ if(!region)return {sql:`(${allocated} OR ${warehouseSale})`,params:scope.params};
  const regionIndex=scope.params.length+1,organizationIndex=scope.params.length+2;
- return {sql:`(${allocated} OR (s.status='CONFIRMED' AND COALESCE(s.seller_organization_id,$${organizationIndex})=$${organizationIndex} AND (o.region=$${regionIndex} OR o.region IS NULL OR o.region='') AND NOT EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir WHERE ir.order_id=s.id AND ir.status IN('ACTIVE','PARTIAL','CONSUMED')) AND EXISTS(SELECT 1 FROM cohamy_crm.warehouses w WHERE w.active AND (${scope.sql}))))`,params:[...scope.params,region,user.organizationId]};
+ return {sql:`(${allocated} OR ${warehouseSale} OR (NOT ${linked} AND s.status='CONFIRMED' AND COALESCE(s.seller_organization_id,$${organizationIndex})=$${organizationIndex} AND (o.region=$${regionIndex} OR o.region IS NULL OR o.region='') AND NOT EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir WHERE ir.order_id=s.id AND ir.status IN('ACTIVE','PARTIAL','CONSUMED')) AND EXISTS(SELECT 1 FROM cohamy_crm.warehouses w WHERE w.active AND (${scope.sql}))))`,params:[...scope.params,region,user.organizationId]};
 }
 export async function salesOrderAccess(sql:Sql,user:Principal,id:string,lock=false):Promise<SalesOrder>{
  assertPermission(user,'orders.read');parse(z.uuid(),id);const scope=salesOrderScope(user);

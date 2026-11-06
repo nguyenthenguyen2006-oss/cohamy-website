@@ -22,6 +22,25 @@
 
 .cohamy-crm .crm-document-flow .crm-document-open{background:transparent;border:0;padding:0;min-height:0;text-align:left;color:#b45309;cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px}
 
+.cohamy-crm .crm-flow-sale-options{min-width:0;margin:18px 0;padding:12px;border:1px solid var(--crm-border,#eadbc5);border-radius:6px}
+.cohamy-crm .crm-flow-sale-options legend{padding:0 6px;font-weight:700}
+.cohamy-crm .crm-document-flow .crm-flow-sale-options :is(input,select){min-height:44px}
+.cohamy-crm .crm-document-flow .crm-flow-vat-toggle{display:flex;flex-direction:row;align-items:center;gap:10px;min-height:44px;align-self:end}
+.cohamy-crm .crm-document-flow .crm-flow-vat-toggle input{width:20px;height:20px;min-height:20px;flex:0 0 auto;margin:0}
+.cohamy-crm .crm-flow-priced-lines .crm-product-entry table{min-width:1450px;table-layout:fixed}
+.cohamy-crm .crm-flow-priced-lines .crm-product-entry th:first-child{width:64px}
+.cohamy-crm .crm-flow-priced-lines .crm-product-entry th:nth-child(2){width:250px;min-width:250px}
+.cohamy-crm .crm-flow-priced-lines .crm-product-entry th:nth-child(3){width:70px}
+.cohamy-crm .crm-flow-priced-lines .crm-product-entry td input{min-width:0;min-height:44px}
+.cohamy-crm .crm-flow-priced-lines output{display:block;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums;min-height:44px;align-content:center}
+.cohamy-crm .crm-flow-sale-summary{margin:18px 0;padding-block:12px;border-block:1px solid var(--crm-border,#eadbc5)}
+.cohamy-crm .crm-flow-sale-summary>p{margin:12px 0 0;color:var(--crm-ink-muted,#57534e);font-size:12px}
+.cohamy-crm .crm-flow-money-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px 20px;font-variant-numeric:tabular-nums;margin:0}
+.cohamy-crm .crm-flow-money-facts>div{min-width:0}
+.cohamy-crm .crm-flow-money-facts dt{font-size:12px;color:var(--crm-ink-secondary,#44403c)}
+.cohamy-crm .crm-flow-money-facts dd{margin:4px 0 0;font-weight:700;overflow-wrap:anywhere}
+@media(max-width:600px){.cohamy-crm .crm-flow-money-facts{grid-template-columns:minmax(0,1fr)}.cohamy-crm .crm-flow-money-facts>div{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.cohamy-crm .crm-flow-money-facts dd{text-align:right}.cohamy-crm .crm-flow-sale-options{padding:8px}}
+
 .crm-document-flow .crm-brevo-remove-key{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin:12px 0}
 .crm-document-flow .crm-brevo-remove-key input[type="checkbox"]{width:18px;height:18px;flex:0 0 auto;margin:0}
 

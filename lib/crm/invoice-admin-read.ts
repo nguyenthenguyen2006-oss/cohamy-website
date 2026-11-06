@@ -10,6 +10,8 @@ import {lineAmount,fixed,fixedText} from './decimal';
 import type {Principal} from './types';
 import {invoiceKindLabels,invoiceKinds,type AdminInvoice,type InvoiceContent,type InvoiceEditLine,type InvoiceKind} from './invoice-admin-model';
 import {invoiceStockCells,type InvoiceStockCell} from './invoice-admin-stock';
+import {calculateHandoverSaleLine,normalizeDiscountPercent} from './handover-sale-pricing';
+import type {WarehouseSaleInvoicePolicy} from './invoice-admin-model';
 type Row=Record<string,unknown>;
 const str=(value:unknown)=>value===null||value===undefined?'':value instanceof Date?value.toISOString():String(value);
 const obj=(value:unknown)=>value&&typeof value==='object'?value as Row:{};
@@ -18,18 +20,33 @@ export function assertInvoiceAdmin(user:Principal){if(user.area!=='crm'||user.ro
 export function invoiceLineAmount(line:InvoiceEditLine){const gross=BigInt(lineAmount(line.unitPrice,line.quantity,'HALF_UP')),discount=BigInt(line.discount);if(discount>gross)throw new CrmError('INVOICE_DISCOUNT_EXCEEDS_LINE',400);return (gross-discount+BigInt(line.tax)).toString();}
 export const invoiceTotal=(content:InvoiceContent)=>(content.lines.reduce((n,l)=>n+BigInt(invoiceLineAmount(l)),0n)+BigInt(content.fee)).toString();
 const normalized=(value:object):InvoiceEditLine=>{const l=value as Row,quantity=str(l.baseQuantity??l.quantity??l.receivedQuantity??'0'),unitPrice=str(l.unitPrice??l.listUnitPrice??l.netUnitPrice??'0')||'0',gross=BigInt(lineAmount(unitPrice,quantity,'HALF_UP')),amount=l.amount===undefined?gross:BigInt(str(l.amount)||'0');return {productId:str(l.productId)||null,name:str(l.name??l.productName)||'Mặt hàng',unit:str(l.stockUnit??l.unit??l.unitLabel)||'Gói',quantity,unitPrice,discount:str(l.discount??(amount<gross?gross-amount:0n)),tax:str(l.tax??(amount>gross?amount-gross:0n)),note:str(l.note)};};
+function warehouseSaleLine(value:object,includeVat:boolean):InvoiceEditLine {
+ const source=obj(value),base=normalized(value),discountPercent=normalizeDiscountPercent(str(source.discountPercent)),priced=calculateHandoverSaleLine({listUnitPrice:str(source.listUnitPrice),quantity:base.quantity,discountPercent,vatRate:str(source.vatRate)||'0',includeVat});
+ return {...base,unitPrice:priced.listUnitPrice,discountPercent:priced.discountPercent,discount:priced.discountAmount,tax:priced.vatAmount};
+}
 const empty=():InvoiceContent=>({warehouseId:null,buyerName:'',buyerAddress:'',buyerTaxId:'',recipient:'',recipientPhone:'',issuedDate:'',invoiceNumber:'',invoiceSymbol:'',note:'',fee:'0',lines:[]});
 
 export async function loadAdminInvoice(sql:Sql,user:Principal,kind:InvoiceKind,id:string,lock=false):Promise<AdminInvoice>{
- assertInvoiceAdmin(user);let original:Row,content=empty(),code='',status='',label=invoiceKindLabels[kind],linkedOrderId:string|null=null,sourceId:string|null=null;
+ assertInvoiceAdmin(user);let original:Row,content=empty(),code='',status='',label=invoiceKindLabels[kind],linkedOrderId:string|null=null,sourceId:string|null=null,warehouseSale:WarehouseSaleInvoicePolicy|undefined;
  if(kind==='FLOW'){
   const row=await flowAccess(sql,user,id,undefined,lock),snapshot=row.flow_payload??await legacyFlowSnapshot(sql,row);original={...row,snapshot};code=row.code;status=row.workflow_state;label=flowLabels[snapshot.kind];linkedOrderId=snapshot.salesOrderId??null;sourceId=snapshot.sourceId;
   content={...content,warehouseId:snapshot.warehouseId,buyerName:snapshot.delivery.customer??snapshot.factoryName,buyerAddress:snapshot.delivery.address??'',recipient:snapshot.delivery.recipient??'',recipientPhone:snapshot.delivery.recipientPhone??'',issuedDate:snapshot.delivery.deliveryDate??snapshot.dueDate,note:snapshot.note,invoiceNumber:snapshot.code,lines:snapshot.lines.map(l=>normalized(l))};
+  if(snapshot.issuePurpose==='SALE'&&snapshot.sale?.version===1){
+   warehouseSale={version:1,includeVat:snapshot.sale.includeVat,lines:snapshot.lines.map(l=>({productId:l.productId,listUnitPrice:l.listUnitPrice??'0',vatRate:l.vatRate??'0'}))};
+   content.fee=snapshot.totals.shipping??snapshot.sale.shippingFee;
+   content.lines=snapshot.lines.map(l=>warehouseSaleLine(l,snapshot.sale!.includeVat));
+  }
  }else if(kind==='SALES'){
   const row=await salesOrderAccess(sql,user,id,lock),version=await salesVersionAccess(sql,row,row.confirmed_version_id??row.latest_version_id),q=version.snapshot.quote;
   const clearance=(await sql.query<{warehouse_id:string|null}>('SELECT warehouse_id FROM cohamy_crm.accounting_order_clearances WHERE order_id=$1 OR request_id=$2 ORDER BY id LIMIT 1',[id,row.request_id])).rows[0];
   original={...row,salesVersion:version};code=row.code;status=row.status;sourceId=row.request_id;linkedOrderId=id;
   content={...content,warehouseId:clearance?.warehouse_id??null,buyerName:q.organization.name,buyerAddress:q.organization.address,buyerTaxId:q.organization.businessId??'',recipient:q.delivery.recipient,recipientPhone:q.delivery.phone,issuedDate:q.issuedAt.slice(0,10),invoiceNumber:row.code,note:q.note,fee:q.calculation.fee,lines:q.calculation.lines.map(l=>normalized(l))};
+  const marker=obj(q).warehouseSale;
+  if(obj(marker).version===1){
+   const includeVat=obj(marker).includeVat===true;
+   warehouseSale={version:1,includeVat,lines:q.calculation.lines.map(l=>({productId:l.productId,listUnitPrice:l.listUnitPrice??'0',vatRate:str(obj(l).vatRate)||'0'}))};
+   content.lines=q.calculation.lines.map(l=>warehouseSaleLine(l,includeVat));
+  }
  }else if(kind==='HISTORICAL'){
   const row=(await sql.query<Row>('SELECT h.id,h.owner_organization_id,h.warehouse_id,h.invoice_date::text,h.snapshot,h.snapshot_checksum,h.source_filename,h.source_checksum FROM cohamy_crm.historical_order_invoices h WHERE h.id=$1 AND h.owner_organization_id=$2',[id,user.organizationId])).rows[0];if(!row)throw new CrmError('NOT_FOUND',404);
   const snapshot=obj(row.snapshot),event=(await sql.query<{order_id:string}>("SELECT payload->>'orderId' AS order_id FROM cohamy_crm.audit_events WHERE action='historical-invoice.reconciled' AND entity_id=$1 ORDER BY created_at DESC LIMIT 1",[id])).rows[0];
@@ -55,7 +72,7 @@ export async function loadAdminInvoice(sql:Sql,user:Principal,kind:InvoiceKind,i
  const head=(await sql.query<{version:number;content:InvoiceContent|null;cancelled_at:string|null;current_content?:InvoiceContent|null}>('SELECT version,content,cancelled_at FROM cohamy_crm.invoice_admin_heads WHERE kind=$1 AND entity_id=$2 AND organization_id=$3',[kind,id,user.organizationId])).rows[0];
  if(head?.content&&kind==='HISTORICAL'){content=head.content;code=content.invoiceSymbol+' · '+content.invoiceNumber;}
  const cancelled=Boolean(head?.cancelled_at)||['CANCELLED','VOID'].includes(status);
- return {kind,id,code,label,status:cancelled?'CANCELLED':status,version:commercialDigest({native:original,head:head?.version??0}),content,total:invoiceTotal(content),cancelled,linkedOrderId,sourceId,original};
+ return {kind,id,code,label,status:cancelled?'CANCELLED':status,version:commercialDigest({native:original,head:head?.version??0}),content,total:invoiceTotal(content),cancelled,linkedOrderId,sourceId,...(warehouseSale?{warehouseSale}:{}),original};
 }
 
 const sources=`

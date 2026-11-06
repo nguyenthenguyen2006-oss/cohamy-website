@@ -1,0 +1,72 @@
+{
+  "environment": "STAGING isolated PostgreSQL with restricted DML role; email disabled",
+  "status": "PASS",
+  "passed": 16,
+  "total": 16,
+  "cases": [
+    {
+      "name": "ABC draft saves/reloads exact line percentages and 410000/52000/358000 totals without stock or finance",
+      "status": "PASS"
+    },
+    {
+      "name": "Draft edits retain per-product decimal percentages and recompute immediately on save",
+      "status": "PASS"
+    },
+    {
+      "name": "Invalid discounts and direct price/cash fields are rejected before any business side effects",
+      "status": "PASS"
+    },
+    {
+      "name": "Warehouse users need an explicit warehouse assignment for SALE",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirm retry creates one order/clearance/receivable and one stock issue per product",
+      "status": "PASS"
+    },
+    {
+      "name": "Source-linked deliveries reject pricing overrides and confirmed flows reject direct saves",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin reads LIST price and corrects FLOW quantity/percentage once through the canonical sale",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin rejects direct base-price/cash/VAT edits on a marked SALE",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin recall and retry restore the exact issued stock once and retain original PDF bytes",
+      "status": "PASS"
+    },
+    {
+      "name": "Insufficient stock rolls back the handover and every finance row atomically",
+      "status": "PASS"
+    },
+    {
+      "name": "SAMPLE, GIFT and legacy-purpose issues never create automatic sales or receivables",
+      "status": "PASS"
+    },
+    {
+      "name": "Draft prices and VAT remain frozen through catalog edits and confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "Distinct concurrent confirm attempts produce exactly one confirmed business posting",
+      "status": "PASS"
+    },
+    {
+      "name": "Accountant create-handover adapter forwards exact line percentages and rejects cash/net overrides",
+      "status": "PASS"
+    },
+    {
+      "name": "Accountant payment adapter records canonical money, keeps staff pending and confirms once without legacy transaction mirrors",
+      "status": "PASS"
+    },
+    {
+      "name": "No factory invoice, automatic reservation, credit hold or outgoing email was created",
+      "status": "PASS"
+    }
+  ]
+}

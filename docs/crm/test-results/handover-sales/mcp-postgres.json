@@ -1,0 +1,49 @@
+{
+  "environment": "STAGING existing isolated PostgreSQL; restricted runtime; native MCP route dispatch; email disabled",
+  "database": "cohamy_qa_handover_65dafc7a36c941d4996b3fdcf1c27efb",
+  "status": "PASS",
+  "scope": "Native MCP bridge and paginated business data runtime. OAuth transport, browser and production are separate checks.",
+  "cases": [
+    {
+      "name": "MCP capability catalog exposes strict per-line percentage sale, confirmation, PDF, finance and Admin operations",
+      "status": "PASS"
+    },
+    {
+      "name": "Native MCP route saves and reloads a draft with independent decimal percentages and rejects cash/price overrides",
+      "status": "PASS"
+    },
+    {
+      "name": "Native MCP confirmation creates one stock/finance linkage and confirmed read returns exact totals",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP downloads the actual immutable customer PDF in bounded chunks",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP data catalog exposes new business provenance with pagination while credentials stay excluded",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP accountant payment writes canonical partial money and live reconciliation reports the same paid amount",
+      "status": "PASS"
+    },
+    {
+      "name": "MCP Admin can edit the canonical sale by percentage, recall it and retain the original PDF and actual payment history",
+      "status": "PASS"
+    }
+  ],
+  "evidence": {
+    "orderId": "9493a45d-f11a-4c0f-8bd5-4e11c34522d0",
+    "handoverId": "bd49ed47-d1ef-4953-858f-d916f4cef217",
+    "pdf": {
+      "bytes": 46621,
+      "chunks": 12,
+      "sha256": "bd61679bd698e0ec78a0cda26f1c1c3def35de9034e1ca30fa50ff77b308b7a7"
+    },
+    "partialPayment": {
+      "amount": "58796",
+      "transactionId": "487f6ab4-ba0c-4d71-931e-8a7fc4c86430"
+    }
+  }
+}

@@ -35,6 +35,13 @@ function invoiceContract(full){
  return primitives+'\n'+basket+'\n'+(full?contracts('lib/crm/order-invoice-model.ts')+'\norderInvoicePayloadSchema.required({source:true}) // Use authenticated invoice-data or invoice-preview; server revalidates all line prices and totals.':contracts('lib/crm/order-invoice-model.ts','draftInvoicePreviewSchema'));
 }
 const routes=[],imports=[],dispatch=[],skipped=[];
+function flowContract(action){
+ const file='lib/crm/document-flow.ts',primitives=readSource(file).split('\n').filter(line=>/^const (uuid|quantity)=/.test(line)).join('\n');
+ if(action==='save')return primitives+'\n'+contracts(file,'inputSchema');
+ const name=action==='confirm'?'confirmFlowDocument':action==='amend'?'amendFlowDocument':action==='accept'?'acceptFactoryRequest':'';let schema='';
+ if(name)visit(parse(file),node=>{if(ts.isFunctionDeclaration(node)&&node.name?.text===name)visit(node,child=>{if(ts.isCallExpression(child)&&child.expression.getText()==='parse'&&child.arguments[0]?.getText().startsWith('z.object('))schema=child.arguments[0].getText();});});
+ return schema?primitives+'\n'+schema:null;
+}
 function salesContract(action){
  const file='lib/crm/sales-customers-contracts.ts';
  if(action==='create')return readSource(file).match(/^const fields=.+$/m)[0]+'\n'+contracts(file,'createSalesCustomerSchema');
@@ -54,7 +61,7 @@ for(const file of walk(root).sort()){
  imports.push(`import * as ${alias} from '@/`+file.slice(0,-3)+`';`);
  dispatch.push(`${JSON.stringify(file)}: ${alias}`);
  const serviceFiles=[...text.matchAll(/from\s+['"](@\/lib\/crm\/[^'"]+)['"]/g)].map(m=>m[1].replace('@/','')+'.ts').filter(f=>fs.existsSync(f));
- const contract=[contracts(file),...serviceFiles.map(contracts)].filter(Boolean).join('\n').slice(0,48000);
+ const contract=[contracts(file),...serviceFiles.map(file=>contracts(file))].filter(Boolean).join('\n').slice(0,48000);
  for(const node of source.statements){
   if(!ts.isFunctionDeclaration(node)||!node.name||!['GET','POST','PATCH','PUT','DELETE'].includes(node.name.text))continue;
   const method=node.name.text,keys=[...relative.matchAll(/\[([^\]]+)\]/g)].map(m=>m[1]);
@@ -69,7 +76,8 @@ for(const file of walk(root).sort()){
     if(id==='POST /api/crm/buyer/password'){skipped.push({route:template,reason:'Password changes remain in the authenticated browser'});continue;}
     let moduleId;visit(node,n=>{if(ts.isCallExpression(n)&&n.expression.getText()==='apiUser')moduleId=evaluate(n.arguments[0],selection);});
     const safeContract=group==='inventory'&&method==='POST'&&['transfer-ship','transfer-receive'].includes(selection)?inventoryTransferContract(selection):id==='POST /api/crm/commerce/invoice-pdf'?invoiceContract(true):id==='POST /api/crm/commerce/invoice-preview'?invoiceContract(false):id==='POST /api/crm/accounts/provision'?contracts('lib/crm/account-provision-contracts.ts','provisionAccountSchema'):id==='POST /api/crm/accounts/invitations'?contracts('lib/crm/account-provision-contracts.ts','accountInvitationSchema'):id==='DELETE /api/crm/accounts/[id]'?contracts('lib/crm/account-deletion-contracts.ts','deleteAccountSchema'):id==='PATCH /api/crm/accounts/[id]'?'z.object({active:z.boolean()}).strict()':id==='POST /api/crm/work/account'?readSource('lib/crm/types.ts').match(/^export const roles = .+$/m)[0].replace(/^export /,'')+'\nz.object({id:z.uuid(),data:z.object({action:z.enum(["revoke","role"]),role:z.enum(roles).optional(),expectedVersion:z.number().int().positive().optional()}).strict()}).strict()':contract;
-    const finalContract=group==='online-orders'&&method==='POST'?contracts('lib/crm/online-orders.ts',relative.endsWith('/dispatch')?'assignSchema':'acceptSchema'):group==='sales-customers'&&method==='POST'?(salesContract(selection)||contracts(file,selection==='invite'?'invitationSchema':selection==='read-notification'?'readNotificationSchema':undefined)):safeContract;
+    const accountantSaleContract=id==='POST /api/crm/accountant/create-handover-invoice'?flowContract('save')+'\n// Legacy adapter forces kind ISSUE; optional explicit issuePurpose SALE requires saleCustomerId, per-line discountPercent only. No cash/global discount or direct net-price overrides.':id==='POST /api/crm/accountant/accountant-verify-clearance'?contract+'\n// Explicit warehouse SALE does not accept aggregate submittedAmountOverride or legacy batch verification. Use record-order-payment and confirm-order-payment with the canonical receipt id.':group==='accountant'&&['record-order-payment','staff-submit-payment'].includes(selection)?contracts('lib/crm/handover-sales.ts','paymentInput')+'\n// For explicit warehouse SALE, this records one native finance receipt/allocation. SALES remains pending until accountant review. Existing other clearances retain their legacy payment contract.':id==='POST /api/crm/accountant/confirm-order-payment'?'z.object({transactionId:z.uuid(),decision:z.enum(["CONFIRM","REJECT"]).default("CONFIRM"),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()}).strict() // Warehouse SALE canonical receipt review; no duplicate legacy payment row.':null;
+    const finalContract=(group==='document-flow'&&method==='POST'?flowContract(selection):null)??accountantSaleContract??(group==='online-orders'&&method==='POST'?contracts('lib/crm/online-orders.ts',relative.endsWith('/dispatch')?'assignSchema':'acceptSchema'):group==='sales-customers'&&method==='POST'?(salesContract(selection)||contracts(file,selection==='invite'?'invitationSchema':selection==='read-notification'?'readNotificationSchema':undefined)):safeContract);
     routes.push({id,method,template,source:file,group:group.startsWith('[')?'directory':group,status:typeof moduleId==='string'&&removed.has(moduleId)?'RETIRED':'AVAILABLE',moduleId:moduleId??null,params:keys.filter(k=>k!==selector),selector:selector?{[selector]:selection}:{},query,inputContract:method==='GET'?'':finalContract,multipart:['POST /api/crm/documents','POST /api/crm/internal-documents','POST /api/crm/jobs/preview','POST /api/crm/commerce/excel-preview','POST /api/crm/consignment/sale-preview'].includes(id),sourceHash:createHash('sha256').update(text+serviceFiles.map(readSource).join('\n')).digest('hex')});
   }
  }

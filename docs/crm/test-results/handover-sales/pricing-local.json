@@ -1,0 +1,78 @@
+{
+  "status": "PASS",
+  "environment": "LOCAL pure shared BigInt pricing; no database or provider",
+  "cases": [
+    {
+      "name": "Percent strings and finite numeric values normalize without a floating money calculation",
+      "status": "PASS"
+    },
+    {
+      "name": "The supplied A/B/C example is exactly 410000 list, 52000 discount and 358000 payable",
+      "status": "PASS"
+    },
+    {
+      "name": "Four decimal percentage digits remain exact",
+      "status": "PASS"
+    },
+    {
+      "name": "Discounted unit VND rounds first, then quantity multiplies that same displayed unit",
+      "status": "PASS"
+    },
+    {
+      "name": "Two-decimal package quantities calculate from the rounded net unit",
+      "status": "PASS"
+    },
+    {
+      "name": "One hundred percent discount is valid and creates zero monetary total",
+      "status": "PASS"
+    },
+    {
+      "name": "Disabled VAT returns actual zero without depending on a tax configuration",
+      "status": "PASS"
+    },
+    {
+      "name": "Explicit VAT is calculated per net line and shipping is added once",
+      "status": "PASS"
+    },
+    {
+      "name": "VAT half-VND rounds up and four-decimal VAT is supported",
+      "status": "PASS"
+    },
+    {
+      "name": "Shipping without VAT and an empty preview have deterministic totals",
+      "status": "PASS"
+    },
+    {
+      "name": "Money beyond JavaScript safe integers remains exact as strings",
+      "status": "PASS"
+    },
+    {
+      "name": "Negative, over-limit, nonfinite, scientific and overprecision discount inputs are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Nonpositive, scientific, excessive precision or oversized quantities are rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "Malformed price and shipping amounts are rejected rather than coerced",
+      "status": "PASS"
+    },
+    {
+      "name": "Invalid VAT configuration is rejected when VAT is explicitly selected",
+      "status": "PASS"
+    },
+    {
+      "name": "Numeric30 monetary bounds hold for the unit, line, VAT, invoice and shipping sum",
+      "status": "PASS"
+    },
+    {
+      "name": "Invoice aggregation rejects inconsistent caller-supplied line totals",
+      "status": "PASS"
+    }
+  ],
+  "productionWrites": 0,
+  "externalEmails": 0,
+  "rounding": "Discounted unit VND HALF_UP first; then quantity and explicit per-line VAT HALF_UP",
+  "percentPrecision": 4
+}

@@ -7,6 +7,7 @@ import {partnerScope,getOrganization,listWarehouses} from './repository';
 import {fixed,fixedText,integer,lineAmount} from './decimal';
 import type {Principal} from './types';
 import type {SalesSnapshot} from './sales-orders';
+import {warehouseScope} from './warehouse-scope';
 
 function isoDate(value:unknown):string{
  if(!value)return '';
@@ -122,11 +123,12 @@ export interface SalesReconciliationResult {
 export async function salesReconciliation(user:Principal,query:Record<string,string>={}):Promise<SalesReconciliationResult>{
  assertPermission(user,'orders.read');
  const db=await database();
- const whRegion=warehouseRoleRegion(user.role);
+ const whScope=warehouseScope(user,'w');
  const scope=user.area==='crm'&&isWarehouseRole(user.role)
-  ?(whRegion
-   ?{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id JOIN cohamy_crm.warehouses w ON w.id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1 AND w.region=$2)',params:[user.membershipId,whRegion] as unknown[]}
-   :{sql:'EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir JOIN cohamy_crm.warehouse_assignments wa ON wa.warehouse_id=ir.warehouse_id WHERE ir.order_id=s.id AND wa.membership_id=$1)',params:[user.membershipId] as unknown[]})
+  ?{sql:`EXISTS(SELECT 1 FROM cohamy_crm.warehouses w WHERE (${whScope.sql}) AND (
+    EXISTS(SELECT 1 FROM cohamy_crm.inventory_reservations ir WHERE ir.order_id=s.id AND ir.warehouse_id=w.id)
+    OR EXISTS(SELECT 1 FROM cohamy_crm.inventory_movements im JOIN cohamy_crm.inventory_documents d ON d.id=im.document_id AND d.status='POSTED' WHERE im.source_order_id=s.id AND im.warehouse_id=w.id AND im.quantity<0)
+    OR EXISTS(SELECT 1 FROM cohamy_crm.warehouse_sale_links l WHERE l.order_id=s.id AND l.warehouse_id=w.id AND l.seller_organization_id=w.organization_id)))`,params:whScope.params}
   :partnerScope(user,'o');
  const params:unknown[]=[...scope.params];
  const conds:string[]=[`(${scope.sql})`];
@@ -187,6 +189,7 @@ export async function salesReconciliation(user:Principal,query:Record<string,str
   receivable_codes:string[]|null;
   receivable_original:string;
   receivable_remaining:string;
+  receivable_paid:string;
   receivable_statuses:string[]|null;
   earliest_due_on:string|null;
  }>(`
@@ -216,6 +219,7 @@ export async function salesReconciliation(user:Principal,query:Record<string,str
    rec_agg.receivable_codes,
    COALESCE(rec_agg.original_amount, 0)::text AS receivable_original,
    COALESCE(rec_agg.remaining_amount, 0)::text AS receivable_remaining,
+   COALESCE(rec_agg.paid_amount, 0)::text AS receivable_paid,
    rec_agg.statuses AS receivable_statuses,
    rec_agg.earliest_due_on::text AS earliest_due_on
   FROM cohamy_crm.sales_orders s
@@ -237,11 +241,14 @@ export async function salesReconciliation(user:Principal,query:Record<string,str
     array_agg(DISTINCT idoc.code) FILTER (WHERE idoc.code IS NOT NULL) AS issue_doc_codes,
     array_agg(DISTINCT w.code) FILTER (WHERE w.code IS NOT NULL) AS warehouse_codes,
     array_agg(DISTINCT w.id::text) FILTER (WHERE w.id IS NOT NULL) AS warehouse_ids
-   FROM cohamy_crm.inventory_reservations ir
-   JOIN cohamy_crm.warehouses w ON w.id = ir.warehouse_id
-   LEFT JOIN cohamy_crm.inventory_movements im ON im.source_order_id = s.id AND im.warehouse_id = w.id AND im.quantity < 0
-   LEFT JOIN cohamy_crm.inventory_documents idoc ON idoc.id = im.document_id AND idoc.status = 'POSTED'
-   WHERE ir.order_id = s.id
+   FROM (
+    SELECT ir.warehouse_id FROM cohamy_crm.inventory_reservations ir WHERE ir.order_id=s.id
+    UNION SELECT im.warehouse_id FROM cohamy_crm.inventory_movements im JOIN cohamy_crm.inventory_documents d ON d.id=im.document_id AND d.status='POSTED' WHERE im.source_order_id=s.id AND im.quantity<0
+    UNION SELECT l.warehouse_id FROM cohamy_crm.warehouse_sale_links l WHERE l.order_id=s.id
+   ) own_warehouses
+   JOIN cohamy_crm.warehouses w ON w.id=own_warehouses.warehouse_id
+   LEFT JOIN cohamy_crm.inventory_movements im ON im.source_order_id=s.id AND im.warehouse_id=w.id AND im.quantity<0
+   LEFT JOIN cohamy_crm.inventory_documents idoc ON idoc.id=im.document_id AND idoc.status='POSTED'
   ) inv_agg ON true
   LEFT JOIN LATERAL (
    SELECT
@@ -249,6 +256,10 @@ export async function salesReconciliation(user:Principal,query:Record<string,str
     array_agg(r.code ORDER BY r.created_at) AS receivable_codes,
     sum(r.original_amount) AS original_amount,
     sum(r.remaining_amount) AS remaining_amount,
+    sum(CASE WHEN r.terms_snapshot->>'creditExposure'='false' THEN COALESCE((
+     SELECT sum(a.amount) FROM cohamy_crm.payment_allocations a JOIN cohamy_crm.payment_receipts p ON p.id=a.payment_id
+     WHERE a.receivable_id=r.id AND p.status='CONFIRMED' AND NOT EXISTS(SELECT 1 FROM cohamy_crm.invoice_allocation_reversals x WHERE x.allocation_id=a.id)
+    ),0) ELSE greatest(r.original_amount-r.remaining_amount,0) END) AS paid_amount,
     array_agg(DISTINCT r.status) AS statuses,
     min(r.due_on) AS earliest_due_on
    FROM cohamy_crm.receivables r
@@ -318,7 +329,7 @@ export async function salesReconciliation(user:Principal,query:Record<string,str
 
   const recOrig=integer(row.receivable_original);
   const recRem=integer(row.receivable_remaining);
-  const recPaid=recOrig>recRem?recOrig-recRem:0n;
+  const recPaid=integer(row.receivable_paid);
   const unposted=receivableIds.length===0&&row.status!=='CANCELLED'&&row.status!=='REJECTED'?orderTotal:0n;
   const recStatuses=(row.receivable_statuses??[]).filter(Boolean);
   const recStatus=receivableIds.length===0
@@ -340,7 +351,8 @@ export async function salesReconciliation(user:Principal,query:Record<string,str
    const netAmt=l.net;
    const discAmt=(integer(listAmt)>integer(netAmt)?integer(listAmt)-integer(netAmt):integer(l.discount)).toString();
    const totalBp=(l.promoPercentBp??0)+(l.accountPercentBp??0);
-   const lineDiscPct=totalBp>0?`${(totalBp/100).toFixed(totalBp%100===0?0:1)}%`:integer(listAmt)>0n&&integer(discAmt)>0n?`${(Number((integer(discAmt)*10000n)/integer(listAmt))/100).toFixed(1)}%`:'0%';
+   const explicitDiscount=(l as typeof l&{discountPercent?:string}).discountPercent;
+   const lineDiscPct=explicitDiscount!==undefined?`${explicitDiscount}%`:totalBp>0?`${(totalBp/100).toFixed(totalBp%100===0?0:1)}%`:integer(listAmt)>0n&&integer(discAmt)>0n?`${(Number((integer(discAmt)*10000n)/integer(listAmt))/100).toFixed(1)}%`:'0%';
 
    const lineRow:ReconciliationLineRow={
     rowKey:`${row.id}:${idx}:${l.sku}`,

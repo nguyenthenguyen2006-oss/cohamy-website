@@ -14,6 +14,30 @@ import {invoiceActionSchema,type AdminInvoice,type InvoiceAction,type InvoiceCon
 import {assertInvoiceAdmin,loadAdminInvoice,invoiceLineAmount,invoiceTotal} from './invoice-admin-read';
 import {invoiceStockCells,adjustInvoiceStock,type InvoiceStockTarget} from './invoice-admin-stock';
 import {reviseInvoiceReceivables} from './invoice-admin-finance';
+import {calculateHandoverSaleLine,calculateHandoverSaleTotals,normalizeDiscountPercent} from './handover-sale-pricing';
+import {syncHandoverSaleSettlement} from './handover-sales';
+
+function validateInvoicePricing(invoice:AdminInvoice,content:InvoiceContent){
+ if(!invoice.warehouseSale){
+  // Keep the existing correction contract for every legacy invoice kind.
+  if(!/^\d{1,15}$/.test(content.fee)||content.lines.some(l=>l.discountPercent!==undefined||[l.unitPrice,l.discount,l.tax].some(value=>!/^\d{1,15}$/.test(value))))throw new CrmError('INVALID_FIELDS',400);
+  return;
+ }
+ const policy=invoice.warehouseSale,seen=new Set<string>();
+ if(content.lines.length!==policy.lines.length)throw new CrmError('INVOICE_PRODUCT_OUTSIDE_SOURCE',409);
+ const priced=content.lines.map(line=>{
+  const frozen=policy.lines.find(l=>l.productId===line.productId);
+  if(!frozen||seen.has(frozen.productId))throw new CrmError('INVOICE_PRODUCT_OUTSIDE_SOURCE',409);seen.add(frozen.productId);
+  if(line.unitPrice!==frozen.listUnitPrice)throw new CrmError('INVOICE_SALE_PRICE_IMMUTABLE',400);
+  if(line.discountPercent===undefined)throw new CrmError('INVALID_DISCOUNT_PERCENT',400);
+  const result=calculateHandoverSaleLine({listUnitPrice:frozen.listUnitPrice,quantity:line.quantity,discountPercent:normalizeDiscountPercent(line.discountPercent),vatRate:frozen.vatRate,includeVat:policy.includeVat});
+  if(line.discount!==result.discountAmount||line.tax!==result.vatAmount)throw new CrmError('INVOICE_SALE_DERIVED_MONEY',400);
+  const original=invoice.content.lines.find(l=>l.productId===line.productId)!;line.name=original.name;line.unit=original.unit;
+  line.discountPercent=result.discountPercent;line.unitPrice=result.listUnitPrice;line.discount=result.discountAmount;line.tax=result.vatAmount;
+  return result;
+ });
+ calculateHandoverSaleTotals(priced,content.fee);
+}
 
 const productQuantities=(content:InvoiceContent)=>{const map=new Map<string,bigint>();for(const line of content.lines){if(!line.productId)throw new CrmError('INVOICE_PRODUCT_REQUIRED',400);map.set(line.productId,(map.get(line.productId)??0n)+fixed(line.quantity));}return map;};
 
@@ -59,9 +83,16 @@ async function reservePendingInvoiceQuantity(sql:Sql,user:Principal,orderId:stri
 
 async function saveSalesContent(sql:Sql,user:Principal,invoice:AdminInvoice,content:InvoiceContent,reason:string,stockChanged:boolean){
  const old=invoice.original.salesVersion as SalesVersion,snapshot:SalesSnapshot=structuredClone(old.snapshot),products=(await sql.query<{id:string;sku:string;name:string;stock_unit:string;version:number}>('SELECT id,sku,name,stock_unit,version FROM cohamy_crm.products WHERE id=ANY($1::uuid[]) AND active',[content.lines.flatMap(l=>l.productId?[l.productId]:[])])).rows;
- const lines:PricedLine[]=content.lines.map(line=>{const product=products.find(p=>p.id===line.productId);if(!product?.stock_unit)throw new CrmError('INVOICE_PRODUCT_REQUIRED',400);const before=snapshot.quote.calculation.lines.find(l=>l.productId===line.productId),gross=lineAmount(line.unitPrice,line.quantity,'HALF_UP'),net=(BigInt(gross)-BigInt(line.discount)).toString();return {...before,sku:product.sku,productId:product.id,name:product.name,stockUnit:product.stock_unit,productVersion:product.version,unitCode:'BASE',unitLabel:product.stock_unit,unitVersion:before?.unitVersion??1,unitNumerator:'1',unitDenominator:'1',quantity:line.quantity,baseQuantity:line.quantity,unitPrice:line.unitPrice,regularUnitPrice:before?.regularUnitPrice??line.unitPrice,listUnitPrice:before?.listUnitPrice??before?.regularUnitPrice??line.unitPrice,priceAfterPromo:before?.priceAfterPromo??line.unitPrice,promoPercentBp:before?.unitPrice===line.unitPrice?before.promoPercentBp:0,accountPercentBp:before?.unitPrice===line.unitPrice?before.accountPercentBp:undefined,promotionName:before?.unitPrice===line.unitPrice?before.promotionName:null,promotionBadge:before?.unitPrice===line.unitPrice?before.promotionBadge:null,gross,discount:line.discount,net,tax:line.tax,total:invoiceLineAmount(line),gift:Boolean(before?.gift&&line.unitPrice==='0'),giftRule:before?.giftRule??null};});
+ const lines:PricedLine[]=content.lines.map(line=>{const product=products.find(p=>p.id===line.productId);if(!product?.stock_unit)throw new CrmError('INVOICE_PRODUCT_REQUIRED',400);const before=snapshot.quote.calculation.lines.find(l=>l.productId===line.productId);
+  if(invoice.warehouseSale){
+   if(!before)throw new CrmError('INVOICE_PRODUCT_OUTSIDE_SOURCE',409);
+   const frozen=invoice.warehouseSale.lines.find(l=>l.productId===line.productId)!,priced=calculateHandoverSaleLine({listUnitPrice:frozen.listUnitPrice,quantity:line.quantity,discountPercent:line.discountPercent!,vatRate:frozen.vatRate,includeVat:invoice.warehouseSale.includeVat});
+   return {...before,...priced,quantity:line.quantity,baseQuantity:line.quantity,unitPrice:priced.unitPrice,regularUnitPrice:priced.listUnitPrice,priceAfterPromo:priced.listUnitPrice,promoPercentBp:0,accountPercentBp:0,promotionName:null,promotionBadge:null,gross:priced.listLineTotal,discount:priced.discountAmount,net:priced.amount,tax:priced.vatAmount,total:priced.grossLineTotal,gift:false,giftRule:null};
+  }
+  const gross=lineAmount(line.unitPrice,line.quantity,'HALF_UP'),net=(BigInt(gross)-BigInt(line.discount)).toString();return {...before,sku:product.sku,productId:product.id,name:product.name,stockUnit:product.stock_unit,productVersion:product.version,unitCode:'BASE',unitLabel:product.stock_unit,unitVersion:before?.unitVersion??1,unitNumerator:'1',unitDenominator:'1',quantity:line.quantity,baseQuantity:line.quantity,unitPrice:line.unitPrice,regularUnitPrice:before?.regularUnitPrice??line.unitPrice,listUnitPrice:before?.listUnitPrice??before?.regularUnitPrice??line.unitPrice,priceAfterPromo:before?.priceAfterPromo??line.unitPrice,promoPercentBp:before?.unitPrice===line.unitPrice?before.promoPercentBp:0,accountPercentBp:before?.unitPrice===line.unitPrice?before.accountPercentBp:undefined,promotionName:before?.unitPrice===line.unitPrice?before.promotionName:null,promotionBadge:before?.unitPrice===line.unitPrice?before.promotionBadge:null,gross,discount:line.discount,net,tax:line.tax,total:invoiceLineAmount(line),gift:Boolean(before?.gift&&line.unitPrice==='0'),giftRule:before?.giftRule??null};});
  const sum=(key:'gross'|'discount'|'tax')=>lines.reduce((n,l)=>n+BigInt(l[key]),0n).toString();
  snapshot.quote.calculation={...snapshot.quote.calculation,lines,subtotal:sum('gross'),discount:sum('discount'),tax:sum('tax'),fee:content.fee,total:invoiceTotal(content),approvalRequired:false,approvalReasons:[]};
+ if(invoice.warehouseSale)Object.assign(snapshot.quote,{totals:calculateHandoverSaleTotals(lines.map(l=>({listLineTotal:l.gross,discountAmount:l.discount,amount:l.net,vatAmount:l.tax,grossLineTotal:l.total})),content.fee)});
  if(snapshot.quote.calculation.channel)snapshot.quote.calculation.channel={...snapshot.quote.calculation.channel,listSubtotal:lines.reduce((n,l)=>n+BigInt(lineAmount(l.listUnitPrice??l.regularUnitPrice,l.baseQuantity,'HALF_UP')),0n).toString()};
  snapshot.quote.basket={...snapshot.quote.basket,lines:lines.filter(l=>!l.gift).map(l=>({sku:l.sku,unitCode:'BASE',quantity:l.quantity,requestedUnitPrice:l.unitPrice})),discountBasisPoints:0};
  snapshot.quote.organization={...snapshot.quote.organization,name:content.buyerName,address:content.buyerAddress,businessId:content.buyerTaxId};snapshot.quote.delivery={recipient:content.recipient,phone:content.recipientPhone,address:content.buyerAddress};snapshot.quote.note=content.note;if(content.issuedDate)snapshot.quote.issuedAt=content.issuedDate+'T00:00:00+07:00';
@@ -69,17 +100,31 @@ async function saveSalesContent(sql:Sql,user:Principal,invoice:AdminInvoice,cont
  await sql.query('INSERT INTO cohamy_crm.sales_order_versions(id,order_id,number,request_version_id,order_policy_id,snapshot,checksum,approval_required,actor_id) VALUES($1,$2,$3,$4,$5,$6::jsonb,$7,false,$8)',[id,invoice.id,number,old.request_version_id,old.order_policy_id,JSON.stringify(snapshot),commercialDigest(snapshot),user.id]);
  await sql.query('UPDATE cohamy_crm.sales_orders SET latest_version_id=$1::uuid,confirmed_version_id=CASE WHEN confirmed_version_id IS NULL THEN NULL ELSE $1::uuid END,version=version+1,updated_at=now() WHERE id=$2',[id,invoice.id]);
  const net=lines.reduce((n,l)=>n+BigInt(l.net),0n).toString(),nominal=snapshot.quote.calculation.channel?.listSubtotal??sum('gross'),listTotal=BigInt(nominal)>BigInt(sum('gross'))?nominal:sum('gross'),allDiscount=(BigInt(listTotal)-BigInt(net)).toString();
- const amountChanged=content.fee!==invoice.content.fee||content.lines.length!==invoice.content.lines.length||content.lines.some((line,i)=>{const prior=invoice.content.lines[i];return !prior||(['productId','quantity','unitPrice','discount','tax'] as const).some(key=>line[key]!==prior[key]);});
- if(amountChanged)await sql.query('UPDATE cohamy_crm.accounting_order_clearances SET warehouse_id=$1,list_subtotal=$2,discount_amount=$3,net_total=$4,vat_amount=$5,gross_total=$6,immutable_lines=$7::jsonb,orderer_name=$8,orderer_phone=$9,updated_at=now() WHERE order_id=$10 OR request_id=$11',[content.warehouseId,listTotal,allDiscount,net,sum('tax'),invoiceTotal(content),JSON.stringify(lines.map(l=>({...l,netUnitPrice:fixed(l.baseQuantity)>0n?roundRatio(BigInt(l.net)*1000000n,fixed(l.baseQuantity),'HALF_UP').toString():'0',listLineTotal:l.gross,netLineTotal:l.net}))),content.recipient,content.recipientPhone,invoice.id,invoice.sourceId]);
+ const amountChanged=content.fee!==invoice.content.fee||content.lines.length!==invoice.content.lines.length||content.lines.some((line,i)=>{const prior=invoice.content.lines[i];return !prior||(['productId','quantity','unitPrice','discount','tax','discountPercent'] as const).some(key=>line[key]!==prior[key]);});
+ if(amountChanged)await sql.query('UPDATE cohamy_crm.accounting_order_clearances SET warehouse_id=$1,list_subtotal=$2,discount_amount=$3,net_total=$4,vat_amount=$5,gross_total=$6,immutable_lines=$7::jsonb,orderer_name=$8,orderer_phone=$9,updated_at=now() WHERE order_id=$10 OR request_id=$11',[content.warehouseId,listTotal,allDiscount,net,sum('tax'),invoiceTotal(content),JSON.stringify(lines.map(l=>({...l,netUnitPrice:invoice.warehouseSale?l.unitPrice:fixed(l.baseQuantity)>0n?roundRatio(BigInt(l.net)*1000000n,fixed(l.baseQuantity),'HALF_UP').toString():'0',listLineTotal:l.gross,netLineTotal:l.net}))),content.recipient,content.recipientPhone,invoice.id,invoice.sourceId]);
  else await sql.query('UPDATE cohamy_crm.accounting_order_clearances SET warehouse_id=$1,orderer_name=$2,orderer_phone=$3,updated_at=now() WHERE order_id=$4 OR request_id=$5',[content.warehouseId,content.recipient,content.recipientPhone,invoice.id,invoice.sourceId]);
- if(stockChanged){await synchronizeSalesReservations(sql,user,invoice,id,reason);await reservePendingInvoiceQuantity(sql,user,invoice.id,id,content,(snapshot.orderPolicy.definition.provisionalReservation?.allowPartial??false),reason);}else await sql.query('UPDATE cohamy_crm.inventory_reservations SET order_version_id=$1,version=version+1,updated_at=now() WHERE order_id=$2',[id,invoice.id]);const stock=await invoiceStockCells(sql,'SALES',invoice.id),delivered=new Map<string,bigint>();for(const cell of stock)delivered.set(cell.product_id,(delivered.get(cell.product_id)??0n)-fixed(cell.quantity,6,true));const ordered=productQuantities(content),full=[...ordered].every(([productId,q])=>(delivered.get(productId)??0n)>=q),started=[...delivered.values()].some(q=>q>0n);await sql.query('UPDATE cohamy_crm.sales_orders SET delivery_status=$1 WHERE id=$2',[full?'DELIVERED':started?'PARTIAL':'NOT_STARTED',invoice.id]);return {versionId:id,number};
+ if(invoice.warehouseSale)await sql.query('UPDATE cohamy_crm.sales_orders SET fulfillment_shortage=$1::jsonb WHERE id=$2',['[]',invoice.id]);
+ else if(stockChanged){await synchronizeSalesReservations(sql,user,invoice,id,reason);await reservePendingInvoiceQuantity(sql,user,invoice.id,id,content,(snapshot.orderPolicy.definition.provisionalReservation?.allowPartial??false),reason);}else await sql.query('UPDATE cohamy_crm.inventory_reservations SET order_version_id=$1,version=version+1,updated_at=now() WHERE order_id=$2',[id,invoice.id]);const stock=await invoiceStockCells(sql,'SALES',invoice.id),delivered=new Map<string,bigint>();for(const cell of stock)delivered.set(cell.product_id,(delivered.get(cell.product_id)??0n)-fixed(cell.quantity,6,true));const ordered=productQuantities(content),full=[...ordered].every(([productId,q])=>(delivered.get(productId)??0n)>=q),started=[...delivered.values()].some(q=>q>0n);await sql.query('UPDATE cohamy_crm.sales_orders SET delivery_status=$1 WHERE id=$2',[full?'DELIVERED':started?'PARTIAL':'NOT_STARTED',invoice.id]);return {versionId:id,number};
 }
 
 async function syncSaleFlowHeads(sql:Sql,user:Principal,orderId:string,cancel:boolean,reason:string,visited:Set<string>){
  const rows=(await sql.query<{flow_payload:FlowSnapshot}>("SELECT flow_payload FROM cohamy_crm.warehouse_handover_invoices WHERE flow_payload->>'salesOrderId'=$1 AND workflow_state='CONFIRMED' ORDER BY id FOR UPDATE",[orderId])).rows;
- for(const row of rows){if(visited.has('FLOW:'+row.flow_payload.id))continue;const before=row.flow_payload,effects=await invoiceStockCells(sql,'FLOW',before.id),quantities=new Map<string,bigint>();for(const cell of effects)quantities.set(cell.product_id,(quantities.get(cell.product_id)??0n)-fixed(cell.quantity,6,true));
-  const changed=before.lines.some(l=>fixed(l.quantity)!==(quantities.get(l.productId)??0n));if(visited.size>1&&!changed&&!cancel)continue;
+ for(const row of rows){if(visited.has('FLOW:'+row.flow_payload.id))continue;const before=row.flow_payload,warehouseSale=before.issuePurpose==='SALE'&&before.sale?.version===1,effects=await invoiceStockCells(sql,warehouseSale?'SALES':'FLOW',warehouseSale?orderId:before.id),quantities=new Map<string,bigint>();for(const cell of effects)quantities.set(cell.product_id,(quantities.get(cell.product_id)??0n)-fixed(cell.quantity,6,true));
+  const changed=before.lines.some(l=>fixed(l.quantity)!==(quantities.get(l.productId)??0n));if(visited.size>1&&!changed&&!cancel&&!warehouseSale)continue;
   const sale=await loadAdminInvoice(sql,user,'SALES',orderId),priced=(sale.original.salesVersion as SalesVersion).snapshot.quote.calculation.lines;
+  if(warehouseSale&&sale.warehouseSale){
+   const updated=before.lines.map(line=>{
+    const price=priced.find(p=>p.productId===line.productId);if(!price)throw new CrmError('INVOICE_PRODUCT_OUTSIDE_SOURCE',409);
+    const source=price as PricedLine&{discountPercent:string;vatRate:string},quantity=fixedText(quantities.get(line.productId)??0n);
+    const money=cancel?null:calculateHandoverSaleLine({listUnitPrice:price.listUnitPrice!,quantity,discountPercent:source.discountPercent,vatRate:source.vatRate,includeVat:sale.warehouseSale!.includeVat});
+    return money?{...line,...money,quantity,ordered:quantity,shipped:quantity,discount:money.discountAmount,tax:money.vatAmount}:line;
+   });
+   const totals=cancel?before.totals:calculateHandoverSaleTotals(updated.map(l=>({listLineTotal:l.listLineTotal!,discountAmount:l.discountAmount!,amount:l.amount,vatAmount:l.vatAmount!,grossLineTotal:l.grossLineTotal!})),sale.content.fee);
+   const warehouseId=sale.content.warehouseId??before.warehouseId,warehouse=(await sql.query<{name:string;code:string}>('SELECT name,code FROM cohamy_crm.warehouses WHERE id=$1 AND organization_id=$2',[warehouseId,user.organizationId])).rows[0];if(!warehouse)throw new CrmError('NOT_FOUND',404);
+   const settlement=await syncHandoverSaleSettlement(sql,orderId),remaining=cancel?'0':settlement?.remaining??totals.total,paid=cancel?'0':settlement?.paid??'0';
+   const after:FlowSnapshot={...before,revision:before.revision+1,state:cancel?'CANCELLED':before.state,warehouseId,warehouseName:warehouse.name,warehouseCode:warehouse.code,note:sale.content.note,dueDate:sale.content.issuedDate,confirmedBy:user.displayName,confirmedAt:new Date().toISOString(),lines:updated,sale:{...before.sale!,shippingFee:sale.content.fee},delivery:{...before.delivery,customer:sale.content.buyerName,address:sale.content.buyerAddress,recipient:sale.content.recipient,recipientPhone:sale.content.recipientPhone,deliveryDate:sale.content.issuedDate},totals:{...totals,paid,remaining},settlement:{total:totals.total,paid,remaining,status:cancel?'CANCELLED':settlement?.paymentStatus??'UNPAID'}};
+   await persistAdminFlowRevision(sql,user,before,after,reason);continue;
+  }
   const revised=before.lines.map(l=>{const quantity=quantities.get(l.productId)??0n,price=priced.find(p=>p.productId===l.productId);if(!price)return {...l,quantity:fixedText(quantity),amount:'0'};return {...l,quantity:fixedText(quantity),unitPrice:fixed(price.baseQuantity)>0n?roundRatio(BigInt(price.net)*1000000n,fixed(price.baseQuantity),'HALF_UP').toString():'0',amount:fixed(price.baseQuantity)>0n?roundRatio(BigInt(price.net)*quantity,fixed(price.baseQuantity),'HALF_UP').toString():'0',discount:'0',tax:'0'};});
   const after={...before,revision:before.revision+1,state:cancel?'CANCELLED':before.state,confirmedBy:user.displayName,confirmedAt:new Date().toISOString(),lines:cancel?before.lines:revised,totals:cancel?before.totals:{...before.totals,total:(revised.reduce((n,l)=>n+BigInt(l.amount),0n)+BigInt(before.totals.shipping||'0')).toString()}};await persistAdminFlowRevision(sql,user,before,after,reason);
  }
@@ -88,6 +133,7 @@ async function syncSaleFlowHeads(sql:Sql,user:Principal,orderId:string,cancel:bo
 export async function applyInvoiceAction(sql:Sql,user:Principal,invoice:AdminInvoice,d:InvoiceAction,visited=new Set<string>(),rootKey=invoice.kind+':'+invoice.id):Promise<Record<string,unknown>>{
  const key=invoice.kind+':'+invoice.id;if(visited.has(key))return {};visited.add(key);const cancel=d.action==='CANCEL',content=structuredClone(d.content??invoice.content),impact:Record<string,unknown>={stock:{changes:[]},finance:[],related:[]};
  if(invoice.cancelled)throw new CrmError('INVOICE_ALREADY_CANCELLED',409);if(content.warehouseId===null&&invoice.kind!=='VAT')content.warehouseId=invoice.content.warehouseId;
+ if(!cancel)validateInvoicePricing(invoice,content);
  for(const line of content.lines)invoiceLineAmount(line);if(!cancel&&content.lines.some(l=>fixed(l.quantity)===0n)&&!(invoice.kind==='FLOW'&&(invoice.original.snapshot as FlowSnapshot).kind==='RECEIPT'))throw new CrmError('INVALID_FIELDS',400);if(content.warehouseId&&!(await sql.query('SELECT id FROM cohamy_crm.warehouses WHERE id=$1 AND organization_id=$2',[content.warehouseId,user.organizationId])).rows.length)throw new CrmError('NOT_FOUND',404);if(invoice.kind==='HISTORICAL'&&!cancel&&!content.issuedDate)throw new CrmError('INVALID_FIELDS',400);if(!cancel&&['FLOW','SALES','TRANSFER'].includes(invoice.kind)&&content.invoiceNumber!==invoice.content.invoiceNumber)throw new CrmError('INVOICE_CODE_IMMUTABLE',409);
  if(invoice.kind==='HISTORICAL'&&!Number.isSafeInteger(Number(invoiceTotal(content))))throw new CrmError('INVOICE_AMOUNT_LIMIT',400);
  if(invoice.kind==='HISTORICAL'&&invoice.linkedOrderId){
@@ -99,6 +145,16 @@ export async function applyInvoiceAction(sql:Sql,user:Principal,invoice:AdminInv
   await sql.query('UPDATE cohamy_crm.vat_invoices SET invoice_number=$1,invoice_symbol=$2,issued_date=$3,buyer_name=$4,buyer_tax_code=$5,buyer_address=$6,lines=$7::jsonb,list_subtotal=$8,discount_amount=$9,net_amount=$10,vat_amount=$11,total_amount=$12,note=$13,status=CASE WHEN $14 THEN \'CANCELLED\' ELSE status END,updated_by=$15,updated_by_name=$16,updated_at=now() WHERE id=$17',[content.invoiceNumber,content.invoiceSymbol,content.issuedDate||null,content.buyerName,content.buyerTaxId,content.buyerAddress,JSON.stringify(content.lines),(gross+BigInt(content.fee)).toString(),discount.toString(),(gross-discount+BigInt(content.fee)).toString(),tax.toString(),invoiceTotal(content),content.note,cancel,user.id,user.displayName,invoice.id]);
  }else if(invoice.kind==='FLOW'){
   const before=invoice.original.snapshot as FlowSnapshot;if(before.salesOrderId)await sql.query('SELECT id FROM cohamy_crm.sales_orders WHERE id=$1 FOR UPDATE',[before.salesOrderId]);let referenced:FlowSnapshot|undefined;
+  if(invoice.warehouseSale&&!before.salesOrderId&&!cancel)throw new CrmError('INVOICE_SALE_USE_DRAFT',409);
+  if(invoice.warehouseSale&&before.salesOrderId){
+   const order=await loadAdminInvoice(sql,user,'SALES',before.salesOrderId,true);if(!order.warehouseSale)throw new CrmError('INVOICE_SALE_SOURCE_INVALID',409);
+   // The canonical sale owns both financial revisions and compensating stock.
+   // Let its synchronizer write this flow once, then record the root action below.
+   visited.delete(key);
+   impact.related=[await applyInvoiceAction(sql,user,order,{...d,kind:'SALES',id:order.id,content:{...content,invoiceNumber:order.content.invoiceNumber}},visited,rootKey)];
+   visited.add(key);
+   if(cancel)await sql.query("UPDATE cohamy_crm.document_mail_outbox SET status='SKIPPED',last_error='DOCUMENT_CANCELLED',updated_at=now() WHERE entity_id=$1 AND status IN('PENDING','FAILED')",[invoice.id]);
+  }else{
   if(cancel&&['REQUEST','DISPATCH'].includes(before.kind)){
    const children=(await sql.query<{id:string}>("SELECT id FROM cohamy_crm.factory_invoices WHERE parent_id=$1 AND workflow_state<>'CANCELLED' ORDER BY id FOR UPDATE",[invoice.id])).rows;
    for(const child of children){const linked=await loadAdminInvoice(sql,user,'FLOW',child.id,true);(impact.related as unknown[]).push(await applyInvoiceAction(sql,user,linked,{...d,kind:'FLOW',id:child.id},visited,rootKey));}
@@ -133,6 +189,7 @@ export async function applyInvoiceAction(sql:Sql,user:Principal,invoice:AdminInv
     impact.related=[await applyInvoiceAction(sql,user,order,{...d,action,kind:'SALES',id:order.id,content:{...order.content,...(!cancel?{note:content.note,buyerName:content.buyerName,buyerAddress:content.buyerAddress,recipient:content.recipient,recipientPhone:content.recipientPhone}:{}),lines:revisedLines.length?revisedLines:order.content.lines}},visited,rootKey)];
    }
   }
+  }
  }else if(invoice.kind==='SALES'){
   const cells=await invoiceStockCells(sql,'SALES',invoice.id),oldQuantities=productQuantities(invoice.content),nextQuantities=productQuantities(content),targets:InvoiceStockTarget[]=[],byProduct=new Map<string,Map<string,bigint>>();
   for(const cell of cells){const map=byProduct.get(cell.product_id)??new Map<string,bigint>();map.set(cell.warehouse_id,(map.get(cell.warehouse_id)??0n)-fixed(cell.quantity,6,true));byProduct.set(cell.product_id,map);}
@@ -143,6 +200,7 @@ export async function applyInvoiceAction(sql:Sql,user:Principal,invoice:AdminInv
   impact.stock=await adjustInvoiceStock(sql,user,'SALES',invoice.id,cells,targets,d.reason,invoice.id);
   impact.finance=await reviseInvoiceReceivables(sql,user,invoice.id,cancel?null:invoiceTotal(content),d.reason);
   if(cancel){await sql.query("UPDATE cohamy_crm.sales_orders SET status='CANCELLED',delivery_status='RETURNED',version=version+1,updated_at=now() WHERE id=$1",[invoice.id]);await sql.query("UPDATE cohamy_crm.document_mail_outbox SET status='SKIPPED',last_error='DOCUMENT_CANCELLED',updated_at=now() WHERE entity_id=$1 AND status IN('PENDING','FAILED')",[invoice.id]);}else impact.sales=await saveSalesContent(sql,user,invoice,content,d.reason,stockChanged);
+  if(invoice.warehouseSale)await syncHandoverSaleSettlement(sql,invoice.id);
   await syncSaleFlowHeads(sql,user,invoice.id,cancel,d.reason,visited);
  }else if(invoice.kind==='TRANSFER'){
   const cells=await invoiceStockCells(sql,'TRANSFER',invoice.id),targets:InvoiceStockTarget[]=[],next=productQuantities(content);

@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "environment": "Loopback staging; fictitious .invalid account and QA products; actual Edge browser",
+  "base": "http://127.0.0.1:4373",
+  "cases": [
+    {
+      "name": "Real sales form has independent percent inputs, read-only prices and immediate ABC totals",
+      "status": "PASS"
+    },
+    {
+      "name": "Each percentage and decimal edit recomputes locally; invalid values disable saving",
+      "status": "PASS"
+    },
+    {
+      "name": "Optional VAT and shipping add to the line net totals without payment entry",
+      "status": "PASS"
+    },
+    {
+      "name": "Dense grid stays usable on desktop, 390px and 320px with scrolling confined to the table",
+      "status": "PASS"
+    },
+    {
+      "name": "Native save stores exactly three independent percentages and preview is a real PDF without stock mutation",
+      "status": "PASS"
+    },
+    {
+      "name": "Reload restores frozen original prices and independent percentages; decimal edit round trips",
+      "status": "PASS"
+    }
+  ],
+  "errors": [],
+  "assetFailures": [],
+  "externalRequests": [],
+  "savedDrafts": [
+    {
+      "id": "9248b8fb-5637-460b-9b58-c755574a0bab",
+      "code": "GH-20261106-9248B8FB",
+      "version": 1
+    },
+    {
+      "id": "9248b8fb-5637-460b-9b58-c755574a0bab",
+      "code": "GH-20261106-9248B8FB",
+      "version": 2
+    }
+  ],
+  "saveRequests": 2,
+  "confirmedDocuments": 0,
+  "externalEmails": 0
+}

@@ -4,6 +4,8 @@ export type FlowLine = {
   productId:string; sku:string; name:string; unit:string; quantity:string;
   ordered:string; shipped:string; received:string; difference:string;
   unitPrice:string; amount:string; discount?:string; tax?:string; note:string;
+  listUnitPrice?:string; discountPercent?:string; discountAmount?:string;
+  listLineTotal?:string; vatRate?:string; catalogVatRate?:string; vatAmount?:string; grossLineTotal?:string;
 };
 export type FlowSnapshot = {
   id:string; code:string; kind:FlowKind; revision:number; state:string;
@@ -13,6 +15,9 @@ export type FlowSnapshot = {
   requestId:string|null; requestCode:string;
   requestRevision?:number|null;
   salesOrderId?:string|null;
+  issuePurpose?:'SALE'|'SAMPLE'|'GIFT'|'OTHER';
+  sale?:{version:1;customerOrganizationId:string;customerName:string;shippingFee:string;includeVat:boolean};
+  settlement?:{paid:string;remaining:string;total:string;status:string};
   createdAt:string; createdBy:string; confirmedAt:string|null; confirmedBy:string;
   creator?:DocumentCreator;
   dueDate:string; note:string; lines:FlowLine[];

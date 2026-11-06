@@ -14,6 +14,30 @@ type Table={type:'table';index:number;grid:number[];rows:Row[]};
 type Layout={page:{width:number;height:number;left:number;right:number;top:number;bottom:number};blocks:(Paragraph|Table)[];footer:Paragraph[]};
 const root=()=>path.join(process.cwd(),'assets/crm');
 const money=(v:string)=>v===''?'—':new Intl.NumberFormat('vi-VN').format(BigInt(v||'0'));
+const pricedDelivery=(s:FlowSnapshot)=>s.kind==='ISSUE'&&(s.issuePurpose==='SALE'||s.lines.some(line=>line.listUnitPrice!==undefined&&line.discountPercent!==undefined));
+function pricedDeliveryRows(s:FlowSnapshot,table:Table):Row[]{
+ const widths=[28,142,29,38,70,54,75,88.4];
+ const headers=['STT','Tên hàng hóa / Mã SP','ĐVT','SL giao','Đơn giá gốc (VND)','CK (%)','Đơn giá sau CK (VND)','Thành tiền (VND)'];
+ const cell=(prototype:Cell,index:number,text:string,header=false):Cell=>{
+  const paragraph=prototype.paragraphs[0];
+  return {...structuredClone(prototype),width:widths[index],span:1,paragraphs:[{...paragraph,align:index===1?'left':index<4||index===5?'center':'right',runs:[{text,size:header?7.5:8,bold:header,italic:false,color:header?'FFFFFF':'394C60',image:false}]}]};
+ };
+ const header:Row={height:32,cells:headers.map((text,index)=>cell(table.rows[0].cells[Math.min(index,table.rows[0].cells.length-1)],index,text,true))};
+ const rows:Row[]=[header,...s.lines.map((line,index)=>{
+  const texts=[String(index+1),`${line.name}\n${line.sku}`,line.unit,line.quantity,money(line.listUnitPrice??''),line.discountPercent===undefined?'—':line.discountPercent+'%',money(line.unitPrice),money(line.amount)];
+  return {height:table.rows[1].height,cells:texts.map((text,column)=>cell(table.rows[1+index%6].cells[Math.min(column,table.rows[1].cells.length-1)],column,text))};
+ })];
+ while(rows.length<7)rows.push({height:table.rows[1].height,cells:widths.map((_,index)=>cell(table.rows[1].cells[Math.min(index,table.rows[1].cells.length-1)],index,index===0?String(rows.length):' '))});
+ return rows;
+}
+function pricedDeliverySummary(s:FlowSnapshot,table:Table):Row[]{
+ const rows=structuredClone(table.rows),cell=rows[0].cells[1],prototype=cell.paragraphs[0];
+ const totals=s.totals;
+ const net=totals.net??(s.lines.every(line=>/^\d+$/u.test(line.amount))?s.lines.reduce((sum,line)=>sum+BigInt(line.amount),0n).toString():'');
+ const values=[['Tổng giá gốc',totals.goods??''],['Tổng chiết khấu',totals.discount??''],['Tiền hàng sau CK',net],['VAT',totals.vat??''],['Phí vận chuyển',totals.shipping??''],['TỔNG THANH TOÁN',totals.total??''],['Đã thanh toán',totals.paid??''],['Còn phải thu',totals.remaining??'']];
+ cell.paragraphs=values.map(([label,value])=>({...structuredClone(prototype),align:'left',runs:[{text:`${label}:  ${money(value)} VND`,size:9,bold:label==='TỔNG THANH TOÁN',italic:false,color:'394C60',image:false}]}));
+ return rows;
+}
 export function deliveryPlaceholders(s:FlowSnapshot):Record<string,string>{
  const d=s.delivery,t=s.totals,na='—';
  return {MA_PHIEU_GIAO:s.code,MA_DON_HANG:s.sourceCode||na,NGAY_LAP:new Intl.DateTimeFormat('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}).format(new Date(s.confirmedAt??s.createdAt)),NGUOI_GIAO:d.giver||na,SDT_NGUOI_GIAO:d.giverPhone||na,KHO_XUAT:s.warehouseName,TEN_DOI_TAC:d.customer||na,NGUOI_NHAN_HANG:d.recipient||na,SDT_NHAN_HANG:d.recipientPhone||na,DIA_CHI_GIAO_HANG:d.address||na,NGAY_GIAO:d.deliveryDate||na,GIO_GIAO:d.deliveryTime||na,DON_VI_VAN_CHUYEN:d.carrier||na,TONG_SL_GIAO:fixedText(s.lines.reduce((n,l)=>n+fixed(l.quantity),0n)),TONG_SO_THUNG:d.packages||na,SL_CHENH_LECH:d.shortage||na,TINH_TRANG_HANG:d.condition||na,TIEN_HANG:money(t.goods??''),CHIET_KHAU:money(t.discount??''),PHI_VAN_CHUYEN:money(t.shipping??''),TONG_THANH_TOAN:money(t.total??''),DA_THANH_TOAN:money(t.paid??''),CON_PHAI_THU:money(t.remaining??''),GHI_CHU_GIAO_NHAN:d.note||s.note||na,SO_TIEN_BANG_CHU:t.total?vndToVietnameseWords(t.total):na};
@@ -43,7 +67,7 @@ export async function renderDeliveryPdf(s:FlowSnapshot,original=false):Promise<B
  const layout=JSON.parse(await fs.readFile(path.join(root(),'delivery-template/layout.json'),'utf8')) as Layout;
  const logo=await fs.readFile(path.join(root(),'delivery-template/logo.png'));
  const {doc,done}=setupDoc(s);await fonts(doc);const p=layout.page,width=p.width-p.left-p.right;
- const values=deliveryPlaceholders(s);let y=p.top;
+ const values=deliveryPlaceholders(s),priced=!original&&pricedDelivery(s);let y=p.top;
  const text=(v:string)=>original?v:v.replace(/\{\{(\w+)\}\}/g,(_,k:string)=>values[k]??'—');
  const setRun=(r:Run)=>doc.font(r.bold?r.italic?'BoldItalic':'Bold':r.italic?'Italic':'Body').fontSize(r.size).fillColor(/^([0-9A-F]{6})$/i.test(r.color)?`#${r.color}`:'#394C60');
  function paragraphHeight(q:Paragraph,w:number){if(q.runs.some(r=>r.image))return 39.7+q.before+q.after;const max=Math.max(1,...q.runs.map(r=>r.size));const combined=q.runs.map(r=>text(r.text)).join('');doc.font(q.runs.some(r=>r.bold)?'Bold':'Body').fontSize(max);const lineHeight=max*q.line;return q.before+Math.max(lineHeight,doc.heightOfString(combined||' ',{width:Math.max(10,w),lineGap:lineHeight-doc.currentLineHeight(true)}))+q.after;}
@@ -69,10 +93,13 @@ export async function renderDeliveryPdf(s:FlowSnapshot,original=false):Promise<B
      const keep=next?.type==='table'&&/^0[1-4]\s/.test(label)?(/^0[34]\s/.test(label)?next.rows.reduce((sum,r)=>sum+rowHeight(r),0):rowHeight(next.rows[0])):0;
      if(y+h+keep>p.height-p.bottom-14)newPage();y+=drawParagraph(b,p.left,y,width);continue;}
    let rows=b.rows;
-   if(b.index===3&&!original){
+   if(b.index===3&&priced){
+     rows=pricedDeliveryRows(s,b);
+   }else if(b.index===3&&!original){
      const pattern=b.rows[1];rows=[b.rows[0],...s.lines.map((l,i)=>{const cells=structuredClone(b.rows[1+i%6].cells);const texts=[String(i+1),`${l.name}\n${l.sku}`,l.unit,l.ordered,l.quantity,money(l.unitPrice),money(l.amount)];cells.forEach((c,j)=>{const q=c.paragraphs[0]??pattern.cells[0].paragraphs[0],r=q.runs[0]??{text:'',size:8,bold:false,italic:false,color:'394C60',image:false};c.paragraphs=[{...q,runs:[{...r,text:texts[j]}]}];});return {height:pattern.height,cells};})];
      while(rows.length<7){const blank=structuredClone(b.rows[rows.length]);blank.cells.forEach((c,j)=>{c.paragraphs=[{type:'p',runs:[{text:j===0?String(rows.length):' ',size:8,bold:false,italic:false,color:'394C60',image:false}],align:j===1?'left':'center',before:0,after:0,line:1.08}];});rows.push(blank);}
    }
+   if(b.index===4&&priced)rows=pricedDeliverySummary(s,b);
    for(let ri=0;ri<rows.length;ri++){
      const r=rows[ri],h=rowHeight(r);
      if(y+h>p.height-p.bottom-14){newPage();if(b.index===3&&ri>0)drawRow(rows[0]);}

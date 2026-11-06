@@ -1,0 +1,47 @@
+{
+  "environment": "LOCAL isolated fictitious PGlite; email disabled",
+  "status": "PASS",
+  "scope": "Financial helper/runtime only. No stock movement, PDF, browser or production coverage claimed.",
+  "cases": [
+    {
+      "name": "Explicit priced sale creates native request/order/clearance/receivable exactly once without a credit hold, reservation or stock movement",
+      "status": "PASS"
+    },
+    {
+      "name": "Tenant customer/warehouse eligibility is rechecked and portal users cannot finalize",
+      "status": "PASS"
+    },
+    {
+      "name": "Unmarked historical, sample and existing-source slips never create revenue",
+      "status": "PASS"
+    },
+    {
+      "name": "Saved server catalog prices and VAT stay frozen when the catalog changes before confirmation",
+      "status": "PASS"
+    },
+    {
+      "name": "Partial accountant payment is canonical, idempotent and updates live paid/remaining without a legacy payment mirror",
+      "status": "PASS"
+    },
+    {
+      "name": "Staff pending receipt never reduces debt until accountant confirms; review retries do not duplicate money",
+      "status": "PASS"
+    },
+    {
+      "name": "Native finance mixed allocation changes credit exposure only for the legacy credit receivable",
+      "status": "PASS"
+    },
+    {
+      "name": "Reconciliation and generic warehouse order access use the explicit warehouse, exact row percent and confirmed allocations",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin correction and recall unallocate actual payments and preserve credit balance and immutable provenance",
+      "status": "PASS"
+    },
+    {
+      "name": "100 percent SALE creates no synthetic zero debt and later Admin positive/zero/positive edits reuse one canonical receivable",
+      "status": "PASS"
+    }
+  ]
+}

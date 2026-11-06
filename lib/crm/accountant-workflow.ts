@@ -835,6 +835,13 @@ export function extractSnapshotTotals(snapshot: Record<string, unknown> | null |
 }
 
 export async function recalculateClearancePaymentTotals(sql: Sql, clearanceId: string) {
+  const saleLink=(await sql.query<{order_id:string}>('SELECT order_id FROM cohamy_crm.warehouse_sale_links WHERE clearance_id=$1',[clearanceId])).rows[0];
+  if(saleLink){
+    const totals=await (await import('./handover-sales')).syncHandoverSaleSettlement(sql,saleLink.order_id);
+    if(!totals)throw new CrmError('NOT_FOUND',404);
+    const head=(await sql.query<{status:OrderClearanceRecord['status']}>('SELECT status FROM cohamy_crm.accounting_order_clearances WHERE id=$1',[clearanceId])).rows[0];
+    return {receivableTotal:totals.total,paidAmount:totals.paid,remainingDebt:totals.remaining,paymentStatus:totals.paymentStatus,status:head.status};
+  }
   const cRow = (
     await sql.query<{
       id: string;
@@ -1314,7 +1321,7 @@ export async function getAccountantWorkspaceData(user: Principal) {
               COALESCE(NULLIF(h.list_subtotal, 0), h.total_amount)::text AS list_subtotal,
               COALESCE(h.discount_percent, 0)::text AS discount_percent,
               COALESCE(h.discount_amount, 0)::text AS discount_amount,
-              COALESCE(NULLIF(h.net_subtotal, 0), h.total_amount)::text AS net_subtotal,
+              (CASE WHEN h.flow_payload->'sale'->>'version'='1' AND h.flow_payload->>'issuePurpose'='SALE' THEN h.net_subtotal ELSE COALESCE(NULLIF(h.net_subtotal, 0), h.total_amount) END)::text AS net_subtotal,
               COALESCE(h.vat_amount, 0)::text AS vat_amount,
               h.total_amount::text,
               COALESCE(h.cost_total, 0)::text AS cost_total,
@@ -2143,10 +2150,16 @@ export async function handleAccountantWorkflowAction(
     const kind=action==='create-factory-order'?'REQUEST':action==='create-factory-dispatch'?'DISPATCH':action==='create-warehouse-reconciliation'?'RECEIPT':'ISSUE';
     assertFlowRole(user,kind);
     const lines=Array.isArray(input.lines)?input.lines as Record<string,unknown>[]:[];
+    if(kind==='ISSUE'){
+      if(input.issuePurpose==='SALE'&&!z.uuid().safeParse(input.idempotencyKey).success)throw new CrmError('IDEMPOTENCY_KEY_REQUIRED',400);
+      const forbidden=['unitPrice','listUnitPrice','netUnitPrice','costUnitPrice','discountAmount','discount','discountType','amount','lineTotal','tax'];
+      if(['discountPercent','discountAmount','discountType','discount'].some(key=>input[key]!==undefined)||lines.some(line=>forbidden.some(key=>line[key]!==undefined)))throw new CrmError('WAREHOUSE_SALE_PERCENT_ONLY',400);
+    }
     return saveFlowDocument(user,{
       kind,warehouseId:input.warehouseId||undefined,factoryMembershipId:input.factoryMembershipId||undefined,
       parentId:input.parentId||input.parentInvoiceId||input.dispatchInvoiceId||undefined,clearanceId:input.clearanceId||undefined,
-      lines:lines.map(l=>({productId:l.productId,quantity:String(l.quantity??(kind==='REQUEST'?l.orderedQty:kind==='DISPATCH'?l.dispatchedQty:l.receivedQty)??''),note:String(l.note??'')})),
+      ...(kind==='ISSUE'?{issuePurpose:input.issuePurpose,saleCustomerId:input.saleCustomerId,shippingFee:input.shippingFee,includeVat:input.includeVat}:{}),
+      lines:lines.map(l=>({productId:l.productId,quantity:String(l.quantity??(kind==='REQUEST'?l.orderedQty:kind==='DISPATCH'?l.dispatchedQty:l.receivedQty)??''),note:String(l.note??''),...(kind==='ISSUE'&&l.discountPercent!==undefined?{discountPercent:l.discountPercent}:{})})),
       note:String(input.note??''),delivery:input.delivery??{},confirm:input.confirm!==false,
       idempotencyKey:input.idempotencyKey||randomUUID(),
     });
@@ -2160,6 +2173,33 @@ export async function handleAccountantWorkflowAction(
   return db.transaction(async sql => {
     await ensureAccountantWorkflowSchema(sql);
     await assertCurrentPrincipal(sql,user);
+    if(action==='accountant-verify-clearance'&&z.uuid().safeParse(input.clearanceId).success&&(await sql.query('SELECT handover_id FROM cohamy_crm.warehouse_sale_links WHERE clearance_id=$1',[input.clearanceId])).rows.length){
+      await (await import('./document-flow')).flowEntityAccess(sql,user,'order-clearance',String(input.clearanceId));
+      throw new CrmError('WAREHOUSE_SALE_USE_CANONICAL_PAYMENT_REVIEW',409);
+    }
+    // New warehouse sales share the native finance receipt/allocation ledger.
+    // Intercept before legacy payment lookups, locks and aggregate fallback.
+    if(['record-order-payment','staff-submit-payment'].includes(action)&&z.uuid().safeParse(input.clearanceId).success){
+      const linked=(await sql.query('SELECT handover_id FROM cohamy_crm.warehouse_sale_links WHERE clearance_id=$1',[input.clearanceId])).rows.length>0;
+      if(linked&&typeof input.amount==='number'&&!Number.isSafeInteger(input.amount))throw new CrmError('INVALID_FIELDS',400);
+      if(linked)return (await import('./handover-sales')).recordHandoverSalePayment(sql,user,{
+        clearanceId:String(input.clearanceId),amount:String(input.amount??''),
+        ...(input.paymentDate!==undefined?{paymentDate:(/^\d{4}-\d{2}-\d{2}$/.test(String(input.paymentDate))?String(input.paymentDate)+'T00:00:00+07:00':/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?$/.test(String(input.paymentDate))?String(input.paymentDate)+(String(input.paymentDate).length===16?':00':'')+'+07:00':String(input.paymentDate))}:{}),
+        ...(input.paymentMethod!==undefined?{paymentMethod:String(input.paymentMethod)}:{}),
+        ...(input.referenceCode!==undefined?{referenceCode:String(input.referenceCode)}:{}),
+        ...(input.bankAccount!==undefined?{bankAccount:String(input.bankAccount)}:{}),
+        ...(input.transferContent!==undefined?{transferContent:String(input.transferContent)}:{}),
+        ...(input.proofDocumentId!==undefined?{proofDocumentId:input.proofDocumentId===null?null:String(input.proofDocumentId)}:{}),
+        idempotencyKey:String(input.idempotencyKey??''),
+      });
+    }
+    if(action==='confirm-order-payment'&&z.uuid().safeParse(input.transactionId).success){
+      const linked=(await sql.query('SELECT payment_id FROM cohamy_crm.warehouse_sale_payment_links WHERE payment_id=$1',[input.transactionId])).rows.length>0;
+      if(linked){
+        const decision=z.enum(['CONFIRM','REJECT']).safeParse(input.decision??'CONFIRM');if(!decision.success)throw new CrmError('INVALID_FIELDS',400);
+        return (await import('./handover-sales')).reviewHandoverSalePayment(sql,user,{transactionId:String(input.transactionId),decision:decision.data,reason:String(input.reason??'Xác nhận thanh toán'),idempotencyKey:String(input.idempotencyKey??'')});
+      }
+    }
     const financial=buyerPaymentActions.includes(action);
     let paymentKey:string|null=null,paymentHash='',scopedClearance='';
     if(financial){

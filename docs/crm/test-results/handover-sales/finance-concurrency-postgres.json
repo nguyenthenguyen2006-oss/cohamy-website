@@ -1,0 +1,28 @@
+{
+  "environment": "STAGING isolated PostgreSQL localhost:55432; restricted DML runtime; email disabled",
+  "database": "cohamy_qa_handover_0cfe694795fc46ef95759d501fb211f1",
+  "status": "PASS",
+  "scope": "Native finance linkage, allocation and correction concurrency only. No production, stock, PDF or browser coverage claimed.",
+  "cases": [
+    {
+      "name": "Different actors can finalize two slips on one warehouse without SHARE lock upgrade deadlock",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent retries of one locked slip create exactly one order and receivable",
+      "status": "PASS"
+    },
+    {
+      "name": "Concurrent canonical payments cannot allocate more than the remaining balance",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirmed payment racing Admin recall preserves real money and ends with no allocated debt",
+      "status": "PASS"
+    },
+    {
+      "name": "Native finance allocation racing recall uses the same order lock and never decrements unrelated credit",
+      "status": "PASS"
+    }
+  ]
+}

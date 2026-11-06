@@ -1,0 +1,62 @@
+{
+  "environment": "LOCAL isolated fictitious PGlite; email disabled",
+  "status": "PASS",
+  "cases": [
+    {
+      "name": "Only internal Admin can read or mutate invoice controls",
+      "status": "PASS"
+    },
+    {
+      "name": "Confirmed receipt edit posts only the quantity delta and preserves the original PDF revision",
+      "status": "PASS"
+    },
+    {
+      "name": "An Admin-edited draft still confirms normally, without a duplicate PDF revision",
+      "status": "PASS"
+    },
+    {
+      "name": "A zero-quantity receipt correction remains a valid discrepancy and posts only the real stock delta",
+      "status": "PASS"
+    },
+    {
+      "name": "A receipt whose stock is already sold cannot be revoked into negative stock; the whole action rolls back",
+      "status": "PASS"
+    },
+    {
+      "name": "Admin can revise an already issued sales invoice; stock quantity is adjusted once",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancelling the issued invoice returns stock to its original warehouse exactly once, including a retry",
+      "status": "PASS"
+    },
+    {
+      "name": "Recalling one partial delivery returns only its quantity and preserves other delivery invoices and the remaining sale",
+      "status": "PASS"
+    },
+    {
+      "name": "Metadata-only edits preserve active reservations; quantity edits replace the hold and cancellation only releases unshipped stock",
+      "status": "PASS"
+    },
+    {
+      "name": "VAT invoice metadata and lines are editable, and a standalone VAT cancellation never creates stock",
+      "status": "PASS"
+    },
+    {
+      "name": "Historical invoice corrections appear in the native archive while the original image and snapshot remain intact",
+      "status": "PASS"
+    },
+    {
+      "name": "A received warehouse transfer is corrected and recalled on both warehouses without changing its original lot identities",
+      "status": "PASS"
+    },
+    {
+      "name": "Cancelling a factory request reverses its receipt and removes every dependent active document",
+      "status": "PASS"
+    },
+    {
+      "name": "Invoice listing is paginated and cancelled invoices stay in history rather than active totals",
+      "status": "PASS"
+    }
+  ]
+}
