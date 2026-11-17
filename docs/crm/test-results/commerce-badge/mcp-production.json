@@ -1,0 +1,8 @@
+{
+  "connected": true,
+  "footerOperations": 0,
+  "available": 255,
+  "total": 363,
+  "sourceSha": "9d7846fbd25b2c74c3ddf99101a229e4863774bb",
+  "scope": "CRM MCP remains connected. The user limited remote MCP to CRM; static public-footer links have no dedicated CRM read/write operation. No API contract changed and no shell/filesystem tool was added."
+}
