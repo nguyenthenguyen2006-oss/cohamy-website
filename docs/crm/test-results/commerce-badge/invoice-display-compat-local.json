@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "scope": "Isolated LOCAL warehouse-sale request/sales display compatibility; exact stored81000 andbothPDFs unchanged; no production business writes",
+  "checks": [
+    "requests display200",
+    "sales display200",
+    "requestId data+PDF200,total81000",
+    "orderId data+PDF200,total81000"
+  ]
+}

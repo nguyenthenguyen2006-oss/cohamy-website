@@ -1,0 +1,6 @@
+{
+  "base": "https://cohamy.vn",
+  "scope": "Read-only live invoice baseline; auth login/logout only",
+  "status": "FAIL",
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n500 !== 200\n\n    at verifyOne (file:///root/cohamy-releases/cbb8981779d1f64fb326731369c2db2e1fabc6be/scripts/crm/order-invoice-live-check.mjs:41:26)\n    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at async verifyViews (file:///root/cohamy-releases/cbb8981779d1f64fb326731369c2db2e1fabc6be/scripts/crm/order-invoice-live-check.mjs:67:5)\n    at async verifyOrderInvoiceHttp (file:///root/cohamy-releases/cbb8981779d1f64fb326731369c2db2e1fabc6be/scripts/crm/order-invoice-live-check.mjs:83:17)\n    at async file:///root/cohamy-releases/cbb8981779d1f64fb326731369c2db2e1fabc6be/scripts/crm/invoice-baseline-tmp.mjs:7:279"
+}
