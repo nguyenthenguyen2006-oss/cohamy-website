@@ -1,0 +1,22 @@
+{
+  "scope": "Two static public-footer links; CRM business APIs and input contracts unchanged.",
+  "crmMcp": {
+    "connected": true,
+    "availableOperations": 255,
+    "footerOperations": 0,
+    "catalogCheck": "PASS"
+  },
+  "coverageGap": "The Cohamy remote MCP is scoped to CRM. These static public-footer links are not stored in CRM and are not editable/readable through a dedicated CRM operation. No shell/filesystem tool was introduced.",
+  "officialSources": {
+    "landingPagesHttpStatus": [
+      200,
+      200
+    ],
+    "badgeHttpStatus": 200,
+    "recordIdentity": "Not independently verified: landing pages are client-rendered and record API requires a signature. No signature controls bypassed."
+  },
+  "localQa": {
+    "fixture": "Isolated LOCAL PGlite, email disabled; no production business writes",
+    "frameworkNotice": "Next.js emitted an existing dependency security-upgrade recommendation during local QA; the same command was retried as instructed by the CLI. Dependency upgrades were outside this two-link change."
+  }
+}

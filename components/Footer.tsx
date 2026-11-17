@@ -1,6 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { BrandLogo } from "@/components/BrandLogo";
 import { CONTACT, getAddresses, getCompanyName } from "@/lib/contact";
@@ -57,6 +58,23 @@ export function Footer() {
           <div><dt>{labels.authority}:</dt><dd>{registration.issuingAuthority}</dd></div>
           <div className={styles.registeredAddress}><dt>{labels.address}:</dt><dd><address>{registration.registeredAddress}</address></dd></div>
         </dl>
+        <div className={styles.commerceNotice} lang="vi" data-footer-commerce>
+          <a
+            className={styles.commerceBadge}
+            href="https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Tra cứu thông báo Bộ Công Thương"
+          >
+            <Image src="/images/legal/bo-cong-thuong-da-thong-bao.png" width={230} height={86} alt="Đã thông báo Bộ Công Thương" unoptimized />
+          </a>
+          <a
+            className={styles.commerceInfo}
+            href="https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Xem hồ sơ trên Online.gov.vn</a>
+        </div>
       </section>
     </div>
     <div className={styles.bottom}><p>{t("copyright", { year: new Date().getFullYear() })}</p></div>

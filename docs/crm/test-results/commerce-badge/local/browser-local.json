@@ -1,0 +1,556 @@
+{
+  "status": "PASS",
+  "testedAt": "2026-11-17T09:59:12.293Z",
+  "base": "http://localhost:4378",
+  "records": [
+    {
+      "path": "/vi",
+      "width": 1440,
+      "height": 900,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1142.59375,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1235.65625,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 1024.921875,
+        "right": 1142.59375,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 1440,
+        "width": 1440,
+        "height": 629.296875
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "viewport": 1440,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi/san-pham/cohamy-socola-hat-dieu-80g",
+      "width": 1440,
+      "height": 900,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1142.59375,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1235.65625,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 1024.921875,
+        "right": 1142.59375,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 1440,
+        "width": 1440,
+        "height": 629.296875
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "viewport": 1440,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi/chinh-sach/thanh-toan",
+      "width": 1440,
+      "height": 900,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1142.59375,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1235.65625,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 1024.921875,
+        "right": 1142.59375,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 1440,
+        "width": 1440,
+        "height": 629.296875
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "viewport": 1440,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/en",
+      "width": 1440,
+      "height": 900,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1142.59375,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 1024.921875,
+          "right": 1235.65625,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 1024.921875,
+        "right": 1142.59375,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 1440,
+        "width": 1440,
+        "height": 655.6875
+      },
+      "documentWidth": 1440,
+      "bodyWidth": 1440,
+      "viewport": 1440,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi",
+      "width": 390,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 390,
+        "width": 390,
+        "height": 1622.375
+      },
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "viewport": 390,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi/san-pham/cohamy-socola-hat-dieu-80g",
+      "width": 390,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 390,
+        "width": 390,
+        "height": 1622.375
+      },
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "viewport": 390,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi/chinh-sach/thanh-toan",
+      "width": 390,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 390,
+        "width": 390,
+        "height": 1622.375
+      },
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "viewport": 390,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/en",
+      "width": 390,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 390,
+        "width": 390,
+        "height": 1622.375
+      },
+      "documentWidth": 390,
+      "bodyWidth": 390,
+      "viewport": 390,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi",
+      "width": 320,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 320,
+        "width": 320,
+        "height": 1724.328125
+      },
+      "documentWidth": 320,
+      "bodyWidth": 320,
+      "viewport": 320,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi/san-pham/cohamy-socola-hat-dieu-80g",
+      "width": 320,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 320,
+        "width": 320,
+        "height": 1724.328125
+      },
+      "documentWidth": 320,
+      "bodyWidth": 320,
+      "viewport": 320,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/vi/chinh-sach/thanh-toan",
+      "width": 320,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 320,
+        "width": 320,
+        "height": 1724.328125
+      },
+      "documentWidth": 320,
+      "bodyWidth": 320,
+      "viewport": 320,
+      "keyboardFocus": "PASS"
+    },
+    {
+      "path": "/en",
+      "width": 320,
+      "height": 844,
+      "links": [
+        {
+          "href": "https://online.gov.vn/nen-tang/e0ebf111-de97-4910-aaf1-938a1098ee56",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 137.671875,
+          "width": 117.671875,
+          "height": 44
+        },
+        {
+          "href": "https://online.gov.vn/nen-tang/320a005c-16bb-4b71-aa8a-f0515f2df6c4",
+          "target": "_blank",
+          "rel": "noopener noreferrer",
+          "x": 20,
+          "right": 230.734375,
+          "width": 210.734375,
+          "height": 44
+        }
+      ],
+      "image": {
+        "src": "/images/legal/bo-cong-thuong-da-thong-bao.png",
+        "naturalWidth": 230,
+        "naturalHeight": 86,
+        "x": 20,
+        "right": 137.671875,
+        "width": 117.671875,
+        "height": 44
+      },
+      "footer": {
+        "x": 0,
+        "right": 320,
+        "width": 320,
+        "height": 1697.9375
+      },
+      "documentWidth": 320,
+      "bodyWidth": 320,
+      "viewport": 320,
+      "keyboardFocus": "PASS"
+    }
+  ],
+  "screenshots": [
+    "docs/crm/test-results/commerce-badge/local/vi-1440.png",
+    "docs/crm/test-results/commerce-badge/local/vi-san-pham-cohamy-socola-hat-dieu-80g-1440.png",
+    "docs/crm/test-results/commerce-badge/local/vi-chinh-sach-thanh-toan-1440.png",
+    "docs/crm/test-results/commerce-badge/local/en-1440.png",
+    "docs/crm/test-results/commerce-badge/local/vi-390.png",
+    "docs/crm/test-results/commerce-badge/local/vi-san-pham-cohamy-socola-hat-dieu-80g-390.png",
+    "docs/crm/test-results/commerce-badge/local/vi-chinh-sach-thanh-toan-390.png",
+    "docs/crm/test-results/commerce-badge/local/en-390.png",
+    "docs/crm/test-results/commerce-badge/local/vi-320.png",
+    "docs/crm/test-results/commerce-badge/local/vi-san-pham-cohamy-socola-hat-dieu-80g-320.png",
+    "docs/crm/test-results/commerce-badge/local/vi-chinh-sach-thanh-toan-320.png",
+    "docs/crm/test-results/commerce-badge/local/en-320.png"
+  ],
+  "errors": [],
+  "blockedWrites": [],
+  "adminRequests": [],
+  "businessWrites": 0,
+  "orderSubmissions": 0,
+  "mocks": 0,
+  "scope": "Actual shared footer across four routes and three viewport sizes; exact links, loaded badge, 44px height, horizontal bounds, keyboard focus and native CDP footer captures. All non-read requests blocked; no login or CRM navigation."
+}

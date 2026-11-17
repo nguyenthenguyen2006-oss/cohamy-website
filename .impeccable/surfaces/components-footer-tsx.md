@@ -15,7 +15,7 @@ STORY: Find a policy, contact the company, and verify its registration details. 
 
 FIRST VIEWPORT: Logo and brand at left, then policies, contact, and company registration. Remove Quick Links and the separate homepage variant. Four columns become two at tablet widths and one at phone widths, with complete information always visible.
 
-FORM: Reference-pinned extension of the existing public visual world. Keep all seven policy URLs, language routing, contact destinations and original logo. No new marketing claims or certification badge. No new raster assets or motion.
+FORM: Reference-pinned extension of the existing public visual world. Keep all seven policy URLs, language routing, contact destinations and original logo. No new marketing claims or motion. The user-authorized 2026-11-17 extension adds the supplied official notification badge (44px high) and a secondary profile link below the company details; use the two exact supplied Online.gov.vn URLs. The sourced badge is the only new raster and carries its origin metadata.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 
