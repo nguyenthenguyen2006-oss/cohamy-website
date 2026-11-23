@@ -1,5 +1,6 @@
 'use client';
 
+import {useEffect,useRef,useState} from 'react';
 import type {flowWorkspace} from '@/lib/crm/document-flow';
 import type {Draft} from './DocumentFlowWorkspace';
 import {fixed,fixedText,lineAmount,roundRatio} from '@/lib/crm/decimal';
@@ -25,6 +26,14 @@ export function draftSaleCalculation(data:Data,draft:Draft){
 }
 
 export function FlowProductLines({data,draft,onChange}:{data:Data;draft:Draft;onChange:(draft:Draft)=>void}){
+ const [extraProductId,setExtraProductId]=useState('');
+ const [addedExtra,setAddedExtra]=useState<{productId:string;revision:number}|null>(null);
+ const gridRoot=useRef<HTMLDivElement>(null);
+ useEffect(()=>{
+  if(!addedExtra)return;
+  const input=gridRoot.current?.querySelector<HTMLInputElement>(`input[data-flow-line-product="${CSS.escape(addedExtra.productId)}"]`);
+  input?.focus();
+ },[addedExtra]);
  const source=data.documents.find(s=>s.id===draft.parentId);
  const order=data.orders.find(o=>o.id===draft.clearanceId);
  const catalogue=draft.kind==='REQUEST'||draft.kind==='ISSUE'&&!draft.clearanceId;
@@ -32,11 +41,23 @@ export function FlowProductLines({data,draft,onChange}:{data:Data;draft:Draft;on
  const eligible=data.products.filter(p=>p.stock_unit&&(draft.kind==='REQUEST'||data.stocks.some(s=>s.warehouse_id===draft.warehouseId&&s.product_id===p.id&&fixed(s.on_hand)>fixed(s.reserved))));
  const lines=catalogue?withProductCatalogue(draft.lines,eligible,l=>l.productId,id=>({productId:id,quantity:'',note:'',...(sale?{discountPercent:'0'}:{})})):draft.lines;
  const change=(productId:string,patch:Partial<Draft['lines'][number]>)=>onChange({...draft,lines:lines.map(l=>l.productId===productId?{...l,...patch}:l)});
+ const dispatch=draft.kind==='DISPATCH';
+ const excludedProducts=new Set([...draft.lines,...(source?.lines??[])].map(line=>line.productId));
+ const extraProducts=dispatch&&source?data.products.filter(p=>p.stock_unit?.trim()&&!excludedProducts.has(p.id)).sort((a,b)=>a.name.localeCompare(b.name,'vi')):[];
+ const selectedExtra=extraProducts.find(product=>product.id===extraProductId);
+ const addExtra=()=>{
+  if(!selectedExtra||draft.lines.length>=300)return;
+  onChange({...draft,lines:[...draft.lines,{productId:selectedExtra.id,quantity:'',note:'',extra:true}]});
+  setExtraProductId('');
+  setAddedExtra({productId:selectedExtra.id,revision:(addedExtra?.revision??0)+1});
+ };
+ const removeExtra=(productId:string)=>onChange({...draft,lines:draft.lines.filter(line=>line.productId!==productId)});
  const rows=lines.map(line=>{
   const product=data.products.find(p=>p.id===line.productId),original=source?.lines.find(l=>l.productId===line.productId),ordered=order?.immutable_lines.find(l=>l.productId===line.productId);
   const stock=data.stocks.find(s=>s.warehouse_id===draft.warehouseId&&s.product_id===line.productId);
+  const extra=line.extra===true||original?.extra===true;
   let remaining:string|undefined;
-  if(draft.kind==='DISPATCH'&&original){const used=data.documents.filter(s=>s.kind==='DISPATCH'&&s.sourceId===source?.id&&s.state==='CONFIRMED').flatMap(s=>s.lines).filter(l=>l.productId===line.productId).reduce((n,l)=>n+fixed(l.quantity),0n);remaining=fixedText(fixed(original.quantity)-used);}
+  if(dispatch&&original){const used=data.documents.filter(s=>s.kind==='DISPATCH'&&s.sourceId===source?.id&&s.state==='CONFIRMED').flatMap(s=>s.lines).filter(l=>!l.extra&&l.productId===line.productId).reduce((n,l)=>n+fixed(l.quantity),0n);remaining=fixedText(fixed(original.quantity)-used);}
   if(draft.kind==='ISSUE'&&ordered){const used=data.documents.filter(s=>s.kind==='ISSUE'&&s.sourceId===order?.id&&s.state==='CONFIRMED').flatMap(s=>s.lines).filter(l=>l.productId===line.productId).reduce((n,l)=>n+fixed(l.quantity),0n);remaining=fixedText(fixed(String(ordered.baseQuantity??ordered.quantity))-used);}
   let financial:{listUnitPrice?:string;unitPrice?:string;amount?:string}={};
   try{
@@ -50,13 +71,24 @@ export function FlowProductLines({data,draft,onChange}:{data:Data;draft:Draft;on
    }
   }catch{financial={listUnitPrice:line.listUnitPrice??product?.retailPrice??undefined};}
   const discountPercent=sale?line.discountPercent??'0':ordered?.discountPercent===undefined?line.discountPercent:String(ordered.discountPercent);
-  return {...line,...financial,discountPercent,key:line.productId,name:original?.name??String(ordered?.name??product?.name??'Sản phẩm trong chứng từ nguồn'),sku:original?.sku??String(ordered?.sku??product?.sku??''),unit:original?.unit??String(ordered?.stockUnit??product?.stock_unit??''),selected:line.quantity.trim()!==''&&(draft.kind==='RECEIPT'||Number(line.quantity)!==0),remaining,shipped:original?.quantity,available:stock?fixedText(fixed(stock.on_hand)-fixed(stock.reserved)):'0'};
+  const name=original?.name??String(ordered?.name??product?.name??'Sản phẩm trong chứng từ nguồn');
+  return {...line,...financial,discountPercent,key:line.productId,name,extra,detail:extra?<span className="crm-flow-extra-row"><span>Gửi bổ sung</span>{dispatch&&<button type="button" className="button button--secondary" aria-label={`Bỏ ${name} khỏi phiếu`} onClick={()=>removeExtra(line.productId)}>Bỏ khỏi phiếu</button>}</span>:undefined,sku:original?.sku??String(ordered?.sku??product?.sku??''),unit:original?.unit??String(ordered?.stockUnit??product?.stock_unit??''),selected:line.quantity.trim()!==''&&(draft.kind==='RECEIPT'||Number(line.quantity)!==0),remaining,shipped:original?.quantity,available:stock?fixedText(fixed(stock.on_hand)-fixed(stock.reserved)):'0'};
  });
- return <div className={priced?'crm-flow-priced-lines':undefined}><ProductEntryGrid rows={rows} label="Sản phẩm trong phiếu" help={sale?'Giá gốc lấy từ bảng giá bán. Mỗi dòng có chiết khấu riêng; để trống CK là 0%. Chỉ các dòng có số lượng mới được đưa vào phiếu.':draft.kind==='RECEIPT'?'Nhập thực nhận từng mặt hàng, kể cả 0. Ghi lý do khi khác số chuyển.':catalogue?'Nhập số lượng ngay trong bảng. Dòng để trống hoặc bằng 0 không đưa vào phiếu.':'Chỉ gồm hàng còn phải xử lý từ chứng từ nguồn. Giá và chiết khấu giữ theo đơn đã chốt.'} columns={[
+ return <div className={priced?'crm-flow-priced-lines':undefined} ref={gridRoot}>
+  {dispatch&&<div className="work-actions crm-flow-extra-picker">
+   <label>Chọn sản phẩm bổ sung
+    <select aria-label="Chọn sản phẩm bổ sung" value={selectedExtra?.id??''} disabled={!extraProducts.length||draft.lines.length>=300} onChange={e=>setExtraProductId(e.target.value)}>
+     <option value="">{draft.lines.length>=300?'Phiếu đã đủ 300 dòng':!source?'Chưa tải được phiếu đề nghị':extraProducts.length?'Chọn theo tên sản phẩm':'Không còn sản phẩm để thêm'}</option>
+     {extraProducts.map(product=><option key={product.id} value={product.id}>{product.name} · {product.stock_unit}</option>)}
+    </select>
+   </label>
+   <button className="button button--secondary" type="button" disabled={!selectedExtra||draft.lines.length>=300} onClick={addExtra}>Thêm sản phẩm</button>
+  </div>}
+  <ProductEntryGrid key={addedExtra?.revision??0} rows={rows} label="Sản phẩm trong phiếu" help={sale?'Giá gốc lấy từ bảng giá bán. Mỗi dòng có chiết khấu riêng; để trống CK là 0%. Chỉ các dòng có số lượng mới được đưa vào phiếu.':draft.kind==='RECEIPT'?'Nhập thực nhận từng mặt hàng, kể cả 0. Ghi lý do khi khác số chuyển.':dispatch?'Nhập số thực gửi. Hàng bổ sung được ghi riêng trên phiếu chuyển.':catalogue?'Nhập số lượng ngay trong bảng. Dòng để trống hoặc bằng 0 không đưa vào phiếu.':'Chỉ gồm hàng còn phải xử lý từ chứng từ nguồn. Giá và chiết khấu giữ theo đơn đã chốt.'} columns={[
   ...(draft.kind==='RECEIPT'?[{key:'shipped',label:'Số chuyển',render:(row:typeof rows[number])=>row.shipped}]:[]),
-  ...(['DISPATCH','ISSUE'].includes(draft.kind)&&!catalogue?[{key:'remaining',label:'Còn phải giao',render:(row:typeof rows[number])=>row.remaining}]:[]),
+  ...(['DISPATCH','ISSUE'].includes(draft.kind)&&!catalogue?[{key:'remaining',label:'Còn phải giao',render:(row:typeof rows[number])=>row.extra?'—':row.remaining}]:[]),
   ...(draft.kind==='ISSUE'?[{key:'available',label:'Khả dụng tại kho',render:(row:typeof rows[number])=>row.available}]:[]),
-  {key:'quantity',label:draft.kind==='RECEIPT'?'Thực nhận':draft.kind==='DISPATCH'?'Thực gửi':draft.kind==='ISSUE'?'Thực xuất':'Số lượng đề nghị',render:row=><ProductQuantityInput aria-label={`Số lượng ${row.name}`} value={row.quantity} required={draft.kind==='RECEIPT'} step={sale?'0.01':undefined} max={draft.kind==='RECEIPT'?undefined:row.remaining} quick={catalogue} onChange={e=>change(row.productId,{quantity:e.target.value})}/>},
+  {key:'quantity',label:draft.kind==='RECEIPT'?'Thực nhận':draft.kind==='DISPATCH'?'Thực gửi':draft.kind==='ISSUE'?'Thực xuất':'Số lượng đề nghị',render:row=><ProductQuantityInput aria-label={`Số lượng ${row.name}`} data-flow-line-product={dispatch?row.productId:undefined} value={row.quantity} required={draft.kind==='RECEIPT'} step={sale?'0.01':undefined} max={draft.kind==='RECEIPT'?undefined:row.remaining} quick={catalogue} onChange={e=>change(row.productId,{quantity:e.target.value})}/>},
   ...(priced?[
    {key:'listUnitPrice',label:'Đơn giá gốc',render:(row:typeof rows[number])=><output aria-label={`Đơn giá gốc ${row.name}`}>{flowMoney(row.listUnitPrice)}</output>},
    {key:'discountPercent',label:'Chiết khấu (%)',render:(row:typeof rows[number])=>sale?<input aria-label={`Chiết khấu (%) ${row.name}`} type="number" inputMode="decimal" min="0" max="100" step="any" value={row.discountPercent??'0'} onChange={e=>change(row.productId,{discountPercent:e.target.value})}/>:<output>{row.discountPercent===undefined?'—':row.discountPercent+'%'}</output>},

@@ -54,7 +54,8 @@ const sharedContracts: Record<string,string> = {
   "323cb8767ddb4069": "const roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nconst organizationSchema = z.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n}).strict()\nz.object({\n  code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u),\n  name: z.string().trim().min(2).max(200), kind: z.enum([\"DEALER\", \"CUSTOMER\", \"SUPPLIER\"]),\n  phone: z.string().trim().max(40).default(\"\"), email: z.union([z.literal(\"\"), z.email()]).default(\"\"),\n  businessId: z.string().trim().max(40).regex(/^[A-Za-z0-9 ._-]*$/).default(\"\"),\n  address: z.string().trim().max(500).default(\"\"),\n  source: z.string().trim().max(120).default(\"\"), segment: z.string().trim().max(120).default(\"\"),\n  contactName: z.string().trim().max(120).default(\"\"), stage: z.enum(['LEAD','CONTACTED','ACTIVE','INACTIVE']).default('ACTIVE'),\n  partnerType: z.enum(['COHAMY','SHAREHOLDER','DEALER_L1','DEALER_L2','STORE','END_CUSTOMER']).optional(),\n  pricingTierId: z.uuid().nullable().optional(),\n  creditEnabled: z.boolean().optional(),\n})\nconst updateSchema = organizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\norganizationSchema.extend({ active: z.boolean(), version: z.number().int().positive() })\nconst warehouseSchema = z.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() }).strict()\nz.object({ code: z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/u), name: z.string().trim().min(2).max(200), organizationId: z.uuid(), region: z.enum([\"NORTH\",\"SOUTH\"]).nullable().optional() })\nconst accountSchema = z.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() }).strict()\nz.object({ email: z.email().toLowerCase(), displayName: z.string().trim().min(2).max(120), password: z.string().min(12).max(72), role: z.enum(roles), organizationId: z.uuid() })\nz.object({ active: z.boolean() })",
   "adfbe4aa2228393c": "\n// Explicit warehouse SALE does not accept aggregate submittedAmountOverride or legacy batch verification. Use record-order-payment and confirm-order-payment with the canonical receipt id.",
   "e5a061389d3dd3f3": "z.object({transactionId:z.uuid(),decision:z.enum([\"CONFIRM\",\"REJECT\"]).default(\"CONFIRM\"),reason:z.string().trim().min(3).max(2000),idempotencyKey:z.uuid()}).strict() // Warehouse SALE canonical receipt review; no duplicate legacy payment row.",
-  "f4139d321d727c1d": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nconst inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()\n// Legacy adapter forces kind ISSUE; optional explicit issuePurpose SALE requires saleCustomerId, per-line discountPercent only. No cash/global discount or direct net-price overrides.",
+  "4bb7b0f4ad957f5b": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nconst inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,extra:z.literal(true).optional().describe('Only for a DISPATCH line whose active catalog product is absent from the linked request. A RECEIPT inherits this flag from the confirmed dispatch.'),discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()\n// Adapter forces kind DISPATCH. Supply parentId of a confirmed factory request, a fresh idempotencyKey, and extra:true only for active products absent from the request.",
+  "1c422e21b3bcb3cc": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nconst inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,extra:z.literal(true).optional().describe('Only for a DISPATCH line whose active catalog product is absent from the linked request. A RECEIPT inherits this flag from the confirmed dispatch.'),discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()\n// Legacy adapter forces kind ISSUE; optional explicit issuePurpose SALE requires saleCustomerId, per-line discountPercent only. No cash/global discount or direct net-price overrides.",
   "ecdbd3c13cb080c4": "\n// For explicit warehouse SALE, this records one native finance receipt/allocation. SALES remains pending until accountant review. Existing other clearances retain their legacy payment contract.",
   "49eb406c9d2d6b12": "const accountInvitationSchema = z.object({membershipId:z.uuid(),action:z.enum(['SEND','RESEND','REVOKE']),idempotencyKey:z.uuid()}).strict()",
   "c035717000a0e0d8": "const roles = [\"ADMIN\", \"MANAGER\", \"SALES\", \"FACTORY\", \"WAREHOUSE_HCM\", \"WAREHOUSE_HN\", \"WAREHOUSE\", \"ACCOUNTANT\", \"DEALER_OWNER\", \"DEALER_STAFF\", \"CUSTOMER\", \"SUPERMARKET\"] as const;\nconst provisionAccountSchema = z.object({email:z.email().trim().toLowerCase(),displayName:z.string().trim().min(2).max(120),role:z.enum(roles),organizationId:z.uuid(),idempotencyKey:z.uuid(),loginMethod:z.enum(['INVITATION','GENERATED']).default('INVITATION')}).strict()",
@@ -71,8 +72,8 @@ const sharedContracts: Record<string,string> = {
   "dbd1408c356641a3": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nz.object({id:uuid,idempotencyKey:uuid}).strict()",
   "9f938e037799a3ee": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),reason:z.string().trim().min(5).max(2000),note:z.string().max(2000),dueDate:z.union([z.literal(''),z.iso.date()]).optional(),delivery:z.record(z.string().max(60),z.string().trim().max(1000)).optional(),lines:z.array(z.object({productId:uuid,quantity})).min(1).max(300),idempotencyKey:uuid}).strict()",
   "addb5231c8938814": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),idempotencyKey:uuid}).strict()",
-  "94cee090090bc032": "const inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()\nz.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n})\nz.object({productId:uuid,quantity,discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')})\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),idempotencyKey:uuid})\nz.object({id:uuid,idempotencyKey:uuid})\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),reason:z.string().trim().min(5).max(2000),note:z.string().max(2000),dueDate:z.union([z.literal(''),z.iso.date()]).optional(),delivery:z.record(z.string().max(60),z.string().trim().max(1000)).optional(),lines:z.array(z.object({productId:uuid,quantity})).min(1).max(300),idempotencyKey:uuid})\nz.object({productId:uuid,quantity})\nconst recipientsSchema = z.object({to:z.array(z.email()).max(50),cc:z.array(z.email()).max(50),bcc:z.array(z.email()).max(50)}).strict()\nz.object({to:z.array(z.email()).max(50),cc:z.array(z.email()).max(50),bcc:z.array(z.email()).max(50)})\nz.object({id:z.uuid().optional(),event:z.enum([...coreMailEvents.map(x=>x.event),...businessMailEvents.filter(e=>e.available).map(e=>e.event)]),warehouseId:z.uuid().nullable(),factoryMembershipId:z.uuid().nullable(),enabled:z.boolean(),recipients:recipientsSchema,subject:z.string().trim().min(1).max(200),body:z.string().trim().min(1).max(10000),attachments:z.enum(['EVENT','BUNDLE']),version:z.number().int().min(0)})\nz.object({id:z.uuid(),version:z.number().int().positive()})\nz.object({id:z.uuid()})\nz.object({ruleId:z.uuid(),documentId:z.uuid().optional(),businessSnapshotId:z.uuid().optional()})\nz.object({id:z.uuid(),reason:z.string().trim().min(5).max(1000),resend:z.boolean().default(false)})\nz.object({email:z.email()})\nz.object({event:z.string().max(80),email:z.email(),'message-id':z.string().min(1).max(500),ts_event:z.number().optional(),ts:z.number().optional(),id:z.union([z.string(),z.number()]).optional()})\nconst schema = z.object({version:z.number().int().min(0),senderEmail:z.email().max(320).transform(v=>v.toLowerCase()),apiKey:z.string().trim().max(1024).default(''),removeKey:z.boolean().default(false)}).strict()\nz.object({version:z.number().int().min(0),senderEmail:z.email().max(320).transform(v=>v.toLowerCase()),apiKey:z.string().trim().max(1024).default(''),removeKey:z.boolean().default(false)})",
-  "bbbdf23b44b3c265": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nconst inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()",
+  "e7725c05b122ef76": "const inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,extra:z.literal(true).optional().describe('Only for a DISPATCH line whose active catalog product is absent from the linked request. A RECEIPT inherits this flag from the confirmed dispatch.'),discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()\nz.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,extra:z.literal(true).optional().describe('Only for a DISPATCH line whose active catalog product is absent from the linked request. A RECEIPT inherits this flag from the confirmed dispatch.'),discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n})\nz.object({productId:uuid,quantity,extra:z.literal(true).optional().describe('Only for a DISPATCH line whose active catalog product is absent from the linked request. A RECEIPT inherits this flag from the confirmed dispatch.'),discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')})\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),idempotencyKey:uuid})\nz.object({id:uuid,idempotencyKey:uuid})\nz.object({id:uuid,kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive(),reason:z.string().trim().min(5).max(2000),note:z.string().max(2000),dueDate:z.union([z.literal(''),z.iso.date()]).optional(),delivery:z.record(z.string().max(60),z.string().trim().max(1000)).optional(),lines:z.array(z.object({productId:uuid,quantity})).min(1).max(300),idempotencyKey:uuid})\nz.object({productId:uuid,quantity})\nconst recipientsSchema = z.object({to:z.array(z.email()).max(50),cc:z.array(z.email()).max(50),bcc:z.array(z.email()).max(50)}).strict()\nz.object({to:z.array(z.email()).max(50),cc:z.array(z.email()).max(50),bcc:z.array(z.email()).max(50)})\nz.object({id:z.uuid().optional(),event:z.enum([...coreMailEvents.map(x=>x.event),...businessMailEvents.filter(e=>e.available).map(e=>e.event)]),warehouseId:z.uuid().nullable(),factoryMembershipId:z.uuid().nullable(),enabled:z.boolean(),recipients:recipientsSchema,subject:z.string().trim().min(1).max(200),body:z.string().trim().min(1).max(10000),attachments:z.enum(['EVENT','BUNDLE']),version:z.number().int().min(0)})\nz.object({id:z.uuid(),version:z.number().int().positive()})\nz.object({id:z.uuid()})\nz.object({ruleId:z.uuid(),documentId:z.uuid().optional(),businessSnapshotId:z.uuid().optional()})\nz.object({id:z.uuid(),reason:z.string().trim().min(5).max(1000),resend:z.boolean().default(false)})\nz.object({email:z.email()})\nz.object({event:z.string().max(80),email:z.email(),'message-id':z.string().min(1).max(500),ts_event:z.number().optional(),ts:z.number().optional(),id:z.union([z.string(),z.number()]).optional()})\nconst schema = z.object({version:z.number().int().min(0),senderEmail:z.email().max(320).transform(v=>v.toLowerCase()),apiKey:z.string().trim().max(1024).default(''),removeKey:z.boolean().default(false)}).strict()\nz.object({version:z.number().int().min(0),senderEmail:z.email().max(320).transform(v=>v.toLowerCase()),apiKey:z.string().trim().max(1024).default(''),removeKey:z.boolean().default(false)})",
+  "3d6c5b7a3d84dd92": "const uuid=z.uuid();\nconst quantity=z.string().regex(/^\\d{1,14}(?:\\.\\d{1,2})?$/);\nconst inputSchema = z.object({\n  id:uuid.optional(),kind:z.enum(['REQUEST','DISPATCH','RECEIPT','ISSUE']),version:z.number().int().positive().optional(),\n  warehouseId:uuid.optional(),factoryMembershipId:uuid.optional(),parentId:uuid.optional(),clearanceId:uuid.optional(),\n  dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),\n  issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),\n  shippingFee:z.string().regex(/^\\d{1,30}$/).optional(),includeVat:z.boolean().optional(),\n  lines:z.array(z.object({productId:uuid,quantity,extra:z.literal(true).optional().describe('Only for a DISPATCH line whose active catalog product is absent from the linked request. A RECEIPT inherits this flag from the confirmed dispatch.'),discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),\n  delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),\n  confirm:z.boolean().default(false),idempotencyKey:uuid,\n}).strict()",
   "ac88782efea25ebc": "const prefsSchema = z.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)}).strict().refine(v=>(v.quietStart===null&&v.quietEnd===null)||(v.quietStart!==null&&v.quietEnd!==null&&v.quietStart!==v.quietEnd))\nz.object({columns:z.array(columns).min(1).max(6).refine(v=>new Set(v).size===v.length).default(['name','code','phone','email','active']),columnWidths:z.partialRecord(columns,z.number().int().min(80).max(600)).default({}),quietStart:z.number().int().min(0).max(23).nullable().default(null),quietEnd:z.number().int().min(0).max(23).nullable().default(null),taskNotifications:z.boolean().default(true),notificationKinds:z.array(z.enum(['TASK','ONBOARDING','SUPPORT','SYSTEM'])).max(4).default(['TASK','ONBOARDING','SUPPORT','SYSTEM']),notificationChannels:z.array(z.enum(['IN_APP','EMAIL'])).max(2).refine(v=>new Set(v).size===v.length).default(['IN_APP']),version:z.number().int().min(0)})\nconst draftSchema = z.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()}).strict()\nz.object({key:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/),entityType:z.enum(['partner','order','new-partner']),entityId:z.uuid().nullable(),version:z.number().int().min(0),value:z.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()}).strict()})\nz.object({name:z.string().max(200).optional(),phone:z.string().max(40).optional(),email:z.string().max(200).optional(),address:z.string().max(500).optional(),body:z.string().max(4000).optional(),title:z.string().max(240).optional()})\nconst filterSchema = z.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)}).strict()\nz.object({id:z.uuid().optional(),name:z.string().trim().min(2).max(80),resource:z.enum(['partners','orders','tasks']),value:z.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()}).strict(),shared:z.boolean().default(false),isDefault:z.boolean().default(false),version:z.number().int().min(0).default(0)})\nz.object({tags:z.string().max(1200).refine(v=>!v||v.split(',').every(id=>z.uuid().safeParse(id).success)).optional(),q:z.string().max(120).optional(),status:z.enum(['PENDING_REVIEW','IN_PROGRESS','READY','REJECTED','CANCELLED']).optional(),kind:z.enum(['CUSTOMER','DEALER']).optional(),done:z.enum(['true','false','all']).optional(),overdue:z.literal('true').optional()})\nz.object({entityType:z.enum(['partner','order','product','commercial-request','sales-order']),entityId:z.uuid(),pinned:z.boolean().optional()})\nz.object({entityType:z.enum(['partner','order','ticket','library','visit','payment','deal','factory-invoice','warehouse-reconciliation','warehouse-handover','vat-invoice','order-clearance']),entityId:z.uuid(),title:z.string().trim().min(2).max(200),filename:z.string().regex(/^[^/\\\\\\r\\n\\x00]{1,180}$/),mime:z.enum(['application/pdf','image/png','image/jpeg','application/xml']),content:z.instanceof(Buffer),documentId:z.uuid().optional(),effectiveAt:z.iso.datetime({offset:true}).optional(),expiresAt:z.iso.datetime({offset:true}).optional(),docCategory:z.string().max(60).optional(),reason:z.string().trim().min(5).max(2000).optional()})",
   "c2dd009a56f92569": "z.object({organizationId:z.uuid(),limitAmount:nonNegativeMoney,termsDays:z.number().int().min(0).max(3650),enabled:z.boolean(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),postingDate:date,reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),amount:money,kind:z.enum(['PAYMENT','DEPOSIT']),paidAt:z.iso.datetime({offset:true}),reference:z.string().trim().min(2).max(200),documentVersionId:z.uuid().nullable(),reason,idempotencyKey:key,dealId:z.uuid().optional(),payerOrganizationId:z.uuid().optional(),payeeOrganizationId:z.uuid().optional(),method:z.string().default('BANK_TRANSFER'),notes:z.string().default('')})\nz.object({id:z.uuid(),version:z.number().int().positive(),decision:z.enum(['CONFIRM','REJECT']),reason,idempotencyKey:key})\nz.object({paymentId:z.uuid(),paymentVersion:z.number().int().positive(),allocations:z.array(z.object({receivableId:z.uuid(),amount:money}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({receivableId:z.uuid(),amount:money})\nz.object({bankCode:z.string().trim().min(2).max(30),externalId:z.string().trim().min(1).max(200),occurredAt:z.iso.datetime({offset:true}),amount:money,reference:z.string().trim().max(500),counterparty:z.string().trim().max(300),raw:z.record(z.string(),z.unknown()),reason,idempotencyKey:key})\nz.object({transactionId:z.uuid(),paymentId:z.uuid(),paymentVersion:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({matchId:z.uuid(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['ADJUST','DISPUTE','RESOLVE']),amount:signedMoney,reason,idempotencyKey:key})\nz.object({receivableId:z.uuid(),scheduledFor:z.iso.datetime({offset:true}),channel:z.enum(['IN_APP','EMAIL','SMS']),recipient:z.string().trim().min(2).max(320),template:z.string().trim().min(3).max(4000),reason,idempotencyKey:key})\nz.object({organizationId:z.uuid(),kind:z.enum(['COLLECT','PAY','REFUND']),amount:money,sourceType:z.string().trim().min(2).max(50),sourceId:z.string().trim().min(1).max(200),documentVersionId:z.uuid().nullable().default(null),reason,idempotencyKey:key})\nz.object({paymentId:z.uuid(),paymentVersion:z.number().int().positive(),amount:money,reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','REJECT','EXECUTE','REVERSE']),reason,idempotencyKey:key})",
   "0b68af9bfa721841": "z.object({productId:z.uuid(),quantity,expectedOn:z.iso.date().nullable(),ownerMembershipId:z.uuid().nullable()})\nz.object({orderId:z.uuid(),productId:z.uuid(),quantity,expectedOn:z.iso.date().nullable(),ownerMembershipId:z.uuid().nullable(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(line).min(1).max(200),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(z.object({reservationId:z.uuid(),quantity}).strict()).min(1).max(200),windowStart:z.iso.datetime({offset:true}).nullable(),windowEnd:z.iso.datetime({offset:true}).nullable(),requirements:z.string().trim().max(1000),reason,idempotencyKey:key})\nz.object({reservationId:z.uuid(),quantity})\nz.object({lineId:z.uuid(),quantity,scannerCode:z.string().trim().min(1).max(120),manual:z.boolean()})\nz.object({id:z.uuid(),version:z.number().int().positive(),lineId:z.uuid(),quantity,scannerCode:z.string().trim().min(1).max(120),manual:z.boolean(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(scan).min(1).max(200),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),label:z.string().trim().min(1).max(200),lines:z.array(z.object({lineId:z.uuid(),quantity}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({lineId:z.uuid(),quantity})\nz.object({parcelIds:z.array(z.uuid()).min(1).max(200).refine(v=>new Set(v).size===v.length),driverName:z.string().trim().min(2).max(120),driverPhone:z.string().trim().min(5).max(40),routeNote:z.string().trim().max(2000),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),outcome:z.enum(['DELIVERED','FAILED']),recipient:z.string().trim().max(120),confirmation:z.string().trim().max(1000),photoDocumentId:z.uuid().nullable(),signatureDocumentId:z.uuid().nullable(),resolution:z.enum(['RESCHEDULE','RETURN']).nullable(),nextAttemptAt:z.iso.datetime({offset:true}).nullable(),reason,idempotencyKey:key})\nz.object({parcelId:z.uuid(),status:z.string().trim().min(2).max(80),trackingCode:z.string().trim().max(120).nullable(),reason,idempotencyKey:key})\nz.object({orderId:z.uuid(),lines:z.array(z.object({deliveryLineId:z.uuid(),quantity,reason:z.string().trim().min(3).max(1000),photoDocumentId:z.uuid().nullable()}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({deliveryLineId:z.uuid(),quantity,reason:z.string().trim().min(3).max(1000),photoDocumentId:z.uuid().nullable()})\nz.object({id:z.uuid(),version:z.number().int().positive(),action:z.enum(['APPROVE','REJECT']),reason,idempotencyKey:key})\nz.object({id:z.uuid(),version:z.number().int().positive(),lines:z.array(z.object({requestLineId:z.uuid(),quantity,disposition:z.enum(['RESALE','QUARANTINE','DAMAGED']),locationId:z.uuid(),reason:z.string().trim().min(3).max(1000)}).strict()).min(1).max(200),reason,idempotencyKey:key})\nz.object({requestLineId:z.uuid(),quantity,disposition:z.enum(['RESALE','QUARANTINE','DAMAGED']),locationId:z.uuid(),reason:z.string().trim().min(3).max(1000)})\nz.object({id:z.uuid().optional(),version:z.number().int().min(0),code:z.string().trim().min(2).max(40).regex(/^[A-Za-z0-9_-]+$/),name:z.string().trim().min(2).max(120),enabled:z.boolean(),idempotencyKey:z.uuid()})\nz.object({parcelCode:z.string().trim().min(1).max(120),status:z.enum(statuses),trackingCode:z.string().trim().max(120).nullable().default(null)})",
@@ -360,7 +361,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "GET /api/crm/accountant/workspace",
@@ -380,7 +381,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/accountant-clear-order",
@@ -397,7 +398,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/accountant-verify-clearance",
@@ -414,7 +415,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "adfbe4aa2228393c",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/accountant-verify-factory-invoice",
@@ -431,7 +432,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/adjust-warehouse-stock",
@@ -448,7 +449,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/attach-vat-document",
@@ -465,7 +466,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/confirm-order-payment",
@@ -482,7 +483,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "e5a061389d3dd3f3",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/confirm-warehouse-pickup",
@@ -499,7 +500,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/create-factory-dispatch",
@@ -514,9 +515,9 @@ const metadata: McpRoute[] = [
       "action": "create-factory-dispatch"
     },
     "query": [],
-    "inputContract": "",
+    "inputContract": "4bb7b0f4ad957f5b",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/create-factory-order",
@@ -533,7 +534,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/create-handover-invoice",
@@ -548,9 +549,9 @@ const metadata: McpRoute[] = [
       "action": "create-handover-invoice"
     },
     "query": [],
-    "inputContract": "f4139d321d727c1d",
+    "inputContract": "1c422e21b3bcb3cc",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/create-warehouse-reconciliation",
@@ -567,7 +568,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/record-order-payment",
@@ -584,7 +585,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "ecdbd3c13cb080c4",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/register-warehouse-order",
@@ -601,7 +602,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/request-vat-adjustment",
@@ -618,7 +619,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/save-customer-tax-profile",
@@ -635,7 +636,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/save-vat-invoice",
@@ -652,7 +653,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/staff-submit-payment",
@@ -669,7 +670,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "ecdbd3c13cb080c4",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/update-handover-delivery",
@@ -686,7 +687,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/update-product-price",
@@ -703,7 +704,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "POST /api/crm/accountant/update-reconciliation-status",
@@ -720,7 +721,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "fb65de475457f519951cc7cb56359b74bcdef90e6a503b2ccd03e80746f5cf41"
+    "sourceHash": "0fdfff7b21814ef57dc4281d2697fd79a9c02642527ee63cc71702a5d0977b74"
   },
   {
     "id": "GET /api/crm/accounts/[id]/deletion-preview",
@@ -805,7 +806,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "6441722a6ffc44fed54ef64335737ec7a0d94369d74d95c63a51072c92af67a2"
+    "sourceHash": "3155c2b6d3fe3791454e9f5cb94d867b457bbb1f8d860d578473ca6995420dea"
   },
   {
     "id": "POST /api/crm/admin-invoices",
@@ -820,7 +821,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "b167f3eb812d8f6c",
     "multipart": false,
-    "sourceHash": "6441722a6ffc44fed54ef64335737ec7a0d94369d74d95c63a51072c92af67a2"
+    "sourceHash": "3155c2b6d3fe3791454e9f5cb94d867b457bbb1f8d860d578473ca6995420dea"
   },
   {
     "id": "GET /api/crm/articles/get",
@@ -3052,7 +3053,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "GET /api/crm/document-flow/pdf",
@@ -3073,7 +3074,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "GET /api/crm/document-flow/provider-settings",
@@ -3094,7 +3095,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "GET /api/crm/document-flow/view",
@@ -3115,7 +3116,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "GET /api/crm/document-flow/workspace",
@@ -3136,7 +3137,7 @@ const metadata: McpRoute[] = [
     ],
     "inputContract": "",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/accept",
@@ -3153,7 +3154,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "dbd1408c356641a3",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/amend",
@@ -3170,7 +3171,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "9f938e037799a3ee",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/confirm",
@@ -3187,7 +3188,7 @@ const metadata: McpRoute[] = [
     "query": [],
     "inputContract": "addb5231c8938814",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail",
@@ -3202,9 +3203,9 @@ const metadata: McpRoute[] = [
       "action": "preview-mail"
     },
     "query": [],
-    "inputContract": "94cee090090bc032",
+    "inputContract": "e7725c05b122ef76",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/preview-mail-rule",
@@ -3219,9 +3220,9 @@ const metadata: McpRoute[] = [
       "action": "preview-mail-rule"
     },
     "query": [],
-    "inputContract": "94cee090090bc032",
+    "inputContract": "e7725c05b122ef76",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/remove-mail-rule",
@@ -3236,9 +3237,9 @@ const metadata: McpRoute[] = [
       "action": "remove-mail-rule"
     },
     "query": [],
-    "inputContract": "94cee090090bc032",
+    "inputContract": "e7725c05b122ef76",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/retry-mail",
@@ -3253,9 +3254,9 @@ const metadata: McpRoute[] = [
       "action": "retry-mail"
     },
     "query": [],
-    "inputContract": "94cee090090bc032",
+    "inputContract": "e7725c05b122ef76",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/save",
@@ -3270,9 +3271,9 @@ const metadata: McpRoute[] = [
       "action": "save"
     },
     "query": [],
-    "inputContract": "bbbdf23b44b3c265",
+    "inputContract": "3d6c5b7a3d84dd92",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/save-mail-rule",
@@ -3287,9 +3288,9 @@ const metadata: McpRoute[] = [
       "action": "save-mail-rule"
     },
     "query": [],
-    "inputContract": "94cee090090bc032",
+    "inputContract": "e7725c05b122ef76",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/save-provider",
@@ -3304,9 +3305,9 @@ const metadata: McpRoute[] = [
       "action": "save-provider"
     },
     "query": [],
-    "inputContract": "94cee090090bc032",
+    "inputContract": "e7725c05b122ef76",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "POST /api/crm/document-flow/test-mail",
@@ -3321,9 +3322,9 @@ const metadata: McpRoute[] = [
       "action": "test-mail"
     },
     "query": [],
-    "inputContract": "94cee090090bc032",
+    "inputContract": "e7725c05b122ef76",
     "multipart": false,
-    "sourceHash": "e29b6762ff68ab5daed0dd054d345a674caca177fb84cab23b93d21091cb5a8b"
+    "sourceHash": "a575c03005ae291323e6046fc212db2cb522b6d7807a59abb36658adc3056a9b"
   },
   {
     "id": "GET /api/crm/documents/[id]",

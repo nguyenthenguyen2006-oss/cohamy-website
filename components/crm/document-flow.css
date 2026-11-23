@@ -22,6 +22,11 @@
 
 .cohamy-crm .crm-document-flow .crm-document-open{background:transparent;border:0;padding:0;min-height:0;text-align:left;color:#b45309;cursor:pointer;font:inherit;text-decoration:underline;text-underline-offset:3px}
 
+.cohamy-crm .crm-document-flow .crm-flow-extra-picker{align-items:end;gap:12px}
+.cohamy-crm .crm-document-flow .crm-flow-extra-picker label{min-width:0;width:min(100%,420px);margin:0}
+.cohamy-crm .crm-document-flow .crm-flow-extra-picker :is(select,button),.cohamy-crm .crm-document-flow .crm-flow-extra-row button{min-height:44px}
+.cohamy-crm .crm-document-flow .crm-flow-extra-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+
 .cohamy-crm .crm-flow-sale-options{min-width:0;margin:18px 0;padding:12px;border:1px solid var(--crm-border,#eadbc5);border-radius:6px}
 .cohamy-crm .crm-flow-sale-options legend{padding:0 6px;font-weight:700}
 .cohamy-crm .crm-document-flow .crm-flow-sale-options :is(input,select){min-height:44px}

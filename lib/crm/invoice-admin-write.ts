@@ -161,17 +161,57 @@ export async function applyInvoiceAction(sql:Sql,user:Principal,invoice:AdminInv
   }
   if(!cancel){
    const quantities=productQuantities(content);
+   const extraProductIds=new Set(before.lines.filter(line=>line.extra===true).map(line=>line.productId));
+   if(extraProductIds.size&&(quantities.size!==before.lines.length||content.lines.length!==before.lines.length||before.lines.some(line=>!quantities.has(line.productId)))){
+    throw new CrmError('INVOICE_PRODUCT_OUTSIDE_SOURCE',409);
+   }
    if(before.kind==='REQUEST'){
-    const children=(await sql.query<{flow_payload:FlowSnapshot|null}>("SELECT flow_payload FROM cohamy_crm.factory_invoices WHERE parent_id=$1 AND stage='FACTORY_DISPATCH' AND workflow_state='CONFIRMED'",[invoice.id])).rows,shipped=new Map<string,bigint>();for(const child of children)for(const l of child.flow_payload?.lines??[])shipped.set(l.productId,(shipped.get(l.productId)??0n)+fixed(l.quantity));for(const [id,q] of shipped)if((quantities.get(id)??0n)<q)throw new CrmError('BELOW_ALREADY_SHIPPED',409);
+    const children=(await sql.query<{flow_payload:FlowSnapshot|null}>("SELECT flow_payload FROM cohamy_crm.factory_invoices WHERE parent_id=$1 AND stage='FACTORY_DISPATCH' AND workflow_state='CONFIRMED'",[invoice.id])).rows;
+    const shipped=new Map<string,bigint>();
+    for(const child of children)for(const line of child.flow_payload?.lines??[]){
+     if(line.extra!==true)shipped.set(line.productId,(shipped.get(line.productId)??0n)+fixed(line.quantity));
+    }
+    for(const [id,quantity] of shipped)if((quantities.get(id)??0n)<quantity)throw new CrmError('BELOW_ALREADY_SHIPPED',409);
    }
    if(before.sourceId&&['DISPATCH','RECEIPT'].includes(before.kind)){
-    const source=await loadAdminInvoice(sql,user,'FLOW',before.sourceId,true);referenced=source.original.snapshot as FlowSnapshot;if(source.cancelled||source.status==='DRAFT')throw new CrmError('SOURCE_NOT_CONFIRMED',409);const sourceQuantities=productQuantities(source.content);if([...quantities.keys()].some(id=>!sourceQuantities.has(id)))throw new CrmError('PRODUCT_OUTSIDE_SOURCE',409);
+    const source=await loadAdminInvoice(sql,user,'FLOW',before.sourceId,true);
+    referenced=source.original.snapshot as FlowSnapshot;
+    if(source.cancelled||source.status==='DRAFT')throw new CrmError('SOURCE_NOT_CONFIRMED',409);
+    if(extraProductIds.size&&content.warehouseId!==referenced.warehouseId)throw new CrmError('SOURCE_WAREHOUSE_MISMATCH',409);
+    const sourceQuantities=productQuantities(source.content);
+    const fromSource=(id:string)=>sourceQuantities.has(id)||before.kind==='DISPATCH'&&extraProductIds.has(id);
+    if([...quantities.keys()].some(id=>!fromSource(id)))throw new CrmError('PRODUCT_OUTSIDE_SOURCE',409);
     if(before.kind==='RECEIPT'&&quantities.size!==sourceQuantities.size)throw new CrmError('ALL_RECEIPT_LINES_REQUIRED',409);
-    if(before.kind==='DISPATCH'){const others=(await sql.query<{flow_payload:FlowSnapshot|null}>("SELECT flow_payload FROM cohamy_crm.factory_invoices WHERE parent_id=$1 AND id<>$2 AND stage='FACTORY_DISPATCH' AND workflow_state='CONFIRMED'",[source.id,invoice.id])).rows;for(const [id,q] of quantities){const shipped=others.reduce((n,row)=>n+(row.flow_payload?.lines??[]).filter(l=>l.productId===id).reduce((sum,l)=>sum+fixed(l.quantity),0n),0n);if(q+shipped>(sourceQuantities.get(id)??0n))throw new CrmError('REQUEST_QUANTITY_EXCEEDED',409);}}
+    if(before.kind==='DISPATCH'){
+     const others=(await sql.query<{flow_payload:FlowSnapshot|null}>("SELECT flow_payload FROM cohamy_crm.factory_invoices WHERE parent_id=$1 AND id<>$2 AND stage='FACTORY_DISPATCH' AND workflow_state='CONFIRMED'",[source.id,invoice.id])).rows;
+     const alreadyShipped=new Map<string,bigint>();
+     for(const row of others)for(const line of row.flow_payload?.lines??[]){
+      if(line.extra!==true)alreadyShipped.set(line.productId,(alreadyShipped.get(line.productId)??0n)+fixed(line.quantity));
+     }
+     for(const [id,quantity] of quantities){
+      if(extraProductIds.has(id))continue;
+      if(quantity+(alreadyShipped.get(id)??0n)>(sourceQuantities.get(id)??0n))throw new CrmError('REQUEST_QUANTITY_EXCEEDED',409);
+     }
+    }
    }
   }
   const products=(await sql.query<{id:string;sku:string;name:string;stock_unit:string}>('SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE id=ANY($1::uuid[])',[content.lines.flatMap(l=>l.productId?[l.productId]:[])])).rows;
-  const after:FlowSnapshot={...before,revision:before.revision+1,state:cancel?'CANCELLED':before.state,sourceRevision:referenced?.revision??before.sourceRevision,sourceCode:referenced?.code??before.sourceCode,requestRevision:referenced?.kind==='REQUEST'?referenced.revision:referenced?.requestRevision??before.requestRevision,warehouseId:content.warehouseId??before.warehouseId,note:content.note,code:content.invoiceNumber||before.code,dueDate:content.issuedDate,confirmedBy:user.displayName,confirmedAt:new Date().toISOString(),totals:{...before.totals,total:invoiceTotal(content),shipping:content.fee},delivery:{...before.delivery,deliveryDate:content.issuedDate||before.delivery.deliveryDate,customer:content.buyerName,address:content.buyerAddress,recipient:content.recipient,recipientPhone:content.recipientPhone},lines:cancel?before.lines:content.lines.map(l=>{const p=products.find(p=>p.id===l.productId);if(!p?.stock_unit)throw new CrmError('INVOICE_PRODUCT_REQUIRED',400);const old=before.lines.find(x=>x.productId===l.productId);return {...old,productId:p.id,sku:p.sku,name:p.name,unit:p.stock_unit,quantity:l.quantity,ordered:before.kind==='REQUEST'?l.quantity:old?.ordered??l.quantity,shipped:before.kind==='DISPATCH'?l.quantity:old?.shipped??'0',received:before.kind==='RECEIPT'?l.quantity:old?.received??'0',difference:before.kind==='RECEIPT'?fixedText(fixed(l.quantity)-fixed(referenced?.lines.find(x=>x.productId===l.productId)?.quantity??old?.shipped??'0')):old?.difference??'0',unitPrice:l.unitPrice,discount:l.discount,tax:l.tax,amount:invoiceLineAmount(l),note:l.note};})};
+  const revisedLines=cancel?before.lines:content.lines.map(line=>{
+   const old=before.lines.find(item=>item.productId===line.productId);
+   const sourceLine=referenced?.lines.find(item=>item.productId===line.productId);
+   // Supplemental provenance is read from the saved dispatch, never supplied by an Admin edit.
+   const extraLine=before.kind==='RECEIPT'?sourceLine:old;
+   const received=before.kind==='RECEIPT'?line.quantity:old?.received??'0';
+   const difference=before.kind==='RECEIPT'?fixedText(fixed(line.quantity)-fixed(sourceLine?.quantity??old?.shipped??'0')):old?.difference??'0';
+   if(extraLine?.extra===true){
+    if([line.unitPrice,line.discount,line.tax].some(value=>BigInt(value)!==0n))throw new CrmError('FINANCIAL_FIELD_FORBIDDEN',403);
+    return {...extraLine,quantity:line.quantity,ordered:'0',shipped:before.kind==='DISPATCH'?line.quantity:extraLine.quantity,received,difference,note:line.note};
+   }
+   const product=products.find(item=>item.id===line.productId);
+   if(!product?.stock_unit)throw new CrmError('INVOICE_PRODUCT_REQUIRED',400);
+   return {...old,productId:product.id,sku:product.sku,name:product.name,unit:product.stock_unit,quantity:line.quantity,ordered:before.kind==='REQUEST'?line.quantity:old?.ordered??line.quantity,shipped:before.kind==='DISPATCH'?line.quantity:old?.shipped??'0',received,difference,unitPrice:line.unitPrice,discount:line.discount,tax:line.tax,amount:invoiceLineAmount(line),note:line.note};
+  });
+  const after:FlowSnapshot={...before,revision:before.revision+1,state:cancel?'CANCELLED':before.state,sourceRevision:referenced?.revision??before.sourceRevision,sourceCode:referenced?.code??before.sourceCode,requestRevision:referenced?.kind==='REQUEST'?referenced.revision:referenced?.requestRevision??before.requestRevision,warehouseId:content.warehouseId??before.warehouseId,note:content.note,code:content.invoiceNumber||before.code,dueDate:content.issuedDate,confirmedBy:user.displayName,confirmedAt:new Date().toISOString(),totals:{...before.totals,total:invoiceTotal(content),shipping:content.fee},delivery:{...before.delivery,deliveryDate:content.issuedDate||before.delivery.deliveryDate,customer:content.buyerName,address:content.buyerAddress,recipient:content.recipient,recipientPhone:content.recipientPhone},lines:revisedLines};
   if(['RECEIPT','ISSUE'].includes(before.kind)&&before.state!=='DRAFT'){
    const cells=await invoiceStockCells(sql,'FLOW',invoice.id),targets:InvoiceStockTarget[]=cancel||before.state==='LEGACY'&&!cells.length?[]:[...productQuantities(content)].map(([productId,quantity])=>({warehouseId:after.warehouseId,productId,quantity:before.kind==='ISSUE'?-quantity:quantity}));
    impact.stock=await adjustInvoiceStock(sql,user,'FLOW',invoice.id,cells,targets,d.reason,before.salesOrderId);

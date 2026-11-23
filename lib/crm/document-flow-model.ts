@@ -4,6 +4,7 @@ export type FlowLine = {
   productId:string; sku:string; name:string; unit:string; quantity:string;
   ordered:string; shipped:string; received:string; difference:string;
   unitPrice:string; amount:string; discount?:string; tax?:string; note:string;
+  extra?:true;
   listUnitPrice?:string; discountPercent?:string; discountAmount?:string;
   listLineTotal?:string; vatRate?:string; catalogVatRate?:string; vatAmount?:string; grossLineTotal?:string;
 };

@@ -2150,6 +2150,7 @@ export async function handleAccountantWorkflowAction(
     const kind=action==='create-factory-order'?'REQUEST':action==='create-factory-dispatch'?'DISPATCH':action==='create-warehouse-reconciliation'?'RECEIPT':'ISSUE';
     assertFlowRole(user,kind);
     const lines=Array.isArray(input.lines)?input.lines as Record<string,unknown>[]:[];
+    if(lines.some(line=>line.extra!==undefined)&&!z.uuid().safeParse(input.idempotencyKey).success)throw new CrmError('IDEMPOTENCY_KEY_REQUIRED',400);
     if(kind==='ISSUE'){
       if(input.issuePurpose==='SALE'&&!z.uuid().safeParse(input.idempotencyKey).success)throw new CrmError('IDEMPOTENCY_KEY_REQUIRED',400);
       const forbidden=['unitPrice','listUnitPrice','netUnitPrice','costUnitPrice','discountAmount','discount','discountType','amount','lineTotal','tax'];
@@ -2159,7 +2160,7 @@ export async function handleAccountantWorkflowAction(
       kind,warehouseId:input.warehouseId||undefined,factoryMembershipId:input.factoryMembershipId||undefined,
       parentId:input.parentId||input.parentInvoiceId||input.dispatchInvoiceId||undefined,clearanceId:input.clearanceId||undefined,
       ...(kind==='ISSUE'?{issuePurpose:input.issuePurpose,saleCustomerId:input.saleCustomerId,shippingFee:input.shippingFee,includeVat:input.includeVat}:{}),
-      lines:lines.map(l=>({productId:l.productId,quantity:String(l.quantity??(kind==='REQUEST'?l.orderedQty:kind==='DISPATCH'?l.dispatchedQty:l.receivedQty)??''),note:String(l.note??''),...(kind==='ISSUE'&&l.discountPercent!==undefined?{discountPercent:l.discountPercent}:{})})),
+      lines:lines.map(l=>({productId:l.productId,quantity:String(l.quantity??(kind==='REQUEST'?l.orderedQty:kind==='DISPATCH'?l.dispatchedQty:l.receivedQty)??''),note:String(l.note??''),...(l.extra!==undefined?{extra:l.extra}:{}),...(kind==='ISSUE'&&l.discountPercent!==undefined?{discountPercent:l.discountPercent}:{})})),
       note:String(input.note??''),delivery:input.delivery??{},confirm:input.confirm!==false,
       idempotencyKey:input.idempotencyKey||randomUUID(),
     });

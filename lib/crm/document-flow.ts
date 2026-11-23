@@ -25,7 +25,7 @@ const inputSchema=z.object({
   dueDate:z.union([z.literal(''),z.iso.date()]).default(''),note:z.string().trim().max(2000).default(''),
   issuePurpose:z.enum(['SALE','SAMPLE','GIFT','OTHER']).optional(),saleCustomerId:uuid.optional(),
   shippingFee:z.string().regex(/^\d{1,30}$/).optional(),includeVat:z.boolean().optional(),
-  lines:z.array(z.object({productId:uuid,quantity,discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),
+  lines:z.array(z.object({productId:uuid,quantity,extra:z.literal(true).optional().describe('Only for a DISPATCH line whose active catalog product is absent from the linked request. A RECEIPT inherits this flag from the confirmed dispatch.'),discountPercent:z.union([z.string(),z.number()]).transform(normalizeDiscountPercent).optional().describe('Per-product discount percentage, 0 through 100, up to four decimal places. Defaults to zero for a new line. Server freezes catalog list price and computes net unit price HALF_UP to VND; no cash discount or editable net unit price.'),note:z.string().trim().max(500).default('')}).strict()).min(1).max(300),
   delivery:z.record(z.string().max(60),z.string().trim().max(1000)).default({}),
   confirm:z.boolean().default(false),idempotencyKey:uuid,
 }).strict();
@@ -88,12 +88,13 @@ async function sourceSnapshot(sql:Sql,user:Principal,id:string,kind:FlowKind){
 }
 async function shippedQuantities(sql:Sql,requestId:string){
   const rows=(await sql.query<{flow_payload:FlowSnapshot}>("SELECT flow_payload FROM cohamy_crm.factory_invoices WHERE parent_id=$1 AND stage='FACTORY_DISPATCH' AND workflow_state='CONFIRMED' ORDER BY id",[requestId])).rows;
-  const sums=new Map<string,bigint>();for(const r of rows)for(const l of r.flow_payload.lines)sums.set(l.productId,(sums.get(l.productId)??0n)+fixed(l.quantity));return sums;
+  const sums=new Map<string,bigint>();for(const r of rows)for(const l of r.flow_payload.lines)if(!l.extra)sums.set(l.productId,(sums.get(l.productId)??0n)+fixed(l.quantity));return sums;
 }
 function plainLine(p:{id:string;sku:string;name:string;stock_unit:string},q:string):FlowLine{return {productId:p.id,sku:p.sku,name:p.name,unit:p.stock_unit,quantity:q,ordered:q,shipped:'0',received:'0',difference:'0',unitPrice:'0',amount:'0',note:''};}
 
 async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,existing?:FlowRow):Promise<FlowSnapshot>{
   assertFlowRole(user,d.kind);
+  if(d.kind!=='DISPATCH'&&d.lines.some(l=>l.extra))throw new CrmError('EXTRA_ONLY_FACTORY_DISPATCH',400);
   if(new Set(d.lines.map(l=>l.productId)).size!==d.lines.length)throw new CrmError('DUPLICATE_PRODUCT',400);
   if(d.lines.some(l=>fixed(l.quantity)===0n)&&d.kind!=='RECEIPT')throw new CrmError('QUANTITY_REQUIRED',400);
   const id=existing?.id??randomUUID(),old=existing?.flow_payload;
@@ -129,7 +130,21 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
     const sums=d.kind==='DISPATCH'?await shippedQuantities(sql,source.id):new Map<string,bigint>();
     if(d.kind==='RECEIPT'&&(await sql.query("SELECT id FROM cohamy_crm.factory_invoices WHERE parent_id=$1 AND stage='WAREHOUSE_RECONCILIATION' AND workflow_state='CONFIRMED'",[source.id])).rows.length)throw new CrmError('ALREADY_RECEIVED',409);
     for(const l of d.lines){
-      const original=source.lines.find(x=>x.productId===l.productId);if(!original)throw new CrmError('PRODUCT_OUTSIDE_REQUEST',409);
+      const original=source.lines.find(x=>x.productId===l.productId);
+      if(l.extra){
+        if(original)throw new CrmError('EXTRA_ALREADY_REQUESTED',409);
+        const product=(await sql.query<{id:string;sku:string;name:string;stock_unit:string}>(
+          'SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE id=$1 AND active FOR SHARE',[l.productId]
+        )).rows[0];
+        if(!product)throw new CrmError('PRODUCT_INVALID',400);
+        if(!product.stock_unit?.trim())throw new CrmError('PRODUCT_STOCK_UNIT_REQUIRED',409);
+        const saved=old?.lines.find(line=>line.extra&&line.productId===l.productId);
+        if(saved&&saved.unit!==product.stock_unit)throw new CrmError('PRODUCT_STOCK_UNIT_CHANGED',409);
+        const identity=saved?{...product,name:saved.name,sku:saved.sku}:product;
+        lines.push({...plainLine(identity,l.quantity),extra:true,ordered:'0',shipped:l.quantity,note:l.note});
+        continue;
+      }
+      if(!original)throw new CrmError('PRODUCT_OUTSIDE_REQUEST',409);
       if(d.kind==='DISPATCH'&&fixed(l.quantity)>fixed(original.quantity)-(sums.get(l.productId)??0n))throw new CrmError('REQUEST_QUANTITY_EXCEEDED',409);
       if(d.kind==='RECEIPT'&&fixed(l.quantity)!==fixed(original.quantity)&&!l.note&&!d.note)throw new CrmError('DISCREPANCY_NOTE_REQUIRED',400);
       lines.push({...original,quantity:l.quantity,shipped:d.kind==='DISPATCH'?l.quantity:original.quantity,received:d.kind==='RECEIPT'?l.quantity:'0',difference:d.kind==='RECEIPT'?fixedText(fixed(l.quantity)-fixed(original.quantity)):'0',note:l.note});
@@ -210,7 +225,7 @@ async function prepare(sql:Sql,user:Principal,d:z.infer<typeof inputSchema>,exis
   return {id,code:old?.code??`${{REQUEST:'DN-NM',DISPATCH:'NM-XUAT',RECEIPT:'KHO-NHAP',ISSUE:'GH'}[d.kind]}-${vietnamBusinessDate(new Date())}-${id.slice(0,8).toUpperCase()}`,kind:d.kind,revision:existing?existing.workflow_version+1:1,state:'DRAFT',warehouseId,warehouseName:wh.name,warehouseCode:wh.code,factoryMembershipId,factoryName,sourceId,sourceCode,sourceRevision,salesOrderId,requestId:source?(d.kind==='DISPATCH'?source.id:source.requestId):requestId,requestCode:source?(d.kind==='DISPATCH'?source.code:source.requestCode):'',requestRevision:source?(d.kind==='DISPATCH'?source.revision:source.requestRevision??null):null,createdAt:old?.createdAt??new Date().toISOString(),createdBy:old?.createdBy??user.displayName,confirmedAt:null,confirmedBy:'',dueDate:d.dueDate,note:d.note,lines,delivery,totals,...(d.kind==='ISSUE'&&issuePurpose?{issuePurpose}:{}),...(sale?{sale}:{})};
 }
 
-function legacyLines(s:FlowSnapshot){return s.lines.map(l=>({productId:l.productId,sku:l.sku,name:l.name,unitLabel:l.unit,orderedQty:Number(l.ordered),dispatchedQty:Number(l.shipped),receivedQty:Number(l.received),discrepancyQty:Number(l.difference),factoryUnitPrice:0,lineTotal:0,receivedTotal:0,note:l.note,quantity:Number(l.quantity),unitPrice:Number(l.unitPrice),lineAmount:Number(l.amount),...(s.sale?.version===1?{quantity:l.quantity,unitPrice:l.unitPrice,lineAmount:l.amount,listUnitPrice:l.listUnitPrice,discountPercent:l.discountPercent,discountAmount:l.discountAmount,listLineTotal:l.listLineTotal,netLineTotal:l.amount,vatRate:l.vatRate,vatAmount:l.vatAmount,lineTotal:l.grossLineTotal}:{} )}));}
+function legacyLines(s:FlowSnapshot){return s.lines.map(l=>({productId:l.productId,sku:l.sku,name:l.name,unitLabel:l.unit,orderedQty:Number(l.ordered),dispatchedQty:Number(l.shipped),receivedQty:Number(l.received),discrepancyQty:Number(l.difference),factoryUnitPrice:0,lineTotal:0,receivedTotal:0,note:l.note,...(l.extra?{extra:true}:{}),quantity:Number(l.quantity),unitPrice:Number(l.unitPrice),lineAmount:Number(l.amount),...(s.sale?.version===1?{quantity:l.quantity,unitPrice:l.unitPrice,lineAmount:l.amount,listUnitPrice:l.listUnitPrice,discountPercent:l.discountPercent,discountAmount:l.discountAmount,listLineTotal:l.listLineTotal,netLineTotal:l.amount,vatRate:l.vatRate,vatAmount:l.vatAmount,lineTotal:l.grossLineTotal}:{} )}));}
 async function syncIssueSaleHead(sql:Sql,s:FlowSnapshot){
   if(s.kind!=='ISSUE'||s.sale?.version!==1)return;
   await sql.query('UPDATE cohamy_crm.warehouse_handover_invoices SET clearance_id=$1,sales_order_id=$2,request_id=$3,order_code=$4,recipient_name=$5,recipient_phone=$6,organization_id=$7,organization_name=$8,list_subtotal=$9,discount_amount=$10,net_subtotal=$11,vat_amount=$12,total_amount=$13,total_quantity=$14 WHERE id=$15',[s.sourceId,s.salesOrderId??null,s.requestId,s.sourceCode,s.delivery.recipient??'',s.delivery.recipientPhone??'',s.sale.customerOrganizationId,s.sale.customerName,s.totals.goods,s.totals.discount,s.totals.net,s.totals.vat,s.totals.total,fixedText(s.lines.reduce((n,l)=>n+fixed(l.quantity),0n)),s.id]);
@@ -287,7 +302,7 @@ async function confirm(sql:Sql,user:Principal,row:FlowRow){
   const old=row.flow_payload;if(!old)throw new CrmError('LEGACY_DOCUMENT_READ_ONLY',409);assertFlowRole(user,old.kind);
   if(row.workflow_state!=='DRAFT')throw new CrmError('DOCUMENT_LOCKED',409);
   // Revalidate against the locked source, including other confirmed installments.
-  let s=await prepare(sql,user,{id:row.id,kind:old.kind,version:row.workflow_version,warehouseId:old.warehouseId,factoryMembershipId:old.factoryMembershipId??undefined,parentId:old.kind==='ISSUE'?undefined:old.sourceId??undefined,clearanceId:old.kind==='ISSUE'?old.sourceId??undefined:undefined,dueDate:old.dueDate,note:old.note,issuePurpose:old.issuePurpose,...(old.sale?{saleCustomerId:old.sale.customerOrganizationId,shippingFee:old.sale.shippingFee,includeVat:old.sale.includeVat}:{}),lines:old.lines.map(l=>({productId:l.productId,quantity:l.quantity,note:l.note,...(old.sale?{discountPercent:l.discountPercent}:{} )})),delivery:old.kind==='ISSUE'&&old.sourceId?Object.fromEntries(Object.entries(old.delivery).filter(([k])=>k!=='customer')):old.delivery,confirm:true,idempotencyKey:randomUUID()},row);
+  let s=await prepare(sql,user,{id:row.id,kind:old.kind,version:row.workflow_version,warehouseId:old.warehouseId,factoryMembershipId:old.factoryMembershipId??undefined,parentId:old.kind==='ISSUE'?undefined:old.sourceId??undefined,clearanceId:old.kind==='ISSUE'?old.sourceId??undefined:undefined,dueDate:old.dueDate,note:old.note,issuePurpose:old.issuePurpose,...(old.sale?{saleCustomerId:old.sale.customerOrganizationId,shippingFee:old.sale.shippingFee,includeVat:old.sale.includeVat}:{}),lines:old.lines.map(l=>({productId:l.productId,quantity:l.quantity,note:l.note,...(old.kind==='DISPATCH'&&l.extra?{extra:true as const}:{}),...(old.sale?{discountPercent:l.discountPercent}:{} )})),delivery:old.kind==='ISSUE'&&old.sourceId?Object.fromEntries(Object.entries(old.delivery).filter(([k])=>k!=='customer')):old.delivery,confirm:true,idempotencyKey:randomUUID()},row);
   s.revision=row.workflow_version;s.state='CONFIRMED';s.confirmedAt=new Date().toISOString();s.confirmedBy=user.displayName;
   if(s.kind==='ISSUE'){
     for(const k of ['giver','recipient','recipientPhone','address','deliveryDate','carrier'])if(!s.delivery[k])throw new CrmError(`DELIVERY_REQUIRED_${k}`,400);
@@ -343,7 +358,9 @@ export async function flowWorkspace(user:Principal){
     rows<FlowRow>(`SELECT f.* FROM cohamy_crm.factory_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${factoryWhere}) AND f.workflow_state<>'CANCELLED' ORDER BY f.created_at DESC LIMIT 500`,params),
     isFactory?[]:rows<FlowRow>(`SELECT f.* FROM cohamy_crm.warehouse_handover_invoices f JOIN cohamy_crm.warehouses w ON w.id=f.warehouse_id WHERE (${scope.sql}) AND f.workflow_state<>'CANCELLED' ORDER BY f.created_at DESC LIMIT 500`,scope.params),
     isFactory?[]:rows<{id:string;code:string;name:string}>(`SELECT w.id,w.code,w.name FROM cohamy_crm.warehouses w WHERE w.active AND (${scope.sql}) ORDER BY w.code`,scope.params),
-    user.role==='ADMIN'||isWarehouseRole(user.role)?rows<{id:string;sku:string;name:string;stock_unit:string;retailPrice:string|null;vatRate:string}>('SELECT id,sku,name,stock_unit,retail_price::text AS "retailPrice",vat_rate::text AS "vatRate" FROM cohamy_crm.products WHERE active ORDER BY sku'):[],
+    isFactory?rows<{id:string;sku:string;name:string;stock_unit:string;retailPrice:null;vatRate:string}>(
+      `SELECT id,sku,name,stock_unit,NULL::text AS "retailPrice",'0'::text AS "vatRate" FROM cohamy_crm.products WHERE active ORDER BY name,id`
+    ):user.role==='ADMIN'||isWarehouseRole(user.role)?rows<{id:string;sku:string;name:string;stock_unit:string;retailPrice:string|null;vatRate:string}>('SELECT id,sku,name,stock_unit,retail_price::text AS "retailPrice",vat_rate::text AS "vatRate" FROM cohamy_crm.products WHERE active ORDER BY sku'):[],
     user.role==='ADMIN'?rows<{id:string;name:string}>("SELECT m.id,u.display_name AS name FROM cohamy_crm.memberships m JOIN cohamy_crm.users u ON u.id=m.user_id WHERE m.organization_id=$1 AND m.role='FACTORY' AND m.active AND u.active ORDER BY u.display_name",[user.organizationId]):[],
     isFactory?[]:rows<{warehouse_id:string;product_id:string;sku:string;name:string;stock_unit:string;on_hand:string;reserved:string;opening:string;received:string;issued:string}>(`SELECT b.warehouse_id,b.product_id,p.sku,p.name,p.stock_unit,sum(b.on_hand)::text AS on_hand,sum(b.reserved)::text AS reserved,(sum(b.on_hand)-COALESCE(m.delta,0))::text AS opening,COALESCE(m.received,0)::text AS received,COALESCE(m.issued,0)::text AS issued FROM cohamy_crm.inventory_balances b JOIN cohamy_crm.warehouses w ON w.id=b.warehouse_id JOIN cohamy_crm.products p ON p.id=b.product_id LEFT JOIN (SELECT i.warehouse_id,i.product_id,sum(i.quantity) AS delta,sum(GREATEST(i.quantity,0)) AS received,sum(GREATEST(-i.quantity,0)) AS issued FROM cohamy_crm.inventory_movements i JOIN cohamy_crm.warehouses w ON w.id=i.warehouse_id WHERE (${scope.sql}) GROUP BY i.warehouse_id,i.product_id) m ON m.warehouse_id=b.warehouse_id AND m.product_id=b.product_id WHERE (${scope.sql}) GROUP BY b.warehouse_id,b.product_id,p.sku,p.name,p.stock_unit,m.delta,m.received,m.issued ORDER BY p.sku`,scope.params),
     // The client only needs delivery fields. Pricing policies/full quote versions stay server-side.
@@ -396,7 +413,12 @@ export async function amendFlowDocument(user:Principal,input:unknown){
     const deltas=new Map<string,bigint>();let after:FlowSnapshot={...s,revision:s.revision+1,note:d.note,dueDate:d.dueDate??s.dueDate,confirmedBy:user.displayName,confirmedAt:new Date().toISOString(),lines:s.lines.map(l=>{const q=d.lines.find(x=>x.productId===l.productId)!.quantity;if(s.kind==='REQUEST'&&fixed(q)<(sums.get(l.productId)??0n))throw new CrmError('BELOW_ALREADY_SHIPPED',409);deltas.set(l.productId,(fixed(q)-fixed(l.quantity))*(s.kind==='ISSUE'?-1n:1n));return {...l,quantity:q,ordered:s.kind==='REQUEST'?q:l.ordered,shipped:s.kind==='DISPATCH'?q:l.shipped,received:s.kind==='RECEIPT'?q:l.received,difference:s.kind==='RECEIPT'?fixedText(fixed(q)-fixed(l.shipped)):l.difference,amount:s.kind==='ISSUE'&&l.unitPrice!==''?lineAmount(l.unitPrice,q,'HALF_UP'):l.amount};})};
     if(s.kind==='DISPATCH'&&[...deltas.values()].some(x=>x!==0n)){
       const source=await sourceSnapshot(sql,user,s.sourceId!,'REQUEST'),all=await shippedQuantities(sql,source.id);
-      for(const l of after.lines)if((all.get(l.productId)??0n)+(deltas.get(l.productId)??0n)>fixed(source.lines.find(x=>x.productId===l.productId)!.quantity))throw new CrmError('REQUEST_QUANTITY_EXCEEDED',409);
+      for(const line of after.lines){
+        if(line.extra)continue;
+        const requested=source.lines.find(product=>product.productId===line.productId);
+        if(!requested)throw new CrmError('PRODUCT_OUTSIDE_REQUEST',409);
+        if((all.get(line.productId)??0n)+(deltas.get(line.productId)??0n)>fixed(requested.quantity))throw new CrmError('REQUEST_QUANTITY_EXCEEDED',409);
+      }
     }
     if(s.kind==='ISSUE'&&s.sale?.version===1&&d.delivery){
       const allowed=['giver','giverPhone','recipient','recipientPhone','address','deliveryDate','deliveryTime','carrier','packages','condition','shortage','note'];
@@ -410,6 +432,10 @@ export async function amendFlowDocument(user:Principal,input:unknown){
     let inventoryId:string|null=null;if((s.kind==='RECEIPT'||s.kind==='ISSUE')&&[...deltas.values()].some(x=>x!==0n))inventoryId=await moveStock(sql,user,after,deltas,d.reason);
     await sql.query("SELECT set_config('cohamy.document_amend','on',true)");
     const file=await archive(sql,user,after,d.reason);await sql.query(`UPDATE cohamy_crm.${table(s.kind)} SET flow_payload=$1::jsonb,workflow_version=$2,lines=$3::jsonb,note=$4,updated_at=now() WHERE id=$5`,[JSON.stringify(after),after.revision,JSON.stringify(legacyLines(after)),after.note,s.id]);
+    if(after.kind==='DISPATCH'&&after.lines.some(line=>line.extra)){
+      const total=fixedText(after.lines.reduce((sum,line)=>sum+fixed(line.shipped),0n));
+      await sql.query('UPDATE cohamy_crm.factory_invoices SET total_dispatched_qty=$1 WHERE id=$2',[total,after.id]);
+    }
     await audit(sql,user.id,'document-flow.amended',s.id,{before:s,after,reason:d.reason,inventoryId});await enqueueDocumentMail(sql,{event:'document.amended',snapshot:after,files:[{type:'FLOW',id:file.revisionId,filename:file.filename,checksum:file.checksum}]});
     const result={id:s.id,code:s.code,version:after.revision,state:after.state};await record(sql,user,d.idempotencyKey,hash,result);return result;
   });
