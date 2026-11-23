@@ -17,6 +17,10 @@ function money(v: string | number | null | undefined): string {
  return `${new Intl.NumberFormat('vi-VN').format(n)} ₫`;
 }
 
+function costMoney(value:string):string{
+ return `${BigInt(value).toLocaleString('vi-VN')} ₫`;
+}
+
 function statusVi(status: string): string {
  const map: Record<string, string> = {
   CONFIRMED: 'Đã xác nhận',
@@ -805,6 +809,8 @@ export function InventoryMatrixSheet({
  const pendingRequest=useRef<AbortController|null>(null);
  useEffect(()=>()=>pendingRequest.current?.abort(),[]);
  const [focusedColKey, setFocusedColKey] = useState<string | null>(null);
+ const showCostPrices=data.warehouseValuations!==undefined||data.rows.some(row=>row.costPrice!==undefined);
+ const showCostValues=data.warehouseValuations!==undefined;
 
  const reloadMatrix = async (overrides?: Record<string, string>) => {
   pendingRequest.current?.abort();const controller=new AbortController();pendingRequest.current=controller;setLoading(true);setLoadError('');
@@ -828,6 +834,27 @@ export function InventoryMatrixSheet({
  };
 
  const matrixColumns = useMemo<SpreadsheetColumn<MatrixProductRow>[]>(() => {
+  const costColumns:SpreadsheetColumn<MatrixProductRow>[]=[];
+  if(showCostPrices)costColumns.push({
+   key:'costPrice',
+   label:'Giá vốn / Đơn vị gốc',
+   type:'money',
+   unitGroup:'VND',
+   summable:false,
+   width:162,
+   getValue:row=>row.costPrice,
+   renderCell:row=>row.costPrice?costMoney(row.costPrice):<span className="muted">Chưa có giá vốn</span>,
+  });
+  if(showCostValues)costColumns.push({
+   key:'costStockValue',
+   label:'Giá trị tồn theo giá vốn',
+   type:'money',
+   unitGroup:'VND',
+   summable:true,
+   width:168,
+   getValue:row=>row.costStockValue,
+   renderCell:row=>row.costStockValue?<strong>{costMoney(row.costStockValue)}</strong>:<span className="muted">Chưa xác định</span>,
+  });
   const dynamicCols: SpreadsheetColumn<MatrixProductRow>[] = data.dynamicColumns.map(col => ({
    key: `dyn_${col.key}`,
    label: `Xuất: ${col.label} (${col.subLabel.split(' · ')[0]})`,
@@ -967,6 +994,7 @@ export function InventoryMatrixSheet({
      </div>
     ),
    },
+   ...costColumns,
    {
     key: 'reservedQty',
     label: 'Đang giữ đơn',
@@ -997,7 +1025,7 @@ export function InventoryMatrixSheet({
     renderCell: r => money(r.retailStockValue),
    },
   ];
- }, [data.dynamicColumns]);
+ }, [data.dynamicColumns,showCostPrices,showCostValues]);
 
  const movementColumns = useMemo<SpreadsheetColumn<MatrixMovementItem>[]>(
   () => [
@@ -1255,6 +1283,19 @@ export function InventoryMatrixSheet({
    </div>
    {workbench&&advancedFilters&&<div className="crm-sheet-server-filters crm-sheet-advanced-filters">{advancedFilterFields}</div>}
    {loadError&&<div className="crm-workbench-load-error" role="alert">{loadError}<button type="button" className="crm-sheet-tool-btn" disabled={loading} onClick={()=>void reloadMatrix()}>Thử lại</button></div>}
+   {tab==='matrix'&&Boolean(data.warehouseValuations?.length)&&(
+    <div className="crm-table-wrap" role="region" aria-label="Giá trị hàng tồn theo kho" tabIndex={0}>
+     <table className="data-table">
+      <caption className="sr-only">Giá trị hàng tồn theo giá vốn hiện tại, gồm mọi vị trí lưu kho</caption>
+      <thead><tr><th scope="col">Kho</th><th scope="col" className="align-right">Giá trị hàng tồn theo giá vốn hiện tại</th><th scope="col">Độ đầy đủ</th></tr></thead>
+      <tbody>{data.warehouseValuations?.map(warehouse=><tr key={warehouse.warehouseId}>
+       <th scope="row">{warehouse.warehouseName}</th>
+       <td className="align-right"><strong>{costMoney(warehouse.costStockValue??warehouse.knownCostStockValue)}</strong></td>
+       <td>{warehouse.missingCostProducts>0?`Tạm tính · ${warehouse.missingCostProducts} mặt hàng tồn chưa có giá vốn`:'Đủ giá vốn hàng tồn'}</td>
+      </tr>)}</tbody>
+     </table>
+    </div>
+   )}
 
    {tab === 'matrix' ? (
     <CrmSpreadsheet
@@ -1262,7 +1303,7 @@ export function InventoryMatrixSheet({
      sheetKey="inventory_matrix_sheet"
      presentation={workbench?'workbench':'standard'}
      defaultDensity={workbench?'comfortable':'compact'}
-     defaultVisibleKeys={workbench?['productName','caseRuleLabel','openingQty','receiptQty','totalOutboundQty','closingOnHand','reservedQty','availableQty']:undefined}
+     defaultVisibleKeys={workbench?['productName','caseRuleLabel','openingQty','receiptQty','totalOutboundQty','closingOnHand',...(showCostPrices?['costPrice']:[]),...(showCostValues?['costStockValue']:[]),'reservedQty','availableQty']:undefined}
      searchPlaceholder={workbench?'Tìm theo tên sản phẩm…':undefined}
      tabs={[
       {key: 'matrix', label: workbench?'Tổng hợp tồn kho':'1. Ma trận Nhập – Xuất – Tồn (Theo SKU & Cột xuất động)', count: data.rows.length},
@@ -1311,6 +1352,14 @@ export function InventoryMatrixSheet({
           <span>Khả dụng xuất ngay</span>
           <strong className="crm-text-positive">{row.availableQty} gói</strong>
          </div>
+         {row.costPrice!==undefined&&<div>
+          <span>Giá vốn / Đơn vị gốc</span>
+          <strong>{row.costPrice?costMoney(row.costPrice):'Chưa có giá vốn'}</strong>
+         </div>}
+         {row.costStockValue!==undefined&&<div>
+          <span>Giá trị tồn theo giá vốn hiện tại</span>
+          <strong>{row.costStockValue?costMoney(row.costStockValue):'Chưa xác định'}</strong>
+         </div>}
         </div>
 
         <div className="crm-drawer-section">

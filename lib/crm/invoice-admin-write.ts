@@ -7,7 +7,8 @@ import {CrmError} from './permissions';
 import {commercialDigest,parseCommercial} from './commercial-common';
 import {fixed,fixedText,lineAmount,roundRatio} from './decimal';
 import {persistAdminFlowRevision} from './document-flow';
-import type {FlowSnapshot} from './document-flow-model';
+import type {FlowLine,FlowSnapshot} from './document-flow-model';
+import {applyFactoryCostTotals} from './factory-cost';
 import type {SalesVersion,SalesSnapshot} from './sales-orders';
 import type {PricedLine} from './pricing-model';
 import {invoiceActionSchema,type AdminInvoice,type InvoiceAction,type InvoiceContent,type InvoiceKind} from './invoice-admin-model';
@@ -196,22 +197,43 @@ export async function applyInvoiceAction(sql:Sql,user:Principal,invoice:AdminInv
    }
   }
   const products=(await sql.query<{id:string;sku:string;name:string;stock_unit:string}>('SELECT id,sku,name,stock_unit FROM cohamy_crm.products WHERE id=ANY($1::uuid[])',[content.lines.flatMap(l=>l.productId?[l.productId]:[])])).rows;
-  const revisedLines=cancel?before.lines:content.lines.map(line=>{
+  const factoryStockFlow=before.kind==='DISPATCH'||before.kind==='RECEIPT';
+  const hasFrozenCost=factoryStockFlow&&before.lines.some(line=>line.costUnitPrice!==undefined);
+  const revisedLines=cancel?before.lines:content.lines.map((line):FlowLine=>{
    const old=before.lines.find(item=>item.productId===line.productId);
    const sourceLine=referenced?.lines.find(item=>item.productId===line.productId);
+   const pricedLine=hasFrozenCost?(old??(before.kind==='RECEIPT'?sourceLine:undefined)):undefined;
    // Supplemental provenance is read from the saved dispatch, never supplied by an Admin edit.
    const extraLine=before.kind==='RECEIPT'?sourceLine:old;
    const received=before.kind==='RECEIPT'?line.quantity:old?.received??'0';
    const difference=before.kind==='RECEIPT'?fixedText(fixed(line.quantity)-fixed(sourceLine?.quantity??old?.shipped??'0')):old?.difference??'0';
+   let revised:FlowLine;
    if(extraLine?.extra===true){
     if([line.unitPrice,line.discount,line.tax].some(value=>BigInt(value)!==0n))throw new CrmError('FINANCIAL_FIELD_FORBIDDEN',403);
-    return {...extraLine,quantity:line.quantity,ordered:'0',shipped:before.kind==='DISPATCH'?line.quantity:extraLine.quantity,received,difference,note:line.note};
+    revised={...extraLine,quantity:line.quantity,ordered:'0',shipped:before.kind==='DISPATCH'?line.quantity:extraLine.quantity,received,difference,note:line.note};
+   }else{
+    const product=products.find(item=>item.id===line.productId);
+    const unit=pricedLine?.unit??product?.stock_unit;
+    if(!product||!unit)throw new CrmError('INVOICE_PRODUCT_REQUIRED',400);
+    revised={...old,productId:product.id,sku:product.sku,name:product.name,unit,quantity:line.quantity,ordered:before.kind==='REQUEST'?line.quantity:old?.ordered??line.quantity,shipped:before.kind==='DISPATCH'?line.quantity:old?.shipped??'0',received,difference,unitPrice:line.unitPrice,discount:line.discount,tax:line.tax,amount:invoiceLineAmount(line),note:line.note};
    }
-   const product=products.find(item=>item.id===line.productId);
-   if(!product?.stock_unit)throw new CrmError('INVOICE_PRODUCT_REQUIRED',400);
-   return {...old,productId:product.id,sku:product.sku,name:product.name,unit:product.stock_unit,quantity:line.quantity,ordered:before.kind==='REQUEST'?line.quantity:old?.ordered??line.quantity,shipped:before.kind==='DISPATCH'?line.quantity:old?.shipped??'0',received,difference,unitPrice:line.unitPrice,discount:line.discount,tax:line.tax,amount:invoiceLineAmount(line),note:line.note};
+   if(factoryStockFlow){
+    // A correction keeps the recorded cost, including an explicitly unknown cost.
+    // Do not attach the cost of a later dispatch revision to an old receipt.
+    delete revised.costAmount;
+    if(hasFrozenCost){
+     revised.costUnitPrice=pricedLine?.costUnitPrice??null;
+     if(pricedLine){
+      revised.sku=pricedLine.sku;
+      revised.name=pricedLine.name;
+      revised.unit=pricedLine.unit;
+     }
+    }else delete revised.costUnitPrice;
+   }
+   return revised;
   });
-  const after:FlowSnapshot={...before,revision:before.revision+1,state:cancel?'CANCELLED':before.state,sourceRevision:referenced?.revision??before.sourceRevision,sourceCode:referenced?.code??before.sourceCode,requestRevision:referenced?.kind==='REQUEST'?referenced.revision:referenced?.requestRevision??before.requestRevision,warehouseId:content.warehouseId??before.warehouseId,note:content.note,code:content.invoiceNumber||before.code,dueDate:content.issuedDate,confirmedBy:user.displayName,confirmedAt:new Date().toISOString(),totals:{...before.totals,total:invoiceTotal(content),shipping:content.fee},delivery:{...before.delivery,deliveryDate:content.issuedDate||before.delivery.deliveryDate,customer:content.buyerName,address:content.buyerAddress,recipient:content.recipient,recipientPhone:content.recipientPhone},lines:revisedLines};
+  const revised:FlowSnapshot={...before,revision:before.revision+1,state:cancel?'CANCELLED':before.state,sourceRevision:referenced?.revision??before.sourceRevision,sourceCode:referenced?.code??before.sourceCode,requestRevision:referenced?.kind==='REQUEST'?referenced.revision:referenced?.requestRevision??before.requestRevision,warehouseId:content.warehouseId??before.warehouseId,note:content.note,code:content.invoiceNumber||before.code,dueDate:content.issuedDate,confirmedBy:user.displayName,confirmedAt:new Date().toISOString(),totals:{...before.totals,total:invoiceTotal(content),shipping:content.fee},delivery:{...before.delivery,deliveryDate:content.issuedDate||before.delivery.deliveryDate,customer:content.buyerName,address:content.buyerAddress,recipient:content.recipient,recipientPhone:content.recipientPhone},lines:revisedLines};
+  const after=cancel?revised:applyFactoryCostTotals(revised);
   if(['RECEIPT','ISSUE'].includes(before.kind)&&before.state!=='DRAFT'){
    const cells=await invoiceStockCells(sql,'FLOW',invoice.id),targets:InvoiceStockTarget[]=cancel||before.state==='LEGACY'&&!cells.length?[]:[...productQuantities(content)].map(([productId,quantity])=>({warehouseId:after.warehouseId,productId,quantity:before.kind==='ISSUE'?-quantity:quantity}));
    impact.stock=await adjustInvoiceStock(sql,user,'FLOW',invoice.id,cells,targets,d.reason,before.salesOrderId);

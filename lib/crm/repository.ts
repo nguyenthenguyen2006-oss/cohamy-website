@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { database, type Sql } from "./db";
 import { audit, assertCurrentPrincipal } from "./auth";
-import { allPartners, assertPermission, CrmError, warehouseRoleRegion } from "./permissions";
+import { allPartners, assertPermission, can, CrmError, warehouseRoleRegion } from "./permissions";
 import { warehouseScope } from "./warehouse-scope";
 import { roles, type CatalogProduct, type Organization, type Principal, type Role, type Warehouse } from "./types";
 import bcrypt from "bcryptjs";
@@ -147,7 +147,8 @@ export async function updateOrganization(user: Principal, id: string, input: unk
 export async function listCatalog(user: Principal, q = "") {
   assertPermission(user, "catalog.read");
   const db = await database();
-  const data = await db.query<CatalogProduct>(`SELECT id,website_id,sku,name,category,weight_label,retail_price::text,translations,mapping_status,stock_unit,units_per_case,active,version FROM cohamy_crm.products WHERE (name ILIKE $1 OR sku ILIKE $1) AND active ORDER BY sku`, [`%${q.slice(0, 120)}%`]);
+  const costColumn = can(user, "inventory.cost.read") ? ",CASE WHEN cost_price>0 THEN cost_price::text END AS cost_price" : "";
+  const data = await db.query<CatalogProduct>(`SELECT id,website_id,sku,name,category,weight_label,retail_price::text,translations,mapping_status,stock_unit,units_per_case,active,version${costColumn} FROM cohamy_crm.products WHERE (name ILIKE $1 OR sku ILIKE $1) AND active ORDER BY sku`, [`%${q.slice(0, 120)}%`]);
   return data.rows;
 }
 export async function ensureRegionalWarehouseAssignments(tx: Sql, organizationId: string, membershipId: string, role: Role | string) {

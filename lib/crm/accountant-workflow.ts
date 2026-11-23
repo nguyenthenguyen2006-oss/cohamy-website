@@ -4680,7 +4680,7 @@ export async function handleAccountantWorkflowAction(
 
       const prod = (
         await sql.query<{id: string; sku: string}>(
-          'SELECT id, sku FROM cohamy_crm.products WHERE id::text = $1 OR sku = $1 LIMIT 1',
+          'SELECT id, sku FROM cohamy_crm.products WHERE id::text = $1 OR sku = $1 LIMIT 1 FOR UPDATE',
           [productId]
         )
       ).rows[0];
@@ -4691,7 +4691,7 @@ export async function handleAccountantWorkflowAction(
          SET retail_price = $1,
              cost_price = COALESCE($2, cost_price),
              vat_rate = COALESCE($3, vat_rate),
-             updated_at = now()
+             version = version + 1
          WHERE id = $4`,
         [String(newRetailPrice), newCostPrice !== null ? String(newCostPrice) : null, newVatRate !== null ? String(newVatRate) : null, prod.id]
       );

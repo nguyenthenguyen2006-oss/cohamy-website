@@ -44,6 +44,14 @@
 .cohamy-crm .crm-flow-money-facts>div{min-width:0}
 .cohamy-crm .crm-flow-money-facts dt{font-size:12px;color:var(--crm-ink-secondary,#44403c)}
 .cohamy-crm .crm-flow-money-facts dd{margin:4px 0 0;font-weight:700;overflow-wrap:anywhere}
+.cohamy-crm .crm-document-flow .crm-flow-stock-cost{margin:16px 0;padding-block:12px;border-block:1px solid var(--crm-border,#eadbc5)}
+.cohamy-crm .crm-document-flow .crm-flow-stock-cost h3{margin:0 0 6px;font-size:14px}
+.cohamy-crm .crm-document-flow .crm-flow-stock-cost p{margin:6px 0 12px;font-size:12px;color:var(--crm-text-muted,#57534e)}
+.cohamy-crm .crm-document-flow .crm-flow-stock-cost small{max-width:26ch;font-weight:400;color:var(--crm-text-muted,#57534e)}
+.cohamy-crm .crm-document-flow .crm-flow-movement-cost{min-width:560px}
+.cohamy-crm .crm-document-flow .crm-flow-movement-cost :is(th,td):nth-child(n+3),
+.cohamy-crm .crm-document-flow .crm-flow-movement-cost tfoot td{text-align:right;white-space:nowrap}
+.cohamy-crm .crm-document-flow .crm-flow-cost-number{display:block;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
 @media(max-width:600px){.cohamy-crm .crm-flow-money-facts{grid-template-columns:minmax(0,1fr)}.cohamy-crm .crm-flow-money-facts>div{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.cohamy-crm .crm-flow-money-facts dd{text-align:right}.cohamy-crm .crm-flow-sale-options{padding:8px}}
 
 .crm-document-flow .crm-brevo-remove-key{display:flex;align-items:center;justify-content:flex-start;gap:8px;margin:12px 0}

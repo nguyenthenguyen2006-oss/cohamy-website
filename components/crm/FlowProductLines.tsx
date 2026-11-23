@@ -42,6 +42,8 @@ export function FlowProductLines({data,draft,onChange}:{data:Data;draft:Draft;on
  const lines=catalogue?withProductCatalogue(draft.lines,eligible,l=>l.productId,id=>({productId:id,quantity:'',note:'',...(sale?{discountPercent:'0'}:{})})):draft.lines;
  const change=(productId:string,patch:Partial<Draft['lines'][number]>)=>onChange({...draft,lines:lines.map(l=>l.productId===productId?{...l,...patch}:l)});
  const dispatch=draft.kind==='DISPATCH';
+ const receipt=draft.kind==='RECEIPT';
+ const showCost=dispatch||receipt;
  const excludedProducts=new Set([...draft.lines,...(source?.lines??[])].map(line=>line.productId));
  const extraProducts=dispatch&&source?data.products.filter(p=>p.stock_unit?.trim()&&!excludedProducts.has(p.id)).sort((a,b)=>a.name.localeCompare(b.name,'vi')):[];
  const selectedExtra=extraProducts.find(product=>product.id===extraProductId);
@@ -72,7 +74,21 @@ export function FlowProductLines({data,draft,onChange}:{data:Data;draft:Draft;on
   }catch{financial={listUnitPrice:line.listUnitPrice??product?.retailPrice??undefined};}
   const discountPercent=sale?line.discountPercent??'0':ordered?.discountPercent===undefined?line.discountPercent:String(ordered.discountPercent);
   const name=original?.name??String(ordered?.name??product?.name??'Sản phẩm trong chứng từ nguồn');
-  return {...line,...financial,discountPercent,key:line.productId,name,extra,detail:extra?<span className="crm-flow-extra-row"><span>Gửi bổ sung</span>{dispatch&&<button type="button" className="button button--secondary" aria-label={`Bỏ ${name} khỏi phiếu`} onClick={()=>removeExtra(line.productId)}>Bỏ khỏi phiếu</button>}</span>:undefined,sku:original?.sku??String(ordered?.sku??product?.sku??''),unit:original?.unit??String(ordered?.stockUnit??product?.stock_unit??''),selected:line.quantity.trim()!==''&&(draft.kind==='RECEIPT'||Number(line.quantity)!==0),remaining,shipped:original?.quantity,available:stock?fixedText(fixed(stock.on_hand)-fixed(stock.reserved)):'0'};
+  const unit=original?.unit??String(ordered?.stockUnit??product?.stock_unit??'');
+  let costUnitPrice:string|null=null;
+  let costAmount:string|undefined;
+  if(showCost){
+   const sourceCost=receipt?original?.costUnitPrice:undefined;
+   const currentCost=product?.stock_unit===unit?product?.costUnitPrice??null:null;
+   costUnitPrice=sourceCost!==undefined?sourceCost:line.costUnitPrice!==undefined?line.costUnitPrice:currentCost;
+   if(line.quantity.trim()!==''){
+    try{
+     if(fixed(line.quantity)===0n)costAmount='0';
+     else if(costUnitPrice!==null)costAmount=lineAmount(costUnitPrice,line.quantity,'HALF_UP');
+    }catch{/* The amount is unavailable while the quantity is invalid. */}
+   }
+  }
+  return {...line,...financial,discountPercent,key:line.productId,name,extra,detail:extra?<span className="crm-flow-extra-row"><span>Gửi bổ sung</span>{dispatch&&<button type="button" className="button button--secondary" aria-label={`Bỏ ${name} khỏi phiếu`} onClick={()=>removeExtra(line.productId)}>Bỏ khỏi phiếu</button>}</span>:undefined,sku:original?.sku??String(ordered?.sku??product?.sku??''),unit,selected:line.quantity.trim()!==''&&(receipt||Number(line.quantity)!==0),remaining,shipped:original?.quantity,available:stock?fixedText(fixed(stock.on_hand)-fixed(stock.reserved)):'0',costUnitPrice,costAmount};
  });
  return <div className={priced?'crm-flow-priced-lines':undefined} ref={gridRoot}>
   {dispatch&&<div className="work-actions crm-flow-extra-picker">
@@ -89,6 +105,10 @@ export function FlowProductLines({data,draft,onChange}:{data:Data;draft:Draft;on
   ...(['DISPATCH','ISSUE'].includes(draft.kind)&&!catalogue?[{key:'remaining',label:'Còn phải giao',render:(row:typeof rows[number])=>row.extra?'—':row.remaining}]:[]),
   ...(draft.kind==='ISSUE'?[{key:'available',label:'Khả dụng tại kho',render:(row:typeof rows[number])=>row.available}]:[]),
   {key:'quantity',label:draft.kind==='RECEIPT'?'Thực nhận':draft.kind==='DISPATCH'?'Thực gửi':draft.kind==='ISSUE'?'Thực xuất':'Số lượng đề nghị',render:row=><ProductQuantityInput aria-label={`Số lượng ${row.name}`} data-flow-line-product={dispatch?row.productId:undefined} value={row.quantity} required={draft.kind==='RECEIPT'} step={sale?'0.01':undefined} max={draft.kind==='RECEIPT'?undefined:row.remaining} quick={catalogue} onChange={e=>change(row.productId,{quantity:e.target.value})}/>},
+  ...(showCost?[
+   {key:'costUnitPrice',label:'Giá vốn / ĐVT',render:(row:typeof rows[number])=><span className="crm-flow-cost-number">{row.costUnitPrice===null?'Chưa có giá vốn':flowMoney(row.costUnitPrice)}</span>},
+   {key:'costAmount',label:'Thành tiền vốn',render:(row:typeof rows[number])=><output className="crm-flow-cost-number" aria-label={`Thành tiền vốn ${row.name}`}>{flowMoney(row.costAmount)}</output>},
+  ]:[]),
   ...(priced?[
    {key:'listUnitPrice',label:'Đơn giá gốc',render:(row:typeof rows[number])=><output aria-label={`Đơn giá gốc ${row.name}`}>{flowMoney(row.listUnitPrice)}</output>},
    {key:'discountPercent',label:'Chiết khấu (%)',render:(row:typeof rows[number])=>sale?<input aria-label={`Chiết khấu (%) ${row.name}`} type="number" inputMode="decimal" min="0" max="100" step="any" value={row.discountPercent??'0'} onChange={e=>change(row.productId,{discountPercent:e.target.value})}/>:<output>{row.discountPercent===undefined?'—':row.discountPercent+'%'}</output>},

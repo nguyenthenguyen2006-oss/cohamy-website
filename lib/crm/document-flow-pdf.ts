@@ -58,8 +58,43 @@ export async function renderFlowPdf(s:FlowSnapshot):Promise<Buffer>{
  doc.fontSize(16).text(flowLabels[s.kind].toLocaleUpperCase('vi'),left,y,{width});y+=30;
  const details=[`${s.code} · Phiên bản ${s.revision} · ${s.state==='CANCELLED'?'ĐÃ THU HỒI / HỦY HIỆU LỰC':s.state==='DRAFT'?'BẢN NHÁP':s.state==='LEGACY'?'CHỨNG TỪ CŨ':'ĐÃ XÁC NHẬN'}`,`Nhà máy: ${s.factoryName}`,`Kho nhận: ${s.warehouseName}`,`Nguồn: ${s.sourceCode||'—'} · Đề nghị: ${s.requestCode||s.code}`,`Người lập: ${s.createdBy} · ${s.createdAt}`,`Xác nhận: ${s.confirmedBy||'—'} · ${s.confirmedAt||'—'}`,`Ngày cần hàng: ${s.dueDate||'—'}`];
  doc.font('Body').fontSize(9).fillColor('#394C60');for(const line of details){doc.text(line,left,y,{width});y=doc.y+6;}y+=10;
+ if((s.kind==='DISPATCH'||s.kind==='RECEIPT')&&s.totals.costMissing!==undefined){
+  const columns=[
+   {label:'Tên hàng / Mã SP',width:205},
+   {label:'ĐVT',width:40},
+   {label:s.kind==='DISPATCH'?'Thực gửi':'Thực nhận',width:57},
+   {label:s.kind==='DISPATCH'?'Theo đề nghị':'Chênh lệch',width:63},
+   {label:'Giá vốn / ĐVT',width:78},
+   {label:'Tiền vốn (đ)',width:80},
+  ];
+  const drawCells=(values:string[],top:number)=>{let x=left;values.forEach((value,index)=>{
+   const column=columns[index];
+   doc.text(value,x+6,top,{width:column.width-12,align:index<2?'left':'right'});
+   x+=column.width;
+  });};
+  const header=()=>{doc.rect(left,y,width,26).fill('#182C43');doc.font('Bold').fontSize(8).fillColor('#FFFFFF');drawCells(columns.map(column=>column.label),y+7);y+=26;};
+  const body=()=>doc.font('Body').fontSize(8.5).fillColor('#394C60');
+  header();
+  for(const line of s.lines){
+   const label=`${line.name} · ${line.sku}${line.extra?'\nGửi bổ sung':''}${line.note?'\n'+line.note:''}`;
+   const cells=[label,line.unit,line.quantity,s.kind==='DISPATCH'?line.ordered:line.difference,line.costUnitPrice==null?'—':money(line.costUnitPrice),line.costAmount==null?'—':money(line.costAmount)];
+   body();
+   const height=Math.max(32,...cells.map((value,index)=>doc.heightOfString(value,{width:columns[index].width-12})+12));
+   if(y+height>770){doc.addPage();y=36;header();body();}
+   doc.rect(left,y,width,height).lineWidth(.5).stroke('#D9E2E9');
+   drawCells(cells,y+6);
+   y+=height;
+  }
+  if(y+55>770){doc.addPage();y=36;}
+  const total=s.totals.cost!==undefined
+   ? `Tổng giá vốn: ${money(s.totals.cost)} đ`
+   : `Giá vốn phần đã có đơn giá: ${money(s.totals.costKnown??'0')} đ · Thiếu giá vốn ${s.totals.costMissing} dòng`;
+  doc.font('Bold').fontSize(9).fillColor('#182C43').text(total,left,y+10,{width,align:'right'});
+  y=doc.y;
+ }else{
  const header=()=>{doc.rect(left,y,width,24).fill('#182C43');doc.font('Bold').fontSize(8).fillColor('#ffffff').text('SKU / Tên hàng',left+6,y+7,{width:245}).text('ĐVT',left+260,y+7,{width:45}).text('Số lượng',left+310,y+7,{width:64}).text('Số chuyển / Chênh lệch',left+382,y+7,{width:137});y+=24;};header();
  for(const l of s.lines){const lineLabel=`${l.sku} · ${l.name}${l.extra?'\nGửi bổ sung':''}${l.note?'\n'+l.note:''}`;doc.font('Body').fontSize(9);const h=Math.max(32,doc.heightOfString(lineLabel,{width:245})+12);if(y+h>770){doc.addPage();y=36;header();}doc.rect(left,y,width,h).lineWidth(.5).stroke('#D9E2E9');doc.fillColor('#394C60').text(lineLabel,left+6,y+6,{width:245}).text(l.unit,left+260,y+6,{width:45}).text(l.quantity,left+310,y+6,{width:64}).text(`${l.shipped} / ${l.difference}`,left+382,y+6,{width:135});y+=h;}
+ }
  if(y+60>780){doc.addPage();y=36;}doc.font('Body').fontSize(9).text(`Ghi chú: ${s.note||'—'}`,left,y+14,{width});
  const range=doc.bufferedPageRange();for(let i=0;i<range.count;i++){doc.switchToPage(i);doc.fontSize(8).fillColor('#6B7681').text(`${s.code} · v${s.revision} · Trang ${i+1}/${range.count}`,left,810,{width,lineBreak:false});}doc.end();return done;
 }

@@ -248,6 +248,54 @@ async function main() {
       await assertStock('0', '0');
     });
 
+    await check('Factory cost freezes by product, receipt uses actual quantity, and current warehouse value reports missing costs', async () => {
+      await db.query('UPDATE cohamy_crm.products SET cost_price=24000 WHERE id=$1',[requested.id]);
+      await db.query('UPDATE cohamy_crm.products SET cost_price=19000 WHERE id=$1',[extra.id]);
+      const source = await makeRequest();
+      await flow.acceptFactoryRequest(factory,{id:source.id,idempotencyKey:randomUUID()});
+      const made = await flow.saveFlowDocument(factory,{...dispatchInput(),parentId:source.id});
+      const valuedDraft = await flow.viewFlowDocument(factory,made.id);
+      assert.equal(valuedDraft.totals.cost,'210500');
+      assert.equal(valuedDraft.lines.find(line=>line.productId===extra.id)?.costAmount,'66500');
+      await db.query('UPDATE cohamy_crm.products SET cost_price=25000 WHERE id=$1',[requested.id]);
+      await db.query('UPDATE cohamy_crm.products SET cost_price=0 WHERE id=$1',[extra.id]);
+      const sent = await flow.confirmFlowDocument(factory,{id:made.id,kind:'DISPATCH',version:made.version,idempotencyKey:randomUUID()});
+      assert.equal((await flow.viewFlowDocument(factory,sent.id)).totals.cost,'210500');
+      const received = await flow.saveFlowDocument(receiver,{
+        kind:'RECEIPT',parentId:sent.id,
+        lines:[{...sourceLine,quantity:'5',note:'QA actual received'},{productId:extra.id,quantity:'3.5'}],
+        confirm:true,idempotencyKey:randomUUID(),
+      });
+      const snapshot = await flow.viewFlowDocument(admin,received.id);
+      assert.equal(snapshot.totals.cost,'186500');
+      assert.deepEqual(snapshot.lines.map(line=>line.costUnitPrice),['24000','19000']);
+      const archive = await flow.downloadFlowPdf(admin,received.id,received.version);
+      assert.equal(archive.snapshot.totals.cost,'186500');
+      if (process.argv.includes('--pdf')) {
+        const directory = `${localDataDir}-evidence`;
+        await fs.mkdir(directory, {recursive:true});
+        await fs.writeFile(`${directory}/priced-dispatch.pdf`, (await flow.downloadFlowPdf(factory,sent.id,sent.version)).bytes);
+        await fs.writeFile(`${directory}/priced-receipt.pdf`, archive.bytes);
+      }
+      const {invoice}=await adminInvoiceDetail(admin,'FLOW',received.id);
+      const content=structuredClone(invoice.content);
+      content.lines.find(line=>line.productId===requested.id)!.quantity='4.5';
+      await changeAdminInvoice(admin,{kind:'FLOW',id:received.id,version:invoice.version,action:'EDIT',content,reason:'QA correct actual receipt quantity',idempotencyKey:randomUUID()});
+      assert.equal((await flow.viewFlowDocument(admin,received.id)).totals.cost,'174500');
+      assert.deepEqual((await flow.downloadFlowPdf(admin,received.id,received.version)).bytes,archive.bytes);
+      const workspace = await flow.flowWorkspace(receiver);
+      assert.deepEqual(workspace.stockCostTotals.find(row=>row.warehouseId===warehouse.id),{warehouseId:warehouse.id,knownValue:'112500',missingProducts:1});
+      assert.equal(workspace.stocks.find(row=>row.product_id===extra.id)?.stockCostValue,null);
+      const {invokeOperation}=await import('../../lib/crm/mcp/bridge');
+      const valuation=await invokeOperation(admin,{operation:'GET /api/crm/document-flow/workspace'},false);
+      assert.ok(valuation.ok && 'data' in valuation);
+      assert.ok((valuation.data as typeof workspace).stockCostTotals.some(row=>row.warehouseId===warehouse.id&&row.knownValue==='112500'));
+      const {invoice: requestInvoice}=await adminInvoiceDetail(admin,'FLOW',source.id);
+      await changeAdminInvoice(admin,{kind:'FLOW',id:source.id,version:requestInvoice.version,action:'CANCEL',reason:'QA recall priced receipt',idempotencyKey:randomUUID()});
+      await assertStock('0','0');
+      await db.query('UPDATE cohamy_crm.products SET cost_price=19000 WHERE id=$1',[extra.id]);
+    });
+
     if (process.argv.includes('--browser-fixture')) {
       const browserRequest = await makeRequest();
       await flow.acceptFactoryRequest(factory, {id:browserRequest.id,idempotencyKey:randomUUID()});

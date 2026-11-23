@@ -46,6 +46,7 @@ export interface Organization {
 export interface CatalogProduct {
   id: string; website_id: string; sku: string; name: string; category: string;
   weight_label: string; retail_price: string; mapping_status: string; translations: Record<string, unknown>;
+  cost_price?: string|null;
   stock_unit: string; units_per_case: number|null; active: boolean; version: number;
 }
 export interface Warehouse {

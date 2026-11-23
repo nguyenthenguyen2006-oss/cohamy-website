@@ -65,6 +65,7 @@ export interface CrmSpreadsheetProps<T> {
  totalDatasetCount?: number;
  /** Optional batch save endpoint or callback for inline cell editing & Excel paste */
  batchSaveEndpoint?: '/api/crm/spreadsheet/partner-cells' | '/api/crm/spreadsheet/catalog-cells';
+ onBatchSaved?: () => void;
  onBatchSaveCustom?: (patches: {id: string; version: number; changes: Record<string, unknown>}[], preview: boolean) => Promise<{
   preview: boolean;
   total: number;
@@ -152,6 +153,7 @@ export function CrmSpreadsheet<T>({
  datasetTotals,
  totalDatasetCount,
  batchSaveEndpoint,
+ onBatchSaved,
  onBatchSaveCustom,
  toolbarActions,
  renderBulkActions,
@@ -689,6 +691,7 @@ export function CrmSpreadsheet<T>({
      );
     } else {
      setDirtyMap(nextDirty);
+     if(data.validCount>0)onBatchSaved?.();
      if (data.errorCount > 0) {
       setSaveStatus('ERROR');
       setSaveMessage(`Đã lưu ${data.validCount} dòng; còn ${data.errorCount} dòng lỗi được giữ nguyên để bạn sửa.`);
@@ -702,7 +705,7 @@ export function CrmSpreadsheet<T>({
     setSaveMessage(`Không thể lưu (${e instanceof Error ? e.message : 'Lỗi kết nối'}). Dữ liệu vừa nhập vẫn được giữ nguyên.`);
    }
   },
-  [dirtyRowCount, batchSaveEndpoint, onBatchSaveCustom, cellErrors, rows, getRowKey, dirtyMap, rowVersions, getRowVersion, columns, activeColumns]
+  [dirtyRowCount, batchSaveEndpoint, onBatchSaveCustom, onBatchSaved, cellErrors, rows, getRowKey, dirtyMap, rowVersions, getRowVersion, columns, activeColumns]
  );
 
  // Keyboard handler on the spreadsheet viewport

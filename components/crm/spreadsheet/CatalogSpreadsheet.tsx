@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import {useRouter} from 'next/navigation';
 import {CrmSpreadsheet, type SpreadsheetColumn} from './CrmSpreadsheet';
 import {resolveProductImage, ProductThumbZoom} from '../CommercialForms';
 import type {CatalogProduct} from '@/lib/crm/types';
@@ -9,11 +10,15 @@ export function CatalogSpreadsheet({
  items,
  root,
  canWrite,
+ canWriteCost,
 }: {
  items: CatalogProduct[];
  root: string;
  canWrite: boolean;
+ canWriteCost: boolean;
 }) {
+ const router=useRouter();
+ const showCost=items.some(item=>item.cost_price!==undefined);
  const columns: SpreadsheetColumn<CatalogProduct>[] = [
   {
    key: 'image',
@@ -99,6 +104,19 @@ export function CatalogSpreadsheet({
     ),
   },
   {
+   key: 'cost_price',
+   label: 'Giá vốn / Đơn vị gốc',
+   type: 'money',
+   unitGroup: 'VND',
+   summable: false,
+   editable: canWriteCost,
+   editorType: 'text',
+   width: 175,
+   getValue: r => r.cost_price??'',
+   validate: value => /^(?:0|[1-9]\d{0,29})?$/.test(value.trim())?null:'Nhập số nguyên bằng đồng, bỏ dấu phân cách.',
+   renderCell: r => r.cost_price?<strong>{BigInt(r.cost_price).toLocaleString('vi-VN')} ₫</strong>:<span className="muted">Chưa có giá vốn</span>,
+  },
+  {
    key: 'retail_price',
    label: 'Giá niêm yết website (VND)',
    type: 'money',
@@ -144,13 +162,14 @@ export function CatalogSpreadsheet({
   <CrmSpreadsheet
    sheetKey="crm_goods_catalog"
    title="Bảng tính Danh mục Hàng hóa & Quy đổi Đơn vị"
-   subtitle="Nhấp đúp hoặc nhấn F2 vào cột Đơn vị cơ sở, Quy đổi / Thùng hoặc Trạng thái để sửa nhanh và lưu hàng loạt"
-   columns={columns}
+   subtitle={canWriteCost?'Nhấp đúp hoặc nhấn F2 ở cột Giá vốn để nhập số tiền bằng đồng cho một đơn vị gốc. Xóa giá trị nếu chưa có giá vốn.':undefined}
+   columns={showCost?columns:columns.filter(column=>column.key!=='cost_price')}
    rows={items}
    getRowKey={r => r.id}
    getRowVersion={r => r.version ?? 1}
    totalDatasetCount={items.length}
-   batchSaveEndpoint={canWrite ? '/api/crm/spreadsheet/catalog-cells' : undefined}
+   batchSaveEndpoint={canWrite||canWriteCost ? '/api/crm/spreadsheet/catalog-cells' : undefined}
+   onBatchSaved={()=>router.refresh()}
    drawerTitle={r => `${r.sku} · ${r.name}`}
    drawerFullPageHref={r => `${root}/${r.id}`}
    renderDrawer={r => (
@@ -172,6 +191,10 @@ export function CatalogSpreadsheet({
        <span>Giá niêm yết website</span>
        <strong className="crm-text-net">{BigInt(r.retail_price).toLocaleString('vi-VN')} đ</strong>
       </div>
+      {r.cost_price!==undefined&&<div>
+       <span>Giá vốn / Đơn vị gốc</span>
+       <strong>{r.cost_price?`${BigInt(r.cost_price).toLocaleString('vi-VN')} ₫`:'Chưa có giá vốn'}</strong>
+      </div>}
       <div>
        <span>Đơn vị gốc</span>
        <strong>{r.stock_unit || 'Chưa khai báo'}</strong>

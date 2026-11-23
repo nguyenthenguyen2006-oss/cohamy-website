@@ -2,7 +2,7 @@ import 'server-only';
 import {z} from 'zod';
 import {database} from './db';
 import {assertCurrentPrincipal,audit} from './auth';
-import {assertPermission,CrmError,isWarehouseRole,warehouseRoleRegion} from './permissions';
+import {assertPermission,can,CrmError,isWarehouseRole} from './permissions';
 import {partnerScope,getOrganization,listWarehouses} from './repository';
 import {fixed,fixedText,integer,lineAmount} from './decimal';
 import type {Principal} from './types';
@@ -549,7 +549,15 @@ export interface MatrixProductRow {
  reservedQty:string;
  availableQty:string;
  retailStockValue:string;
+ costPrice?:string|null;
+ costStockValue?:string|null;
  allMovements:MatrixMovementItem[];
+}
+
+export interface InventoryCostSummary {
+ knownCostStockValue:string;
+ costStockValue:string|null;
+ missingCostProducts:number;
 }
 
 export interface InventoryMatrixResult {
@@ -568,7 +576,11 @@ export interface InventoryMatrixResult {
   reservedQty:string;
   availableQty:string;
   retailStockValue:string;
+  knownCostStockValue?:string;
+  costStockValue?:string|null;
+  missingCostProducts?:number;
  };
+ warehouseValuations?:({warehouseId:string;warehouseName:string}&InventoryCostSummary)[];
  warehouses:{id:string;code:string;name:string}[];
  partners:{id:string;name:string}[];
 }
@@ -606,6 +618,9 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
  const toDate=query.to&&z.iso.date().safeParse(query.to).success?query.to:null;
  const qFilter=(query.q??'').trim().toLowerCase();
  const partnerFilter=(query.partnerId??'').trim();
+ const canReadCosts=can(user,'inventory.cost.read');
+ const showCurrentCosts=canReadCosts&&!fromDate&&!toDate&&!partnerFilter;
+ const costColumn=canReadCosts?",CASE WHEN cost_price>0 AND btrim(stock_unit)<>'' THEN cost_price::text END AS cost_price":"";
 
  const products=(await db.query<{
   id:string;
@@ -616,8 +631,40 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
   stock_unit:string;
   units_per_case:number|null;
   retail_price:string;
+  cost_price?:string|null;
   active:boolean;
- }>(`SELECT id,sku,name,category,weight_label,stock_unit,units_per_case,retail_price::text,active FROM cohamy_crm.products WHERE active ORDER BY name,sku`)).rows;
+ }>(`SELECT id,sku,name,category,weight_label,stock_unit,units_per_case,retail_price::text,active${costColumn} FROM cohamy_crm.products WHERE active ORDER BY name,sku`)).rows;
+
+ const warehouseCostRows=showCurrentCosts&&targetWhIds.length?(await db.query<{
+  warehouse_id:string;product_id:string;value:string|null;
+ }>(`
+  SELECT b.warehouse_id,b.product_id,
+   CASE WHEN p.cost_price>0 AND btrim(p.stock_unit)<>'' THEN round(sum(b.on_hand)*p.cost_price)::text END AS value
+  FROM cohamy_crm.inventory_balances b
+  JOIN cohamy_crm.products p ON p.id=b.product_id
+  WHERE b.warehouse_id=ANY($1::uuid[])
+  GROUP BY b.warehouse_id,b.product_id,p.cost_price,p.stock_unit
+  HAVING sum(b.on_hand)>0
+ `,[targetWhIds])).rows:[];
+ const costByProduct=new Map<string,bigint|null>();
+ const costByWarehouse=new Map<string,{knownValue:bigint;missingProducts:number}>();
+ for(const row of warehouseCostRows){
+  const warehouse=costByWarehouse.get(row.warehouse_id)??{knownValue:0n,missingProducts:0};
+  const productValue=costByProduct.get(row.product_id);
+  if(row.value===null){
+   warehouse.missingProducts+=1;
+   costByProduct.set(row.product_id,null);
+  }else{
+   const value=integer(row.value);
+   warehouse.knownValue+=value;
+   if(productValue!==null)costByProduct.set(row.product_id,(productValue??0n)+value);
+  }
+  costByWarehouse.set(row.warehouse_id,warehouse);
+ }
+ const warehouseValuations=showCurrentCosts?warehouses.filter(w=>targetWhIds.includes(w.id)).map(w=>{
+  const {knownValue,missingProducts}=costByWarehouse.get(w.id)??{knownValue:0n,missingProducts:0};
+  return {warehouseId:w.id,warehouseName:w.name,knownCostStockValue:knownValue.toString(),costStockValue:missingProducts?null:knownValue.toString(),missingCostProducts:missingProducts};
+ }):undefined;
 
  const balances=targetWhIds.length?(await db.query<{
   product_id:string;
@@ -800,6 +847,8 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
  let totalReserved=0n;
  let totalAvailable=0n;
  let totalRetailValue=0n;
+ let knownCostStockValue=0n;
+ let missingCostProducts=0;
  const columnTotalsNum=new Map<string,bigint>();
 
  for(const p of products){
@@ -845,6 +894,10 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
   const closingFixed=fromDate||toDate?(openingFixed+receiptFixed-outboundFixed+returnAdjustFixed):currentOnHand;
   const upc=p.units_per_case??24;
   const retailVal=(closingFixed/1000000n)*integer(p.retail_price||'0');
+  const recordedCostStockValue=costByProduct.get(p.id);
+  const productCostStockValue=recordedCostStockValue===undefined?0n:recordedCostStockValue;
+  if(productCostStockValue===null)missingCostProducts+=1;
+  else knownCostStockValue+=productCostStockValue;
 
   rows.push({
    productId:p.id,
@@ -867,6 +920,8 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
    reservedQty:cleanQty(fixedText(currentReserved)),
    availableQty:cleanQty(fixedText(currentAvailable)),
    retailStockValue:retailVal.toString(),
+   ...(canReadCosts?{costPrice:p.cost_price??null}:{}),
+   ...(showCurrentCosts?{costStockValue:productCostStockValue?.toString()??null}:{}),
    allMovements:pMoves,
   });
 
@@ -901,7 +956,13 @@ export async function inventoryMatrix(user:Principal,query:Record<string,string>
    reservedQty:cleanQty(fixedText(totalReserved)),
    availableQty:cleanQty(fixedText(totalAvailable)),
    retailStockValue:totalRetailValue.toString(),
+   ...(showCurrentCosts?{
+    knownCostStockValue:knownCostStockValue.toString(),
+    costStockValue:missingCostProducts?null:knownCostStockValue.toString(),
+    missingCostProducts,
+   }:{}),
   },
+  ...(warehouseValuations?{warehouseValuations}:{}),
   warehouses:warehouses.map(w=>({id:w.id,code:w.code,name:w.name})),
   partners:[...partnerOptionsMap.entries()].map(([id,name])=>({id,name})),
  };
@@ -1008,19 +1069,22 @@ const catalogPatchItemSchema=z.object({
   name:z.string().trim().min(2).max(200).optional(),
   stock_unit:z.string().trim().min(1).max(40).optional(),
   units_per_case:z.number().int().min(1).max(100000).nullable().optional(),
+  cost_price:z.string().trim().regex(/^(?:0|[1-9]\d{0,29})?$/).transform(v=>v||'0').optional(),
   active:z.boolean().optional(),
  }).strict(),
 }).strict();
 
 export async function batchCatalogCells(user:Principal,input:unknown){
- if(user.area!=='crm'||!['ADMIN','MANAGER'].includes(user.role))throw new CrmError('FORBIDDEN',403);
+ assertPermission(user,'inventory.cost.write');
  const parsed=z.object({
   preview:z.boolean().default(false),
+  atomic:z.boolean().default(false),
   rows:z.array(catalogPatchItemSchema).min(1).max(100),
   reason:z.string().trim().min(2).max(500).default('Cập nhật hàng hóa trực tiếp trên bảng tính CRM'),
  }).strict().safeParse(input);
  if(!parsed.success)throw new CrmError('INVALID_FIELDS',400);
  const d=parsed.data;
+ if(d.atomic&&new Set(d.rows.map(row=>row.id)).size!==d.rows.length)throw new CrmError('INVALID_FIELDS',400);
  const db=await database();
 
  return db.transaction(async tx=>{
@@ -1028,7 +1092,7 @@ export async function batchCatalogCells(user:Principal,input:unknown){
   const results:{id:string;sku:string;name:string;ok:boolean;error?:string;nextVersion?:number}[]=[];
 
   for(const item of [...d.rows].sort((a,b)=>a.id.localeCompare(b.id))){
-   const row=(await tx.query<{id:string;sku:string;name:string;stock_unit:string;units_per_case:number|null;active:boolean;version:number}>('SELECT id,sku,name,stock_unit,units_per_case,active,version FROM cohamy_crm.products WHERE id=$1 FOR UPDATE',[item.id])).rows[0];
+   const row=(await tx.query<{id:string;sku:string;name:string;stock_unit:string;units_per_case:number|null;cost_price:string;active:boolean;version:number}>('SELECT id,sku,name,stock_unit,units_per_case,cost_price::text,active,version FROM cohamy_crm.products WHERE id=$1 FOR UPDATE',[item.id])).rows[0];
    if(!row){
     results.push({id:item.id,sku:'',name:'',ok:false,error:'Không tìm thấy sản phẩm (NOT_FOUND).'});
     continue;
@@ -1052,20 +1116,22 @@ export async function batchCatalogCells(user:Principal,input:unknown){
     const nextActive=item.changes.active??row.active;
 
     const updated=await tx.query<{version:number}>(
-     'UPDATE cohamy_crm.products SET sku=$1,name=$2,stock_unit=$3,units_per_case=$4,active=$5,version=version+1 WHERE id=$6 AND version=$7 RETURNING version',
-     [nextSku,nextName,nextUnit,nextUpc,nextActive,item.id,item.version]
+     'UPDATE cohamy_crm.products SET sku=$1,name=$2,stock_unit=$3,units_per_case=$4,active=$5,cost_price=COALESCE($6::numeric,cost_price),version=version+1 WHERE id=$7 AND version=$8 RETURNING version',
+     [nextSku,nextName,nextUnit,nextUpc,nextActive,item.changes.cost_price??null,item.id,item.version]
     );
     if(!updated.rows.length){
      results.push({id:item.id,sku:row.sku,name:row.name,ok:false,error:'Xung đột phiên bản (VERSION_CONFLICT).'});
      continue;
     }
-    await audit(tx,user.id,'catalog.spreadsheet-updated',item.id,{before:{version:row.version},after:{...item.changes,version:updated.rows[0].version},reason:d.reason});
+    const before={version:row.version,...(item.changes.cost_price!==undefined?{cost_price:row.cost_price}:{})};
+    await audit(tx,user.id,'catalog.spreadsheet-updated',item.id,{before,after:{...item.changes,version:updated.rows[0].version},reason:d.reason});
     results.push({id:item.id,sku:nextSku,name:nextName,ok:true,nextVersion:updated.rows[0].version});
    }else{
     results.push({id:item.id,sku:row.sku,name:row.name,ok:true,nextVersion:row.version+1});
    }
   }
 
+  if(d.atomic&&!d.preview&&results.some(r=>!r.ok))throw new CrmError('CATALOG_BATCH_CONFLICT',409);
   return {
    preview:d.preview,
    total:results.length,
