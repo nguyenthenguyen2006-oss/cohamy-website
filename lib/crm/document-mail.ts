@@ -11,6 +11,8 @@ import {businessMailEvents} from './document-business-registry';
 import {brevoStatus,sendDocumentEmail,type DocumentEmail} from './brevo';
 import type {Principal} from './types';
 import {isBrevoDemo} from './brevo-settings';
+import {WEBSITE_ORDER_ASSIGNED_MAIL_EVENT, WEBSITE_ORDER_WAREHOUSE_RECIPIENTS_MISSING} from './website-order-mail-event';
+import {currentWebsiteOrderWarehouseRecipients} from './website-order-mail-recipients';
 
 type Rule={id:string;event:string;warehouse_id:string|null;factory_membership_id:string|null;enabled:boolean;recipients:MailRecipients;subject:string;body:string;attachments:'EVENT'|'BUNDLE';version:number};
 type Job={id:string;event_key:string;event:string;entity_id:string;revision:number;rule_id:string|null;warehouse_id:string|null;factory_membership_id:string|null;code:string;recipients:MailRecipients;subject:string;body:string;files:MailFile[];status:string;attempts:number;message_id:string|null;claim_token:string};
@@ -135,11 +137,24 @@ export async function runDocumentMailOutbox(provider:(input:DocumentEmail)=>Prom
   // A crashed request may already have reached Brevo. Never automatically resend it.
   await db.query("UPDATE cohamy_crm.document_mail_outbox SET status='UNKNOWN',last_error='WORKER_CRASH_RESULT_UNKNOWN',claim_token=NULL,updated_at=now() WHERE status='SENDING' AND claimed_at<now()-interval '2 minutes'");
   const rows=(await db.query<{id:string}>("SELECT id FROM cohamy_crm.document_mail_outbox WHERE status IN('PENDING','RETRY','DEFERRED') AND attempts<5 AND available_at<=now() ORDER BY available_at,id LIMIT 20")).rows;
-  let accepted=0,failed=0;
+  let accepted=0,failed=0,skipped=0;
   for(const r of rows){
     const token=randomUUID(),job=(await db.query<Job>("UPDATE cohamy_crm.document_mail_outbox SET status='SENDING',claim_token=$2,claimed_at=now(),attempts=attempts+1,updated_at=now() WHERE id=$1 AND status IN('PENDING','RETRY','DEFERRED') AND available_at<=now() RETURNING *",[r.id,token])).rows[0];if(!job)continue;
     try{
-      const attachments=await mailFiles(db,job.files);if(job.event!=='mail.test'&&!businessMailEvents.some(e=>e.event===job.event&&e.available&&e.notificationOnly)&&!attachments.length)throw new CrmError('MAIL_FILE_NOT_READY',409);
+      if(job.event===WEBSITE_ORDER_ASSIGNED_MAIL_EVENT){
+        const recipients=await currentWebsiteOrderWarehouseRecipients(db,job);
+        if(!recipients||!recipients.to.length){
+          await db.query("UPDATE cohamy_crm.document_mail_outbox SET status=$3,last_error=$4,claim_token=NULL,updated_at=now() WHERE id=$1 AND claim_token=$2",
+            [job.id,token,recipients?'FAILED':'SUPERSEDED',recipients?WEBSITE_ORDER_WAREHOUSE_RECIPIENTS_MISSING:'']);
+          if(recipients)failed++;else skipped++;
+          continue;
+        }
+        if(job.recipients.cc.length||job.recipients.bcc.length||recipients.to.length!==job.recipients.to.length||recipients.to.some((email,index)=>email!==job.recipients.to[index])){
+          await db.query('UPDATE cohamy_crm.document_mail_outbox SET recipients=$3::jsonb WHERE id=$1 AND claim_token=$2',[job.id,token,JSON.stringify(recipients)]);
+          job.recipients=recipients;
+        }
+      }
+      const attachments=await mailFiles(db,job.files);if(job.event!=='mail.test'&&job.event!==WEBSITE_ORDER_ASSIGNED_MAIL_EVENT&&!businessMailEvents.some(e=>e.event===job.event&&e.available&&e.notificationOnly)&&!attachments.length)throw new CrmError('MAIL_FILE_NOT_READY',409);
       const messageId=await provider({recipients:job.recipients,subject:job.subject,textContent:job.body,attachments,jobId:job.id});
       await db.transaction(async sql=>{
         const state=provider===sendDocumentEmail&&isBrevoDemo()?'SIMULATED':'ACCEPTED';
@@ -152,7 +167,7 @@ export async function runDocumentMailOutbox(provider:(input:DocumentEmail)=>Prom
       const status=unknown?'UNKNOWN':deferred?'DEFERRED':retry&&job.attempts<5?'RETRY':'FAILED';
       await db.query("UPDATE cohamy_crm.document_mail_outbox SET status=$1,last_error=$2,available_at=now()+($3::integer*interval '1 second'),claim_token=NULL,attempts=GREATEST(attempts-$6,0),updated_at=now() WHERE id=$4 AND claim_token=$5",[status,code,Math.min(3600,30*2**job.attempts),job.id,token,deferred?1:0]);failed++;
     }
-  }return {processed:accepted+failed,accepted,failed};
+  }return {processed:accepted+failed+skipped,accepted,failed};
 }
 export function verifyBrevoWebhook(authorization:string|null){
   const secret=process.env.CRM_BREVO_WEBHOOK_TOKEN;if(!secret||secret.length<24)throw new CrmError('WEBHOOK_NOT_CONFIGURED',503);

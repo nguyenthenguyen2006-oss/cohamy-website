@@ -3,6 +3,7 @@ import {notFound} from 'next/navigation';
 import {listOnlineOrders,getOnlineOrder} from '@/lib/crm/online-orders';
 import {CrmError,isWarehouseRole} from '@/lib/crm/permissions';
 import type {Principal} from '@/lib/crm/types';
+import {WEBSITE_ORDER_ASSIGNED_MAIL_EVENT} from '@/lib/crm/website-order-mail-event';
 import {CrmNavLink as Link} from './CrmNavLink';
 import {OnlineOrderActions} from './OnlineOrderForms';
 import styles from './OnlineOrders.module.css';
@@ -98,9 +99,9 @@ function History({data,path,query}:{data:Detail['history'];path:string;query:Rec
 }
 
 function MailHistory({data,path,query}:{data:Detail['mailJobs'];path:string;query:Record<string,string>}){
-  return <section className="work-section"><h2>Thông báo email đơn mới</h2><p className="work-help">“Nhà cung cấp đã nhận” chưa có nghĩa người nhận đã đọc thư.</p><div className={`${styles.table} ${styles.mail}`} role="region" aria-label="Email thông báo đơn online" tabIndex={0}>
-    <table className="data-table"><thead><tr><th>Thời gian</th><th>Người nhận</th><th>Trạng thái</th><th>Số lần thử</th><th>Kết quả gần nhất</th></tr></thead><tbody>
-      {data.items.map(job=><tr key={job.id}><td>{date(job.createdAt)}<small>Cập nhật {date(job.updatedAt)}</small></td><td className={styles.recipients}><p>TO: {job.recipients.to.join(', ')||'—'}</p>{job.recipients.cc.length>0&&<p>CC: {job.recipients.cc.join(', ')}</p>}{job.recipients.bcc.length>0&&<p>BCC: {job.recipients.bcc.join(', ')}</p>}</td><td>{mailLabels[job.status]??'Chưa xác định'}</td><td>{job.attempts}</td><td className={styles.prewrap}>{job.lastError||'—'}</td></tr>)}{!data.items.length&&<tr><td colSpan={5}>Chưa có lịch sử email của đơn này.</td></tr>}
+  return <section className="work-section"><h2>Lịch sử email đơn online</h2><p className="work-help">Email điều phối được gửi tới thủ kho đã kích hoạt tại kho nhận đơn.</p><div className={`${styles.table} ${styles.mail}`} role="region" aria-label="Email thông báo đơn online" tabIndex={0}>
+    <table className="data-table"><thead><tr><th scope="col">Thời gian</th><th scope="col">Sự kiện</th><th scope="col">Người nhận</th><th scope="col">Trạng thái</th><th scope="col">Số lần thử</th><th scope="col">Kết quả gần nhất</th></tr></thead><tbody>
+      {data.items.map(job=><tr key={job.id}><td>{date(job.createdAt)}<small>Cập nhật {date(job.updatedAt)}</small></td><td>{job.event===WEBSITE_ORDER_ASSIGNED_MAIL_EVENT?'Điều phối về kho':'Khách đặt đơn'}{job.warehouseName&&<small>{job.warehouseName}</small>}</td><td className={styles.recipients}><p>TO: {job.recipients.to.join(', ')||'—'}</p>{job.recipients.cc.length>0&&<p>CC: {job.recipients.cc.join(', ')}</p>}{job.recipients.bcc.length>0&&<p>BCC: {job.recipients.bcc.join(', ')}</p>}</td><td>{mailLabels[job.status]??'Chưa xác định'}</td><td>{job.attempts}</td><td className={styles.prewrap}>{job.lastError||'—'}</td></tr>)}{!data.items.length&&<tr><td colSpan={6}>Chưa có lịch sử email của đơn này.</td></tr>}
     </tbody></table>
   </div><Pagination path={path} query={query} param="mailPage" page={data.page} pageSize={data.pageSize} total={data.total} label="thông báo"/></section>;
 }

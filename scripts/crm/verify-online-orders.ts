@@ -9,12 +9,14 @@ import {CrmError} from '../../lib/crm/permissions';
 import type {Role} from '../../lib/crm/types';
 import {getPublicStorefront} from '../../lib/crm/storefront';
 import {STOREFRONT_PRODUCTS} from '../../lib/storefront-pricing';
+import type {DocumentEmail} from '../../lib/crm/brevo';
 import {createWebsiteOrder} from '../../lib/crm/website-orders';
 import {listOnlineOrders, getOnlineOrder, assignOnlineOrder, acceptOnlineOrder} from '../../lib/crm/online-orders';
 import {runDocumentMailOutbox,retryDocumentMail} from '../../lib/crm/document-mail';
 import {invokeOperation, operationCatalog} from '../../lib/crm/mcp/bridge';
 
 const mailEvent='website.order.received';
+const assignedMailEvent='website.order.assigned';
 const recipients=['kangminamhd@gmail.com','nguyenptkthd@gmail.com'];
 const output='docs/crm/test-results/online-orders';
 const invariantTables=[
@@ -39,6 +41,11 @@ async function fingerprints(sql:Sql){
 async function frozen(sql:Sql,id:string){
   return (await sql.query('SELECT contact,lines,subtotal::text,payment_requested,paid,locale,request_hash,idempotency_key FROM cohamy_crm.website_orders WHERE id=$1',[id])).rows[0];
 }
+async function assignmentMail(sql:Sql,orderId:string){
+  return (await sql.query<{
+    id:string;revision:number;warehouse_id:string;status:string;last_error:string;recipients:DocumentEmail['recipients'];body:string;files:unknown[];
+  }>('SELECT id,revision,warehouse_id,status,last_error,recipients,body,files FROM cohamy_crm.document_mail_outbox WHERE event=$1 AND entity_id=$2 ORDER BY revision',[assignedMailEvent,orderId])).rows;
+}
 
 async function main(){
   const postgres=process.env.CRM_DATABASE_MODE==='postgres';
@@ -61,20 +68,31 @@ async function main(){
   const sales=(await login('sales@crm-qa.invalid',qaPassword)).user;
   const accountant=(await login('accountant@crm-qa.invalid',qaPassword)).user;
   const dealer=(await login('a@crm-qa.invalid',qaPassword)).user;
-  const wh={north:randomUUID(),south:randomUUID(),inactive:randomUUID()};
-  for(const [id,code,region,active] of [[wh.north,'QA_ONLINE_HN','NORTH',true],[wh.south,'QA_ONLINE_HCM','SOUTH',true],[wh.inactive,'QA_ONLINE_OFF','NORTH',false]] as const){
+  const wh={north:randomUUID(),south:randomUUID(),inactive:randomUUID(),unstaffed:randomUUID()};
+  for(const [id,code,region,active] of [[wh.north,'QA_ONLINE_HN','NORTH',true],[wh.south,'QA_ONLINE_HCM','SOUTH',true],[wh.inactive,'QA_ONLINE_OFF','NORTH',false],[wh.unstaffed,'QA_ONLINE_UNSTAFFED',null,true]] as const){
     await owner.query('INSERT INTO cohamy_crm.warehouses(id,code,name,organization_id,region,active) VALUES($1,$2,$3,$4,$5,$6)',[id,code,'LOCAL QA · '+code,admin.organizationId,region,active]);
   }
+  async function seedStaff(email:string,role:Role,options:{active?:boolean;pending?:boolean;membershipActive?:boolean;organizationId?:string}={}){
+    const userId=randomUUID(),membershipId=randomUUID();
+    await owner.query(`INSERT INTO cohamy_crm.users(id,email,display_name,password_hash,active,activation_status) SELECT $1,$2,$3,password_hash,$5,$6 FROM cohamy_crm.users WHERE id=$4`,[userId,email,'LOCAL QA · '+role,admin.id,options.active??true,options.pending?'PENDING_ACTIVATION':'ACTIVE']);
+    await owner.query('INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role,active) VALUES($1,$2,$3,$4,$5)',[membershipId,userId,options.organizationId??admin.organizationId,role,options.membershipActive??true]);
+  }
   async function staff(email:string,role:Role){
-    await owner.query(`INSERT INTO cohamy_crm.users(id,email,display_name,password_hash) SELECT $1,$2,$3,password_hash FROM cohamy_crm.users WHERE id=$4`,[randomUUID(),email,'LOCAL QA · '+role,admin.id]);
-    const user=(await owner.query<{id:string}>('SELECT id FROM cohamy_crm.users WHERE email=$1',[email])).rows[0];
-    await owner.query('INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,$4)',[randomUUID(),user.id,admin.organizationId,role]);
+    await seedStaff(email,role);
     return (await login(email,qaPassword)).user;
   }
   const north=await staff('online-hn@crm-qa.invalid','WAREHOUSE_HN'),south=await staff('online-hcm@crm-qa.invalid','WAREHOUSE_HCM');
   const manager=await staff('online-manager@crm-qa.invalid','MANAGER');
   const generic=(await login('warehouse@crm-qa.invalid',qaPassword)).user;
   await owner.query('INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) VALUES($1,$2)',[generic.membershipId,wh.north]);
+  const secondNorthMembership=randomUUID();
+  await owner.query("INSERT INTO cohamy_crm.memberships(id,user_id,organization_id,role) VALUES($1,$2,$3,'WAREHOUSE')",[secondNorthMembership,north.id,admin.organizationId]);
+  await owner.query('INSERT INTO cohamy_crm.warehouse_assignments(membership_id,warehouse_id) VALUES($1,$2)',[secondNorthMembership,wh.north]);
+  await seedStaff('online-unassigned@crm-qa.invalid','WAREHOUSE');
+  await seedStaff('online-revoked@crm-qa.invalid','WAREHOUSE_HN',{membershipActive:false});
+  await seedStaff('online-inactive@crm-qa.invalid','WAREHOUSE_HN',{active:false});
+  await seedStaff('online-pending@crm-qa.invalid','WAREHOUSE_HN',{pending:true});
+  await seedStaff('online-other-org@crm-qa.invalid','WAREHOUSE_HN',{organizationId:ids.dealerA});
   const product=(await owner.query<{id:string}>('SELECT id FROM cohamy_crm.products WHERE website_id=$1',[STOREFRONT_PRODUCTS[0].crmWebsiteId])).rows[0];
   const location=randomUUID(),lot=randomUUID();
   await owner.query("INSERT INTO cohamy_crm.warehouse_locations(id,warehouse_id,code,name,kind) VALUES($1,$2,'PICK','LOCAL QA PICK','PICK')",[location,wh.north]);
@@ -150,6 +168,19 @@ async function main(){
       await rejectsStatus(assignOnlineOrder(admin,orderId,{...first,warehouseId:wh.south}),409);
       await rejectsStatus(assignOnlineOrder(admin,orderId,{...first,idempotencyKey:randomUUID()}),409);
     });
+    await test('Dispatch emails active staff of the assigned warehouse once with only the order link and reference',async()=>{
+      const jobs=await assignmentMail(db,orderId);
+      assert.equal(jobs.length,1);
+      const job=jobs[0];
+      assert.equal(job.revision,2);assert.equal(job.warehouse_id,wh.north);assert.equal(job.status,'PENDING');
+      assert.deepEqual(job.recipients,{to:['online-hn@crm-qa.invalid','warehouse@crm-qa.invalid'],cc:[],bcc:[]});
+      assert.equal(job.files.length,0);
+      assert.ok(job.body.includes(receipt.code));assert.ok(job.body.includes('QA_ONLINE_HN'));
+      assert.ok(job.body.includes('https://online-orders-qa.invalid/crm/online-customers/'+orderId));
+      for(const secret of [input.contact.fullName,input.contact.email,input.contact.phone,input.contact.address,input.contact.note])assert.ok(!job.body.includes(secret));
+      const detail=await getOnlineOrder(admin,orderId,{});
+      assert.ok(detail.mailJobs.items.some(row=>row.id===job.id&&row.event===assignedMailEvent&&row.warehouseName==='LOCAL QA · QA_ONLINE_HN'));
+    });
     await test('Assigned warehouse sees and accepts only its own dispatch; retries retain their original action receipt',async()=>{
       assert.equal((await listOnlineOrders(north,{})).total,1);assert.equal((await listOnlineOrders(generic,{})).total,1);
       assert.equal((await getOnlineOrder(north,orderId,{})).mailJobs.total,0);
@@ -159,6 +190,7 @@ async function main(){
       assert.equal(result.version,3);assert.equal(result.dispatchStatus,'ACCEPTED');assert.deepEqual(await acceptOnlineOrder(north,orderId,action),result);
       await rejectsStatus(acceptOnlineOrder(north,orderId,{...action,reason:'changed retry'}),409);
       assert.deepEqual(await frozen(db,orderId),original);
+      assert.equal((await assignmentMail(db,orderId)).length,1);
     });
     await test('Reassignment resets acceptance and removes previous warehouse visibility without repricing or posting money',async()=>{
       await db.query('UPDATE cohamy_crm.products SET retail_price=90000,version=version+1 WHERE id=$1',[product.id]);
@@ -167,6 +199,44 @@ async function main(){
       assert.equal((await listOnlineOrders(north,{})).total,0);await rejectsStatus(getOnlineOrder(north,orderId,{}),[403,404]);
       assert.equal((await listOnlineOrders(south,{})).total,1);const accepted=await acceptOnlineOrder(admin,orderId,{version:4,reason:'LOCAL QA Admin override',idempotencyKey:randomUUID()});assert.equal(accepted.version,5);
       assert.deepEqual(await createWebsiteOrder(input),receipt);assert.deepEqual(await frozen(db,orderId),original);
+    });
+    await test('Reassignment replaces the unsent notification and the worker only delivers to the new warehouse',async()=>{
+      const [firstJob,secondJob,...unexpected]=await assignmentMail(db,orderId);
+      assert.equal(unexpected.length,0);
+      assert.equal(firstJob.status,'SUPERSEDED');
+      assert.equal(secondJob.revision,4);assert.equal(secondJob.warehouse_id,wh.south);assert.equal(secondJob.status,'PENDING');
+      assert.deepEqual(secondJob.recipients,{to:['online-hcm@crm-qa.invalid'],cc:[],bcc:[]});
+      const sent:DocumentEmail[]=[];
+      const provider=async(message:DocumentEmail)=>{sent.push(message);return 'QA_FAKE_PROVIDER_'+message.jobId;};
+      // The checkout history test above queued 21 explicit resends. Drain through the same worker in batches.
+      assert.equal((await runDocumentMailOutbox(provider)).failed,0);
+      assert.equal((await runDocumentMailOutbox(provider)).failed,0);
+      assert.equal((await runDocumentMailOutbox(provider)).processed,0);
+      assert.deepEqual(sent.filter(message=>message.jobId===firstJob.id||message.jobId===secondJob.id).map(message=>({id:message.jobId,recipients:message.recipients,attachments:message.attachments})),[
+        {id:secondJob.id,recipients:{to:['online-hcm@crm-qa.invalid'],cc:[],bcc:[]},attachments:[]},
+      ]);
+      assert.deepEqual((await assignmentMail(db,orderId)).map(job=>job.status),['SUPERSEDED','ACCEPTED']);
+    });
+    await test('An unstaffed warehouse can receive an order with a visible notification failure',async()=>{
+      const command={version:1,warehouseId:wh.unstaffed,reason:'LOCAL QA warehouse with no staff',idempotencyKey:randomUUID()};
+      const result=await assignOnlineOrder(admin,legacyId,command);
+      assert.equal(result.dispatchStatus,'ASSIGNED');assert.equal(result.warehouseId,wh.unstaffed);
+      const jobs=await assignmentMail(db,legacyId);
+      assert.equal(jobs.length,1);assert.equal(jobs[0].status,'FAILED');assert.equal(jobs[0].last_error,'WAREHOUSE_RECIPIENTS_NOT_CONFIGURED');
+      assert.deepEqual(jobs[0].recipients,{to:[],cc:[],bcc:[]});
+    });
+    await test('The worker rechecks warehouse access before delivering queued notifications',async()=>{
+      const command={version:2,warehouseId:wh.north,reason:'LOCAL QA recheck scoped recipient access',idempotencyKey:randomUUID()};
+      const result=await assignOnlineOrder(admin,legacyId,command);
+      const job=(await assignmentMail(db,legacyId)).find(row=>row.revision===result.version);
+      assert.ok(job);assert.deepEqual(job.recipients.to,['online-hn@crm-qa.invalid','warehouse@crm-qa.invalid']);
+      await owner.query('UPDATE cohamy_crm.memberships SET active=false WHERE id=$1',[generic.membershipId]);
+      try{
+        const sent:DocumentEmail[]=[];
+        const outcome=await runDocumentMailOutbox(async message=>{sent.push(message);return 'QA_FAKE_PROVIDER_'+message.jobId;});
+        assert.equal(outcome.failed,0);assert.equal(outcome.accepted,1);assert.equal(sent.length,1);
+        assert.equal(sent[0].jobId,job.id);assert.deepEqual(sent[0].recipients,{to:['online-hn@crm-qa.invalid'],cc:[],bcc:[]});
+      }finally{await owner.query('UPDATE cohamy_crm.memberships SET active=true WHERE id=$1',[generic.membershipId]);}
     });
     await test('Dispatch action history is append-only for the production-equivalent runtime role',async()=>{
       assert.ok((await getOnlineOrder(admin,orderId,{})).history.total>=4);
@@ -190,6 +260,12 @@ async function main(){
       const state=(await getOnlineOrder(admin,orderId,{})).order;
       const command={operation:'POST /api/crm/online-orders/[id]/dispatch',params:{id:orderId},input:{version:state.version,warehouseId:state.dispatch.warehouseId===wh.north?wh.south:wh.north,reason:'LOCAL QA MCP dispatch',idempotencyKey:randomUUID()}};
       const result=await invokeOperation(admin,command,true);assert.equal(result.status,200);assert.deepEqual(await invokeOperation(admin,command,true),result);
+      const jobs=(await assignmentMail(db,orderId)).filter(job=>job.revision===state.version+1);
+      assert.equal(jobs.length,1);assert.equal(jobs[0].warehouse_id,command.input.warehouseId);
+      const mail=await invokeOperation(admin,{operation:'GET /api/crm/online-orders/[id]',params:{id:orderId}},false);
+      assert.ok(mail.ok&&'data' in mail);
+      const mcpDetail=mail.data as Awaited<ReturnType<typeof getOnlineOrder>>;
+      assert.ok(mcpDetail.mailJobs.items.some(row=>row.id===jobs[0].id&&row.event===assignedMailEvent));
       assert.ok(!/password_hash|access_token|api_key|claim_token/.test(JSON.stringify(detail)));
     });
     if(postgres)await test('Concurrent same-key checkout and same-version routing have single winners without duplicate notifications',async()=>{
@@ -199,6 +275,8 @@ async function main(){
       assert.equal((await db.query<{n:string}>('SELECT count(*)::text AS n FROM cohamy_crm.document_mail_outbox WHERE event=$1 AND entity_id=$2',[mailEvent,row.id])).rows[0].n,'1');
       const outcomes=await Promise.allSettled([wh.north,wh.south].map(warehouseId=>assignOnlineOrder(admin,row.id,{version:1,warehouseId,reason:'LOCAL QA parallel dispatch',idempotencyKey:randomUUID()})));
       assert.equal(outcomes.filter(result=>result.status==='fulfilled').length,1);assert.equal(outcomes.filter(result=>result.status==='rejected').length,1);
+      const [dispatchJob,...duplicates]=await assignmentMail(db,row.id);
+      assert.equal(duplicates.length,0);assert.equal(dispatchJob.warehouse_id,(await getOnlineOrder(admin,row.id,{})).order.dispatch.warehouseId);
       const other=await createWebsiteOrder({...race,idempotencyKey:randomUUID()}),otherId=(await db.query<{id:string}>('SELECT id FROM cohamy_crm.website_orders WHERE code=$1',[other.code])).rows[0].id;
       const state=(await getOnlineOrder(admin,row.id,{})).order,key=randomUUID();
       const collision=await Promise.allSettled([
@@ -214,7 +292,9 @@ async function main(){
     });
     complete=true;
   }finally{
-    await fs.mkdir(output,{recursive:true});await fs.writeFile(output+'/services-'+(postgres?'staging':'local')+'.json',JSON.stringify({status:complete?'PASS':'FAIL',environment:postgres?'STAGING isolated PostgreSQL, restricted runtime role':'LOCAL isolated PGlite',testedAt:new Date().toISOString(),cases,invariantTables:baseline,provider:'FAKE_PROVIDER lambda; CRM_EMAIL_ENABLED=false; no live delivery claim',externalEmails:0,productionWrites:0,mcpScope:'Native invokeOperation on isolated fixtures, not production connector verification'},null,2)+'\n');
+    if(!process.argv.includes('--no-report')){
+      await fs.mkdir(output,{recursive:true});await fs.writeFile(output+'/services-'+(postgres?'staging':'local')+'.json',JSON.stringify({status:complete?'PASS':'FAIL',environment:postgres?'STAGING isolated PostgreSQL, restricted runtime role':'LOCAL isolated PGlite',testedAt:new Date().toISOString(),cases,invariantTables:baseline,provider:'FAKE_PROVIDER lambda; CRM_EMAIL_ENABLED=false; no live delivery claim',externalEmails:0,productionWrites:0,mcpScope:'Native invokeOperation on isolated fixtures, not production connector verification'},null,2)+'\n');
+    }
     await close();if(postgres)await owner.close();
   }
 }

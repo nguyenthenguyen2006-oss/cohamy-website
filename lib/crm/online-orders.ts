@@ -5,6 +5,9 @@ import {database,type Sql} from './db';
 import {assertCurrentPrincipal,audit,digest} from './auth';
 import {CrmError,isWarehouseRole} from './permissions';
 import {warehouseScope} from './warehouse-scope';
+import {enqueueWebsiteOrderAssigned} from './website-order-notifications';
+import {WEBSITE_ORDER_ASSIGNED_MAIL_EVENT, WEBSITE_ORDER_MAIL_EVENT, WEBSITE_ORDER_WAREHOUSE_RECIPIENTS_MISSING} from './website-order-mail-event';
+import type {MailRecipients} from './document-mail-model';
 import type {Principal} from './types';
 
 type DispatchStatus='UNASSIGNED'|'ASSIGNED'|'ACCEPTED';
@@ -70,16 +73,19 @@ export async function getOnlineOrder(user:Principal,id:string,query:Record<strin
   const historyPage=Math.min(requestedHistory,Math.max(1,Math.ceil(historyTotal/pageSize)));
   const historyRows=(await sql.query<{id:string;action:string;fromWarehouseName:string;toWarehouseName:string;reason:string;actorName:string;createdAt:Date|string;version:number}>(`SELECT id,action,from_warehouse_name AS "fromWarehouseName",to_warehouse_name AS "toWarehouseName",reason,actor_name AS "actorName",created_at AS "createdAt",version FROM cohamy_crm.website_order_dispatch_actions WHERE website_order_id=$1 ORDER BY created_at DESC,id DESC LIMIT ${pageSize} OFFSET $2`,[id,(historyPage-1)*pageSize])).rows;
   let mailTotal=0,mailPage=1;
-  type MailRow={id:string;status:string;attempts:number;recipients:{to:string[];cc:string[];bcc:string[]};last_error:string|null;created_at:Date|string;updated_at:Date|string};
+  type MailRow={id:string;event:string;warehouse_name:string|null;status:string;attempts:number;recipients:MailRecipients;last_error:string|null;created_at:Date|string;updated_at:Date|string};
   let mailRows:MailRow[]=[];
   if(user.role==='ADMIN'){
-   mailTotal=Number((await sql.query<{total:string}>("SELECT count(*)::text AS total FROM cohamy_crm.document_mail_outbox WHERE event='website.order.received' AND entity_id=$1",[id])).rows[0].total);
+   const mailFilter=[id,WEBSITE_ORDER_MAIL_EVENT,WEBSITE_ORDER_ASSIGNED_MAIL_EVENT];
+   mailTotal=Number((await sql.query<{total:string}>('SELECT count(*)::text AS total FROM cohamy_crm.document_mail_outbox WHERE entity_id=$1 AND event IN($2,$3)',mailFilter)).rows[0].total);
    mailPage=Math.min(requestedMail,Math.max(1,Math.ceil(mailTotal/pageSize)));
-   mailRows=(await sql.query<MailRow>(`SELECT id,status,attempts,recipients,last_error,created_at,updated_at FROM cohamy_crm.document_mail_outbox WHERE event='website.order.received' AND entity_id=$1 ORDER BY created_at DESC,id DESC LIMIT ${pageSize} OFFSET $2`,[id,(mailPage-1)*pageSize])).rows;
+   mailRows=(await sql.query<MailRow>(`SELECT m.id,m.event,w.name AS warehouse_name,m.status,m.attempts,m.recipients,m.last_error,m.created_at,m.updated_at
+     FROM cohamy_crm.document_mail_outbox m LEFT JOIN cohamy_crm.warehouses w ON w.id=m.warehouse_id
+     WHERE m.entity_id=$1 AND m.event IN($2,$3) ORDER BY m.created_at DESC,m.id DESC LIMIT ${pageSize} OFFSET $4`,[...mailFilter,(mailPage-1)*pageSize])).rows;
   }
   return {order:display(row),warehouses:await warehouses(sql,user),canDispatch:user.role==='ADMIN',canAccept:true,
    history:{items:historyRows.map(action=>({...action,createdAt:iso(action.createdAt)!})),total:historyTotal,page:historyPage,pageSize},
-   mailJobs:{items:mailRows.map(job=>({id:job.id,status:job.status,attempts:job.attempts,recipients:job.recipients,lastError:job.last_error?'Email cần kiểm tra trong lịch sử thông báo.':null,createdAt:iso(job.created_at)!,updatedAt:iso(job.updated_at)!})),total:mailTotal,page:mailPage,pageSize}};
+   mailJobs:{items:mailRows.map(job=>({id:job.id,event:job.event,warehouseName:job.warehouse_name,status:job.status,attempts:job.attempts,recipients:job.recipients,lastError:job.last_error===WEBSITE_ORDER_WAREHOUSE_RECIPIENTS_MISSING?'Kho chưa có thủ kho đã kích hoạt nhận email.':job.last_error?'Email cần kiểm tra trong lịch sử thông báo.':null,createdAt:iso(job.created_at)!,updatedAt:iso(job.updated_at)!})),total:mailTotal,page:mailPage,pageSize}};
  });
 }
 const assignSchema=z.object({version:z.number().int().positive(),warehouseId:z.uuid(),reason:z.string().trim().min(5).max(1000),idempotencyKey:z.uuid()}).strict();
@@ -119,6 +125,7 @@ async function mutate(user:Principal,id:string,action:'ASSIGN'|'ACCEPT',input:{v
   else await sql.query("UPDATE cohamy_crm.website_orders SET dispatch_status='ACCEPTED',accepted_by=$1,accepted_at=now(),version=$2,updated_at=now() WHERE id=$3",[user.id,version,id]);
   const result:ActionResult={id,version,dispatchStatus,warehouseId:targetId};
   await sql.query('INSERT INTO cohamy_crm.website_order_dispatch_actions(id,website_order_id,actor_id,actor_name,request_hash,action,from_warehouse_id,to_warehouse_id,from_warehouse_name,to_warehouse_name,reason,version,result) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13::jsonb)',[input.idempotencyKey,id,user.id,user.displayName,requestHash,action,old.assigned_warehouse_id,targetId,old.warehouse_name??'',warehouse.name,input.reason,version,JSON.stringify(result)]);
+  if(action==='ASSIGN')await enqueueWebsiteOrderAssigned(sql,{id,code:old.code,revision:version,warehouseId:targetId,warehouseName:warehouse.name,actorId:user.id});
   await audit(sql,user.id,action==='ASSIGN'?'website.order-dispatched':'website.order-accepted',id,{fromWarehouseId:old.assigned_warehouse_id,warehouseId:targetId,version,reason:input.reason,idempotencyKey:input.idempotencyKey});
   return result;
  });

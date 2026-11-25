@@ -1,4 +1,6 @@
 export const WEBSITE_ORDER_MAIL_EVENT = 'website.order.received';
+export const WEBSITE_ORDER_ASSIGNED_MAIL_EVENT = 'website.order.assigned';
+export const WEBSITE_ORDER_WAREHOUSE_RECIPIENTS_MISSING = 'WAREHOUSE_RECIPIENTS_NOT_CONFIGURED';
 
 export const websiteOrderMailEvent = {
   event: WEBSITE_ORDER_MAIL_EVENT,
